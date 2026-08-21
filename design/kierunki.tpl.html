@@ -1,0 +1,640 @@
+<title>Kierunki wizualne Vitesse</title>
+<style>
+/*FONTS*/
+
+/* ============ dokument (neutralny, żeby nie konkurował z makietami) ============ */
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --doc-bg:#E9ECEF; --doc-card:#FFFFFF; --doc-ink:#14181E; --doc-muted:#5C6674;
+  --doc-line:#D2D7DE; --doc-accent:#FF7A00;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --doc-bg:#0D0F13; --doc-card:#15181E; --doc-ink:#EDEFF2; --doc-muted:#98A1AE;
+    --doc-line:#262B33;
+  }
+}
+:root[data-theme="dark"]{
+  --doc-bg:#0D0F13; --doc-card:#15181E; --doc-ink:#EDEFF2; --doc-muted:#98A1AE;
+  --doc-line:#262B33;
+}
+body{
+  margin:0; background:var(--doc-bg); color:var(--doc-ink);
+  font-family:'IBM Plex Sans',system-ui,sans-serif; font-size:16px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+.mock-a .cell b,.mock-b .dcell b,.mock-c .out-val,.mock-c .out-sub b,.mock-c .out-grid div b,.mock-c .fld-in input{font-variant-numeric:tabular-nums}
+
+.doc-head{padding:64px 0 40px}
+.doc-kicker{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--doc-accent);margin:0 0 14px}
+.doc-head h1{font-family:'Archivo',sans-serif;font-weight:700;font-size:clamp(30px,4.4vw,48px);
+  line-height:1.08;letter-spacing:-.02em;margin:0 0 18px;max-width:20ch}
+.doc-head p{margin:0;max-width:66ch;color:var(--doc-muted);font-size:17px}
+
+.note{background:var(--doc-card);border:1px solid var(--doc-line);border-radius:12px;
+  padding:22px 24px;margin:32px 0 0}
+.note h3{font-family:'Archivo',sans-serif;font-size:15px;margin:0 0 10px;letter-spacing:-.01em}
+.note ul{margin:0;padding-left:20px;color:var(--doc-muted);font-size:15px}
+.note li{margin:5px 0}
+.note li strong{color:var(--doc-ink);font-weight:600}
+
+/* ---- nagłówek kierunku ---- */
+.dir{padding:56px 0 8px;border-top:1px solid var(--doc-line);margin-top:56px}
+.dir-num{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--doc-accent)}
+.dir h2{font-family:'Archivo',sans-serif;font-weight:700;font-size:clamp(26px,3.4vw,38px);
+  letter-spacing:-.02em;margin:8px 0 12px}
+.dir-lead{margin:0 0 28px;max-width:70ch;color:var(--doc-muted);font-size:16.5px}
+.dir-specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;
+  margin:0 0 30px;padding:22px;background:var(--doc-card);border:1px solid var(--doc-line);border-radius:12px}
+.spec h4{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--doc-muted);margin:0 0 10px;font-weight:500}
+.spec p{margin:0;font-size:14.5px;line-height:1.5}
+.sw{display:flex;gap:7px;flex-wrap:wrap}
+.sw i{width:30px;height:30px;border-radius:6px;display:block;border:1px solid rgba(128,128,128,.28)}
+
+/* ---- ramka „przeglądarki" ---- */
+.browser{border:1px solid var(--doc-line);border-radius:14px;overflow:hidden;
+  background:var(--doc-card);box-shadow:0 18px 44px -24px rgba(0,0,0,.5)}
+.browser-bar{display:flex;align-items:center;gap:8px;padding:11px 14px;
+  background:var(--doc-card);border-bottom:1px solid var(--doc-line)}
+.browser-bar em{width:10px;height:10px;border-radius:50%;background:var(--doc-line);display:block}
+.browser-url{flex:1;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11.5px;
+  color:var(--doc-muted)}
+.mock{container-type:inline-size}
+
+.feedback{margin:64px 0 80px;padding:34px;background:var(--doc-card);
+  border:1px solid var(--doc-line);border-radius:14px}
+.feedback h2{font-family:'Archivo',sans-serif;font-size:24px;margin:0 0 8px;letter-spacing:-.02em}
+.feedback p{color:var(--doc-muted);margin:0 0 20px;max-width:70ch}
+.fb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.fb-item{border-left:2px solid var(--doc-accent);padding:2px 0 2px 14px}
+.fb-item h4{margin:0 0 5px;font-size:14.5px;font-family:'Archivo',sans-serif}
+.fb-item p{margin:0;font-size:14px}
+
+/* ================================================================
+   KIERUNEK A — HAMOWNIA
+   ================================================================ */
+.mock-a{
+  --bg:#0F1116; --surface:#171A21; --line:#262B35; --text:#F1F2F4;
+  --muted:#8A919E; --accent:#FF7A00; --accent-soft:#FFB067;
+  background:var(--bg); color:var(--text);
+  font-family:'IBM Plex Sans',sans-serif;
+}
+.mock-a .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding:9px 30px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+.mock-a .topbar b{color:var(--text);font-weight:600}
+.mock-a .topbar .tb-r{display:flex;gap:20px;flex-wrap:wrap}
+.mock-a .nav{display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding:16px 30px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.mock-a .brand{font-family:'Archivo',sans-serif;font-weight:800;font-style:italic;
+  font-size:25px;letter-spacing:-.035em;white-space:nowrap}
+.mock-a .brand s{color:var(--accent);text-decoration:none}
+.mock-a .brand u{display:block;font-family:'IBM Plex Mono',monospace;font-style:normal;
+  font-weight:500;font-size:9px;letter-spacing:.24em;color:var(--muted);text-decoration:none;margin-top:1px}
+.mock-a .menu{display:flex;gap:24px;font-size:14px;font-weight:600;flex-wrap:wrap}
+.mock-a .menu span{cursor:default;white-space:nowrap}
+.mock-a .menu span:first-child{color:var(--accent)}
+.mock-a .btn{background:var(--accent);color:#0F1116;font-weight:700;font-size:13.5px;
+  padding:11px 19px;border-radius:3px;white-space:nowrap;border:0;cursor:pointer;font-family:inherit}
+.mock-a .hero{position:relative;padding:66px 30px 30px;overflow:hidden}
+.mock-a .hero-bg{position:absolute;inset:0;background-image:var(--hero-img);
+  background-size:cover;background-position:60% 50%;opacity:.5}
+.mock-a .hero-bg::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(100deg,#0F1116 24%,rgba(15,17,22,.72) 55%,rgba(15,17,22,.35))}
+.mock-a .hero-in{position:relative;max-width:660px}
+.mock-a .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 16px;display:flex;align-items:center;gap:10px}
+.mock-a .eyebrow::after{content:'';height:1px;width:56px;background:var(--accent);opacity:.5}
+.mock-a h1{font-family:'Archivo',sans-serif;font-weight:800;font-style:italic;
+  font-size:clamp(34px,5.6cqw,60px);line-height:.98;letter-spacing:-.035em;margin:0 0 20px;
+  text-wrap:balance}
+.mock-a h1 s{color:var(--accent);text-decoration:none}
+.mock-a .lead{font-size:16.5px;color:#C7CCD4;max-width:52ch;margin:0;text-wrap:pretty}
+.mock-a .stats{position:relative;display:flex;gap:34px;margin:34px 0 0;flex-wrap:wrap}
+.mock-a .stat{border-left:2px solid var(--accent);padding-left:13px}
+.mock-a .stat b{display:block;font-family:'Archivo',sans-serif;font-weight:700;font-size:21px;letter-spacing:-.02em}
+.mock-a .stat span{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--muted)}
+</style>
+<style>
+/* ---- A: wyszukiwarka jako panel pomiarowy (element sygnaturowy) ---- */
+.mock-a .ps{position:relative;margin:38px 0 0;background:var(--surface);
+  border:1px solid var(--line);border-top:2px solid var(--accent);border-radius:4px;
+  box-shadow:0 26px 60px -30px rgba(0,0,0,.9)}
+.mock-a .ps-head{display:flex;justify-content:space-between;align-items:center;gap:14px;
+  padding:15px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.mock-a .ps-title{font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;letter-spacing:-.01em}
+.mock-a .ps-badge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:4px 8px;border-radius:2px}
+.mock-a .ps-row{display:flex;align-items:center;gap:14px;padding:13px 20px;border-bottom:1px solid var(--line)}
+.mock-a .ps-row.off{opacity:.42}
+.mock-a .ps-n{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent);
+  letter-spacing:.1em;width:16px;flex:none}
+.mock-a .ps-row.off .ps-n{color:var(--muted)}
+.mock-a .ps-f{flex:1;min-width:0}
+.mock-a .ps-lab{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);display:block;margin-bottom:7px}
+.mock-a .ps-cascade{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@container (max-width:720px){.mock-a .ps-cascade{grid-template-columns:1fr 1fr}}
+@container (max-width:430px){.mock-a .ps-cascade{grid-template-columns:1fr}}
+.mock-a select,.mock-a .ps-fake{width:100%;background:#0F1116;color:var(--text);
+  border:1px solid var(--line);border-radius:3px;padding:11px 11px;font-size:14px;
+  font-family:inherit;appearance:none;cursor:pointer}
+.mock-a select:disabled{color:var(--muted);cursor:not-allowed}
+.mock-a select:focus-visible,.mock-a .btn:focus-visible,.mock-a input:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px}
+.mock-a .ps-fake{color:var(--muted);cursor:not-allowed}
+.mock-a .ps-tag{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);border:1px dashed var(--line);
+  padding:3px 7px;border-radius:2px;flex:none}
+
+/* wynik + bramka leadowa */
+.mock-a .ps-out{padding:19px 20px;display:none}
+.mock-a .ps-out.on{display:block}
+.mock-a .res{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:3px;overflow:hidden}
+@container (max-width:560px){.mock-a .res{grid-template-columns:1fr 1fr}}
+.mock-a .cell{background:var(--surface);padding:13px 14px}
+.mock-a .cell span{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px}
+.mock-a .cell b{font-family:'Archivo',sans-serif;font-weight:700;font-size:23px;letter-spacing:-.02em;display:block}
+.mock-a .cell.gain{background:#1D1509}
+.mock-a .cell.gain b{color:var(--accent)}
+.mock-a .lock{position:relative}
+.mock-a .lock.hid b{filter:blur(9px);opacity:.55;user-select:none}
+.mock-a .gate{margin:15px 0 0;padding:15px;border:1px dashed var(--accent);border-radius:3px;background:#17130C}
+.mock-a .gate.done{display:none}
+.mock-a .gate p{margin:0 0 11px;font-size:13.5px;color:#D8DCE2}
+.mock-a .gate p b{color:var(--text)}
+.mock-a .gate-f{display:flex;gap:8px;flex-wrap:wrap}
+.mock-a .gate input{flex:1;min-width:190px;background:#0F1116;border:1px solid var(--line);
+  color:var(--text);border-radius:3px;padding:11px;font-size:14px;font-family:inherit}
+.mock-a .rodo{margin:10px 0 0;font-size:11.5px;color:var(--muted);line-height:1.45}
+.mock-a .ps-hint{padding:13px 20px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line)}
+
+/* ================================================================
+   KIERUNEK B — WYKRES
+   ================================================================ */
+.mock-b{
+  --bg:#F4F6F8; --surface:#FFFFFF; --ink:#0E1116; --muted:#5C6470; --line:#DDE2E8;
+  --accent:#FF6A00; --stock:#98A2B0;
+  background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans',sans-serif;
+}
+.mock-b .nav{display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding:17px 30px;background:var(--surface);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.mock-b .brand{font-family:'Archivo',sans-serif;font-weight:800;font-style:italic;font-size:24px;
+  letter-spacing:-.035em}
+.mock-b .brand s{color:var(--accent);text-decoration:none}
+.mock-b .menu{display:flex;gap:22px;font-size:14px;font-weight:600;color:var(--muted);flex-wrap:wrap}
+.mock-b .menu span:first-child{color:var(--ink)}
+.mock-b .btn{background:var(--accent);color:#160A00;font-weight:700;font-size:13.5px;
+  padding:11px 18px;border-radius:2px;border:0;cursor:pointer;font-family:inherit;white-space:nowrap}
+.mock-b .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:44px;
+  padding:52px 30px;align-items:center}
+@container (max-width:820px){.mock-b .hero{grid-template-columns:1fr;gap:32px}}
+.mock-b .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 15px}
+.mock-b h1{font-family:'Archivo',sans-serif;font-weight:700;font-size:clamp(30px,4.5cqw,49px);
+  line-height:1.02;letter-spacing:-.032em;margin:0 0 17px;text-wrap:balance}
+.mock-b .lead{color:var(--muted);font-size:16px;margin:0 0 26px;max-width:46ch;text-wrap:pretty}
+.mock-b .ps{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:17px}
+.mock-b .ps-lab{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px}
+.mock-b .ps-cascade{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@container (max-width:430px){.mock-b .ps-cascade{grid-template-columns:1fr}}
+.mock-b select{width:100%;background:var(--surface);color:var(--ink);border:1px solid var(--line);
+  border-radius:4px;padding:11px;font-size:14px;font-family:inherit;appearance:none;cursor:pointer}
+.mock-b select:disabled{color:#A5ADB8;cursor:not-allowed}
+.mock-b select:focus-visible,.mock-b .btn:focus-visible,.mock-b input:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px}
+.mock-b .alt{margin:11px 0 0;font-size:12.5px;color:var(--muted)}
+.mock-b .alt em{font-style:normal;border-bottom:1px dotted var(--muted)}
+
+/* wykres — element sygnaturowy */
+.mock-b .chart{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:19px}
+.mock-b .chart-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  margin:0 0 13px;flex-wrap:wrap}
+.mock-b .chart-t{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted)}
+.mock-b .chart-v{font-family:'Archivo',sans-serif;font-weight:700;font-size:15px}
+.mock-b svg{display:block;width:100%;height:auto}
+.mock-b .legend{display:flex;gap:18px;margin:13px 0 0;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.mock-b .legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:6px}
+.mock-b .deltas{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:5px;overflow:hidden;margin:15px 0 0}
+.mock-b .dcell{background:var(--surface);padding:12px 14px}
+.mock-b .dcell span{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+.mock-b .dcell b{font-family:'Archivo',sans-serif;font-weight:700;font-size:22px;color:var(--accent)}
+.mock-b .dcell.lock b{filter:blur(9px);opacity:.5}
+.mock-b .gate{margin:14px 0 0;padding:14px;background:#FFF6EF;border:1px solid #FFD9BC;border-radius:5px}
+.mock-b .gate.done{display:none}
+.mock-b .gate p{margin:0 0 10px;font-size:13.5px;color:#3A2410}
+.mock-b .gate-f{display:flex;gap:8px;flex-wrap:wrap}
+.mock-b .gate input{flex:1;min-width:180px;border:1px solid #E7C5A6;border-radius:4px;padding:11px;
+  font-size:14px;font-family:inherit;background:var(--surface);color:var(--ink)}
+.mock-b .rodo{margin:9px 0 0;font-size:11.5px;color:#6B5744;line-height:1.45}
+</style>
+<style>
+/* ================================================================
+   KIERUNEK C — FLOTA
+   ================================================================ */
+.mock-c{
+  --bg:#FFFFFF; --band:#1B2330; --soft:#F2F4F7; --ink:#141A22; --muted:#5A6472;
+  --line:#E3E7EC; --accent:#FF7A00; --save:#12706E;
+  background:var(--bg); color:var(--ink); font-family:'Outfit',system-ui,sans-serif;
+}
+.mock-c .nav{display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding:18px 32px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.mock-c .brand{font-family:'Archivo',sans-serif;font-weight:800;font-style:italic;font-size:23px;
+  letter-spacing:-.035em}
+.mock-c .brand s{color:var(--accent);text-decoration:none}
+.mock-c .menu{display:flex;gap:22px;font-size:14.5px;font-weight:500;color:var(--muted);flex-wrap:wrap}
+.mock-c .menu span:nth-child(3){color:var(--ink);font-weight:600}
+.mock-c .btn{background:var(--ink);color:#fff;font-weight:600;font-size:13.5px;padding:11px 19px;
+  border-radius:7px;border:0;cursor:pointer;font-family:inherit;white-space:nowrap}
+.mock-c .btn.acc{background:var(--accent);color:#160A00}
+.mock-c .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.92fr);gap:48px;
+  padding:56px 32px;align-items:start}
+@container (max-width:820px){.mock-c .hero{grid-template-columns:1fr;gap:34px}}
+.mock-c .eyebrow{display:inline-block;font-size:12.5px;font-weight:600;color:var(--save);
+  background:#E7F2F1;padding:5px 11px;border-radius:20px;margin:0 0 17px}
+.mock-c h1{font-family:'Outfit',sans-serif;font-weight:600;font-size:clamp(31px,4.6cqw,50px);
+  line-height:1.06;letter-spacing:-.028em;margin:0 0 17px;text-wrap:balance}
+.mock-c .lead{color:var(--muted);font-size:16.5px;margin:0 0 26px;max-width:48ch;text-wrap:pretty}
+.mock-c .ticks{list-style:none;padding:0;margin:0 0 28px;display:grid;gap:10px}
+.mock-c .ticks li{display:flex;gap:11px;align-items:flex-start;font-size:15px}
+.mock-c .ticks b{color:var(--save);flex:none;font-weight:600}
+.mock-c .cta-row{display:flex;gap:11px;flex-wrap:wrap}
+.mock-c .callback{margin:20px 0 0;font-size:14px;color:var(--muted)}
+.mock-c .callback b{color:var(--ink);font-weight:600}
+
+/* kalkulator — element sygnaturowy */
+.mock-c .calc{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:24px}
+.mock-c .calc-h{font-family:'Outfit',sans-serif;font-weight:600;font-size:17px;margin:0 0 3px}
+.mock-c .calc-s{font-size:13px;color:var(--muted);margin:0 0 20px}
+.mock-c .fld{margin:0 0 17px}
+.mock-c .fld-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+.mock-c .fld label{font-size:13.5px;font-weight:500;color:var(--muted)}
+.mock-c .fld-in{display:flex;align-items:center;gap:5px;background:var(--bg);
+  border:1px solid var(--line);border-radius:7px;padding:5px 9px}
+.mock-c .fld-in input{width:74px;border:0;background:transparent;text-align:right;
+  font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:14.5px;color:var(--ink);padding:2px 0}
+.mock-c .fld-in input:focus{outline:none}
+.mock-c .fld-in em{font-style:normal;font-size:12px;color:var(--muted);white-space:nowrap}
+.mock-c input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer;margin:0}
+.mock-c input:focus-visible,.mock-c .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mock-c .out{background:var(--band);color:#fff;border-radius:11px;padding:20px;margin:22px 0 0}
+.mock-c .out-main{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.mock-c .out-lab{font-size:12.5px;color:#96A0B0;margin:0 0 4px}
+.mock-c .out-val{font-family:'Outfit',sans-serif;font-weight:600;font-size:36px;line-height:1;
+  letter-spacing:-.03em;color:#5FD6C9}
+.mock-c .out-sub{text-align:right}
+.mock-c .out-sub b{display:block;font-family:'Outfit',sans-serif;font-weight:600;font-size:19px}
+.mock-c .out-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 0;
+  padding:16px 0 0;border-top:1px solid rgba(255,255,255,.13)}
+.mock-c .out-grid div span{display:block;font-size:11.5px;color:#96A0B0;margin-bottom:3px}
+.mock-c .out-grid div b{font-family:'Outfit',sans-serif;font-weight:600;font-size:17px}
+.mock-c .disclaim{margin:14px 0 0;font-size:11.5px;color:var(--muted);line-height:1.5}
+.mock-c .trust{background:var(--soft);border-top:1px solid var(--line);padding:26px 32px;
+  display:flex;gap:38px;flex-wrap:wrap;justify-content:space-between}
+.mock-c .trust div b{display:block;font-family:'Outfit',sans-serif;font-weight:600;font-size:20px;
+  letter-spacing:-.02em}
+.mock-c .trust div span{font-size:12.5px;color:var(--muted)}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="doc-head">
+    <p class="doc-kicker">Propozycja · sierpień 2026</p>
+    <h1>Trzy kierunki wizualne dla nowego serwisu Vitesse</h1>
+    <p>Każdy kierunek to inny pomysł na to, czym Vitesse jest dla odwiedzającego: warsztatem,
+    pracownią pomiarową albo partnerem biznesowym. Różnią się kolorem i typografią, ale przede wszystkim
+    <strong>tym, co pokazują najpierw</strong>. Makiety są klikalne — wyszukiwarka i kalkulator działają.</p>
+
+    <div class="note">
+      <h3>Zanim zaczniecie oglądać</h3>
+      <ul>
+        <li><strong>Dane w wyszukiwarce są prawdziwe</strong> — Ford Focus III, VW Golf VII i BMW Serii 3 F30,
+            35 wersji silnikowych pobranych z obecnego katalogu. Docelowo wjedzie komplet, ok. 70 marek.</li>
+        <li><strong>Zdjęcia pochodzą z obecnej strony</strong> i są tu tylko jako materiał zastępczy.
+            Do finalnej wersji potrzebujemy nowych zdjęć hamowni, warsztatu i zespołu.</li>
+        <li><strong>Logo odtworzyliśmy typograficznie.</strong> Obecny plik ma chromowany gradient
+            w stylu sprzed kilkunastu lat i źle się skaluje. To osobna decyzja — czy odświeżamy znak.</li>
+        <li><strong>Nie oceniajcie treści</strong>, tylko wrażenie. Teksty są robocze i będą pisane osobno.</li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- =============== KIERUNEK A =============== -->
+  <article class="dir">
+    <p class="dir-num">Kierunek A</p>
+    <h2>Hamownia</h2>
+    <p class="dir-lead">Ciemny, warsztatowy, oparty na zdjęciu. Mówi „robimy to od 2008 i mamy sprzęt”.
+      Najbliższy temu, czego klient spodziewa się po firmie tuningowej — i najmocniej gra z pomarańczem z logo.
+      Wyszukiwarka wygląda jak odczyt z aparatury pomiarowej.</p>
+
+    <div class="dir-specs">
+      <div class="spec"><h4>Kolory</h4>
+        <div class="sw"><i style="background:#0F1116"></i><i style="background:#171A21"></i>
+          <i style="background:#F1F2F4"></i><i style="background:#8A919E"></i><i style="background:#FF7A00"></i></div></div>
+      <div class="spec"><h4>Typografia</h4>
+        <p>Archivo 800 <em>kursywa</em> w nagłówkach — echo logo.<br>IBM Plex Sans w tekście, Plex Mono na danych.</p></div>
+      <div class="spec"><h4>Ton</h4><p>Rzeczowy, warsztatowy. Dowód zamiast obietnicy.</p></div>
+      <div class="spec"><h4>Element sygnaturowy</h4><p>Wyszukiwarka jako panel pomiarowy z bramką na wynik.</p></div>
+    </div>
+
+    <div class="browser">
+      <div class="browser-bar"><em></em><em></em><em></em><span class="browser-url">vitesse.auto.pl</span></div>
+      <div class="mock mock-a" style="--hero-img:url('__IMG_hero_night__')">
+        <div class="topbar">
+          <span>ul. Kolumny 267C, Łódź · pon–pt 8–17, sob 8–14</span>
+          <span class="tb-r"><span>Tuning <b>511 205 980</b></span><span>Floty <b>515 660 210</b></span></span>
+        </div>
+        <div class="nav">
+          <div class="brand"><s>V</s>ITESSE<u>V-TECH ŁÓDŹ</u></div>
+          <nav class="menu"><span>Podnoszenie mocy</span><span>EV / Hybryda</span><span>Hamownia</span>
+            <span>Wykresy i osiągi</span><span>Floty</span><span>Kontakt</span></nav>
+          <button class="btn">Umów pomiar</button>
+        </div>
+        <div class="hero">
+          <div class="hero-bg"></div>
+          <div class="hero-in">
+            <p class="eyebrow">Hamownia 4×4 · Łódź</p>
+            <h1>Moc z pomiaru,<br>nie z <s>folderu</s>.</h1>
+            <p class="lead">Chip tuning i modyfikacje sterowników. Każdą zmianę potwierdzamy pomiarem
+              na hamowni — przed i po, na tym samym stanowisku.</p>
+
+            <div class="ps" data-ps="a">
+              <div class="ps-head">
+                <span class="ps-title">Sprawdź, ile zyska Twój silnik</span>
+                <span class="ps-badge">Demo · 3 modele</span>
+              </div>
+              <div class="ps-row off">
+                <span class="ps-n">01</span>
+                <div class="ps-f"><span class="ps-lab">Numer VIN</span>
+                  <div class="ps-fake">Wpisz VIN — rozpoznamy auto automatycznie</div></div>
+                <span class="ps-tag">etap 2</span>
+              </div>
+              <div class="ps-row">
+                <span class="ps-n">02</span>
+                <div class="ps-f"><span class="ps-lab">Wybierz z listy</span>
+                  <div class="ps-cascade">
+                    <select data-sel="make"  aria-label="Marka"></select>
+                    <select data-sel="model" aria-label="Model" disabled></select>
+                    <select data-sel="gen"   aria-label="Generacja" disabled></select>
+                    <select data-sel="eng"   aria-label="Silnik" disabled></select>
+                  </div></div>
+              </div>
+              <div class="ps-row off">
+                <span class="ps-n">03</span>
+                <div class="ps-f"><span class="ps-lab">Opisz własnymi słowami</span>
+                  <div class="ps-fake">„mam golfa siódemkę 2.0 tdi” — asystent dobierze wersję</div></div>
+                <span class="ps-tag">etap 2</span>
+              </div>
+              <div class="ps-out" data-out>
+                <div class="res">
+                  <div class="cell"><span>Moc fabryczna</span><b data-f="shp">—</b></div>
+                  <div class="cell"><span>Moment fabryczny</span><b data-f="snm">—</b></div>
+                  <div class="cell gain lock hid"><span>Po chip tuningu</span><b data-f="thp">—</b></div>
+                  <div class="cell gain lock hid"><span>Moment po</span><b data-f="tnm">—</b></div>
+                </div>
+                <div class="gate" data-gate>
+                  <p>Wynik jest gotowy: <b data-f="teaser">—</b>. Podaj adres e-mail, a pokażemy pełne
+                    wartości po tuningu i orientacyjną wycenę.</p>
+                  <div class="gate-f">
+                    <input type="email" placeholder="twoj@email.pl" aria-label="Adres e-mail">
+                    <button class="btn" data-submit>Pokaż wynik</button>
+                  </div>
+                  <p class="rodo">Wyrażam zgodę na kontakt w sprawie zapytania. Dane przetwarza
+                    Vitesse V-tech Łódź, podanie ich jest dobrowolne. <u>Polityka prywatności</u>.</p>
+                </div>
+              </div>
+              <p class="ps-hint">Nie ma Twojej wersji? Zadzwoń — często mamy rozwiązanie, którego nie ma w katalogu.</p>
+            </div>
+
+            <div class="stats">
+              <div class="stat"><b>2008</b><span>autoryzacja V-tech</span></div>
+              <div class="stat"><b>4×4</b><span>hamownia i stanowisko moto</span></div>
+              <div class="stat"><b>W cenie</b><span>pomiar przed i po</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- =============== KIERUNEK B =============== -->
+  <article class="dir">
+    <p class="dir-num">Kierunek B</p>
+    <h2>Wykres</h2>
+    <p class="dir-lead">Jasny, techniczny, oparty na danych. Zamiast zdjęcia auta — krzywa mocy, która rysuje się
+      po wybraniu silnika. Mówi „mierzymy, nie zgadujemy”. Odchodzi od tego, jak wygląda większość stron
+      tuningowych, i buduje wiarygodność inżynierską zamiast emocji.</p>
+
+    <div class="dir-specs">
+      <div class="spec"><h4>Kolory</h4>
+        <div class="sw"><i style="background:#F4F6F8"></i><i style="background:#FFFFFF"></i>
+          <i style="background:#0E1116"></i><i style="background:#98A2B0"></i><i style="background:#FF6A00"></i></div></div>
+      <div class="spec"><h4>Typografia</h4>
+        <p>Archivo 700 prosto, mocno zwężone światło.<br>Plex Mono dominuje na opisach osi i liczbach.</p></div>
+      <div class="spec"><h4>Ton</h4><p>Precyzyjny, rzeczowy. Język pomiaru.</p></div>
+      <div class="spec"><h4>Element sygnaturowy</h4><p>Krzywa przed/po z wypełnionym polem różnicy.</p></div>
+    </div>
+
+    <div class="browser">
+      <div class="browser-bar"><em></em><em></em><em></em><span class="browser-url">vitesse.auto.pl</span></div>
+      <div class="mock mock-b">
+        <div class="nav">
+          <div class="brand"><s>V</s>ITESSE</div>
+          <nav class="menu"><span>Podnoszenie mocy</span><span>EV / Hybryda</span><span>Hamownia</span>
+            <span>Wykresy i osiągi</span><span>Floty</span><span>Kontakt</span></nav>
+          <button class="btn">Umów pomiar</button>
+        </div>
+        <div class="hero">
+          <div>
+            <p class="eyebrow">Katalog osiągów</p>
+            <h1>Zobacz różnicę, zanim zdecydujesz.</h1>
+            <p class="lead">Wybierz silnik i sprawdź, ile realnie zyskasz. Wartości pochodzą z naszych
+              pomiarów, nie z tabel dostawcy oprogramowania.</p>
+
+            <div class="ps" data-ps="b">
+              <span class="ps-lab">Twój samochód</span>
+              <div class="ps-cascade">
+                <select data-sel="make"  aria-label="Marka"></select>
+                <select data-sel="model" aria-label="Model" disabled></select>
+                <select data-sel="gen"   aria-label="Generacja" disabled></select>
+                <select data-sel="eng"   aria-label="Silnik" disabled></select>
+              </div>
+              <p class="alt">Możesz też <em>wpisać VIN</em> albo <em>opisać auto własnymi słowami</em> — obie opcje w etapie 2.</p>
+            </div>
+          </div>
+
+          <div class="chart">
+            <div class="chart-h">
+              <span class="chart-t">Moc [KM] · obroty [1/min]</span>
+              <span class="chart-v" data-f="title">Wybierz silnik</span>
+            </div>
+            <svg viewBox="0 0 520 250" role="img" aria-label="Wykres mocy przed i po tuningu">
+              <g stroke="#DDE2E8" stroke-width="1">
+                <line x1="40" y1="210" x2="510" y2="210"/>
+                <line x1="40" y1="160" x2="510" y2="160"/><line x1="40" y1="110" x2="510" y2="110"/>
+                <line x1="40" y1="60"  x2="510" y2="60"/><line x1="40" y1="14" x2="510" y2="14"/>
+              </g>
+              <g font-family="IBM Plex Mono, monospace" font-size="9" fill="#8C95A2">
+                <text x="46" y="228">1500</text><text x="160" y="228">2500</text>
+                <text x="280" y="228">3500</text><text x="400" y="228">4500</text>
+                <text x="480" y="228">5500</text>
+                <text x="6" y="213">0</text><text x="6" y="64" data-f="ax75"></text><text x="6" y="18" data-f="ax1"></text>
+              </g>
+              <path data-f="area" fill="#FF6A00" opacity=".13" d=""/>
+              <path data-f="stock" fill="none" stroke="#98A2B0" stroke-width="2.2"
+                    stroke-linecap="round" d="" stroke-dasharray="4 4"/>
+              <path data-f="tuned" fill="none" stroke="#FF6A00" stroke-width="2.8"
+                    stroke-linecap="round" d=""/>
+            </svg>
+            <div class="legend">
+              <span><i style="background:#98A2B0"></i>fabrycznie</span>
+              <span><i style="background:#FF6A00"></i>po chip tuningu</span>
+              <span style="margin-left:auto;font-size:11px">kształt krzywej poglądowy — realne przebiegi z archiwum hamowni</span>
+            </div>
+            <div class="deltas">
+              <div class="dcell lock"><span>Przyrost mocy</span><b data-f="dhp">—</b></div>
+              <div class="dcell lock"><span>Przyrost momentu</span><b data-f="dnm">—</b></div>
+            </div>
+            <div class="gate" data-gate>
+              <p>Podaj e-mail, żeby zobaczyć dokładne wartości i orientacyjną wycenę dla tej wersji.</p>
+              <div class="gate-f">
+                <input type="email" placeholder="twoj@email.pl" aria-label="Adres e-mail">
+                <button class="btn" data-submit>Pokaż wynik</button>
+              </div>
+              <p class="rodo">Zgoda na kontakt w sprawie zapytania. Administrator: Vitesse V-tech Łódź. <u>Polityka prywatności</u>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- =============== KIERUNEK C =============== -->
+  <article class="dir">
+    <p class="dir-num">Kierunek C</p>
+    <h2>Flota</h2>
+    <p class="dir-lead">Jasny, uporządkowany, biznesowy. Jako jedyny prowadzi nie mocą, tylko pieniędzmi —
+      na pierwszym ekranie stoi kalkulator oszczędności dla flot. Kierunek dla firmy, która chce rozmawiać
+      z zarządcami flot i podpisywać umowy, a nie tylko obsługiwać klienta detalicznego.</p>
+
+    <div class="dir-specs">
+      <div class="spec"><h4>Kolory</h4>
+        <div class="sw"><i style="background:#FFFFFF"></i><i style="background:#1B2330"></i>
+          <i style="background:#F2F4F7"></i><i style="background:#12706E"></i><i style="background:#FF7A00"></i></div></div>
+      <div class="spec"><h4>Typografia</h4>
+        <p>Outfit — jedna rodzina, geometryczna, spokojna.<br>Plex Mono tylko na polach liczbowych.</p></div>
+      <div class="spec"><h4>Ton</h4><p>Konkret biznesowy. Liczby, zwrot z inwestycji.</p></div>
+      <div class="spec"><h4>Element sygnaturowy</h4><p>Kalkulator z żywym wynikiem i okresem zwrotu.</p></div>
+    </div>
+
+    <div class="browser">
+      <div class="browser-bar"><em></em><em></em><em></em><span class="browser-url">vitesse.auto.pl/oferta-dla-flot</span></div>
+      <div class="mock mock-c">
+        <div class="nav">
+          <div class="brand"><s>V</s>ITESSE</div>
+          <nav class="menu"><span>Podnoszenie mocy</span><span>Hamownia</span><span>Floty</span>
+            <span>Wykresy</span><span>O nas</span><span>Kontakt</span></nav>
+          <button class="btn">Porozmawiajmy</button>
+        </div>
+        <div class="hero">
+          <div>
+            <span class="eyebrow">Eco-tuning dla flot</span>
+            <h1>Flota, która pali mniej.</h1>
+            <p class="lead">Eco-tuning obniża spalanie średnio o 5–8% bez zmiany stylu jazdy.
+              Przy kilkunastu pojazdach zwraca się w kilka miesięcy.</p>
+            <ul class="ticks">
+              <li><b>✓</b><span>Pomiar na hamowni przed i po — wiecie, za co płacicie.</span></li>
+              <li><b>✓</b><span>Limitery prędkości i obrotów, jeśli flota tego wymaga.</span></li>
+              <li><b>✓</b><span>Obsługa u Was albo u nas, całą flotą albo partiami.</span></li>
+            </ul>
+            <div class="cta-row">
+              <button class="btn acc">Zamów audyt floty</button>
+              <button class="btn">Pobierz wyliczenie w PDF</button>
+            </div>
+            <p class="callback">Wolicie porozmawiać? Dział flotowy: <b>515 660 210</b>, pon–pt 8–17.</p>
+          </div>
+
+          <div class="calc" data-calc>
+            <p class="calc-h">Ile zaoszczędzi Wasza flota?</p>
+            <p class="calc-s">Przesuńcie suwaki albo wpiszcie własne wartości.</p>
+
+            <div class="fld">
+              <div class="fld-top"><label for="c-veh">Liczba pojazdów</label>
+                <span class="fld-in"><input id="c-veh" type="number" data-num="veh" value="20" min="1" max="300"><em>szt.</em></span></div>
+              <input type="range" data-rng="veh" min="1" max="300" value="20" aria-label="Liczba pojazdów">
+            </div>
+            <div class="fld">
+              <div class="fld-top"><label for="c-km">Roczny przebieg na pojazd</label>
+                <span class="fld-in"><input id="c-km" type="number" data-num="km" value="120000" min="5000" max="300000" step="5000"><em>km</em></span></div>
+              <input type="range" data-rng="km" min="5000" max="300000" step="5000" value="120000" aria-label="Roczny przebieg">
+            </div>
+            <div class="fld">
+              <div class="fld-top"><label for="c-fu">Średnie spalanie</label>
+                <span class="fld-in"><input id="c-fu" type="number" data-num="fu" value="30" min="4" max="60" step="0.5"><em>l/100 km</em></span></div>
+              <input type="range" data-rng="fu" min="4" max="60" step="0.5" value="30" aria-label="Średnie spalanie">
+            </div>
+            <div class="fld">
+              <div class="fld-top"><label for="c-pr">Cena paliwa</label>
+                <span class="fld-in"><input id="c-pr" type="number" data-num="pr" value="7.50" min="3" max="15" step="0.1"><em>zł/l</em></span></div>
+              <input type="range" data-rng="pr" min="3" max="15" step="0.1" value="7.5" aria-label="Cena paliwa">
+            </div>
+
+            <div class="out">
+              <div class="out-main">
+                <div><p class="out-lab">Oszczędność roczna</p><p class="out-val" data-c="year">—</p></div>
+                <div class="out-sub"><p class="out-lab">miesięcznie</p><b data-c="month">—</b></div>
+              </div>
+              <div class="out-grid">
+                <div><span>Mniej paliwa rocznie</span><b data-c="litres">—</b></div>
+                <div><span>Zwrot kosztu usługi</span><b data-c="payback">—</b></div>
+              </div>
+            </div>
+            <p class="disclaim">Wyliczenie szacunkowe: zakładamy oszczędność 6,5% oraz koszt usługi 1 500 zł netto
+              za pojazd — obie wartości do ustalenia z Państwem. Rzeczywisty wynik zależy od stanu technicznego
+              pojazdów, tras i stylu jazdy. Nie stanowi oferty w rozumieniu Kodeksu cywilnego.</p>
+          </div>
+        </div>
+        <div class="trust">
+          <div><b>Od 2008</b><span>autoryzacja V-tech</span></div>
+          <div><b>Hamownia 4×4</b><span>pomiar przed i po</span></div>
+          <div><b>Faktura VAT</b><span>rozliczenie firmowe</span></div>
+          <div><b>Łódź</b><span>ul. Kolumny 267C</span></div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <section class="feedback">
+    <h2>Jak dać nam znać, co poprawić</h2>
+    <p>Nie trzeba używać fachowych określeń. Najbardziej pomocne są zdania w stylu
+      „A, ale jaśniejsze” albo „podoba nam się wykres z B, ale reszta jak w A”.
+      Kierunki można mieszać — to nie są zamknięte pakiety.</p>
+    <div class="fb-grid">
+      <div class="fb-item"><h4>Który kierunek jest najbliżej?</h4>
+        <p>I co konkretnie w nim nie pasuje — kolor, czcionka, zdjęcia, układ?</p></div>
+      <div class="fb-item"><h4>Co ma stać na pierwszym ekranie?</h4>
+        <p>Wyszukiwarka mocy (A, B) czy kalkulator dla flot (C)? To decyzja handlowa, nie graficzna.</p></div>
+      <div class="fb-item"><h4>Czy bramka na e-mail jest OK?</h4>
+        <p>W A i B wynik odsłania się po podaniu adresu. To buduje bazę kontaktów, ale część osób odpadnie.</p></div>
+      <div class="fb-item"><h4>Odświeżamy logo?</h4>
+        <p>Obecny znak ma chromowany gradient. Możemy zostawić albo zrobić wersję płaską.</p></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const CATALOG = __CATALOG__;
+__SCRIPT__
+</script>

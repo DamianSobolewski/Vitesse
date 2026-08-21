@@ -1,0 +1,19 @@
+/* Uproszczony wp-admin dla roli „Obsługa hamowni". */
+#wpbody-content .wrap > h1{font-size:26px}
+.vts-mb__f{display:grid;grid-template-columns:minmax(0,260px) minmax(0,200px);
+  gap:12px;align-items:center;margin:0 0 14px}
+.vts-mb__f label{font-weight:600;font-size:14px}
+.vts-mb__f input{padding:9px 11px;font-size:15px}
+.vts-mb__consent{margin:20px 0 0;padding:14px;background:#fff8e5;border:1px solid #f0d68a;
+  border-radius:4px;display:grid;gap:6px}
+.vts-mb__consent span{font-size:13px;color:#6b5b32}
+/* mniej rozpraszaczy w edytorze */
+#contextual-help-link-wrap,#screen-options-link-wrap,#wp-admin-bar-wp-logo,
+#postexcerpt,#trackbacksdiv,#commentstatusdiv,#slugdiv,#authordiv,#postcustom{display:none!important}
+
+/* edytor klasyczny — pola pomiaru mają być pierwsze, nie schowane pod treścią */
+#vts_dyno_data{margin-top:18px}
+#vts_dyno_data .postbox-header h2{font-size:15px}
+#wp-content-editor-tools,#post-body-content .wp-editor-tools{background:transparent}
+#postdivrich{margin-top:10px}
+#elementor-switch-mode,#elementor-editor-button{display:none!important}

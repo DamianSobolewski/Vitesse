@@ -1,0 +1,295 @@
+/* ============================================================
+   Vitesse — warstwa prezentacji (kierunek „Hamownia")
+   Nadpisuje hello-elementor. Kolejność ładowania: fonts → tokens → theme.
+   ============================================================ */
+
+*,*::before,*::after{box-sizing:border-box}
+
+body{
+  margin:0;background:var(--vts-bg);color:var(--vts-text);
+  font-family:var(--vts-font-body);font-size:var(--vts-step-0);line-height:1.62;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img{max-width:100%;height:auto}
+a{color:inherit}
+:where(a,button,input,select,textarea,summary):focus-visible{
+  outline:2px solid var(--vts-accent);outline-offset:2px;border-radius:2px;
+}
+::selection{background:var(--vts-accent);color:var(--vts-on-accent)}
+
+h1,h2,h3,h4{font-family:var(--vts-font-display);font-weight:700;letter-spacing:-.028em;
+  line-height:1.08;margin:0 0 var(--vts-gap-s);text-wrap:balance}
+h1{font-size:var(--vts-step-4);font-weight:800;font-style:italic;letter-spacing:-.035em;line-height:.99}
+h2{font-size:var(--vts-step-3)}
+h3{font-size:var(--vts-step-1)}
+p{margin:0 0 var(--vts-gap-s);text-wrap:pretty}
+p:last-child{margin-bottom:0}
+
+.vts-wrap{max-width:var(--vts-wide);margin-inline:auto;padding-inline:clamp(16px,4vw,30px)}
+.vts-narrow{max-width:var(--vts-content)}
+/* dwukolumnowy układ treści — zwija się na wąskich ekranach */
+.vts-split{display:grid;gap:var(--vts-gap-l);align-items:start;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.vts-split--wide-left{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}
+@media (max-width:900px){.vts-split,.vts-split--wide-left{grid-template-columns:minmax(0,1fr)}}
+.vts-eyebrow{font-family:var(--vts-font-mono);font-size:11.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--vts-accent);margin:0 0 var(--vts-gap-s);
+  display:flex;align-items:center;gap:10px}
+.vts-eyebrow::after{content:'';height:1px;flex:0 0 56px;background:currentColor;opacity:.45}
+.vts-lead{font-size:var(--vts-step-1);color:#C7CCD4;line-height:1.5;max-width:50ch}
+.vts-section{padding-block:var(--vts-gap-xl)}
+.vts-section + .vts-section{border-top:1px solid var(--vts-line-soft)}
+/* nagłówek strony ma własny odstęp dolny — pierwsza sekcja nie dokłada drugiego */
+.vts-hero + .vts-section{padding-top:var(--vts-gap-m)}
+
+/* --- przyciski --- */
+.vts-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:var(--vts-font-body);font-weight:700;font-size:14px;line-height:1;
+  padding:14px 22px;border-radius:var(--vts-radius);border:1px solid transparent;
+  text-decoration:none;cursor:pointer;transition:background .18s,border-color .18s,color .18s}
+.vts-btn--primary{background:var(--vts-accent);color:var(--vts-on-accent)}
+.vts-btn--primary:hover{background:var(--vts-accent-soft)}
+.vts-btn--ghost{background:transparent;color:var(--vts-text);border-color:var(--vts-line)}
+.vts-btn--ghost:hover{border-color:var(--vts-accent);color:var(--vts-accent)}
+
+/* --- pasek informacyjny --- */
+.vts-topbar{background:#0B0D11;border-bottom:1px solid var(--vts-line-soft);
+  font-size:12.5px;color:var(--vts-muted)}
+.vts-topbar .vts-wrap{display:flex;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;padding-block:9px}
+.vts-topbar a{color:var(--vts-text);font-weight:600;text-decoration:none}
+.vts-topbar a:hover{color:var(--vts-accent)}
+.vts-topbar__phones{display:flex;gap:20px;flex-wrap:wrap}
+
+/* --- nagłówek --- */
+.vts-header{position:sticky;top:0;z-index:50;background:rgba(15,17,22,.94);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--vts-line)}
+.vts-header .vts-wrap{display:flex;align-items:center;gap:var(--vts-gap-m);padding-block:14px}
+.vts-brand{font-family:var(--vts-font-display);font-weight:800;font-style:italic;
+  font-size:25px;letter-spacing:-.035em;text-decoration:none;line-height:1;white-space:nowrap}
+.vts-brand span{color:var(--vts-accent)}
+.vts-brand small{display:block;font-family:var(--vts-font-mono);font-style:normal;
+  font-weight:500;font-size:9px;letter-spacing:.24em;color:var(--vts-muted);margin-top:2px}
+
+.vts-nav{margin-left:auto}
+.vts-nav ul{list-style:none;display:flex;gap:22px;margin:0;padding:0}
+.vts-nav li{position:relative}
+.vts-nav a{font-size:14px;font-weight:600;text-decoration:none;padding-block:10px;
+  display:inline-block;white-space:nowrap}
+.vts-nav a:hover,.vts-nav .current-menu-item > a,.vts-nav .current-page-ancestor > a{color:var(--vts-accent)}
+/* rozwijane — bez JS, na :hover i :focus-within */
+.vts-nav .sub-menu{position:absolute;left:-14px;top:100%;min-width:250px;margin:0;padding:8px 0;
+  background:var(--vts-surface);border:1px solid var(--vts-line);border-radius:var(--vts-radius);
+  display:grid;gap:1px;opacity:0;visibility:hidden;transform:translateY(-5px);
+  transition:opacity .16s,transform .16s,visibility .16s;box-shadow:0 22px 44px -20px #000}
+.vts-nav li:hover > .sub-menu,.vts-nav li:focus-within > .sub-menu{opacity:1;visibility:visible;transform:none}
+.vts-nav .sub-menu a{display:block;padding:9px 16px;font-weight:500;font-size:13.5px;white-space:normal}
+.vts-nav .sub-menu a:hover{background:var(--vts-surface-2)}
+.vts-header__cta{flex:none}
+
+/* przełącznik menu na wąskich ekranach */
+.vts-burger{display:none;margin-left:auto;background:transparent;border:1px solid var(--vts-line);
+  color:var(--vts-text);border-radius:var(--vts-radius);padding:10px 13px;cursor:pointer;
+  font-family:var(--vts-font-mono);font-size:12px;letter-spacing:.1em}
+@media (max-width:1080px){
+  .vts-burger{display:block}
+  .vts-header__cta{display:none}
+  .vts-nav{position:fixed;inset:auto 0 0;top:var(--vts-header-h,64px);margin:0;
+    background:var(--vts-bg);border-top:1px solid var(--vts-line);
+    overflow-y:auto;padding:var(--vts-gap-s) 0 var(--vts-gap-l);display:none}
+  .vts-nav.is-open{display:block}
+  .vts-nav ul{flex-direction:column;gap:0;padding-inline:clamp(16px,4vw,30px)}
+  .vts-nav > ul > li{border-bottom:1px solid var(--vts-line-soft)}
+  .vts-nav a{padding-block:14px;font-size:16px}
+  .vts-nav .sub-menu{position:static;opacity:1;visibility:visible;transform:none;
+    border:0;background:transparent;box-shadow:none;padding:0 0 10px 14px;
+    border-left:1px solid var(--vts-line)}
+}
+
+/* --- hero --- */
+/* Warstwy układamy jawnie, bo kolejność ma znaczenie: światło musi trafić NAD
+   zdjęcie, ale POD przyciemnienie, inaczej albo go nie widać, albo tekst
+   przestaje być czytelny. */
+.vts-hero{position:relative;overflow:hidden;padding-block:clamp(44px,7vw,84px) var(--vts-gap-l);
+  isolation:isolate}
+.vts-hero__bg{position:absolute;inset:0;z-index:0;opacity:.9;
+  background-image:var(--vts-hero-img);background-size:cover;background-position:50% 50%}
+@media (max-width:640px){
+  .vts-hero__bg{background-image:var(--vts-hero-img-sm,var(--vts-hero-img))}
+}
+/* Zasłona ma tłumić zapalone na zdjęciu reflektory, więc NIE może być w warstwie
+   rozjaśniającej — tam kolor tła byłby niewidoczny. Stąd osobna warstwa nad tłem. */
+.vts-hero__veil{position:absolute;inset:0;z-index:1;pointer-events:none}
+.vts-hero__veil svg{position:absolute;inset:0;width:100%;height:100%}
+.vts-hero__light{position:absolute;inset:0;z-index:2;pointer-events:none;
+  mix-blend-mode:screen}
+.vts-hero__scrim{position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:linear-gradient(100deg,var(--vts-bg) 24%,rgba(15,17,22,.78) 54%,rgba(15,17,22,.36))}
+.vts-hero .vts-wrap{position:relative;z-index:4}
+.vts-hero__in{max-width:660px}
+
+/* Snopy świateł. Domyślnie ZAPALONE — jeśli JavaScript nie działa, użytkownik
+   widzi kompletny kadr, tylko bez sekwencji. */
+.vts-hero__beams{position:absolute;inset:0;width:100%;height:100%;opacity:.9}
+.vts-hero__glow{position:absolute;left:72%;top:49%;width:40%;height:22%;
+  transform:translate(-50%,-50%);opacity:.85;
+  background:radial-gradient(ellipse at center,
+    rgba(226,238,255,.20) 0%, rgba(191,214,255,.07) 52%, transparent 76%)}
+
+/* Stan wyjściowy sekwencji włącza dopiero skrypt (klasa na <html>). */
+.js-anim .vts-hero__beams,
+.js-anim .vts-hero__glow{opacity:0}
+.js-anim .vts-hero__veil{opacity:1}
+
+.js-anim .vts-hero.is-lit .vts-hero__beams{
+  animation:vts-ignite 1.6s cubic-bezier(.2,.7,.3,1) forwards}
+.js-anim .vts-hero.is-lit .vts-hero__glow{
+  animation:vts-ignite 1.6s cubic-bezier(.2,.7,.3,1) forwards,
+            vts-breathe 6s 1.7s ease-in-out infinite}
+.js-anim .vts-hero.is-lit .vts-hero__veil{
+  animation:vts-ignite-out 1.6s cubic-bezier(.2,.7,.3,1) forwards}
+
+/* Bez skryptu i przy ograniczonym ruchu zasłony nie ma — światła są zapalone. */
+.vts-hero__veil{opacity:0}
+
+/* Rozruch lampy: dwa mrugnięcia, potem równe narastanie. To mrugnięcie
+   odróżnia sekwencję od zwykłego pojawienia się. */
+@keyframes vts-ignite{
+   0%  {opacity:0}
+  13%  {opacity:0}
+  16%  {opacity:.55}
+  21%  {opacity:.06}
+  27%  {opacity:.80}
+  32%  {opacity:.14}
+  45%  {opacity:.52}
+ 100%  {opacity:.90}
+}
+/* Wejścia kart. Stan ukryty włącza wyłącznie klasa js-anim, którą dodaje skrypt —
+   bez JavaScriptu i przy ograniczonym ruchu nic nie znika. */
+.js-anim .vts-reveal{opacity:0;transform:translateY(12px)}
+.js-anim .vts-reveal.is-in{opacity:1;transform:none;
+  transition:opacity .5s cubic-bezier(.2,.7,.3,1),transform .5s cubic-bezier(.2,.7,.3,1)}
+
+@keyframes vts-ignite-out{
+   0%  {opacity:1}
+  13%  {opacity:1}
+  16%  {opacity:.45}
+  21%  {opacity:.94}
+  27%  {opacity:.20}
+  32%  {opacity:.86}
+  45%  {opacity:.48}
+ 100%  {opacity:0}
+}
+@keyframes vts-breathe{
+  0%,100%{transform:translate(-50%,-50%) scale(1)}
+  50%    {transform:translate(-50%,-50%) scale(1.06)}
+}
+
+/* --- paski liczbowe --- */
+.vts-stats{display:flex;gap:34px;flex-wrap:wrap;margin-top:var(--vts-gap-m)}
+.vts-stat{border-left:2px solid var(--vts-accent);padding-left:13px}
+.vts-stat b{display:block;font-family:var(--vts-font-display);font-weight:700;
+  font-size:var(--vts-step-1);letter-spacing:-.02em}
+.vts-stat span{font-family:var(--vts-font-mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--vts-muted)}
+
+/* --- karty --- */
+.vts-grid{display:grid;gap:var(--vts-gap-s);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))}
+.vts-card{background:var(--vts-surface);border:1px solid var(--vts-line);
+  border-radius:var(--vts-radius);padding:var(--vts-gap-m);text-decoration:none;display:block;
+  transition:border-color .18s,transform .18s}
+a.vts-card:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
+.vts-card h3{font-size:var(--vts-step-1);margin-bottom:8px}
+.vts-card p{color:var(--vts-muted);font-size:var(--vts-step--1);margin:0}
+.vts-card__n{font-family:var(--vts-font-mono);font-size:10.5px;letter-spacing:.14em;
+  color:var(--vts-accent);display:block;margin-bottom:12px}
+
+/* --- FAQ (natywne <details>, bez wtyczki) --- */
+.vts-faq{border-top:1px solid var(--vts-line)}
+.vts-faq details{border-bottom:1px solid var(--vts-line)}
+.vts-faq summary{cursor:pointer;list-style:none;padding:var(--vts-gap-s) 34px var(--vts-gap-s) 0;
+  font-family:var(--vts-font-display);font-weight:600;font-size:var(--vts-step-0);position:relative}
+.vts-faq summary::-webkit-details-marker{display:none}
+.vts-faq summary::after{content:'+';position:absolute;right:6px;top:50%;translate:0 -50%;
+  color:var(--vts-accent);font-size:20px;font-weight:400}
+.vts-faq details[open] summary::after{content:'–'}
+.vts-faq details > div{padding:0 0 var(--vts-gap-s);color:var(--vts-muted);max-width:72ch}
+
+/* --- okruszki --- */
+.vts-crumbs{font-size:12.5px;color:var(--vts-muted);padding-block:var(--vts-gap-s)}
+.vts-crumbs a{text-decoration:none}
+.vts-crumbs a:hover{color:var(--vts-accent)}
+.vts-crumbs span{margin-inline:7px;opacity:.5}
+
+/* --- stopka --- */
+.vts-footer{background:#0B0D11;border-top:1px solid var(--vts-line);
+  margin-top:var(--vts-gap-xl);padding-block:var(--vts-gap-l) var(--vts-gap-m)}
+.vts-footer__cols{display:grid;gap:var(--vts-gap-l);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,215px),1fr))}
+.vts-footer h4{font-family:var(--vts-font-mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--vts-muted);font-weight:500;margin:0 0 var(--vts-gap-s)}
+.vts-footer ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.vts-footer a{font-size:14px;text-decoration:none;color:#C7CCD4}
+.vts-footer a:hover{color:var(--vts-accent)}
+.vts-footer__meta{font-size:13px;color:var(--vts-muted);display:grid;gap:6px}
+.vts-footer__bottom{margin-top:var(--vts-gap-l);padding-top:var(--vts-gap-s);
+  border-top:1px solid var(--vts-line-soft);display:flex;justify-content:space-between;
+  gap:var(--vts-gap-s);flex-wrap:wrap;font-size:12.5px;color:var(--vts-dim)}
+/* dyskretne wejście do panelu wykresów — to wygoda, nie zabezpieczenie */
+.vts-footer__panel{opacity:.65}
+
+/* --- pływające CTA na mobile --- */
+.vts-fab{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;gap:1px;
+  background:var(--vts-line);border-top:1px solid var(--vts-line)}
+.vts-fab a{flex:1;text-align:center;padding:13px 8px;background:var(--vts-surface);
+  text-decoration:none;font-weight:700;font-size:13.5px}
+.vts-fab a.is-accent{background:var(--vts-accent);color:var(--vts-on-accent)}
+@media (max-width:720px){.vts-fab{display:flex}body{padding-bottom:52px}}
+
+@media (prefers-reduced-motion:reduce){
+  /* Samo skrócenie czasu nie wystarcza: animacja z iteracją nieskończoną nadal
+     się zapętla, tylko wielokrotnie szybciej, niepotrzebnie obciążając procesor.
+     Dlatego wymuszamy też pojedynczy przebieg. */
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
+
+/* --- katalog osiągów (strony wirtualne) --- */
+.vts-cat-grid{display:grid;gap:8px;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr))}
+.vts-cat-tile{background:var(--vts-surface);border:1px solid var(--vts-line);
+  border-radius:var(--vts-radius);padding:14px 16px;text-decoration:none;display:block;
+  transition:border-color .16s,background .16s}
+.vts-cat-tile:hover{border-color:var(--vts-accent);background:var(--vts-surface-2)}
+.vts-cat-tile b{display:block;font-family:var(--vts-font-display);font-weight:600;
+  font-size:15px;margin-bottom:3px}
+.vts-cat-tile span{font-family:var(--vts-font-mono);font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--vts-muted)}
+
+.vts-table-wrap{overflow-x:auto;border:1px solid var(--vts-line);border-radius:var(--vts-radius)}
+.vts-table{width:100%;border-collapse:collapse;font-size:14.5px;min-width:600px}
+.vts-table th{text-align:left;font-family:var(--vts-font-mono);font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--vts-muted);font-weight:500;
+  padding:12px 16px;border-bottom:1px solid var(--vts-line);background:var(--vts-surface)}
+.vts-table td{padding:12px 16px;border-bottom:1px solid var(--vts-line-soft);
+  font-variant-numeric:tabular-nums}
+.vts-table tr:last-child td{border-bottom:0}
+.vts-table tbody tr:hover{background:var(--vts-surface)}
+.vts-table a{color:var(--vts-text);text-decoration:none;font-weight:600}
+.vts-table a:hover{color:var(--vts-accent)}
+.vts-table__go{font-size:13px;color:var(--vts-accent)!important;white-space:nowrap}
+
+.vts-cat-siblings{list-style:none;padding:0;margin:0;display:grid;gap:1px;
+  background:var(--vts-line);border:1px solid var(--vts-line);border-radius:var(--vts-radius);
+  overflow:hidden}
+.vts-cat-siblings li{background:var(--vts-surface);padding:10px 14px;display:flex;
+  justify-content:space-between;gap:12px;font-size:14px}
+.vts-cat-siblings a{text-decoration:none}
+.vts-cat-siblings a:hover{color:var(--vts-accent)}
+.vts-cat-siblings span{font-family:var(--vts-font-mono);font-size:12.5px;color:var(--vts-muted);
+  font-variant-numeric:tabular-nums}

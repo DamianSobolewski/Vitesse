@@ -1,0 +1,54 @@
+/* ============================================================
+   Vitesse — tokeny systemu wizualnego
+   Kierunek „Hamownia": ciemny, warsztatowy, pomarańcz z logo.
+   Te same wartości trafiają do global kitu Elementora
+   (vts_configure_kit w content/import.php), żeby edytor
+   nie mógł ich nadpisać własnymi domyślnymi.
+   ============================================================ */
+:root{
+  /* --- tło i powierzchnie --- */
+  --vts-bg:        #0F1116;   /* grafit z lekkim odchyleniem w błękit */
+  --vts-surface:   #171A21;
+  --vts-surface-2: #1E222B;
+  --vts-line:      #262B35;
+  --vts-line-soft: #1F242D;
+
+  /* --- treść --- */
+  --vts-text:      #F1F2F4;
+  --vts-muted:     #8A919E;
+  --vts-dim:       #6A7280;
+
+  /* --- marka --- */
+  --vts-accent:      #FF7A00;  /* pomarańcz z logo, lekko przygaszony */
+  --vts-accent-soft: #FFB067;
+  --vts-accent-dim:  #1D1509;  /* tło podświetleń */
+  --vts-on-accent:   #0F1116;  /* tekst na pomarańczu — kontrast 5.9:1 */
+
+  /* --- semantyka --- */
+  --vts-ok:      #3DBE8B;
+  --vts-warn:    #E5A83C;
+  --vts-danger:  #E5544B;
+
+  /* --- typografia --- */
+  --vts-font-display: 'Archivo', system-ui, sans-serif;
+  --vts-font-body:    'IBM Plex Sans', system-ui, sans-serif;
+  --vts-font-mono:    'IBM Plex Mono', ui-monospace, monospace;
+
+  --vts-step--1: clamp(13px, .35vw + 12px, 14px);
+  --vts-step-0:  clamp(15px, .4vw + 14px, 17px);
+  --vts-step-1:  clamp(19px, .7vw + 17px, 23px);
+  --vts-step-2:  clamp(24px, 1.4vw + 20px, 32px);
+  --vts-step-3:  clamp(30px, 2.4vw + 23px, 44px);
+  --vts-step-4:  clamp(36px, 4.6vw + 22px, 66px);
+
+  /* --- rytm --- */
+  --vts-gap-xs: 8px;
+  --vts-gap-s:  14px;
+  --vts-gap-m:  24px;
+  --vts-gap-l:  44px;
+  --vts-gap-xl: 78px;
+
+  --vts-content: 780px;   /* szerokość tekstu czytanego */
+  --vts-wide:   1240px;   /* szerokość kontenera */
+  --vts-radius: 4px;      /* twardy, techniczny — nie zaokrąglamy hojnie */
+}

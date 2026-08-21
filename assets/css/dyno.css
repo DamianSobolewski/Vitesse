@@ -1,0 +1,24 @@
+/* Baza wykresów z hamowni. */
+.vts-dyno__filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:var(--vts-gap-m)}
+.vts-dyno__chip{font-size:13px;font-weight:600;text-decoration:none;padding:8px 14px;
+  border:1px solid var(--vts-line);border-radius:100px;color:var(--vts-muted);
+  transition:border-color .18s,color .18s}
+.vts-dyno__chip:hover,.vts-dyno__chip.is-active{border-color:var(--vts-accent);color:var(--vts-accent)}
+.vts-dyno__grid{display:grid;gap:var(--vts-gap-s);
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))}
+.vts-dyno__card{background:var(--vts-surface);border:1px solid var(--vts-line);
+  border-radius:var(--vts-radius);overflow:hidden;text-decoration:none;display:block;
+  transition:border-color .18s,transform .18s}
+.vts-dyno__card:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
+.vts-dyno__img{display:block;aspect-ratio:3/2;overflow:hidden;background:var(--vts-bg)}
+.vts-dyno__img img{width:100%;height:100%;object-fit:cover;display:block}
+.vts-dyno__body{display:block;padding:14px 16px}
+.vts-dyno__t{display:block;font-family:var(--vts-font-display);font-weight:600;
+  font-size:15px;margin-bottom:6px}
+.vts-dyno__v{font-family:var(--vts-font-mono);font-size:13px;color:var(--vts-muted);
+  font-variant-numeric:tabular-nums}
+.vts-dyno__v b{color:var(--vts-text);font-weight:500}
+.vts-dyno__v em{font-style:normal;color:var(--vts-accent)}
+.vts-dyno__empty{color:var(--vts-muted);grid-column:1/-1;padding:var(--vts-gap-m);
+  border:1px dashed var(--vts-line);border-radius:var(--vts-radius);text-align:center}
+.vts-dyno__more{margin-top:var(--vts-gap-m)}

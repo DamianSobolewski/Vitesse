@@ -1,0 +1,41 @@
+/* Kalkulator oszczędności flotowych. */
+.vts-calc{background:var(--vts-surface);border:1px solid var(--vts-line);
+  border-radius:var(--vts-radius);padding:var(--vts-gap-m)}
+.vts-calc__head h3{margin:0 0 4px}
+.vts-calc__head p{color:var(--vts-muted);font-size:var(--vts-step--1);margin:0 0 var(--vts-gap-m)}
+
+.vts-calc__fld{margin-bottom:17px}
+.vts-calc__top{display:flex;justify-content:space-between;align-items:baseline;
+  gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.vts-calc__top label{font-size:13.5px;color:var(--vts-muted)}
+.vts-calc__in{display:flex;align-items:center;gap:5px;background:var(--vts-bg);
+  border:1px solid var(--vts-line);border-radius:3px;padding:5px 9px}
+/* suwak sam nie wystarczy — na dotyku nie da się nim trafić w „37 pojazdów" */
+.vts-calc__in input{width:86px;border:0;background:transparent;text-align:right;
+  font-family:var(--vts-font-mono);font-size:14px;color:var(--vts-text);padding:2px 0;
+  font-variant-numeric:tabular-nums;-moz-appearance:textfield}
+.vts-calc__in input::-webkit-outer-spin-button,
+.vts-calc__in input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.vts-calc__in input:focus{outline:none}
+.vts-calc__in em{font-style:normal;font-size:12px;color:var(--vts-muted);white-space:nowrap}
+.vts-calc input[type=range]{width:100%;accent-color:var(--vts-accent);cursor:pointer;margin:0}
+
+.vts-calc__out{background:var(--vts-bg);border:1px solid var(--vts-line);
+  border-radius:var(--vts-radius);padding:20px;margin-top:var(--vts-gap-m)}
+.vts-calc__main{display:flex;justify-content:space-between;align-items:flex-end;
+  gap:14px;flex-wrap:wrap}
+.vts-calc__lab{display:block;font-family:var(--vts-font-mono);font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--vts-muted);margin-bottom:5px}
+.vts-calc__val{font-family:var(--vts-font-display);font-weight:800;font-size:clamp(30px,4vw,42px);
+  line-height:1;letter-spacing:-.03em;color:var(--vts-accent);margin:0;
+  font-variant-numeric:tabular-nums}
+.vts-calc__side{text-align:right}
+.vts-calc__side b{font-family:var(--vts-font-display);font-weight:700;font-size:20px;
+  font-variant-numeric:tabular-nums}
+.vts-calc__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));
+  gap:14px;margin-top:18px;padding-top:16px;border-top:1px solid var(--vts-line)}
+.vts-calc__grid span{display:block;font-size:11.5px;color:var(--vts-muted);margin-bottom:3px}
+.vts-calc__grid b{font-family:var(--vts-font-display);font-weight:700;font-size:17px;
+  font-variant-numeric:tabular-nums}
+.vts-calc__disclaim{margin:var(--vts-gap-s) 0 0;font-size:11.5px;color:var(--vts-muted);line-height:1.5}
+.vts-calc__cta{margin-top:var(--vts-gap-s)}

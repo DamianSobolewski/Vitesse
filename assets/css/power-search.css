@@ -1,0 +1,88 @@
+/* Wyszukiwarka mocy — panel pomiarowy (element sygnaturowy kierunku „Hamownia"). */
+
+.vts-ps{background:var(--vts-surface);border:1px solid var(--vts-line);
+  border-top:2px solid var(--vts-accent);border-radius:var(--vts-radius);
+  box-shadow:0 26px 60px -30px rgba(0,0,0,.9);margin-top:var(--vts-gap-m)}
+
+.vts-ps__head{display:flex;justify-content:space-between;align-items:center;gap:14px;
+  padding:15px 20px;border-bottom:1px solid var(--vts-line);flex-wrap:wrap}
+.vts-ps__title{font-family:var(--vts-font-display);font-weight:700;font-size:15px;letter-spacing:-.01em}
+.vts-ps__badge{font-family:var(--vts-font-mono);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--vts-muted);border:1px solid var(--vts-line);
+  padding:4px 8px;border-radius:2px;white-space:nowrap}
+
+.vts-ps__row{display:flex;align-items:center;gap:14px;padding:13px 20px;
+  border-bottom:1px solid var(--vts-line)}
+.vts-ps__row.is-off{opacity:.42}
+.vts-ps__n{font-family:var(--vts-font-mono);font-size:10px;color:var(--vts-accent);
+  letter-spacing:.1em;flex:0 0 16px}
+.vts-ps__row.is-off .vts-ps__n{color:var(--vts-muted)}
+.vts-ps__f{flex:1;min-width:0}
+.vts-ps__lab{font-family:var(--vts-font-mono);font-size:10px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--vts-muted);display:block;margin-bottom:7px}
+.vts-ps__tag{font-family:var(--vts-font-mono);font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--vts-muted);border:1px dashed var(--vts-line);
+  padding:3px 7px;border-radius:2px;flex:none}
+
+.vts-ps__cascade{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:900px){.vts-ps__cascade{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.vts-ps__cascade{grid-template-columns:1fr}}
+
+.vts-ps select,.vts-ps__fake{width:100%;background:var(--vts-bg);color:var(--vts-text);
+  border:1px solid var(--vts-line);border-radius:3px;padding:11px;font-size:14px;
+  font-family:inherit;appearance:none;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,var(--vts-muted) 50%),
+                   linear-gradient(135deg,var(--vts-muted) 50%,transparent 50%);
+  background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:32px;
+  text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
+.vts-ps select:disabled{color:var(--vts-dim);cursor:not-allowed;opacity:.7}
+.vts-ps__fake{color:var(--vts-muted);cursor:not-allowed;background-image:none;padding-right:11px}
+
+/* wynik */
+.vts-ps__out{padding:19px 20px}
+.vts-ps__res{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--vts-line);border:1px solid var(--vts-line);border-radius:3px;overflow:hidden}
+@media (max-width:640px){.vts-ps__res{grid-template-columns:1fr 1fr}}
+.vts-ps__cell{background:var(--vts-surface);padding:13px 14px}
+.vts-ps__cell span{font-family:var(--vts-font-mono);font-size:9.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--vts-muted);display:block;margin-bottom:5px}
+.vts-ps__cell b{font-family:var(--vts-font-display);font-weight:700;font-size:23px;
+  letter-spacing:-.02em;display:block;font-variant-numeric:tabular-nums}
+.vts-ps__cell.is-gain{background:var(--vts-accent-dim)}
+.vts-ps__cell.is-gain b{color:var(--vts-accent)}
+.vts-ps__cell.is-locked b{filter:blur(9px);opacity:.55;user-select:none}
+
+/* bramka */
+.vts-ps__gate{margin-top:15px;padding:15px;border:1px dashed var(--vts-accent);
+  border-radius:3px;background:#17130C}
+.vts-ps__gate[hidden]{display:none}
+.vts-ps__gate > p{margin:0 0 11px;font-size:13.5px;color:#D8DCE2}
+.vts-ps__gatef{display:flex;gap:8px;flex-wrap:wrap}
+.vts-ps__gate input[type=email]{flex:1;min-width:190px;background:var(--vts-bg);
+  border:1px solid var(--vts-line);color:var(--vts-text);border-radius:3px;
+  padding:12px;font-size:14px;font-family:inherit}
+.vts-ps__consent{display:flex;gap:9px;align-items:flex-start;margin-top:11px;
+  font-size:11.5px;color:var(--vts-muted);line-height:1.45;cursor:pointer}
+.vts-ps__consent input{margin-top:2px;accent-color:var(--vts-accent);flex:none}
+.vts-ps__consent a{color:var(--vts-accent)}
+.vts-ps__hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.vts-ps__err{margin:10px 0 0;font-size:13px;color:#FFB4AE}
+.vts-ps__err[hidden]{display:none}
+.vts-ps__note{margin:13px 0 0;font-size:12px;color:var(--vts-muted);line-height:1.5}
+.vts-ps__note[hidden]{display:none}
+.vts-ps__out[hidden]{display:none}
+
+.vts-ps__hint{padding:13px 20px;margin:0;font-size:12.5px;color:var(--vts-muted);
+  border-top:1px solid var(--vts-line)}
+.vts-ps__hint a{color:var(--vts-accent);text-decoration:none;font-weight:600}
+
+/* pełne wyniki po odsłonięciu */
+.vts-ps__full{display:grid;gap:1px;background:var(--vts-line);border:1px solid var(--vts-line);
+  border-radius:3px;overflow:hidden;margin-top:15px}
+.vts-ps__srv{background:var(--vts-surface);padding:14px 16px;display:flex;
+  align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.vts-ps__srv h4{margin:0;font-size:14px;font-family:var(--vts-font-display)}
+.vts-ps__srv-v{display:flex;gap:22px;font-family:var(--vts-font-mono);font-size:13px;
+  font-variant-numeric:tabular-nums}
+.vts-ps__srv-v b{color:var(--vts-accent);font-weight:500}

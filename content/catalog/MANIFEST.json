@@ -1,0 +1,12 @@
+{
+ "scraped_at": "2026-08-20T22:33:16",
+ "counts": {
+  "makes": 66,
+  "models": 604,
+  "generations": 1018,
+  "engines": 3268,
+  "gains": 5416
+ },
+ "pages_fetched": 1481,
+ "broken_pages": 84
+}

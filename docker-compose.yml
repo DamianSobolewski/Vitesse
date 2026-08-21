@@ -1,0 +1,106 @@
+services:
+  db:
+    image: mariadb:11.4
+    container_name: vts_db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  wordpress:
+    image: wordpress:6-php8.3-apache
+    container_name: vts_wordpress
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${WP_PORT}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${DB_NAME}
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_DEBUG: ${WP_DEBUG}
+      # Sekrety NIE trafiaja do wp_options - wylacznie srodowisko (plan §3).
+      VTS_TOKEN_SECRET: ${VTS_TOKEN_SECRET}
+      VTS_LEAD_SALT: ${VTS_LEAD_SALT}
+      VTS_LEAD_INBOX: ${VTS_LEAD_INBOX}
+      VTS_LEAD_INBOX_FLEET: ${VTS_LEAD_INBOX_FLEET}
+      VTS_OPENAI_API_KEY: ${VTS_OPENAI_API_KEY}
+    # dostep do Mailpit dzialajacego na hoscie (test wysylki formularzy)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - wp_data:/var/www/html
+      - ./config/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
+      - ./assets:/var/www/html/wp-content/vts-assets:ro
+      - ./mu-plugins:/var/www/html/wp-content/mu-plugins:ro
+      # Jedyny mount RW: Krzysiek wgrywa wykresy, uploady musza byc na hoscie (backup, przenaszalnosc)
+      - ./uploads:/var/www/html/wp-content/uploads
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: vts_phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${PMA_PORT}:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASSWORD}
+      UPLOAD_LIMIT: 256M
+
+  wpcli:
+    image: wordpress:cli-php8.3
+    container_name: vts_wpcli
+    depends_on:
+      db:
+        condition: service_healthy
+    user: "33:33"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${DB_NAME}
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      VTS_TOKEN_SECRET: ${VTS_TOKEN_SECRET}
+      VTS_LEAD_SALT: ${VTS_LEAD_SALT}
+      VTS_LEAD_INBOX: ${VTS_LEAD_INBOX}
+      VTS_LEAD_INBOX_FLEET: ${VTS_LEAD_INBOX_FLEET}
+    entrypoint: wp
+    command: "--info"
+    profiles: ["cli"]
+    volumes:
+      - wp_data:/var/www/html
+      - ./content:/content:ro
+      - ./mu-plugins:/var/www/html/wp-content/mu-plugins:ro
+      - ./assets:/var/www/html/wp-content/vts-assets:ro
+      - ./uploads:/var/www/html/wp-content/uploads
+
+  # Scraper katalogu i budowa mapy przekierowan. Powtarzalny u kazdego, nie tylko na tej maszynie.
+  tools:
+    image: node:22-alpine
+    container_name: vts_tools
+    working_dir: /work
+    entrypoint: ["node"]
+    command: ["--version"]
+    profiles: ["tools"]
+    volumes:
+      - ./tools:/work
+      - ./content:/content
+
+volumes:
+  db_data:
+  wp_data:

@@ -1,0 +1,28 @@
+.env
+.idea/
+.vscode/
+node_modules/
+# settings.local.json jest osobista konfiguracja, nie projektowa
+.claude/settings.local.json
+
+# Uploady WordPressa - tresc klienta, nie kod. Backup przez bin/backup.sh.
+uploads/*
+!uploads/.gitkeep
+
+# Surowy HTML ze scrape'u i lustro starego serwisu - duze, archiwizowane osobno.
+tools/scrape/raw/
+tools/scrape/mirror/
+tools/scrape/*.log
+
+# Wyniki testow
+test-results/
+playwright-report/
+
+# Playwright
+/node_modules/
+/package-lock.json
+/test-results/
+
+# Makiety budowane przez design/build.py — zrodlem sa .tpl.html + .js
+design/kierunki-wizualne.html
+design/kierunki-artifact.html
