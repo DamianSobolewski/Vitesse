@@ -192,9 +192,9 @@ foreach (vts_read('engines') as $e) {
         'slug'          => $e['slug'],
         'name'          => $e['name'],
         'fuel'          => $e['fuel'],
-        'stock_kw'      => $e['stock_kw'] ?: 0,
-        'stock_hp'      => $e['stock_hp'] ?: 0,
-        'stock_nm'      => $e['stock_nm'] ?: 0,
+        'stock_kw'      => $e['stock_kw'] ?? 0,
+        'stock_hp'      => $e['stock_hp'] ?? 0,
+        'stock_nm'      => $e['stock_nm'] ?? 0,
         'legacy_key'    => $e['legacy_key'],
         'search_blob'   => mb_substr($blob, 0, 255),
         'sort'          => $e['sort'],
@@ -222,15 +222,37 @@ foreach (vts_read('gains') as $g) {
     $rows[] = [
         'engine_id'    => $engine_id[$g['engine_legacy_key']],
         'service_code' => $g['service_code'],
-        'tuned_hp'     => $g['tuned_hp'],
-        'tuned_nm'     => $g['tuned_nm'],
+        'label'        => $g['label'] ?? null,
+        // Konfigurator V-techa podaje przyrosty, katalog Vitesse wartości po
+        // modyfikacji. Trzymamy oba pola i uzupełniamy to, co da się policzyć.
+        'gain_hp'      => $g['gain_hp'] ?? null,
+        'gain_nm'      => $g['gain_nm'] ?? null,
+        'tuned_hp'     => $g['tuned_hp'] ?? null,
+        'tuned_nm'     => $g['tuned_nm'] ?? null,
         'visibility'   => 1,
         'updated_at'   => $now,
     ];
 }
-vts_bulk($T('gain'), ['engine_id','service_code','tuned_hp','tuned_nm','visibility','updated_at'],
-    $rows, ['tuned_hp','tuned_nm','visibility','updated_at']);
+vts_bulk($T('gain'),
+    ['engine_id','service_code','label','gain_hp','gain_nm','tuned_hp','tuned_nm','visibility','updated_at'],
+    $rows, ['label','gain_hp','gain_nm','tuned_hp','tuned_nm','visibility','updated_at']);
 vts_log('przyrosty: ' . count($rows));
+
+/* ---------------------------------------------- wygaszenie starych rekordów
+ *
+ * Upsert stemplem `updated_at` dotyka wyłącznie rekordów obecnych w bieżącym
+ * imporcie. Wszystko, czego nie dotknął, pochodzi z poprzedniego źródła danych
+ * i przestaje być widoczne. Nie kasujemy — wiersz musi zostać, żeby przekierowania
+ * po starym kluczu miały dokąd prowadzić, a ponowny import mógł go przywrócić.
+ */
+$stale = 0;
+foreach (['gain', 'engine', 'generation', 'model', 'make'] as $t) {
+    $stale += (int) $wpdb->query($wpdb->prepare(
+        'UPDATE ' . $T($t) . ' SET visibility = 0 WHERE updated_at < %s AND visibility <> 0',
+        $now
+    ));
+}
+vts_log("wygaszone rekordy z poprzedniego źródła: {$stale}");
 
 /* ------------------------------------------- bramka jakości i liczniki */
 

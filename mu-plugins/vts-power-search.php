@@ -196,27 +196,57 @@ function vts_rest_lead(WP_REST_Request $r)
 
     $services = vts_services();
     $results  = [];
+    $stock_hp = (int) $path['stock_hp'];
+    $stock_nm = (int) $path['stock_nm'];   // 0 znaczy „nieznany" — V-tech nie podaje momentu fabrycznego
 
     foreach (vts_engine_gains($engine_id) as $g) {
         $code = $g['service_code'];
+
+        // Przyrost bierzemy wprost, jeśli jest zapisany; inaczej liczymy z wartości
+        // bezwzględnych. Dane z konfiguratora V-techa to delty, dane z katalogu
+        // Vitesse to wartości po modyfikacji — obsługujemy oba źródła.
+        $gain_hp = $g['gain_hp'] !== null
+            ? (int) $g['gain_hp']
+            : max(0, (int) $g['tuned_hp'] - $stock_hp);
+        $gain_nm = $g['gain_nm'] !== null
+            ? (int) $g['gain_nm']
+            : ($stock_nm > 0 ? max(0, (int) $g['tuned_nm'] - $stock_nm) : 0);
+
         $results[] = [
             'code'     => $code,
-            'label'    => $services[$code]['label'] ?? $code,
-            'tuned_hp' => (int) $g['tuned_hp'],
-            'tuned_nm' => (int) $g['tuned_nm'],
-            'gain_hp'  => (int) $g['tuned_hp'] - (int) $path['stock_hp'],
-            'gain_nm'  => (int) $g['tuned_nm'] - (int) $path['stock_nm'],
+            'label'    => $g['label'] ?: ($services[$code]['label'] ?? $code),
+            'gain_hp'  => $gain_hp,
+            'gain_nm'  => $gain_nm,
+            'tuned_hp' => $g['tuned_hp'] !== null ? (int) $g['tuned_hp'] : ($stock_hp ? $stock_hp + $gain_hp : null),
+            'tuned_nm' => $g['tuned_nm'] !== null ? (int) $g['tuned_nm'] : null,
             'price'    => $g['price_net'] !== null ? (float) $g['price_net'] : null,
         ];
     }
 
+    // Kafelki podsumowania pokazują JEDEN wariant — ten o największym przyroście
+    // mocy — a nie maksima z różnych produktów. Inaczej klient widziałby moc
+    // z jednego pakietu i moment z drugiego, czego nie da się kupić razem.
+    $top = null;
+    foreach ($results as $r) {
+        if ($top === null || $r['gain_hp'] > $top['gain_hp']) {
+            $top = $r;
+        }
+    }
+
     return [
         'vehicle'  => "{$path['make']} {$path['model']} {$path['generation']} · {$path['engine']}",
-        'stock_hp' => (int) $path['stock_hp'],
-        'stock_nm' => (int) $path['stock_nm'],
+        'stock_hp' => $stock_hp,
+        'stock_nm' => $stock_nm ?: null,
+        'best'     => $top ? [
+            'label'    => $top['label'],
+            'gain_hp'  => $top['gain_hp'],
+            'gain_nm'  => $top['gain_nm'],
+            'tuned_hp' => $top['tuned_hp'],
+        ] : null,
         'results'  => $results,
-        'note'     => 'Wartości orientacyjne, zależne od stanu technicznego pojazdu. '
-                    . 'Ostateczny wynik potwierdzamy pomiarem na hamowni.',
+        'note'     => 'Podane wartości to przyrosty względem stanu fabrycznego, orientacyjne '
+                    . 'i zależne od stanu technicznego pojazdu. Ostateczny wynik potwierdzamy '
+                    . 'pomiarem na hamowni przed modyfikacją i po niej.',
     ];
 }
 
@@ -286,9 +316,9 @@ add_shortcode('vts_power_search', function ($atts) {
       <div class="vts-ps__out" data-out hidden>
         <div class="vts-ps__res">
           <div class="vts-ps__cell"><span>Moc fabryczna</span><b data-f="shp">—</b></div>
-          <div class="vts-ps__cell"><span>Moment fabryczny</span><b data-f="snm">—</b></div>
           <div class="vts-ps__cell is-gain"><span>Po modyfikacji</span><b data-f="thp">—</b></div>
-          <div class="vts-ps__cell is-gain"><span>Moment po</span><b data-f="tnm">—</b></div>
+          <div class="vts-ps__cell is-gain"><span>Przyrost mocy</span><b data-f="ghp">—</b></div>
+          <div class="vts-ps__cell is-gain"><span>Przyrost momentu</span><b data-f="gnm">—</b></div>
         </div>
 
         <form class="vts-ps__gate" data-gate novalidate>

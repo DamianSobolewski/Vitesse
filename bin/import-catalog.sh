@@ -6,4 +6,6 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-docker compose --profile cli run --rm wpcli eval-file /content/import-catalog.php "$@"
+# Argumenty po "--" trafiają do skryptu, nie do wp-cli, które inaczej
+# odrzuca nieznane flagi jak --force.
+docker compose --profile cli run --rm wpcli eval-file /content/import-catalog.php -- "$@"

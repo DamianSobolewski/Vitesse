@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('VTS_DB_VERSION', '1.0.0');
+define('VTS_DB_VERSION', '1.1.0');
 
 /** Pełne nazwy tabel (z prefiksem instalacji). */
 function vts_table(string $name): string
@@ -106,9 +106,9 @@ function vts_schema_definitions(): array
   displacement smallint(5) unsigned DEFAULT NULL,
   ecu varchar(64) DEFAULT NULL,
   gearbox varchar(16) NOT NULL DEFAULT 'nieznana',
-  stock_kw smallint(5) unsigned NOT NULL DEFAULT 0,
-  stock_hp smallint(5) unsigned NOT NULL DEFAULT 0,
-  stock_nm smallint(5) unsigned NOT NULL DEFAULT 0,
+  stock_kw smallint(5) unsigned DEFAULT NULL,
+  stock_hp smallint(5) unsigned DEFAULT NULL,
+  stock_nm smallint(5) unsigned DEFAULT NULL,
   legacy_key varchar(190) DEFAULT NULL,
   search_blob varchar(255) NOT NULL DEFAULT '',
   visibility tinyint(3) unsigned NOT NULL DEFAULT 1,
@@ -125,9 +125,12 @@ function vts_schema_definitions(): array
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   engine_id int(10) unsigned NOT NULL,
   service_code varchar(32) NOT NULL,
+  label varchar(64) DEFAULT NULL,
   tuned_kw smallint(5) unsigned DEFAULT NULL,
   tuned_hp smallint(5) unsigned DEFAULT NULL,
   tuned_nm smallint(5) unsigned DEFAULT NULL,
+  gain_hp smallint(5) unsigned DEFAULT NULL,
+  gain_nm smallint(5) unsigned DEFAULT NULL,
   fuel_saving_pct decimal(4,1) DEFAULT NULL,
   price_net decimal(9,2) DEFAULT NULL,
   price_is_from tinyint(1) NOT NULL DEFAULT 1,

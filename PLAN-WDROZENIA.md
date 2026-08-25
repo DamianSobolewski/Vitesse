@@ -6,19 +6,33 @@ WordPress + Elementor FREE + Docker. Kierunek wizualny „Hamownia" (ciemny, war
 
 ## Uruchomienie
 
+Instrukcja krok po kroku, także dla świeżego serwera: **[README.md](README.md)**.
+W skrócie, na czystym środowisku:
+
 ```bash
-cp .env.example .env         # uzupełnij hasła i sekrety
-docker compose up -d         # WordPress :8090, phpMyAdmin :8091
-./bin/migrate.sh             # tabele katalogu i leadów
-./bin/import.sh              # strony, treść, menu, SEO, formularz
-./bin/import-catalog.sh      # katalog mocy z content/catalog/*.json
-./bin/seed-dev.sh            # dane demonstracyjne wykresów (TYLKO dev)
+cp .env.example .env                          # uzupełnij hasła i sekrety
+docker compose up -d
+./bin/bootstrap.sh https://adres-serwisu      # rdzeń WordPressa, motyw, wtyczki, konta
+./bin/migrate.sh                              # tabele katalogu i leadów
+./bin/import.sh                               # strony, treść, menu, SEO, formularz
+./bin/import-catalog.sh                       # katalog mocy z content/catalog/*.json
+./bin/seed-dev.sh                             # dane demonstracyjne (TYLKO nieprodukcyjne)
 ```
+
+Kolejność jest obowiązkowa. `bootstrap.sh` przyjmuje adres serwisu jako parametr, bo instalacja
+zapisuje go do bazy — serwis postawiony pod złym adresem będzie na niego przekierowywał z każdego
+innego hosta. Skrypt jest idempotentny.
 
 Logowanie: `/wp-admin`, dane w `.env` (`WP_ADMIN_USER`, `WP_ADMIN_PASSWORD`).
 Konto obsługi hamowni: `VTS_OPERATOR_USER` / `VTS_OPERATOR_PASSWORD`.
 
----
+`bootstrap.sh` włącza blokadę indeksowania (`blog_public = 0`). Obejmuje ona także strony
+wirtualne katalogu — WordPress sam by ich nie objął, a jest ich blisko pięć tysięcy.
+Zdjęcie blokady przed startem produkcyjnym:
+
+```bash
+docker compose --profile cli run --rm wpcli option update blog_public 1
+```
 
 ## Struktura repozytorium
 
@@ -87,42 +101,57 @@ przekierowaniach i sitemapie — i nie da się go przypadkiem pominąć.
 
 ## Katalog mocy
 
-Własne tabele, nie CPT: 3 268 wariantów silnikowych × 2 usługi to ~60 tys. wpisów
-w `wp_posts` i ~600 tys. w `wp_postmeta`. Kaskada byłaby wtedy `meta_query`
-z JOIN-ami po `LONGTEXT`, trzy razy na jedną interakcję w Hero.
+Własne tabele, nie CPT: tysiące wariantów silnikowych × kilka poziomów produktu to zbyt dużo,
+żeby trzymać je w `wp_posts`. Kaskada byłaby wtedy `meta_query` z JOIN-ami po `LONGTEXT`.
 
-Opublikowane: **55 marek, 512 modeli, 1006 generacji, 3210 silników**.
-Ukryte przez bramkę jakości: rekordy bez danych o przyroście.
+### Źródło danych: konfigurator V-techa
 
-Kluczem tożsamości jest `legacy_key` (wartość `?auto=` ze starego serwisu), nie slug —
-slug jest generowany i bywa zmienny. Ten sam indeks obsługuje matrycę 301.
+Dane pochodzą z **konfiguratora PowerChip V-techa** (`sklep.vtech.pl`), czyli od producenta,
+którego autoryzację Vitesse ma od 2008 roku. To lepsze źródło niż stary serwis klienta: zawsze
+aktualne i z pełnym podziałem na poziomy produktu.
 
-**Ponowny scrape:**
+Mechanizm rozpoznaliśmy na podstawie wtyczki *VT Konfigurator* (Signuply), której **nie instalujemy** —
+wzięliśmy z niej wiedzę, nie kod. Powody odrzucenia wtyczki:
+
+* nie ma bramki leadowej — pokazuje przyrosty od razu, co przekreśla główne wymaganie klienta,
+* wrzuca **całe drzewo (4,3 MB)** do HTML każdej strony przez `wp_localize_script`,
+* jej parser zbiera wszystkie karty do dwóch worków i zostawia ostatnią, przez co przy czterech
+  poziomach produktu pokazuje najwyżej dwa.
+
+Nasz scraper zapisuje **każdy poziom osobno**: PowerChip One, PowerChip Premium,
+PowerChip Premium + AI oraz Chip Tuning.
+
+### Marki spoza konfiguratora
+
+Konfigurator V-techa obejmuje pojazdy drogowe. Nie ma w nim **MAN-a** ani maszyn rolniczych
+(Fendt, Case), a „Chip tuning ciągników i maszyn" jest w ofercie Vitesse. Te marki dokładamy
+z katalogu starego serwisu — `tools/scrape/merge-catalog.py`. Marek występujących w obu źródłach
+nie scalamy, żeby uniknąć sprzecznych wartości; V-tech jest zawsze nadrzędny.
+
+### Przyrosty, nie wartości bezwzględne
+
+V-tech podaje **delty** (+KM / +Nm), stary katalog Vitesse podawał wartości po modyfikacji.
+Tabela `vts_gain` trzyma oba pola: `gain_hp`/`gain_nm` oraz `tuned_hp`/`tuned_nm`, a warstwa
+REST uzupełnia to, co da się policzyć. Moment fabryczny bywa nieznany — V-tech go nie podaje —
+i wtedy kolumna `stock_nm` ma 0, co kod traktuje jako brak danych, nie jako zero.
+
+### Przekierowania po podmianie katalogu
+
+Nowe rekordy nie mają kluczy `?auto=` ze starego serwisu, więc wyszukiwanie po `legacy_key`
+przestało wystarczać. `tools/scrape/map-legacy.py` dopasowuje stare klucze do nowych ścieżek
+(silniki po sygnaturze pojemność/rodzina/kW) i zapisuje mapę do `content/redirects/legacy-catalog.json`.
+Klucze bez dopasowania trafiają na przodka, nigdy na 404.
+
+### Odświeżenie katalogu
+
 ```bash
-python3 tools/scrape/scrape-catalog.py     # 4 poziomy, wznawialny, cache w raw/
-python3 tools/scrape/scrape-orphans.py     # modele bez poziomu generacji
-./bin/import-catalog.sh                    # upsert; --force omija ochronę -10%
+./bin/refresh-catalog.sh            # drzewo + wyniki + scalenie + mapa + import
+./bin/refresh-catalog.sh --tree     # samo drzewo, bez pobierania wyników
 ```
 
----
-
-## Animacja hero („zapłon")
-
-Zdjęcie pokazuje auto na wprost w ciemnym garażu. Reflektory na fotografii są zapalone, więc nie
-da się ich zgasić wprost — zamiast tego kładziemy na nie **zasłonę w kolorze dobranym z samego
-zdjęcia** i zdejmujemy ją z dwoma mrugnięciami (rozruch lampy). Potem zostaje delikatny oddech
-poświaty. Kolor zasłony to `#020303`, a nie kolor tła strony: otoczenie lamp na zdjęciu jest
-praktycznie czysto czarne i `#0F1116` zostawiał widoczne szare plamy.
-
-Kadr jest **złożony**: auto zmniejszono do połowy szerokości i dosunięto do prawej krawędzi,
-resztę płótna wypełniono czernią z miękkim wygaszeniem krawędzi. Bez tego całe auto nie mieści się
-obok nagłówka i wyszukiwarki, które zajmują lewe dwie trzecie sekcji.
-
-* Tło **nigdy nie jest animowane** — to element LCP. Animujemy wyłącznie warstwy nad nim.
-* Bez JavaScriptu światła są zapalone od razu; przy `prefers-reduced-motion` również.
-* Karty wjeżdżają przy przewijaniu, z przesunięciem 60 ms. Bloki tekstowe zostają nieruchome.
-* Warianty tła: `hero.webp` (1800 px) i `hero-sm.webp` (900 px) przez zmienne CSS,
-  z osobnymi wskazaniami `preload` per szerokość ekranu.
+Pobieranie wyników jest wznawialne (cache w `tools/scrape/raw-vtech/`). Scraper prosi o kompresję
+i zapisuje w cache tylko fragment z kartami produktów — pełna strona wyniku waży **4,66 MB**,
+bo V-tech osadza w niej całe drzewo pojazdów.
 
 ## Weryfikacja
 

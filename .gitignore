@@ -9,10 +9,12 @@ node_modules/
 uploads/*
 !uploads/.gitkeep
 
-# Surowy HTML ze scrape'u i lustro starego serwisu - duze, archiwizowane osobno.
+# Cache scraperow i lustro starego serwisu - odtwarzalne, archiwizowane osobno.
 tools/scrape/raw/
+tools/scrape/raw-vtech/
 tools/scrape/mirror/
 tools/scrape/*.log
+tools/scrape/*.html
 
 # Wyniki testow
 test-results/
@@ -26,3 +28,6 @@ playwright-report/
 # Makiety budowane przez design/build.py — zrodlem sa .tpl.html + .js
 design/kierunki-wizualne.html
 design/kierunki-artifact.html
+
+# Plik posredni scrapera — odtwarzany przez vtech-tree.py w kilka sekund.
+content/catalog/_combos.json

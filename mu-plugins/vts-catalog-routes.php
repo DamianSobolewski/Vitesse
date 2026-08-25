@@ -321,6 +321,14 @@ add_action('wp_head', function () {
     echo '<link rel="canonical" href="' . esc_url($canonical) . '">' . "\n";
     echo '<meta name="description" content="' . esc_attr(vts_catalog_intro($r)) . '">' . "\n";
 
+    // Strony katalogu są wirtualne, więc ustawienie „proś wyszukiwarki o nieindeksowanie"
+    // ich nie obejmuje — WordPress dokłada swój znacznik tylko do własnych stron.
+    // Bez tego warunku podgląd dla klienta wystawiłby kilka tysięcy stron do indeksu.
+    if (!get_option('blog_public')) {
+        echo '<meta name="robots" content="noindex,nofollow">' . "\n";
+        return;
+    }
+
     // Przełącznik odwrotu: gdyby Search Console zgłosiła problem z cienką treścią,
     // schodzimy poziom wyżej jedną komendą, bez zmian w adresach.
     $order = ['index' => 0, 'make' => 1, 'model' => 2, 'gen' => 3, 'engine' => 4];

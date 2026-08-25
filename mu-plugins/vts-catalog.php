@@ -32,12 +32,34 @@ function vts_visibility_sql(string $alias, ?string $feature = null): string
 function vts_services(): array
 {
     return [
+        // Poziomy PowerChip wg aktualnej oferty V-techa. Kolejność decyduje
+        // o kolejności wyświetlania — od najtańszego do najmocniejszego.
+        'powerchip-one' => [
+            'label'      => 'PowerChip One',
+            'short'      => 'One',
+            'desc'       => 'Podstawowy moduł Plug&Play. Montaż bez ingerencji w oprogramowanie, zdejmowany w kilkanaście minut.',
+            'show_price' => true,
+        ],
+        'powerchip-premium' => [
+            'label'      => 'PowerChip Premium',
+            'short'      => 'Premium',
+            'desc'       => 'Mocniejszy wariant modułu, z szerszym zakresem korekt.',
+            'show_price' => true,
+        ],
+        'powerchip-premium-ai' => [
+            'label'      => 'PowerChip Premium + AI',
+            'short'      => 'Premium + AI',
+            'desc'       => 'Najwyższy poziom modułu, z adaptacją do stylu jazdy.',
+            'show_price' => true,
+        ],
         'chip' => [
             'label'      => 'Chip tuning',
             'short'      => 'Chip',
             'desc'       => 'Modyfikacja oprogramowania sterownika. Pełny zakres zmian, wynik potwierdzony pomiarem.',
             'show_price' => true,
         ],
+        // Zostaje dla pojazdów spoza konfiguratora V-techa (MAN, maszyny rolnicze),
+        // gdzie dane pochodzą z katalogu Vitesse.
         'powerbox' => [
             'label'      => 'PowerBox',
             'short'      => 'Box',
@@ -45,6 +67,12 @@ function vts_services(): array
             'show_price' => true,
         ],
     ];
+}
+
+/** Kolejność wyświetlania wariantów usług. */
+function vts_service_order(): array
+{
+    return array_keys(vts_services());
 }
 
 /* ----------------------------------------------------------- odczyt danych */
@@ -134,11 +162,13 @@ function vts_engine_gains(int $engine_id): array
     global $wpdb;
     $t = vts_table('gain');
 
+    $order = "'" . implode("','", array_map('esc_sql', vts_service_order())) . "'";
+
     return $wpdb->get_results($wpdb->prepare(
-        "SELECT service_code, tuned_hp, tuned_nm, price_net, price_is_from
+        "SELECT service_code, label, tuned_hp, tuned_nm, gain_hp, gain_nm, price_net, price_is_from
            FROM {$t} g
           WHERE g.engine_id = %d" . vts_visibility_sql('g') . "
-          ORDER BY FIELD(g.service_code,'chip','powerbox'), g.service_code",
+          ORDER BY FIELD(g.service_code, {$order}), g.service_code",
         $engine_id
     ), ARRAY_A) ?: [];
 }

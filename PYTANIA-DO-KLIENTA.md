@@ -4,19 +4,33 @@ Krótka lista. Pierwsze cztery pozycje blokują konkretne etapy, reszta jest do 
 
 ---
 
-## 1. Skąd pochodzi baza mocy? — **blokuje cały katalog**
+## 1. Zgoda V-techa na pobieranie danych z konfiguratora — **pilne**
 
-Na `vitesse.auto.pl` jest katalog osiągów: ~70 marek, modele, generacje, warianty silnikowe
-z przyrostami mocy i momentu.
+Katalog osiągów na nowej stronie budujemy na danych z **konfiguratora PowerChip V-techa**
+(`sklep.vtech.pl`). To lepsze źródło niż stary serwis: dane pochodzą wprost od producenta,
+są zawsze aktualne i zawierają pełny podział na poziomy produktu — PowerChip One, Premium,
+Premium + AI oraz Chip Tuning.
 
-**Pytanie: czy te dane są własnością Vitesse, czy pochodzą z katalogu licencjonowanego
-przez dostawcę oprogramowania tuningowego?**
+Technicznie odczytujemy je z publicznie dostępnej strony konfiguratora, tak samo jak robi to
+wtyczka, którą Państwo przysłali. **Ale to nadal są dane handlowe V-techa**, a Vitesse jest
+ich autoryzowanym partnerem, nie właścicielem.
 
-Ma to znaczenie, bo jeśli baza jest licencjonowana, ponowna publikacja na nowym serwisie
-może naruszać warunki licencji oraz prawo do bazy danych. Wtedy katalog trzeba zaprojektować
-inaczej — a to najdłuższy etap całego projektu.
+Prosimy o wyjaśnienie z V-techem:
 
-Potrzebna też **pisemna zgoda na pobranie zawartości obecnego serwisu** do migracji.
+- Czy jako autoryzowany partner mogą Państwo prezentować te dane na własnej stronie?
+- Czy V-tech udostępnia do tego **oficjalne API albo plik**? To byłoby znacznie lepsze niż
+  odczytywanie danych ze strony — nie psuje się przy każdej zmianie wyglądu ich sklepu.
+- Czy jest zgoda na pokazywanie **wykresów mocy** z ich serwera?
+
+To pytanie blokuje publikację katalogu. Do czasu odpowiedzi wszystko działa lokalnie i nie jest
+widoczne dla klientów.
+
+## 1a. Skąd pochodzi baza w starym serwisie?
+
+Osobno: katalog na obecnej stronie zawiera marki, których u V-techa nie ma — **MAN** oraz maszyny
+rolnicze (Fendt, Case). Te dane przenosimy ze starego serwisu, bo „chip tuning ciągników i maszyn"
+jest w Państwa ofercie. Skąd pochodziły pierwotnie? Czy to Państwa własne pomiary, czy również
+materiał od dostawcy oprogramowania?
 
 ## 2. Dostępy — **blokuje przekierowania i pomiar**
 

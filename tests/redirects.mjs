@@ -1,17 +1,23 @@
 import fs from 'fs';
 const BASE = 'http://localhost:8090';
 
-// stare adresy .php z lustra + probka realnych kluczy katalogu
+// Stare adresy .php z lustra + próbka kluczy ?auto= ze starego serwisu.
+// Po przejściu na dane V-techa klucze nie są już w katalogu — źródłem prawdy
+// jest mapa wygenerowana przez tools/scrape/map-legacy.py.
 const files = fs.readFileSync('content/redirects/legacy-urls.txt', 'utf8').trim().split('\n');
-const engines = JSON.parse(fs.readFileSync('content/catalog/engines.json', 'utf8'));
-const gens    = JSON.parse(fs.readFileSync('content/catalog/generations.json', 'utf8'));
-const makes   = JSON.parse(fs.readFileSync('content/catalog/makes.json', 'utf8'));
+const map = JSON.parse(fs.readFileSync('content/redirects/legacy-catalog.json', 'utf8'));
+const keys = Object.keys(map);
 
 const pick = (arr, n) => arr.filter((_, i) => i % Math.max(1, Math.floor(arr.length / n)) === 0).slice(0, n);
+// próbka z każdego poziomu: marka (bez _), model, generacja, silnik (najwięcej podkreśleń)
+const byDepth = (d) => keys.filter(k => k.split('_').length === d);
 const catalog = [
-  ...pick(makes, 8).map(m => m.legacy_key),
-  ...pick(gens, 12).map(g => g.legacy_key),
-  ...pick(engines, 20).map(e => e.legacy_key),
+  ...pick(byDepth(1), 6),
+  ...pick(byDepth(2), 8),
+  ...pick(byDepth(3), 10),
+  ...pick(keys.filter(k => k.split('_').length >= 4), 16),
+  // klucz, którego w mapie nie ma — musi trafić na przodka, nie na 404
+  'Ford_Focus_III_nieistniejacy-silnik-999kW',
 ].filter(Boolean).map(k => '/chiptuning_lodz.php?auto=' + encodeURIComponent(k));
 
 const urls = [...files.map(f => '/' + f), ...catalog];

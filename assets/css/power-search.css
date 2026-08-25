@@ -86,3 +86,4 @@
 .vts-ps__srv-v{display:flex;gap:22px;font-family:var(--vts-font-mono);font-size:13px;
   font-variant-numeric:tabular-nums}
 .vts-ps__srv-v b{color:var(--vts-accent);font-weight:500}
+.vts-ps__srv-v em{font-style:normal;color:var(--vts-muted)}

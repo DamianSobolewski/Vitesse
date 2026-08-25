@@ -73,22 +73,115 @@ add_action('template_redirect', function () {
 }, 1);
 
 /**
- * Zamienia wartość ?auto=… na kanoniczny adres. Schodzi po poziomach: jeśli nie ma
- * silnika, próbuje generacji, potem modelu, potem marki — zamiast oddawać 404.
+ * Mapa starych kluczy ?auto= na nowe ścieżki katalogu.
+ *
+ * Po przejściu na dane V-techa rekordy nie mają już kluczy ze starego serwisu,
+ * więc wyszukiwanie po legacy_key przestało wystarczać. Mapę generuje
+ * tools/scrape/map-legacy.py przez dopasowanie slugów i sygnatur silników.
+ */
+function vts_legacy_catalog_map(): array
+{
+    static $map = null;
+    if ($map === null) {
+        $f = __DIR__ . '/vts-data/legacy-catalog.json';
+        $map = file_exists($f)
+            ? (json_decode(file_get_contents($f), true) ?: [])
+            : [];
+    }
+    return $map;
+}
+
+/**
+ * Zamienia wartość ?auto=… na kanoniczny adres. Kolejność prób:
+ * mapa → klucz w bazie (marki spoza konfiguratora V-techa zachowały stare klucze)
+ * → przodek, przez obcinanie od prawej. Zamiast 404 użytkownik trafia wyżej w drzewie.
  */
 function vts_resolve_legacy_catalog(string $auto): ?string
 {
-    global $wpdb;
-
     $auto = trim(str_replace("\xc2\xa0", ' ', $auto));
     if ($auto === '') {
         return null;
     }
 
+    $map = vts_legacy_catalog_map();
+    if (isset($map[$auto])) {
+        $url = vts_catalog_path_url($map[$auto]);
+        if ($url) {
+            return $url;
+        }
+    }
+
+    if ($url = vts_lookup_legacy_key($auto)) {
+        return $url;
+    }
+
+    if (str_contains($auto, '_')) {
+        return vts_resolve_legacy_catalog(substr($auto, 0, strrpos($auto, '_')));
+    }
+
+    return null;
+}
+
+/**
+ * Buduje adres ze ścieżki "marka/model/generacja/silnik", ucinając poziomy,
+ * których nie ma albo które są ukryte — dzięki temu nigdy nie kierujemy na 404.
+ */
+function vts_catalog_path_url(string $path): ?string
+{
+    global $wpdb;
+    $parts = array_values(array_filter(explode('/', $path)));
+    if (!$parts) {
+        return null;
+    }
+
+    $k = vts_table('make'); $o = vts_table('model');
+    $g = vts_table('generation'); $e = vts_table('engine');
+
+    $make = $wpdb->get_row($wpdb->prepare(
+        "SELECT id, slug FROM {$k} m WHERE m.slug = %s" . vts_visibility_sql('m', 'jlr_service'),
+        $parts[0]), ARRAY_A);
+    if (!$make) {
+        return null;
+    }
+    $out = [$make['slug']];
+
+    if (isset($parts[1])) {
+        $model = $wpdb->get_row($wpdb->prepare(
+            "SELECT id, slug FROM {$o} x WHERE x.make_id = %d AND x.slug = %s" . vts_visibility_sql('x'),
+            $make['id'], $parts[1]), ARRAY_A);
+        if ($model) {
+            $out[] = $model['slug'];
+
+            if (isset($parts[2])) {
+                $gen = $wpdb->get_row($wpdb->prepare(
+                    "SELECT id, slug FROM {$g} x WHERE x.model_id = %d AND x.slug = %s" . vts_visibility_sql('x'),
+                    $model['id'], $parts[2]), ARRAY_A);
+                if ($gen) {
+                    $out[] = $gen['slug'];
+
+                    if (isset($parts[3])) {
+                        $eng = $wpdb->get_var($wpdb->prepare(
+                            "SELECT slug FROM {$e} x WHERE x.generation_id = %d AND x.slug = %s" . vts_visibility_sql('x'),
+                            $gen['id'], $parts[3]));
+                        if ($eng) {
+                            $out[] = $eng;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return vts_catalog_url(...$out);
+}
+
+/** Marki spoza konfiguratora V-techa zachowały klucze ze starego serwisu. */
+function vts_lookup_legacy_key(string $auto): ?string
+{
+    global $wpdb;
     $e = vts_table('engine'); $g = vts_table('generation');
     $m = vts_table('model');  $k = vts_table('make');
 
-    // silnik
     $row = $wpdb->get_row($wpdb->prepare(
         "SELECT k.slug mk, o.slug md, g.slug gn, x.slug en
            FROM {$e} x
@@ -96,44 +189,18 @@ function vts_resolve_legacy_catalog(string $auto): ?string
            JOIN {$m} o ON o.id = g.model_id
            JOIN {$k} k ON k.id = o.make_id
           WHERE x.legacy_key = %s"
-              . vts_visibility_sql('x') . vts_visibility_sql('g')
-              . vts_visibility_sql('o') . vts_visibility_sql('k'), $auto), ARRAY_A);
+          . vts_visibility_sql('x') . vts_visibility_sql('g')
+          . vts_visibility_sql('o') . vts_visibility_sql('k'), $auto), ARRAY_A);
     if ($row) {
         return vts_catalog_url($row['mk'], $row['md'], $row['gn'], $row['en']);
     }
 
-    // generacja
-    $row = $wpdb->get_row($wpdb->prepare(
-        "SELECT k.slug mk, o.slug md, x.slug gn
-           FROM {$g} x
-           JOIN {$m} o ON o.id = x.model_id
-           JOIN {$k} k ON k.id = o.make_id
-          WHERE x.legacy_key = %s"
-              . vts_visibility_sql('x') . vts_visibility_sql('o') . vts_visibility_sql('k'), $auto), ARRAY_A);
-    if ($row) {
-        return vts_catalog_url($row['mk'], $row['md'], $row['gn']);
-    }
-
-    // model
-    $row = $wpdb->get_row($wpdb->prepare(
-        "SELECT k.slug mk, x.slug md
-           FROM {$m} x JOIN {$k} k ON k.id = x.make_id
-          WHERE x.legacy_key = %s"
-              . vts_visibility_sql('x') . vts_visibility_sql('k'), $auto), ARRAY_A);
-    if ($row) {
-        return vts_catalog_url($row['mk'], $row['md']);
-    }
-
-    // marka
-    $slug = $wpdb->get_var($wpdb->prepare(
-        "SELECT slug FROM {$k} x WHERE x.legacy_key = %s" . vts_visibility_sql('x'), $auto));
-    if ($slug) {
-        return vts_catalog_url($slug);
-    }
-
-    // nie znaleziono dokładnie — spróbuj przodka, obcinając od prawej
-    if (str_contains($auto, '_')) {
-        return vts_resolve_legacy_catalog(substr($auto, 0, strrpos($auto, '_')));
+    foreach ([[$g, 'generation'], [$m, 'model'], [$k, 'make']] as [$table, $_]) {
+        $slug = $wpdb->get_var($wpdb->prepare(
+            "SELECT slug FROM {$table} x WHERE x.legacy_key = %s" . vts_visibility_sql('x'), $auto));
+        if ($slug) {
+            return vts_catalog_path_url($slug);
+        }
     }
 
     return null;

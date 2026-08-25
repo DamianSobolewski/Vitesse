@@ -87,8 +87,7 @@
 
       clearResult();
       out.hidden = false;
-      field('shp').textContent = row.stock_hp + ' KM';
-      field('snm').textContent = row.stock_nm + ' Nm';
+      field('shp').textContent = row.stock_hp ? row.stock_hp + ' KM' : '—';
       field('veh').textContent = sel('make').selectedOptions[0].text + ' ' +
         sel('model').selectedOptions[0].text + ' ' + row.name;
     });
@@ -135,20 +134,24 @@
     function reveal(data) {
       gate.hidden = true;
 
-      var best = data.results[0];
-      if (best) {
-        var cells = root.querySelectorAll('.vts-ps__cell.is-gain');
-        cells[0].querySelector('b').textContent = best.tuned_hp + ' KM';
-        cells[1].querySelector('b').textContent = best.tuned_nm + ' Nm';
-        cells.forEach(function (c) { c.classList.remove('is-locked'); });
+      // Podsumowanie pokazuje jeden, najmocniejszy wariant; poziomy są rozpisane niżej.
+      var top = data.best;
+      if (top) {
+        field('thp').textContent = top.tuned_hp ? top.tuned_hp + ' KM' : '—';
+        field('ghp').textContent = '+' + top.gain_hp + ' KM';
+        field('gnm').textContent = top.gain_nm ? '+' + top.gain_nm + ' Nm' : '—';
+        root.querySelectorAll('.vts-ps__cell.is-gain')
+            .forEach(function (c) { c.classList.remove('is-locked'); });
       }
 
       var wrap = document.createElement('div');
       wrap.className = 'vts-ps__full';
       wrap.innerHTML = data.results.map(function (r) {
-        return '<div class="vts-ps__srv"><h4>' + r.label + '</h4><div class="vts-ps__srv-v">' +
-          '<span>moc <b>' + r.tuned_hp + ' KM</b> (+' + r.gain_hp + ')</span>' +
-          '<span>moment <b>' + r.tuned_nm + ' Nm</b> (+' + r.gain_nm + ')</span></div></div>';
+        var moc = '<span>moc <b>+' + r.gain_hp + ' KM</b>' +
+                  (r.tuned_hp ? ' <em>→ ' + r.tuned_hp + '</em>' : '') + '</span>';
+        var mom = r.gain_nm ? '<span>moment <b>+' + r.gain_nm + ' Nm</b></span>' : '';
+        return '<div class="vts-ps__srv"><h4>' + r.label + '</h4>' +
+               '<div class="vts-ps__srv-v">' + moc + mom + '</div></div>';
       }).join('');
       out.insertBefore(wrap, note);
 
