@@ -92,6 +92,11 @@ function vts_render_hero_light(): void
     // Pozycje lamp w jednostkach viewBox, przeliczone po złożeniu kadru
     // (auto dosunięte do prawej, lewa część płótna to czerń strony).
     $lamps = [['x' => 1069, 'y' => 612], ['x' => 1516, 'y' => 604]];
+
+    // Tylne światła są w kadrze pośrednio: nad dachem widać czerwoną łunę odbitą
+    // od ściany. Środek i półosie wyznaczone z samego zdjęcia — piksele, w których
+    // czerwień wyraźnie przewyższa pozostałe kanały (środek ciężkości 1298/451).
+    $tail = ['x' => 1298, 'y' => 451, 'rx' => 172, 'ry' => 48];
     ?>
     <div class="vts-hero__veil" aria-hidden="true">
       <svg viewBox="0 0 1800 1240" preserveAspectRatio="xMidYMid slice" focusable="false">
@@ -104,8 +109,12 @@ function vts_render_hero_light(): void
            czysta czerń, więc kolor tła strony (#0F1116) zostawiał widoczne szare plamy. -->
         <g filter="url(#vts-veil-blur)" fill="#020303">
           <?php foreach ($lamps as $l) : ?>
-            <ellipse cx="<?= $l['x'] ?>" cy="<?= $l['y'] + 40 ?>" rx="165" ry="125"/>
+            <ellipse cx="<?= $l['x'] ?>" cy="<?= $l['y'] + 40 ?>" rx="180" ry="135"/>
           <?php endforeach; ?>
+          <!-- bez tej elipsy tylna łuna paliłaby się przez całą sekwencję, gdy
+               przednie lampy są jeszcze zgaszone — i mrugnięcie by nie zagrało -->
+          <ellipse cx="<?= $tail['x'] ?>" cy="<?= $tail['y'] ?>"
+                   rx="<?= $tail['rx'] + 40 ?>" ry="<?= $tail['ry'] + 34 ?>"/>
         </g>
       </svg>
     </div>
@@ -115,27 +124,68 @@ function vts_render_hero_light(): void
            preserveAspectRatio="xMidYMid slice" focusable="false">
         <defs>
           <radialGradient id="vts-lamp-grad">
-            <stop offset="0"   stop-color="#FFFFFF" stop-opacity=".95"/>
-            <stop offset=".22" stop-color="#EAF2FF" stop-opacity=".55"/>
-            <stop offset=".6"  stop-color="#BFD6FF" stop-opacity=".16"/>
+            <stop offset="0"   stop-color="#FFFFFF" stop-opacity="1"/>
+            <stop offset=".14" stop-color="#FFFFFF" stop-opacity=".88"/>
+            <stop offset=".32" stop-color="#EAF2FF" stop-opacity=".50"/>
+            <stop offset=".64" stop-color="#BFD6FF" stop-opacity=".19"/>
             <stop offset="1"   stop-color="#BFD6FF" stop-opacity="0"/>
           </radialGradient>
+          <!-- rozżarzony rdzeń żarówki — bez niego lampa jest plamą, a nie źródłem -->
+          <radialGradient id="vts-core-grad">
+            <stop offset="0"   stop-color="#FFFFFF" stop-opacity="1"/>
+            <stop offset=".55" stop-color="#F4F9FF" stop-opacity=".72"/>
+            <stop offset="1"   stop-color="#EAF2FF" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="vts-tail-grad">
+            <stop offset="0"   stop-color="#FF5140" stop-opacity=".70"/>
+            <stop offset=".34" stop-color="#E62A18" stop-opacity=".38"/>
+            <stop offset=".72" stop-color="#B21A10" stop-opacity=".13"/>
+            <stop offset="1"   stop-color="#B21A10" stop-opacity="0"/>
+          </radialGradient>
           <radialGradient id="vts-floor-grad">
-            <stop offset="0"   stop-color="#DCE8FF" stop-opacity=".30"/>
-            <stop offset=".6"  stop-color="#BFD6FF" stop-opacity=".10"/>
+            <stop offset="0"   stop-color="#DCE8FF" stop-opacity=".38"/>
+            <stop offset=".6"  stop-color="#BFD6FF" stop-opacity=".13"/>
             <stop offset="1"   stop-color="#BFD6FF" stop-opacity="0"/>
           </radialGradient>
         </defs>
 
+        <!-- Tylne światła w tej samej warstwie co przednie: animacja zapłonu jest
+             na całym SVG, więc łuna mruga co do klatki tak samo jak reflektory. -->
+        <ellipse cx="<?= $tail['x'] ?>" cy="<?= $tail['y'] ?>"
+                 rx="<?= $tail['rx'] + 58 ?>" ry="<?= $tail['ry'] + 40 ?>"
+                 fill="url(#vts-tail-grad)"/>
+
         <?php foreach ($lamps as $l) : ?>
-          <ellipse cx="<?= $l['x'] ?>" cy="<?= $l['y'] ?>" rx="140" ry="92" fill="url(#vts-lamp-grad)"/>
+          <ellipse cx="<?= $l['x'] ?>" cy="<?= $l['y'] ?>" rx="176" ry="116" fill="url(#vts-lamp-grad)"/>
+          <ellipse cx="<?= $l['x'] ?>" cy="<?= $l['y'] ?>" rx="54" ry="36" fill="url(#vts-core-grad)"/>
         <?php endforeach; ?>
 
         <!-- odbicie na posadzce przed autem -->
-        <ellipse cx="1290" cy="880" rx="420" ry="110" fill="url(#vts-floor-grad)"/>
+        <ellipse cx="1290" cy="880" rx="440" ry="118" fill="url(#vts-floor-grad)"/>
       </svg>
 
       <span class="vts-hero__glow"></span>
+
+      <?php /* Światła awaryjne — zapala je przycisk na konsoli. Osobna warstwa,
+               więc sekwencja zapłonu jej nie dotyczy: awaryjne działają
+               niezależnie od reflektorów, tak jak w aucie. */ ?>
+      <svg class="vts-hero__hazard" viewBox="0 0 1800 1240"
+           preserveAspectRatio="xMidYMid slice" focusable="false" aria-hidden="true">
+        <defs>
+          <radialGradient id="vts-haz-grad">
+            <stop offset="0"   stop-color="#FFB25A" stop-opacity=".95"/>
+            <stop offset=".28" stop-color="#FF8A1E" stop-opacity=".60"/>
+            <stop offset=".66" stop-color="#FF7A00" stop-opacity=".20"/>
+            <stop offset="1"   stop-color="#FF7A00" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <?php foreach ($lamps as $l) : ?>
+          <ellipse cx="<?= $l['x'] ?>" cy="<?= $l['y'] ?>" rx="150" ry="100" fill="url(#vts-haz-grad)"/>
+        <?php endforeach; ?>
+        <ellipse cx="<?= $tail['x'] ?>" cy="<?= $tail['y'] ?>"
+                 rx="<?= $tail['rx'] + 50 ?>" ry="<?= $tail['ry'] + 34 ?>"
+                 fill="url(#vts-haz-grad)"/>
+      </svg>
     </div>
     <?php
 }
@@ -208,6 +258,52 @@ function vts_breadcrumbs(): string
          . implode('<span>/</span>', $crumbs) . '</nav>';
 }
 
+/* ----------------------------------------------------------- pas ze zdjęciem
+ *
+ * Rozdziela sekcje na podstronach, które były samym tekstem. Zdjęcia są
+ * stockowe i stonowane do palety, więc muszą być podpisane jako ilustracyjne —
+ * inaczej sugerowałyby, że to hala Vitesse, a nie jest.
+ */
+add_shortcode('vts_band', function ($atts) {
+    $a = shortcode_atts([
+        'img'     => '',
+        'alt'     => '',
+        'eyebrow' => '',
+        'title'   => '',
+    ], $atts);
+
+    $nazwa = preg_replace('/[^a-z0-9-]/', '', (string) $a['img']);
+    $plik  = "img/pas-{$nazwa}.webp";
+    $maly  = "img/pas-{$nazwa}-sm.webp";
+
+    if ($nazwa === '' || !file_exists(VTS_ASSETS_DIR . '/' . $plik)) {
+        return '';
+    }
+
+    $duzy_url = VTS_ASSETS_URL . '/' . $plik . '?v=' . vts_asset_ver($plik);
+    $maly_url = VTS_ASSETS_URL . '/' . $maly . '?v=' . vts_asset_ver($maly);
+
+    ob_start(); ?>
+    <figure class="vts-band">
+      <img src="<?= esc_url($duzy_url) ?>"
+           srcset="<?= esc_url($maly_url) ?> 900w, <?= esc_url($duzy_url) ?> 1800w"
+           sizes="(max-width:900px) 100vw, 1240px"
+           width="1800" height="675" loading="lazy" decoding="async"
+           alt="<?= esc_attr($a['alt']) ?>">
+      <figcaption>
+        <?php if ($a['eyebrow'] !== '') : ?>
+          <span class="vts-band__e"><?= esc_html($a['eyebrow']) ?></span>
+        <?php endif; ?>
+        <?php if ($a['title'] !== '') : ?>
+          <b><?= esc_html($a['title']) ?></b>
+        <?php endif; ?>
+        <span class="vts-band__note">zdjęcie ilustracyjne</span>
+      </figcaption>
+    </figure>
+    <?php
+    return ob_get_clean();
+});
+
 /* ------------------------------------------------------------------- FAQ */
 
 /** Jedno źródło pytań — używane na stronie głównej, w FAQ i w JSON-LD. */
@@ -257,10 +353,10 @@ add_shortcode('vts_contact_details', function () {
     $c = vts_company();
     ob_start(); ?>
     <div class="vts-card">
-      <h3>Warsztat</h3>
+      <h3><?= vts_icon('pin') ?>Warsztat</h3>
       <p style="color:var(--vts-text)"><?= esc_html($c['street']) ?><br>
         <?= esc_html($c['postal_code'] . ' ' . $c['city']) ?></p>
-      <h3 style="margin-top:var(--vts-gap-s)">Telefony</h3>
+      <h3 style="margin-top:var(--vts-gap-s)"><?= vts_icon('phone') ?>Telefony</h3>
       <p>
         <?php foreach ($c['phones'] as $p) : ?>
           <?= esc_html($p['label']) ?>:
@@ -268,10 +364,10 @@ add_shortcode('vts_contact_details', function () {
              style="color:var(--vts-accent);text-decoration:none;font-weight:600"><?= esc_html($p['number']) ?></a><br>
         <?php endforeach; ?>
       </p>
-      <h3 style="margin-top:var(--vts-gap-s)">E-mail</h3>
+      <h3 style="margin-top:var(--vts-gap-s)"><?= vts_icon('mail') ?>E-mail</h3>
       <p><a href="mailto:<?= esc_attr($c['email']) ?>"
             style="color:var(--vts-accent);text-decoration:none"><?= esc_html($c['email']) ?></a></p>
-      <h3 style="margin-top:var(--vts-gap-s)">Godziny</h3>
+      <h3 style="margin-top:var(--vts-gap-s)"><?= vts_icon('clock') ?>Godziny</h3>
       <p><?= esc_html($c['hours']['weekdays']['label']) ?>
         <?= esc_html($c['hours']['weekdays']['open'] . '–' . $c['hours']['weekdays']['close']) ?><br>
         <?= esc_html($c['hours']['saturday']['label']) ?>

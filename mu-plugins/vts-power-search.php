@@ -202,23 +202,33 @@ function vts_rest_lead(WP_REST_Request $r)
     foreach (vts_engine_gains($engine_id) as $g) {
         $code = $g['service_code'];
 
-        // Przyrost bierzemy wprost, jeśli jest zapisany; inaczej liczymy z wartości
-        // bezwzględnych. Dane z konfiguratora V-techa to delty, dane z katalogu
-        // Vitesse to wartości po modyfikacji — obsługujemy oba źródła.
-        $gain_hp = $g['gain_hp'] !== null
+        // Brak wartości to w tej tabeli ZERO, nie NULL — importer zapisuje to, co
+        // przychodzi ze źródła, a konfigurator V-techa podaje w nieużywanych polach
+        // zera. Wcześniejszy warunek `!== null` nie łapał więc niczego i moc po
+        // modyfikacji była pusta dla 11 277 z 11 514 wariantów. Traktujemy zero
+        // jako „nie wiadomo" i liczymy brakującą stronę z drugiej.
+        $zap_hp = (int) $g['tuned_hp'];
+        $zap_nm = (int) $g['tuned_nm'];
+
+        // Dane z konfiguratora V-techa to delty, dane ze starego katalogu Vitesse
+        // to wartości po modyfikacji — obsługujemy oba źródła.
+        $gain_hp = (int) $g['gain_hp'] > 0
             ? (int) $g['gain_hp']
-            : max(0, (int) $g['tuned_hp'] - $stock_hp);
-        $gain_nm = $g['gain_nm'] !== null
+            : max(0, $zap_hp - $stock_hp);
+        $gain_nm = (int) $g['gain_nm'] > 0
             ? (int) $g['gain_nm']
-            : ($stock_nm > 0 ? max(0, (int) $g['tuned_nm'] - $stock_nm) : 0);
+            : ($stock_nm > 0 ? max(0, $zap_nm - $stock_nm) : 0);
+
+        $tuned_hp = $zap_hp > 0 ? $zap_hp : ($stock_hp > 0 && $gain_hp > 0 ? $stock_hp + $gain_hp : null);
+        $tuned_nm = $zap_nm > 0 ? $zap_nm : ($stock_nm > 0 && $gain_nm > 0 ? $stock_nm + $gain_nm : null);
 
         $results[] = [
             'code'     => $code,
             'label'    => $g['label'] ?: ($services[$code]['label'] ?? $code),
             'gain_hp'  => $gain_hp,
             'gain_nm'  => $gain_nm,
-            'tuned_hp' => $g['tuned_hp'] !== null ? (int) $g['tuned_hp'] : ($stock_hp ? $stock_hp + $gain_hp : null),
-            'tuned_nm' => $g['tuned_nm'] !== null ? (int) $g['tuned_nm'] : null,
+            'tuned_hp' => $tuned_hp,
+            'tuned_nm' => $tuned_nm,
             'price'    => $g['price_net'] !== null ? (float) $g['price_net'] : null,
         ];
     }
@@ -270,77 +280,132 @@ add_shortcode('vts_power_search', function ($atts) {
     $makes  = vts_makes();
     $counts = vts_catalog_counts();
 
+    // Kaskada to nadal cztery natywne <select>. Zmieniamy obudowę, nie mechanizm:
+    // przy 61 markach i 4853 silnikach własna lista kosztowałaby systemowy wybór
+    // na telefonie, obsługę klawiatury i czytniki ekranu.
+    $slots = [
+        ['make',  'Marka'],
+        ['model', 'Model'],
+        ['gen',   'Generacja'],
+        ['eng',   'Silnik'],
+    ];
+
     ob_start(); ?>
-    <div class="vts-ps" data-vts-ps data-rest="<?= esc_attr(rest_url(VTS_NS)) ?>">
-      <div class="vts-ps__head">
-        <span class="vts-ps__title"><?= esc_html($a['title']) ?></span>
-        <span class="vts-ps__badge"><?= esc_html(number_format_i18n($counts['engine'])) ?> wersji silnikowych</span>
-      </div>
+    <div class="vts-con" data-vts-ps data-rest="<?= esc_attr(rest_url(VTS_NS)) ?>">
+      <div class="vts-con__deck">
+        <?php /* Kratki nawiewu i listwa przełączników to dekoracja obudowy: bez fokusu,
+                 bez zdarzeń, ukryte przed czytnikami. Klikalne atrapy były już w tym
+                 projekcie zgłoszone jako błąd — tests/cards.mjs pilnuje tego do dziś.
 
-      <div class="vts-ps__row is-off">
-        <span class="vts-ps__n">01</span>
-        <div class="vts-ps__f">
-          <span class="vts-ps__lab">Numer VIN</span>
-          <div class="vts-ps__fake">Wpisz VIN — rozpoznamy auto automatycznie</div>
-        </div>
-        <span class="vts-ps__tag">wkrótce</span>
-      </div>
+                 Kratki flankują SAM EKRAN, a nie całą fasadę — tak jest w aucie,
+                 a przy okazji nie zostaje pod nimi pusta kolumna obudowy. */ ?>
+        <div class="vts-con__unit">
 
-      <div class="vts-ps__row">
-        <span class="vts-ps__n">02</span>
-        <div class="vts-ps__f">
-          <span class="vts-ps__lab">Wybierz z listy</span>
-          <div class="vts-ps__cascade">
-            <select data-sel="make" aria-label="Marka">
-              <option value="" selected disabled>Marka</option>
-              <?php foreach ($makes as $m) : ?>
-                <option value="<?= esc_attr($m['slug']) ?>"><?= esc_html($m['name']) ?></option>
-              <?php endforeach; ?>
-            </select>
-            <select data-sel="model" aria-label="Model" disabled><option>Model</option></select>
-            <select data-sel="gen" aria-label="Generacja" disabled><option>Generacja</option></select>
-            <select data-sel="eng" aria-label="Silnik" disabled><option>Silnik</option></select>
+          <div class="vts-con__top">
+          <span class="vts-con__vent" aria-hidden="true"><b></b></span>
+          <div class="vts-con__bezel">
+          <div class="vts-con__screen">
+            <div class="vts-con__bar">
+              <span class="vts-con__title"><?= esc_html($a['title']) ?></span>
+              <span class="vts-con__count"><?= esc_html(number_format_i18n($counts['engine'])) ?> wersji</span>
+            </div>
+
+            <p class="vts-con__veh" data-f="veh">Wybierz pojazd z listy poniżej</p>
+
+            <div class="vts-con__read">
+              <div class="vts-con__cell">
+                <span>Moc fabryczna</span><b data-f="shp">– – –</b>
+              </div>
+              <div class="vts-con__cell">
+                <span>Moment fabr.</span><b data-f="snm">– – –</b>
+              </div>
+              <div class="vts-con__cell is-gain is-locked">
+                <span>Po modyfikacji</span><b data-f="thp">– – –</b>
+              </div>
+              <div class="vts-con__cell is-gain is-locked">
+                <span>Przyrost mocy</span><b data-f="ghp">– – –</b>
+              </div>
+            </div>
+          </div>
+          </div>
+          <span class="vts-con__vent" aria-hidden="true"><b></b></span>
+          </div>
+
+          <div class="vts-con__trim" aria-hidden="true"></div>
+
+          <div class="vts-con__slots">
+            <?php foreach ($slots as $n => [$key, $label]) : ?>
+              <label class="vts-con__slot">
+                <span class="vts-con__slot-l"><?= esc_html($label) ?></span>
+                <select data-sel="<?= esc_attr($key) ?>" aria-label="<?= esc_attr($label) ?>"
+                        <?= $key === 'make' ? '' : 'disabled' ?>>
+                  <option value="" selected disabled><?= esc_html($label) ?></option>
+                  <?php if ($key === 'make') : foreach ($makes as $m) : ?>
+                    <option value="<?= esc_attr($m['slug']) ?>"><?= esc_html($m['name']) ?></option>
+                  <?php endforeach; endif; ?>
+                </select>
+              </label>
+            <?php endforeach; ?>
+          </div>
+
+          <?php /* Presety wariantu — jak przyciski w radiu. Do czasu otwarcia bramki
+                   nie ma czym ich wypełnić, więc są wyłączone i wyglądają na wyłączone. */ ?>
+          <div class="vts-con__presets" role="group" aria-label="Wariant usługi">
+            <?php foreach (vts_services() as $code => $srv) : ?>
+              <button type="button" class="vts-con__preset" data-srv="<?= esc_attr($code) ?>"
+                      disabled><i aria-hidden="true"></i><?= esc_html($srv['short']) ?></button>
+            <?php endforeach; ?>
+          </div>
+
+          <p class="vts-con__soon">Odczyt z numeru VIN i asystent AI — <b>wkrótce</b></p>
+
+          <div data-out hidden>
+            <form class="vts-con__gate" data-gate novalidate>
+              <p>Wynik dla <b data-f="veh2">—</b> jest gotowy. Zostaw adres e-mail,
+                 a odsłonimy wartości po modyfikacji.</p>
+              <div class="vts-con__gatef">
+                <input type="email" name="email" required placeholder="twoj@email.pl" aria-label="Adres e-mail">
+                <button class="vts-btn vts-btn--primary" type="submit">Pokaż wynik</button>
+              </div>
+              <label class="vts-con__consent">
+                <input type="checkbox" name="consent" required>
+                <span><?= esc_html(vts_consent_text()) ?>
+                  <a href="<?= esc_url(home_url('/polityka-prywatnosci/')) ?>">Polityka prywatności</a>.</span>
+              </label>
+              <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" class="vts-con__hp">
+              <p class="vts-con__err" data-err hidden></p>
+            </form>
+
+            <p class="vts-con__note" data-note hidden></p>
           </div>
         </div>
+
       </div>
 
-      <div class="vts-ps__row is-off">
-        <span class="vts-ps__n">03</span>
-        <div class="vts-ps__f">
-          <span class="vts-ps__lab">Opisz własnymi słowami</span>
-          <div class="vts-ps__fake">„mam golfa siódemkę 2.0 tdi” — asystent dobierze wersję</div>
+      <?php /* Listwa pod radiem. Pokrętła i przełączniki to fasada — aria-hidden,
+               bez zdarzeń, kursor domyślny.
+
+               Wyjątkiem jest trójkąt świateł awaryjnych: to prawdziwy przycisk,
+               który zapala awaryjne w aucie na zdjęciu obok. Dzięki temu jedyny
+               element, który wygląda na przycisk, faktycznie nim jest — reszta
+               blachy nie udaje sterowania. Kontener NIE może być aria-hidden,
+               bo element z fokusem w ukrytym poddrzewie to błąd dostępności. */ ?>
+      <div class="vts-con__hvac">
+        <span class="vts-con__knob" aria-hidden="true"></span>
+        <div class="vts-con__hvac-mid">
+          <i class="vts-con__sw" aria-hidden="true"></i>
+          <i class="vts-con__sw" aria-hidden="true"></i>
+          <button type="button" class="vts-con__hazard" data-hazard
+                  aria-pressed="false" title="Światła awaryjne">
+            <span class="screen-reader-text">Światła awaryjne</span>
+          </button>
+          <i class="vts-con__sw" aria-hidden="true"></i>
+          <i class="vts-con__sw" aria-hidden="true"></i>
         </div>
-        <span class="vts-ps__tag">wkrótce</span>
+        <span class="vts-con__knob" aria-hidden="true"></span>
       </div>
 
-      <div class="vts-ps__out" data-out hidden>
-        <div class="vts-ps__res">
-          <div class="vts-ps__cell"><span>Moc fabryczna</span><b data-f="shp">—</b></div>
-          <div class="vts-ps__cell is-gain"><span>Po modyfikacji</span><b data-f="thp">—</b></div>
-          <div class="vts-ps__cell is-gain"><span>Przyrost mocy</span><b data-f="ghp">—</b></div>
-          <div class="vts-ps__cell is-gain"><span>Przyrost momentu</span><b data-f="gnm">—</b></div>
-        </div>
-
-        <form class="vts-ps__gate" data-gate novalidate>
-          <p>Wynik dla <b data-f="veh">—</b> jest gotowy. Zostaw adres e-mail, a pokażemy
-             pełne wartości po modyfikacji.</p>
-          <div class="vts-ps__gatef">
-            <input type="email" name="email" required placeholder="twoj@email.pl" aria-label="Adres e-mail">
-            <button class="vts-btn vts-btn--primary" type="submit">Pokaż wynik</button>
-          </div>
-          <label class="vts-ps__consent">
-            <input type="checkbox" name="consent" required>
-            <span><?= esc_html(vts_consent_text()) ?>
-              <a href="<?= esc_url(home_url('/polityka-prywatnosci/')) ?>">Polityka prywatności</a>.</span>
-          </label>
-          <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" class="vts-ps__hp">
-          <p class="vts-ps__err" data-err hidden></p>
-        </form>
-
-        <p class="vts-ps__note" data-note hidden></p>
-      </div>
-
-      <p class="vts-ps__hint">Nie ma Twojej wersji? Zadzwoń —
+      <p class="vts-con__hint">Nie ma Twojej wersji? Zadzwoń —
         <a href="<?= esc_attr(vts_phone_href(vts_company()['phones']['tuning']['number'])) ?>">
           <?= esc_html(vts_company()['phones']['tuning']['number']) ?></a>
         — często mamy rozwiązanie, którego nie ma w katalogu.</p>

@@ -67,7 +67,7 @@ function vts_render_header(): void
     ?>
     <div class="vts-topbar">
       <div class="vts-wrap">
-        <span><?= esc_html("{$c['street']}, {$c['postal_code']} {$c['city']}") ?> ·
+        <span class="vts-topbar__where"><?= esc_html("{$c['street']}, {$c['postal_code']} {$c['city']}") ?> ·
           <?= esc_html($c['hours']['weekdays']['label']) ?>
           <?= esc_html($c['hours']['weekdays']['open'] . '–' . $c['hours']['weekdays']['close']) ?></span>
         <span class="vts-topbar__phones">

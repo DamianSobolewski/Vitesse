@@ -117,6 +117,25 @@ Prosimy o informację:
 - Zdjęcia: warsztat, hamownia, zespół, przykładowe realizacje
 - Certyfikaty i materiały prasowe, jeśli mają zostać
 
+### 9a. Zdjęcia hamowni — pytanie z konkretną odpowiedzią do podjęcia
+
+Podstrony rozdzielone są ciemnymi pasami ze zdjęciami stockowymi (licencja Unsplash, opisane
+w `assets/img/CREDITS.md`). **Podstrona `/hamownia/` została bez zdjęcia świadomie** — nie ma
+sensownego stocku pokazującego hamownię podwoziową.
+
+W materiałach po starym serwisie jest **osiem własnych zdjęć Waszego stanowiska**: hala, rolki,
+dmuchawa, auta osobowe, dostawcze, ciągnik siodłowy i autobus na stanowisku. Są dużo lepsze niż
+cokolwiek kupionego. Żeby ich użyć, potrzebujemy rozstrzygnąć:
+
+1. **Czy mamy zgody właścicieli pojazdów na publikację?** Na zdjęciach widać oklejenia firm
+   (MARK-TRANS-SPED, TOPLINE, przewoźnik autobusowy) i tablice rejestracyjne.
+2. Jeśli zgód nie ma — **czy zamazać tablice i logotypy?** Technicznie prosta rzecz, tylko musi
+   być Wasza decyzja, bo zmienia wymowę zdjęcia.
+3. Najlepsze wyjście: **kilka nowych zdjęć pustego stanowiska** albo z autem, na które zgodę
+   macie. Wtedy nie ma tematu i zdjęcia są w pełni Wasze.
+
+To samo dotyczy czterech zdjęć demonstracyjnych w bazie wykresów (`content/dyno/seed/`).
+
 ## 10. Hosting docelowy
 
 Gdzie ma stanąć nowy serwis? Potrzebny dostęp SSH i do panelu DNS.

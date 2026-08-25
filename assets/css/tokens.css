@@ -52,3 +52,14 @@
   --vts-wide:   1240px;   /* szerokość kontenera */
   --vts-radius: 4px;      /* twardy, techniczny — nie zaokrąglamy hojnie */
 }
+
+/* Rytm pionowy jest dobrany pod desktop. Na telefonie te same 78 px między
+ * sekcjami czytają się jak dziury, a nie jak oddech, i zmuszają do dłuższego
+ * przewijania. Skalujemy same zmienne — pojedynczych sekcji nie dotykamy. */
+@media (max-width: 720px) {
+  :root {
+    --vts-gap-xl: 48px;
+    --vts-gap-l:  30px;
+    --vts-gap-m:  20px;
+  }
+}

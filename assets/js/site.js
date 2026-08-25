@@ -52,22 +52,67 @@
     }
   }
 
+  /* --------------------------------------------------- światła awaryjne
+   *
+   * Trójkąt na konsoli zapala awaryjne w aucie na zdjęciu. Efekt jest w całości
+   * w CSS — skrypt tylko przełącza klasę i stan przycisku, więc przy wyłączonym
+   * JavaScripcie przycisk po prostu nic nie robi i nic się nie psuje.
+   */
+  var hazard = document.querySelector('[data-hazard]');
+  if (hazard && hero) {
+    hazard.addEventListener('click', function () {
+      var on = hero.classList.toggle('is-hazard');
+      hazard.setAttribute('aria-pressed', String(on));
+    });
+  }
+
+  /* ------------------------------------------------------- menu mobilne
+   *
+   * Menu jest nakładką na cały ekran, ale ma zostać POD nagłówkiem, żeby
+   * przycisk zamknięcia był widoczny i klikalny. Odstęp od góry liczymy
+   * z realnej dolnej krawędzi nagłówka w chwili otwarcia: nagłówek jest
+   * przyklejony, a pasek kontaktowy odjeżdża przy przewijaniu, więc sztywna
+   * wartość myliłaby się przy większości pozycji strony.
+   */
   if (burger && nav) {
-    burger.addEventListener('click', function () {
-      var open = nav.classList.toggle('is-open');
+    var setMenu = function (open) {
+      if (open) {
+        var bottom = header ? header.getBoundingClientRect().bottom : 64;
+        document.documentElement.style.setProperty(
+          '--vts-chrome-h', Math.max(0, Math.round(bottom)) + 'px');
+      }
+      nav.classList.toggle('is-open', open);
+      // klasa na obu elementach: przewijaniem steruje <html>, nie <body>
+      document.documentElement.classList.toggle('vts-menu-open', open);
+      document.body.classList.toggle('vts-menu-open', open);
       burger.setAttribute('aria-expanded', String(open));
       burger.textContent = open ? 'ZAMKNIJ' : 'MENU';
+    };
+
+    burger.addEventListener('click', function () {
+      setMenu(!nav.classList.contains('is-open'));
+    });
+
+    // Kliknięcie pozycji zamyka menu. Bez tego blokada przewijania zostawałaby
+    // na stronie docelowej wszędzie tam, gdzie odnośnik prowadzi do kotwicy
+    // i strona się nie przeładowuje.
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) setMenu(false);
     });
 
     // Escape zamyka menu i oddaje focus przyciskowi
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && nav.classList.contains('is-open')) {
-        nav.classList.remove('is-open');
-        burger.setAttribute('aria-expanded', 'false');
-        burger.textContent = 'MENU';
+        setMenu(false);
         burger.focus();
       }
     });
+
+    // Po obrocie na poziomo albo powiększeniu okna nakładka przestaje
+    // obowiązywać — zdejmujemy blokadę, żeby strona nie została zamrożona.
+    addEventListener('resize', function () {
+      if (nav.classList.contains('is-open') && innerWidth > 1080) setMenu(false);
+    }, { passive: true });
   }
 
   /* ------------------------------------------------- delikatne wejścia kart

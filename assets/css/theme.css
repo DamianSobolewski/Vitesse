@@ -60,6 +60,21 @@ p:last-child{margin-bottom:0}
 .vts-topbar a{color:var(--vts-text);font-weight:600;text-decoration:none}
 .vts-topbar a:hover{color:var(--vts-accent)}
 .vts-topbar__phones{display:flex;gap:20px;flex-wrap:wrap}
+/* Adres z godzinami łamie się na telefonie na dwie linie i zjada ~50 px na
+ * każdej podstronie. Zostaje w stopce, na stronie Kontakt i w danych
+ * strukturalnych — w pasku zostawiamy same telefony, bo podział na Tuning
+ * i Floty ma znaczenie handlowe, a dolny pasek dzwoni tylko pod jeden numer. */
+@media (max-width:720px){
+  .vts-topbar__where{display:none}
+  .vts-topbar .vts-wrap{justify-content:center}
+  .vts-topbar__phones{gap:6px 18px;justify-content:center;align-items:center}
+  /* numer w pasku to samodzielny przycisk, nie odnosnik w zdaniu — 16 px
+   * wysokosci to za malo na palec */
+  .vts-topbar__phones a{display:inline-flex;align-items:center;min-height:40px}
+  /* wysokosc paska daje teraz sam przycisk — wlasny odstep pionowy by sie
+   * do niej tylko dodal i zjadl ekran */
+  .vts-topbar .vts-wrap{padding-block:2px}
+}
 
 /* --- nagłówek --- */
 .vts-header{position:sticky;top:0;z-index:50;background:rgba(15,17,22,.94);
@@ -91,19 +106,56 @@ p:last-child{margin-bottom:0}
 .vts-burger{display:none;margin-left:auto;background:transparent;border:1px solid var(--vts-line);
   color:var(--vts-text);border-radius:var(--vts-radius);padding:10px 13px;cursor:pointer;
   font-family:var(--vts-font-mono);font-size:12px;letter-spacing:.1em}
+/* hello-elementor maluje button:focus/:hover na malinowy #c36 i wygrywa
+ * specyficznoscia z sama klasa. Przycisk menu jest jedynym miejscem, gdzie ten
+ * obcy kolor przechodzil — po dotknieciu stan zostaje na telefonie na stale. */
+.vts-burger:hover,.vts-burger:focus,.vts-burger:active{
+  background:transparent;border-color:var(--vts-accent);color:var(--vts-accent)}
+
 @media (max-width:1080px){
   .vts-burger{display:block}
   .vts-header__cta{display:none}
-  .vts-nav{position:fixed;inset:auto 0 0;top:var(--vts-header-h,64px);margin:0;
-    background:var(--vts-bg);border-top:1px solid var(--vts-line);
-    overflow-y:auto;padding:var(--vts-gap-s) 0 var(--vts-gap-l);display:none}
+
+  /* backdrop-filter czyni element BLOKIEM ZAWIERAJĄCYM dla potomków
+   * position:fixed — dokładnie tak jak transform czy filter. Menu zamiast
+   * rozciągnąć się na ekran zamykało się w 69-pikselowym prostokącie nagłówka
+   * i widoczna była z niego jedna pozycja. Na telefonie rozmycie i tak jest
+   * niewidoczne, a kosztowne, więc nagłówek dostaje w zamian pełne tło.
+   */
+  .vts-header{backdrop-filter:none;background:var(--vts-bg)}
+  /* na telefonie pasek kontaktowy i naglowek zjadaly razem 20% ekranu na
+   * kazdej podstronie — odstep pionowy naglowka schodzi do wysokosci
+   * przycisku menu, ktory i tak wyznacza tu miare */
+  .vts-header .vts-wrap{padding-block:9px}
+
+  /* Menu jako nakładka na cały ekran. Uwaga: menu jest DZIECKIEM nagłówka,
+   * więc jego z-index rywalizuje nie z nagłówkiem, tylko z jego własną
+   * zawartością — samo podniesienie nagłówka nic nie daje. Nad nakładkę
+   * wypychamy więc logo i przycisk zamknięcia, niżej. Odstęp od góry
+   * bierzemy z realnej dolnej krawędzi nagłówka (ustawia ją skrypt przy
+   * otwarciu) — nagłówek jest przyklejony, a pasek kontaktowy odjeżdża przy
+   * przewijaniu, więc sztywna wartość byłaby błędna przy części pozycji strony.
+   */
+  .vts-nav{position:fixed;inset:0;margin:0;z-index:45;background:var(--vts-bg);
+    overflow-y:auto;overscroll-behavior:contain;
+    padding:calc(var(--vts-chrome-h,64px) + var(--vts-gap-s)) 0 var(--vts-gap-l);
+    display:none}
   .vts-nav.is-open{display:block}
   .vts-nav ul{flex-direction:column;gap:0;padding-inline:clamp(16px,4vw,30px)}
   .vts-nav > ul > li{border-bottom:1px solid var(--vts-line-soft)}
-  .vts-nav a{padding-block:14px;font-size:16px}
+  .vts-nav a{display:flex;align-items:center;min-height:48px;padding-block:12px;font-size:16px}
   .vts-nav .sub-menu{position:static;opacity:1;visibility:visible;transform:none;
     border:0;background:transparent;box-shadow:none;padding:0 0 10px 14px;
     border-left:1px solid var(--vts-line)}
+  .vts-nav .sub-menu a{min-height:46px;padding:8px 16px}
+  /* ponad nakładką — inaczej nie ma czym zamknąć menu */
+  .vts-brand,.vts-burger{position:relative;z-index:46}
+
+  /* Tło nie przewija się pod otwartym menu. Klasę skrypt wiesza na <html>
+   * i <body> — sam <body> nie wystarcza, bo przewijaniem steruje <html>. */
+  .vts-menu-open{overflow:hidden}
+  /* dolny pasek CTA ma z-index 60 i inaczej zasłania spód menu */
+  .vts-menu-open .vts-fab{display:none}
 }
 
 /* --- hero --- */
@@ -164,6 +216,23 @@ p:last-child{margin-bottom:0}
   45%  {opacity:.52}
  100%  {opacity:.90}
 }
+/* --- światła awaryjne ----------------------------------------------------
+ * Zapala je przycisk z trójkątem na konsoli. Warstwa jest niezależna od
+ * sekwencji zapłonu — awaryjne działają przy zgaszonych reflektorach tak samo
+ * jak przy zapalonych.
+ *
+ * Rytm ~1,1 Hz, czyli bliżej realnego przekaźnika i bezpiecznie poniżej progu
+ * 3 Hz, od którego migotanie staje się ryzykiem dla osób ze światłowstrętem.
+ */
+.vts-hero__hazard{position:absolute;inset:0;width:100%;height:100%;opacity:0}
+.vts-hero.is-hazard .vts-hero__hazard{opacity:1;animation:vts-hazard .9s steps(1,end) infinite}
+@keyframes vts-hazard{0%,49%{opacity:1}50%,100%{opacity:0}}
+
+@media (prefers-reduced-motion:reduce){
+  /* Zamiast migotania — stały bursztynowy blask. Funkcja zostaje, ruch znika. */
+  .vts-hero.is-hazard .vts-hero__hazard{animation-name:none;opacity:1}
+}
+
 /* Wejścia kart. Stan ukryty włącza wyłącznie klasa js-anim, którą dodaje skrypt —
    bez JavaScriptu i przy ograniczonym ruchu nic nie znika. */
 .js-anim .vts-reveal{opacity:0;transform:translateY(12px)}
@@ -196,6 +265,33 @@ p:last-child{margin-bottom:0}
 /* --- karty --- */
 .vts-grid{display:grid;gap:var(--vts-gap-s);
   grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))}
+
+/* Ostatni rząd nie może zawierać dokładnie jednego kafelka.
+ *
+ * auto-fit dobiera kolumny szerokością i nie wie, ile jest elementów — stąd
+ * 3+1 na laptopie i 4+1 na desktopie. Dokładamy wyjątki tam, gdzie liczba
+ * kafelków dzieli się źle przez liczbę kolumn. Progi zmierzone w przeglądarce:
+ * 4 kolumny od 1180 px, 3 od 896, 2 od 600.
+ *
+ * Liczbę kafelków rozpoznaje zapytanie ilościowe (ostatnie dziecko o danym
+ * numerze), więc reguła obejmuje też sekcje, których dziś w treści nie ma —
+ * bez klas do pamiętania przy pisaniu kolejnych stron.
+ */
+@media (min-width:1180px){                    /* 4 kolumny */
+  /* 3 kafelki zostawiłyby puste pole, 5 dałoby 4+1 */
+  .vts-grid:has(> :nth-child(3):last-child),
+  .vts-grid:has(> :nth-child(5):last-child){grid-template-columns:repeat(3,minmax(0,1fr))}
+  .vts-grid:has(> :nth-child(9):last-child) > :last-child{grid-column:1/-1}
+}
+@media (min-width:896px) and (max-width:1179px){   /* 3 kolumny */
+  /* 4 kafelki dałyby 3+1 — stąd cała uwaga */
+  .vts-grid:has(> :nth-child(4):last-child){grid-template-columns:repeat(2,minmax(0,1fr))}
+  .vts-grid:has(> :nth-child(7):last-child) > :last-child{grid-column:1/-1}
+}
+@media (min-width:600px) and (max-width:895px){    /* 2 kolumny */
+  /* nieparzysta liczba w dwóch kolumnach zawsze zostawia sierotę */
+  .vts-grid:has(> :nth-child(odd):last-child) > :last-child{grid-column:1/-1}
+}
 .vts-card{background:var(--vts-surface);border:1px solid var(--vts-line);
   border-radius:var(--vts-radius);padding:var(--vts-gap-m);text-decoration:none;display:block;
   transition:border-color .18s,transform .18s}
@@ -204,6 +300,74 @@ a.vts-card:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
 .vts-card p{color:var(--vts-muted);font-size:var(--vts-step--1);margin:0}
 .vts-card__n{font-family:var(--vts-font-mono);font-size:10.5px;letter-spacing:.14em;
   color:var(--vts-accent);display:block;margin-bottom:12px}
+
+/* --- ikony ---------------------------------------------------------------
+ * Domyślnie ikona ma rozmiar tekstu, w którym siedzi. Kafelek i lista nadają
+ * jej własną skalę. Kolor bierze z currentColor, więc nie trzeba go powtarzać.
+ */
+.vts-i{width:1em;height:1em;flex:none;vertical-align:-.14em}
+/* ikona wpleciona w nagłówek — np. karta kontaktowa */
+.vts-card h3 > .vts-i{width:18px;height:18px;color:var(--vts-accent);
+  margin-right:9px;vertical-align:-.16em}
+.vts-card > .vts-i{display:block;width:27px;height:27px;color:var(--vts-accent);
+  margin-bottom:13px;opacity:.92;transition:opacity .18s,transform .18s}
+a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
+/* kafelek z numerem kroku ikony nie dostaje — numer już niesie kolejność */
+
+/* --- kroki procesu -------------------------------------------------------
+ * Cienki łącznik w przerwie między kafelkami, na wysokości numeru kroku.
+ * Rysuje się przy wejściu kafelka w kadr — korzysta z klasy is-in, którą i tak
+ * nadaje obserwator w site.js, więc nie dokładamy ani linijki JavaScriptu.
+ *
+ * Tylko od 1180 px: niżej cztery kafelki układają się 2×2 i łącznik między
+ * drugim a trzecim prowadziłby donikąd.
+ */
+@media (min-width:1180px){
+  .vts-steps > .vts-card{position:relative}
+  .vts-steps > .vts-card + .vts-card::before{
+    content:'';position:absolute;top:34px;left:calc(-1px - var(--vts-gap-s));
+    width:var(--vts-gap-s);height:1px;background:var(--vts-accent);opacity:.6;
+    transform:scaleX(1);transform-origin:left;transition:transform .55s ease .1s}
+  /* bez JS klasa js-anim nie powstaje i łącznik jest od razu narysowany */
+  .js-anim .vts-steps > .vts-card + .vts-card::before{transform:scaleX(0)}
+  .js-anim .vts-steps > .vts-card.is-in + .vts-card::before{transform:scaleX(1)}
+}
+
+/* --- pas ze zdjęciem ------------------------------------------------------
+ * Zdjęcie jest teksturą rozdzielającą sekcje, nie ilustracją poglądową: siedzi
+ * pod ciemnym gradientem, z podpisem na dole. Adnotacja „ilustracyjne" jest
+ * elementem uczciwości, nie ozdobą — materiał jest stockowy.
+ */
+.vts-band{position:relative;margin:var(--vts-gap-l) 0 0;overflow:hidden;
+  border:1px solid var(--vts-line);border-radius:var(--vts-radius)}
+.vts-band img{display:block;width:100%;height:auto;aspect-ratio:16/6;object-fit:cover}
+.vts-band figcaption{position:absolute;inset:auto 0 0;padding:var(--vts-gap-l) var(--vts-gap-m) var(--vts-gap-m);
+  background:linear-gradient(180deg,rgba(8,9,12,0) 0%,rgba(8,9,12,.72) 42%,rgba(8,9,12,.97) 100%)}
+.vts-band__e{display:block;font-family:var(--vts-font-mono);font-size:10.5px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--vts-accent);margin-bottom:7px}
+/* kolor jawnie — figcaption dziedziczy przygaszoną barwę z motywu bazowego
+   i podpis robi się nieczytelny na zdjęciu */
+.vts-band b{display:block;color:var(--vts-text);
+  font-family:var(--vts-font-display);font-weight:700;
+  font-size:var(--vts-step-1);letter-spacing:-.02em;max-width:34ch;text-wrap:balance;
+  text-shadow:0 2px 18px rgba(0,0,0,.8)}
+.vts-band__note{position:absolute;right:var(--vts-gap-m);bottom:var(--vts-gap-m);
+  font-family:var(--vts-font-mono);font-size:9px;letter-spacing:.14em;
+  text-transform:uppercase;color:#6B7482}
+@media (max-width:640px){
+  .vts-band img{aspect-ratio:16/9}
+  .vts-band__note{position:static;display:block;margin-top:8px}
+}
+
+/* lista z ikonami — zamiast wypunktowania na stronach, gdzie był sam tekst */
+.vts-ilist{list-style:none;margin:var(--vts-gap-m) 0 0;padding:0;
+  border-top:1px solid var(--vts-line-soft)}
+.vts-ilist li{display:flex;gap:15px;align-items:flex-start;padding:15px 0;
+  border-bottom:1px solid var(--vts-line-soft)}
+.vts-ilist .vts-i{width:23px;height:23px;color:var(--vts-accent);margin-top:2px}
+.vts-ilist div{min-width:0}
+.vts-ilist b{display:block;margin-bottom:4px;font-size:15px}
+.vts-ilist span{color:var(--vts-muted);font-size:14.5px;line-height:1.55}
 
 /* --- FAQ (natywne <details>, bez wtyczki) --- */
 .vts-faq{border-top:1px solid var(--vts-line)}
@@ -262,6 +426,12 @@ a.vts-card:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
 /* --- katalog osiągów (strony wirtualne) --- */
 .vts-cat-grid{display:grid;gap:8px;
   grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr))}
+/* Przy 190 px na telefonie wchodzi jedna kolumna, a przy 61 markach to
+ * kilkanascie ekranow przewijania. Nazwy sa krotkie, wiec 150 px wystarcza
+ * na dwie kolumny — na szerszych ekranach zostaje 190, zeby nie zageszczac. */
+@media (max-width:720px){
+  .vts-cat-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr))}
+}
 .vts-cat-tile{background:var(--vts-surface);border:1px solid var(--vts-line);
   border-radius:var(--vts-radius);padding:14px 16px;text-decoration:none;display:block;
   transition:border-color .16s,background .16s}
@@ -293,3 +463,26 @@ a.vts-card:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
 .vts-cat-siblings a:hover{color:var(--vts-accent)}
 .vts-cat-siblings span{font-family:var(--vts-font-mono);font-size:12.5px;color:var(--vts-muted);
   font-variant-numeric:tabular-nums}
+
+/* --- ekrany dotykowe ---------------------------------------------------
+ *
+ * Reguły spięte z (pointer: coarse), a nie z szerokością okna: chodzi
+ * o palec, nie o rozmiar ekranu. Wskazówka Apple i Google to 44 px, a na
+ * stronie ponad dwadzieścia elementów na podstronę było mniejsze niż 40.
+ */
+@media (pointer: coarse), (max-width: 720px) {
+  .vts-footer a,
+  .vts-cat-siblings a,
+  .vts-table a,
+  .vts-crumbs a { display:inline-flex; align-items:center; min-height:44px }
+  .vts-footer ul { gap:0 }
+
+  /* Domyślne podświetlenie dotknięcia daje różowy prostokąt — obcy palecie.
+   * Stan wciśnięcia zostaje, tylko rysujemy go sami. */
+  a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent }
+  a:active, button:active { opacity:.7 }
+
+  /* bez pól wyboru — checkbox zgody rozciągnięty do 46 px wygląda jak błąd */
+  select, textarea, button, .vts-btn,
+  input:not([type="checkbox"]):not([type="radio"]) { min-height:46px }
+}

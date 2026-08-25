@@ -1,8 +1,31 @@
-/* Wyszukiwarka mocy — kaskada + bramka leadowa.
-   Wartości po modyfikacji nie istnieją po stronie klienta, dopóki serwer
-   ich nie zwróci w odpowiedzi na wysłanie formularza. */
+/* Wyszukiwarka mocy — kaskada, bramka leadowa i ekran konsoli.
+ *
+ * Wartości po modyfikacji nie istnieją po stronie klienta, dopóki serwer ich nie
+ * zwróci w odpowiedzi na wysłanie formularza. Nowa oprawa niczego w tym nie
+ * zmienia: ekran do tego czasu pokazuje kreski, a nie zamazane liczby.
+ */
 (function () {
   'use strict';
+
+  var motionOK = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var PUSTE = '– – –';
+
+  /* Odliczanie liczby na ekranie. Przy wyłączonym ruchu wpisujemy od razu
+     wartość końcową — nigdy przypadkową klatkę. */
+  function licz(el, od, doo, sufiks, prefiks) {
+    var koniec = (prefiks || '') + doo + (sufiks || '');
+    if (!motionOK || od === doo) { el.textContent = koniec; return; }
+
+    var start = null, czas = 700;
+    var krok = function (t) {
+      if (start === null) start = t;
+      var p = Math.min(1, (t - start) / czas);
+      var e = 1 - Math.pow(1 - p, 3);              // wyhamowanie na końcu
+      el.textContent = (prefiks || '') + Math.round(od + (doo - od) * e) + (sufiks || '');
+      if (p < 1) requestAnimationFrame(krok); else el.textContent = koniec;
+    };
+    requestAnimationFrame(krok);
+  }
 
   document.querySelectorAll('[data-vts-ps]').forEach(function (root) {
     var api    = root.dataset.rest.replace(/\/$/, '');
@@ -12,8 +35,9 @@
     var gate   = root.querySelector('[data-gate]');
     var errBox = root.querySelector('[data-err]');
     var note   = root.querySelector('[data-note]');
-    var token  = null;
-    var engine = null;
+    var presety = [].slice.call(root.querySelectorAll('[data-srv]'));
+
+    var token = null, engine = null, stockHp = 0, warianty = null;
 
     function reset(select, placeholder) {
       select.innerHTML = '';
@@ -38,21 +62,37 @@
       });
     }
 
-    function clearResult() {
+    /* Gasi ekran do stanu wyjściowego. Presety wracają do wyłączonych — przed
+       bramką nie ma czym ich wypełnić, więc nie mogą wyglądać na czynne. */
+    function zgas() {
       out.hidden = true;
       gate.hidden = false;
       note.hidden = true;
       errBox.hidden = true;
-      var full = root.querySelector('.vts-ps__full');
+      warianty = null;
+
+      var full = root.querySelector('.vts-con__full');
       if (full) full.remove();
-      root.querySelectorAll('.vts-ps__cell.is-gain').forEach(function (c) {
-        c.classList.add('is-locked');
-        c.querySelector('b').textContent = '—';
+
+      ['thp', 'ghp'].forEach(function (k) { field(k).textContent = PUSTE; });
+      root.querySelectorAll('.vts-con__cell.is-gain')
+          .forEach(function (c) { c.classList.add('is-locked'); });
+
+      presety.forEach(function (b) {
+        b.disabled = true;
+        b.classList.remove('is-on');
       });
     }
 
+    function zgasCaly() {
+      zgas();
+      ['shp', 'snm'].forEach(function (k) { field(k).textContent = PUSTE; });
+      field('veh').textContent = 'Wybierz pojazd z listy poniżej';
+      field('veh').classList.remove('is-set');
+    }
+
     sel('make').addEventListener('change', function (e) {
-      clearResult();
+      zgasCaly();
       reset(sel('gen'), 'Generacja'); reset(sel('eng'), 'Silnik');
       get('/catalog/models', { make: e.target.value }).then(function (rows) {
         populate(sel('model'), rows, 'Model', function (r) { return r.name; }, function (r) { return r.id; });
@@ -60,7 +100,7 @@
     });
 
     sel('model').addEventListener('change', function (e) {
-      clearResult();
+      zgasCaly();
       reset(sel('eng'), 'Silnik');
       get('/catalog/generations', { model: e.target.value }).then(function (rows) {
         populate(sel('gen'), rows, 'Generacja', function (r) { return r.name; }, function (r) { return r.id; });
@@ -68,7 +108,7 @@
     });
 
     sel('gen').addEventListener('change', function (e) {
-      clearResult();
+      zgasCaly();
       get('/catalog/engines', { generation: e.target.value }).then(function (rows) {
         populate(sel('eng'), rows, 'Silnik',
           function (r) { return r.name + ' · ' + r.stock_hp + ' KM'; },
@@ -82,14 +122,29 @@
       var row  = rows.filter(function (r) { return String(r.id) === e.target.value; })[0];
       if (!row) return;
 
-      engine = row.id;
-      token  = row.token;
+      engine  = row.id;
+      token   = row.token;
+      stockHp = row.stock_hp || 0;
 
-      clearResult();
+      zgas();
       out.hidden = false;
-      field('shp').textContent = row.stock_hp ? row.stock_hp + ' KM' : '—';
-      field('veh').textContent = sel('make').selectedOptions[0].text + ' ' +
-        sel('model').selectedOptions[0].text + ' ' + row.name;
+
+      var pojazd = sel('make').selectedOptions[0].text + ' ' +
+                   sel('model').selectedOptions[0].text + ' · ' + row.name;
+      field('veh').textContent = pojazd;
+      field('veh').classList.add('is-set');
+      field('veh2').textContent = pojazd;
+
+      // Stan fabryczny zapala się od razu — bramka trzyma tylko wartości po modyfikacji.
+      if (row.stock_hp) { licz(field('shp'), 0, row.stock_hp, ' KM'); }
+      else { field('shp').textContent = PUSTE; }
+      // V-tech nie podaje momentu fabrycznego dla każdej wersji. Wartość słowna
+      // w miejscu liczby nie mieści się w rytmie odczytu, więc komórka dostaje
+      // własny, mniejszy krój — inaczej napis wychodzi na sąsiednią kolumnę.
+      var kom = field('snm').parentElement;
+      kom.classList.toggle('is-text', !row.stock_nm);
+      if (row.stock_nm) { licz(field('snm'), 0, row.stock_nm, ' Nm'); }
+      else { field('snm').textContent = 'brak danych'; }
     });
 
     gate.addEventListener('submit', function (e) {
@@ -120,7 +175,7 @@
         .then(function (r) { return r.json().then(function (b) { return { ok: r.ok, body: b }; }); })
         .then(function (res) {
           if (!res.ok) throw new Error(res.body && res.body.message ? res.body.message : 'Nie udało się wysłać.');
-          reveal(res.body);
+          odsloń(res.body);
         })
         .catch(function (err) { fail(err.message); })
         .finally(function () { btn.disabled = false; btn.textContent = 'Pokaż wynik'; });
@@ -131,27 +186,47 @@
       errBox.hidden = false;
     }
 
-    function reveal(data) {
-      gate.hidden = true;
+    /* Przełożenie jednego wariantu na ekran. Wywoływane też z presetów. */
+    function pokaz(w) {
+      root.querySelectorAll('.vts-con__cell.is-gain')
+          .forEach(function (c) { c.classList.remove('is-locked'); });
 
-      // Podsumowanie pokazuje jeden, najmocniejszy wariant; poziomy są rozpisane niżej.
-      var top = data.best;
-      if (top) {
-        field('thp').textContent = top.tuned_hp ? top.tuned_hp + ' KM' : '—';
-        field('ghp').textContent = '+' + top.gain_hp + ' KM';
-        field('gnm').textContent = top.gain_nm ? '+' + top.gain_nm + ' Nm' : '—';
-        root.querySelectorAll('.vts-ps__cell.is-gain')
-            .forEach(function (c) { c.classList.remove('is-locked'); });
-      }
+      if (w.tuned_hp) { licz(field('thp'), stockHp || 0, w.tuned_hp, ' KM'); }
+      else { field('thp').textContent = PUSTE; }
+      licz(field('ghp'), 0, w.gain_hp, ' KM', '+');
+
+      presety.forEach(function (b) {
+        b.classList.toggle('is-on', b.dataset.srv === w.code);
+      });
+    }
+
+    function odsloń(data) {
+      gate.hidden = true;
+      warianty = data.results || [];
+
+      // Presety zapalamy tylko dla wariantów, które dla tego silnika istnieją —
+      // przycisk bez danych zostaje wyłączony, zamiast udawać czynny.
+      presety.forEach(function (b) {
+        var w = warianty.filter(function (r) { return r.code === b.dataset.srv; })[0];
+        b.disabled = !w;
+        if (w) {
+          b.onclick = function () { pokaz(w); };
+        }
+      });
+
+      var start = warianty.filter(function (r) {
+        return data.best && r.label === data.best.label;
+      })[0] || warianty[0];
+      if (start) { pokaz(start); }
 
       var wrap = document.createElement('div');
-      wrap.className = 'vts-ps__full';
-      wrap.innerHTML = data.results.map(function (r) {
+      wrap.className = 'vts-con__full';
+      wrap.innerHTML = warianty.map(function (r) {
         var moc = '<span>moc <b>+' + r.gain_hp + ' KM</b>' +
                   (r.tuned_hp ? ' <em>→ ' + r.tuned_hp + '</em>' : '') + '</span>';
         var mom = r.gain_nm ? '<span>moment <b>+' + r.gain_nm + ' Nm</b></span>' : '';
-        return '<div class="vts-ps__srv"><h4>' + r.label + '</h4>' +
-               '<div class="vts-ps__srv-v">' + moc + mom + '</div></div>';
+        return '<div class="vts-con__srv"><h4>' + r.label + '</h4>' +
+               '<div class="vts-con__srv-v">' + moc + mom + '</div></div>';
       }).join('');
       out.insertBefore(wrap, note);
 
