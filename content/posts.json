@@ -1,0 +1,46 @@
+{
+  "powerbox-czy-zapis-w-sterowniku": {
+    "file": "powerbox-czy-zapis",
+    "title": "PowerBox czy zapis w sterowniku — kiedy który ma sens",
+    "date": "2026-08-04",
+    "excerpt": "Moduł dopina się do instalacji i schodzi w kwadrans. Zapis wchodzi do pamięci sterownika i zostaje. Oba dają moc, ale odpowiadają na inne sytuacje.",
+    "seo": {
+      "title": "PowerBox czy chip tuning? Kiedy który ma sens | Vitesse V-tech Łódź",
+      "desc": "Różnice między modułem PowerBox a zapisem w sterowniku: odwracalność, zakres zmian, leasing i gwarancja. Bez marketingu, z konkretami."
+    },
+    "icon": "plug"
+  },
+  "po-co-pomiar-przed-i-po": {
+    "file": "pomiar-przed-i-po",
+    "title": "Po co pomiar przed i po",
+    "date": "2026-08-11",
+    "excerpt": "Bez pomiaru wyjściowego nie ma od czego liczyć przyrostu. Wynik staje się wtedy deklaracją warsztatu, a nie liczbą, którą da się sprawdzić.",
+    "seo": {
+      "title": "Po co pomiar na hamowni przed i po modyfikacji | Vitesse V-tech Łódź",
+      "desc": "Dlaczego przyrost mocy bez pomiaru wyjściowego jest niesprawdzalny i co realnie zmienia hamownia podwoziowa w procesie modyfikacji."
+    },
+    "icon": "dyno"
+  },
+  "skad-oszczednosc-w-eco-tuningu": {
+    "file": "eco-tuning-flota",
+    "title": "Skąd się bierze oszczędność w eco-tuningu floty",
+    "date": "2026-08-18",
+    "excerpt": "Nie z tego, że silnik nagle zużywa mniej paliwa na tej samej pracy. Z tego, że kierowca rzadziej wchodzi w zakres, w którym paliwo idzie w ciepło.",
+    "seo": {
+      "title": "Eco-tuning floty — skąd bierze się oszczędność paliwa | Vitesse V-tech",
+      "desc": "Mechanizm oszczędności w eco-tuningu, realny zakres 5–8 procent i sposób liczenia zwrotu przy flocie ciągników siodłowych."
+    },
+    "icon": "fuel"
+  },
+  "zamkniety-sterownik": {
+    "file": "zamkniety-sterownik",
+    "title": "Zamknięty sterownik — co to właściwie znaczy",
+    "date": "2026-08-25",
+    "excerpt": "Producenci zabezpieczają moduły przed odczytem i zapisem. To nie jest awaria ani wada — to zamek, który trzeba umieć otworzyć.",
+    "seo": {
+      "title": "Zamknięty sterownik — co to znaczy i co z tego wynika | Vitesse V-tech",
+      "desc": "Dlaczego część sterowników wymaga otwarcia przed modyfikacją, co to zmienia w czasie realizacji i na co uważać przy wysyłce modułu."
+    },
+    "icon": "unlock"
+  }
+}

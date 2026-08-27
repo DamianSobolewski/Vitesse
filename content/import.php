@@ -176,6 +176,74 @@ foreach ($pages as $slug => $cfg) {
 }
 vts_log('strony: ' . count($ids));
 
+/* ------------------------------------------------------------------ wpisy
+ *
+ * Ten sam wzorzec co strony: źródłem jest content/posts/*.html i posts.json,
+ * dopasowanie po slugu, więc drugi przebieg niczego nie dubluje. Wpisy klikane
+ * w edytorze zostaną nadpisane — tak samo jak strony.
+ */
+
+function vts_find_post(string $slug): ?WP_Post
+{
+    $q = new WP_Query([
+        'post_type'      => 'post',
+        'name'           => $slug,
+        'post_status'    => ['publish', 'draft', 'private'],
+        'posts_per_page' => 1,
+        'no_found_rows'  => true,
+    ]);
+    return $q->have_posts() ? $q->posts[0] : null;
+}
+
+$plik_wpisow = VTS_CONTENT . '/posts.json';
+$wpisy = file_exists($plik_wpisow)
+    ? (array) json_decode(file_get_contents($plik_wpisow), true)
+    : [];
+
+$ile_wpisow = 0;
+foreach ($wpisy as $slug => $cfg) {
+    $f = VTS_CONTENT . '/posts/' . $cfg['file'] . '.html';
+    if (!file_exists($f)) {
+        vts_log('BRAK PLIKU wpisu ' . $slug);
+        continue;
+    }
+
+    $data = [
+        'post_title'   => $cfg['title'],
+        'post_name'    => $slug,
+        'post_type'    => 'post',
+        'post_status'  => 'publish',
+        'post_content' => file_get_contents($f),
+        'post_excerpt' => $cfg['excerpt'] ?? '',
+        'post_date'    => $cfg['date'] . ' 09:00:00',
+    ];
+
+    $istnieje = vts_find_post($slug);
+    if ($istnieje) {
+        $data['ID'] = $istnieje->ID;
+        $id = wp_update_post($data, true);
+    } else {
+        $id = wp_insert_post($data, true);
+    }
+
+    if (is_wp_error($id)) {
+        vts_log('BŁĄD wpisu ' . $slug . ': ' . $id->get_error_message());
+        continue;
+    }
+
+    if (!empty($cfg['seo'])) {
+        update_post_meta($id, 'rank_math_title', $cfg['seo']['title']);
+        update_post_meta($id, 'rank_math_description', $cfg['seo']['desc']);
+    }
+    delete_post_meta($id, '_elementor_edit_mode');
+    update_post_meta($id, '_vts_raw_html', 1);
+    if (!empty($cfg['icon'])) {
+        update_post_meta($id, '_vts_icon', $cfg['icon']);
+    }
+    $ile_wpisow++;
+}
+vts_log('wpisy: ' . $ile_wpisow);
+
 /* ----------------------------------------------- strona główna i wpisy */
 
 foreach ($pages as $slug => $cfg) {

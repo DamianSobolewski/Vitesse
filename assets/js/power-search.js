@@ -35,7 +35,6 @@
     var gate   = root.querySelector('[data-gate]');
     var errBox = root.querySelector('[data-err]');
     var note   = root.querySelector('[data-note]');
-    var presety = [].slice.call(root.querySelectorAll('[data-srv]'));
 
     var token = null, engine = null, stockHp = 0, warianty = null;
 
@@ -71,17 +70,12 @@
       errBox.hidden = true;
       warianty = null;
 
-      var full = root.querySelector('.vts-con__full');
+      var full = root.querySelector('.vts-ps__full');
       if (full) full.remove();
 
       ['thp', 'ghp'].forEach(function (k) { field(k).textContent = PUSTE; });
-      root.querySelectorAll('.vts-con__cell.is-gain')
+      root.querySelectorAll('.vts-ps__cell.is-gain')
           .forEach(function (c) { c.classList.add('is-locked'); });
-
-      presety.forEach(function (b) {
-        b.disabled = true;
-        b.classList.remove('is-on');
-      });
     }
 
     function zgasCaly() {
@@ -186,33 +180,19 @@
       errBox.hidden = false;
     }
 
-    /* Przełożenie jednego wariantu na ekran. Wywoływane też z presetów. */
+    /* Przełożenie najmocniejszego wariantu na ekran. */
     function pokaz(w) {
-      root.querySelectorAll('.vts-con__cell.is-gain')
+      root.querySelectorAll('.vts-ps__cell.is-gain')
           .forEach(function (c) { c.classList.remove('is-locked'); });
 
       if (w.tuned_hp) { licz(field('thp'), stockHp || 0, w.tuned_hp, ' KM'); }
       else { field('thp').textContent = PUSTE; }
       licz(field('ghp'), 0, w.gain_hp, ' KM', '+');
-
-      presety.forEach(function (b) {
-        b.classList.toggle('is-on', b.dataset.srv === w.code);
-      });
     }
 
     function odsloń(data) {
       gate.hidden = true;
       warianty = data.results || [];
-
-      // Presety zapalamy tylko dla wariantów, które dla tego silnika istnieją —
-      // przycisk bez danych zostaje wyłączony, zamiast udawać czynny.
-      presety.forEach(function (b) {
-        var w = warianty.filter(function (r) { return r.code === b.dataset.srv; })[0];
-        b.disabled = !w;
-        if (w) {
-          b.onclick = function () { pokaz(w); };
-        }
-      });
 
       var start = warianty.filter(function (r) {
         return data.best && r.label === data.best.label;
@@ -220,13 +200,13 @@
       if (start) { pokaz(start); }
 
       var wrap = document.createElement('div');
-      wrap.className = 'vts-con__full';
+      wrap.className = 'vts-ps__full';
       wrap.innerHTML = warianty.map(function (r) {
         var moc = '<span>moc <b>+' + r.gain_hp + ' KM</b>' +
                   (r.tuned_hp ? ' <em>→ ' + r.tuned_hp + '</em>' : '') + '</span>';
         var mom = r.gain_nm ? '<span>moment <b>+' + r.gain_nm + ' Nm</b></span>' : '';
-        return '<div class="vts-con__srv"><h4>' + r.label + '</h4>' +
-               '<div class="vts-con__srv-v">' + moc + mom + '</div></div>';
+        return '<div class="vts-ps__srv"><h4>' + r.label + '</h4>' +
+               '<div class="vts-ps__srv-v">' + moc + mom + '</div></div>';
       }).join('');
       out.insertBefore(wrap, note);
 

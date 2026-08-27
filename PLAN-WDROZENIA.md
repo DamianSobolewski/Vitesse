@@ -160,8 +160,8 @@ node tests/cards.mjs        # strażnik pustych kafelków
 node tests/hero-anim.mjs
 node tests/rwd.mjs          # 1440/768/390: brak poziomego scrolla, jeden H1
 node tests/mobile.mjs       # menu na cały ekran, cele dotykowe, blokada tła
-node tests/console.mjs      # konsola w hero: kaskada, szczelność bramki, dostępność
-node tests/visuals.mjs      # sieroty w siatkach, obecność grafik, licencje zdjęć
+node tests/console.mjs      # panel w hero: kaskada, szczelność bramki, kontrast, LCP
+node tests/visuals.mjs      # jedna lewa krawędź, jedna skala fontów, sieroty, licencje
 node tests/redirects.mjs    # 71 starych adresów → 301 w jednym skoku na stronę 200
 node tests/full-check.mjs   # kaskada, bramka, kalkulator, wykresy, LCP
 ```

@@ -19,24 +19,40 @@ a{color:inherit}
 
 h1,h2,h3,h4{font-family:var(--vts-font-display);font-weight:700;letter-spacing:-.028em;
   line-height:1.08;margin:0 0 var(--vts-gap-s);text-wrap:balance}
-h1{font-size:var(--vts-step-4);font-weight:800;font-style:italic;letter-spacing:-.035em;line-height:.99}
+/* Tytuł podstrony jest o stopień niższy niż nagłówek hero na stronie głównej —
+   inaczej każda podstrona krzyczy tak samo głośno jak wejście na serwis.
+   Wcześniej wszystkie H1 miały 66 px, a katalog wyłamywał się na 44. */
+h1{font-size:var(--vts-step-3);font-weight:800;font-style:italic;letter-spacing:-.035em;line-height:.99}
+.vts-hero__in h1{font-size:var(--vts-step-4)}
 h2{font-size:var(--vts-step-3)}
 h3{font-size:var(--vts-step-1)}
 p{margin:0 0 var(--vts-gap-s);text-wrap:pretty}
 p:last-child{margin-bottom:0}
 
 .vts-wrap{max-width:var(--vts-wide);margin-inline:auto;padding-inline:clamp(16px,4vw,30px)}
-.vts-narrow{max-width:var(--vts-content)}
+/* .vts-narrow ogranicza DŁUGOŚĆ WIERSZA, a nie szerokość sekcji.
+ *
+ * Wcześniej zwężał cały kontener, który dalej centrował się przez margin:auto —
+ * i lewa krawędź takiej sekcji wypadała 230 px dalej niż sąsiedniej. Na jednej
+ * podstronie potrafiły przez to być trzy różne linie startu i treść skakała
+ * w bok przy przewijaniu. Teraz kontener zawsze trzyma tę samą szerokość
+ * i wcięcie, a zwężamy tylko treść — dosuniętą do lewej.
+ */
+.vts-narrow > *{max-width:var(--vts-content)}
 /* dwukolumnowy układ treści — zwija się na wąskich ekranach */
 .vts-split{display:grid;gap:var(--vts-gap-l);align-items:start;
   grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .vts-split--wide-left{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}
 @media (max-width:900px){.vts-split,.vts-split--wide-left{grid-template-columns:minmax(0,1fr)}}
-.vts-eyebrow{font-family:var(--vts-font-mono);font-size:11.5px;letter-spacing:.2em;
+.vts-eyebrow{font-family:var(--vts-font-mono);font-size:var(--vts-step--2);letter-spacing:.2em;
   text-transform:uppercase;color:var(--vts-accent);margin:0 0 var(--vts-gap-s);
   display:flex;align-items:center;gap:10px}
 .vts-eyebrow::after{content:'';height:1px;flex:0 0 56px;background:currentColor;opacity:.45}
 .vts-lead{font-size:var(--vts-step-1);color:#C7CCD4;line-height:1.5;max-width:50ch}
+/* Przypis — zastrzeżenia i noty prawne. Wcześniej pisany stylem w atrybucie,
+   przez co nie dało się go odróżnić od zwykłego akapitu przy przeglądzie
+   spójności. Teraz to nazwana rola z własnym stopniem skali. */
+.vts-note{font-size:var(--vts-step--1);color:var(--vts-muted);line-height:1.6}
 .vts-section{padding-block:var(--vts-gap-xl)}
 .vts-section + .vts-section{border-top:1px solid var(--vts-line-soft)}
 /* nagłówek strony ma własny odstęp dolny — pierwsza sekcja nie dokłada drugiego */
@@ -44,7 +60,7 @@ p:last-child{margin-bottom:0}
 
 /* --- przyciski --- */
 .vts-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  font-family:var(--vts-font-body);font-weight:700;font-size:14px;line-height:1;
+  font-family:var(--vts-font-body);font-weight:700;font-size:var(--vts-step--1);line-height:1;
   padding:14px 22px;border-radius:var(--vts-radius);border:1px solid transparent;
   text-decoration:none;cursor:pointer;transition:background .18s,border-color .18s,color .18s}
 .vts-btn--primary{background:var(--vts-accent);color:var(--vts-on-accent)}
@@ -54,7 +70,7 @@ p:last-child{margin-bottom:0}
 
 /* --- pasek informacyjny --- */
 .vts-topbar{background:#0B0D11;border-bottom:1px solid var(--vts-line-soft);
-  font-size:12.5px;color:var(--vts-muted)}
+  font-size:var(--vts-step--2);color:var(--vts-muted)}
 .vts-topbar .vts-wrap{display:flex;justify-content:space-between;gap:16px;
   flex-wrap:wrap;padding-block:9px}
 .vts-topbar a{color:var(--vts-text);font-weight:600;text-decoration:none}
@@ -81,15 +97,15 @@ p:last-child{margin-bottom:0}
   backdrop-filter:blur(10px);border-bottom:1px solid var(--vts-line)}
 .vts-header .vts-wrap{display:flex;align-items:center;gap:var(--vts-gap-m);padding-block:14px}
 .vts-brand{font-family:var(--vts-font-display);font-weight:800;font-style:italic;
-  font-size:25px;letter-spacing:-.035em;text-decoration:none;line-height:1;white-space:nowrap}
+  font-size:var(--vts-step-1);letter-spacing:-.035em;text-decoration:none;line-height:1;white-space:nowrap}
 .vts-brand span{color:var(--vts-accent)}
 .vts-brand small{display:block;font-family:var(--vts-font-mono);font-style:normal;
-  font-weight:500;font-size:9px;letter-spacing:.24em;color:var(--vts-muted);margin-top:2px}
+  font-weight:500;font-size:var(--vts-step--3);letter-spacing:.24em;color:var(--vts-muted);margin-top:2px}
 
 .vts-nav{margin-left:auto}
 .vts-nav ul{list-style:none;display:flex;gap:22px;margin:0;padding:0}
 .vts-nav li{position:relative}
-.vts-nav a{font-size:14px;font-weight:600;text-decoration:none;padding-block:10px;
+.vts-nav a{font-size:var(--vts-step--1);font-weight:600;text-decoration:none;padding-block:10px;
   display:inline-block;white-space:nowrap}
 .vts-nav a:hover,.vts-nav .current-menu-item > a,.vts-nav .current-page-ancestor > a{color:var(--vts-accent)}
 /* rozwijane — bez JS, na :hover i :focus-within */
@@ -98,14 +114,14 @@ p:last-child{margin-bottom:0}
   display:grid;gap:1px;opacity:0;visibility:hidden;transform:translateY(-5px);
   transition:opacity .16s,transform .16s,visibility .16s;box-shadow:0 22px 44px -20px #000}
 .vts-nav li:hover > .sub-menu,.vts-nav li:focus-within > .sub-menu{opacity:1;visibility:visible;transform:none}
-.vts-nav .sub-menu a{display:block;padding:9px 16px;font-weight:500;font-size:13.5px;white-space:normal}
+.vts-nav .sub-menu a{display:block;padding:9px 16px;font-weight:500;font-size:var(--vts-step--1);white-space:normal}
 .vts-nav .sub-menu a:hover{background:var(--vts-surface-2)}
 .vts-header__cta{flex:none}
 
 /* przełącznik menu na wąskich ekranach */
 .vts-burger{display:none;margin-left:auto;background:transparent;border:1px solid var(--vts-line);
   color:var(--vts-text);border-radius:var(--vts-radius);padding:10px 13px;cursor:pointer;
-  font-family:var(--vts-font-mono);font-size:12px;letter-spacing:.1em}
+  font-family:var(--vts-font-mono);font-size:var(--vts-step--2);letter-spacing:.1em}
 /* hello-elementor maluje button:focus/:hover na malinowy #c36 i wygrywa
  * specyficznoscia z sama klasa. Przycisk menu jest jedynym miejscem, gdzie ten
  * obcy kolor przechodzil — po dotknieciu stan zostaje na telefonie na stale. */
@@ -143,7 +159,7 @@ p:last-child{margin-bottom:0}
   .vts-nav.is-open{display:block}
   .vts-nav ul{flex-direction:column;gap:0;padding-inline:clamp(16px,4vw,30px)}
   .vts-nav > ul > li{border-bottom:1px solid var(--vts-line-soft)}
-  .vts-nav a{display:flex;align-items:center;min-height:48px;padding-block:12px;font-size:16px}
+  .vts-nav a{display:flex;align-items:center;min-height:48px;padding-block:12px;font-size:var(--vts-step-0)}
   .vts-nav .sub-menu{position:static;opacity:1;visibility:visible;transform:none;
     border:0;background:transparent;box-shadow:none;padding:0 0 10px 14px;
     border-left:1px solid var(--vts-line)}
@@ -164,21 +180,41 @@ p:last-child{margin-bottom:0}
    przestaje być czytelny. */
 .vts-hero{position:relative;overflow:hidden;padding-block:clamp(44px,7vw,84px) var(--vts-gap-l);
   isolation:isolate}
+/* Auto siedzi w prawej połowie kadru, a panel wyszukiwarki sięgał do 890 px —
+ * czyli zasłaniał lewy reflektor (zmierzony na 752 px przy 1440). Przesuwamy
+ * zdjęcie w prawo. Lewy pas kadru to płaski kolor tła strony, więc przesunięcie
+ * nie odsłania żadnego szwu i nie wymaga przerabiania pliku. */
+/* Przesunięcie zdjęcia zależy od miejsca, a nie jest stałe.
+ *
+ * Przy stałych 120 px auto wyjeżdżało poza kadr na węższych ekranach — przy
+ * 1100 px prawy reflektor był już poza oknem. Teraz przesunięcie schodzi do zera
+ * w okolicach 1080 px, czyli tam, gdzie kadr przestaje mieć zapas. */
+.vts-hero{--vts-hero-shift:clamp(0px, (100vw - 1080px) * .36, 120px)}
 .vts-hero__bg{position:absolute;inset:0;z-index:0;opacity:.9;
-  background-image:var(--vts-hero-img);background-size:cover;background-position:50% 50%}
+  background-image:var(--vts-hero-img);background-size:cover;background-repeat:no-repeat;
+  background-position:calc(50% + var(--vts-hero-shift)) 50%}
 @media (max-width:640px){
   .vts-hero__bg{background-image:var(--vts-hero-img-sm,var(--vts-hero-img))}
 }
 /* Zasłona ma tłumić zapalone na zdjęciu reflektory, więc NIE może być w warstwie
    rozjaśniającej — tam kolor tła byłby niewidoczny. Stąd osobna warstwa nad tłem. */
-.vts-hero__veil{position:absolute;inset:0;z-index:1;pointer-events:none}
+/* Zasłona i światła muszą jechać razem ze zdjęciem — inaczej poświata zostaje
+   tam, gdzie reflektorów już nie ma. Stąd wspólna zmienna, a nie dwie liczby. */
+.vts-hero__veil{position:absolute;inset:0;z-index:1;pointer-events:none;
+  transform:translateX(var(--vts-hero-shift))}
 .vts-hero__veil svg{position:absolute;inset:0;width:100%;height:100%}
 .vts-hero__light{position:absolute;inset:0;z-index:2;pointer-events:none;
-  mix-blend-mode:screen}
+  mix-blend-mode:screen;transform:translateX(var(--vts-hero-shift))}
 .vts-hero__scrim{position:absolute;inset:0;z-index:3;pointer-events:none;
   background:linear-gradient(100deg,var(--vts-bg) 24%,rgba(15,17,22,.78) 54%,rgba(15,17,22,.36))}
 .vts-hero .vts-wrap{position:relative;z-index:4}
-.vts-hero__in{max-width:660px}
+.vts-hero__in{max-width:var(--vts-content)}
+/* Nagłówek i lead mogą leżeć na zdjęciu — zasłona pod nimi to załatwia.
+ * Nieprzezroczysty panel już nie, więc dostaje własną, węższą miarę. */
+/* Procent liczyłby się od kolumny tekstu (760 px), a nie od szerokości hero —
+   panel zwęziłby się wtedy wszędzie, także tam, gdzie miejsca jest pod
+   dostatkiem. Zostaje stała miara; o zapas dla auta dba przesunięcie zdjęcia. */
+.vts-hero .vts-ps{max-width:640px}
 
 /* Snopy świateł. Domyślnie ZAPALONE — jeśli JavaScript nie działa, użytkownik
    widzi kompletny kadr, tylko bez sekwencji. */
@@ -259,7 +295,7 @@ p:last-child{margin-bottom:0}
 .vts-stat{border-left:2px solid var(--vts-accent);padding-left:13px}
 .vts-stat b{display:block;font-family:var(--vts-font-display);font-weight:700;
   font-size:var(--vts-step-1);letter-spacing:-.02em}
-.vts-stat span{font-family:var(--vts-font-mono);font-size:10.5px;letter-spacing:.13em;
+.vts-stat span{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);letter-spacing:.13em;
   text-transform:uppercase;color:var(--vts-muted)}
 
 /* --- karty --- */
@@ -298,7 +334,7 @@ p:last-child{margin-bottom:0}
 a.vts-card:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
 .vts-card h3{font-size:var(--vts-step-1);margin-bottom:8px}
 .vts-card p{color:var(--vts-muted);font-size:var(--vts-step--1);margin:0}
-.vts-card__n{font-family:var(--vts-font-mono);font-size:10.5px;letter-spacing:.14em;
+.vts-card__n{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);letter-spacing:.14em;
   color:var(--vts-accent);display:block;margin-bottom:12px}
 
 /* --- ikony ---------------------------------------------------------------
@@ -333,6 +369,194 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
   .js-anim .vts-steps > .vts-card.is-in + .vts-card::before{transform:scaleX(1)}
 }
 
+/* --- zestaw wskaźników ---------------------------------------------------
+ * Sekcja „Cztery rzeczy" jako deska z zegarami.
+ *
+ * Sekwencja przy wejściu w kadr jest tą samą, którą robi realny kokpit przy
+ * przekręceniu kluczyka: wskazówka idzie na pełny wychył, wraca na wartość
+ * z lekkim przeregulowaniem, a podświetlenie i podziałka zapalają się za nią.
+ *
+ * Stan spoczynkowy to stan KOŃCOWY — bez JavaScriptu i przy ograniczonym ruchu
+ * zegar jest od razu zapalony i pokazuje wartość. Do zera cofa go dopiero
+ * klasa js-anim, którą wiesza skrypt.
+ */
+.vts-gauges{display:grid;gap:var(--vts-gap-s);margin-top:var(--vts-gap-m);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+
+.vts-gauge{display:flex;flex-direction:column;align-items:center;gap:var(--vts-gap-s);
+  text-align:center;text-decoration:none;padding:var(--vts-gap-m) var(--vts-gap-s);
+  background:var(--vts-surface);border:1px solid var(--vts-line);
+  border-radius:var(--vts-radius);transition:border-color .18s,transform .18s}
+.vts-gauge:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
+
+.vts-gauge__dial{position:relative;display:block;width:154px;max-width:100%;aspect-ratio:1}
+.vts-gauge__dial svg{position:relative;z-index:1;display:block;width:100%;height:100%;overflow:visible}
+
+/* podświetlenie tarczy — ciepła łuna spod spodu, jak lampka w zegarze */
+.vts-gauge__glow{position:absolute;inset:-6%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 50% 52%,
+    rgba(255,138,30,.17) 0%, rgba(255,122,0,.09) 46%, transparent 72%)}
+
+.vts-gauge__arc{stroke:var(--vts-line)}
+/* ten sam łuk na wierzchu, odsłonięty do wartości */
+.vts-gauge__arc-lit{stroke:var(--vts-accent);stroke-dasharray:100 100;
+  stroke-dashoffset:calc(100 - var(--vts-pct));
+  filter:drop-shadow(0 0 5px rgba(255,122,0,.75))}
+.vts-gauge__ticks line{stroke:#4A525E}
+.vts-gauge__ticks line.is-lit{stroke:#FFB25A}
+.vts-gauge__needle line{stroke:var(--vts-accent);
+  filter:drop-shadow(0 0 4px rgba(255,122,0,.8))}
+.vts-gauge__hub{fill:var(--vts-bg);stroke:var(--vts-accent);stroke-width:2.5}
+.vts-gauge:hover .vts-gauge__arc{stroke:#3C4451}
+
+.vts-gauge__needle{transform-origin:100px 100px;transform:rotate(var(--vts-kat))}
+
+/* --- stan wyjściowy sekwencji (tylko przy włączonym ruchu) --------------- */
+.js-anim .vts-gauge__needle{transform:rotate(0deg)}
+.js-anim .vts-gauge__glow{opacity:0}
+.js-anim .vts-gauge__arc-lit{stroke-dashoffset:100}
+.js-anim .vts-gauge__ticks line.is-lit{stroke:#4A525E}
+
+.js-anim .vts-gauge.is-in .vts-gauge__needle{
+  animation:vts-gauge-sweep 1.7s cubic-bezier(.4,0,.2,1) forwards}
+.js-anim .vts-gauge.is-in .vts-gauge__glow{
+  opacity:1;transition:opacity .9s ease .25s}
+.js-anim .vts-gauge.is-in .vts-gauge__arc-lit{
+  stroke-dashoffset:calc(100 - var(--vts-pct));
+  transition:stroke-dashoffset .85s cubic-bezier(.2,.7,.3,1) .78s}
+.js-anim .vts-gauge.is-in .vts-gauge__ticks line.is-lit{
+  stroke:#FFB25A;transition:stroke .5s ease 1.1s}
+
+/* Pełny wychył i powrót — z lekkim przeregulowaniem, żeby wskazówka miała
+   bezwładność, a nie dojeżdżała jak suwak. */
+@keyframes vts-gauge-sweep{
+    0% {transform:rotate(0deg)}
+    8% {transform:rotate(0deg)}
+   42% {transform:rotate(270deg)}
+   74% {transform:rotate(var(--vts-kat))}
+   82% {transform:rotate(calc(var(--vts-kat) + 7deg))}
+  100% {transform:rotate(var(--vts-kat))}
+}
+
+.vts-gauge__val{position:absolute;left:50%;top:78%;transform:translate(-50%,-50%);
+  z-index:2;display:flex;align-items:baseline;gap:4px;white-space:nowrap}
+.vts-gauge__val b{font-family:var(--vts-font-display);font-weight:700;
+  font-size:var(--vts-step-2);letter-spacing:-.03em;color:var(--vts-text);
+  font-variant-numeric:tabular-nums;text-shadow:0 0 18px rgba(255,138,30,.35)}
+.vts-gauge__val i{font-style:normal;font-family:var(--vts-font-mono);
+  font-size:var(--vts-step--2);color:var(--vts-accent)}
+
+.vts-gauge__body{display:block;max-width:30ch}
+.vts-gauge__body > b{display:block;font-family:var(--vts-font-display);font-weight:700;
+  font-size:var(--vts-step-1);letter-spacing:-.02em;color:var(--vts-text);margin-bottom:5px}
+.vts-gauge__meta{display:block;font-family:var(--vts-font-mono);
+  font-size:var(--vts-step--3);letter-spacing:.11em;text-transform:uppercase;
+  color:var(--vts-accent);margin-bottom:9px}
+.vts-gauge__desc{display:block;font-size:var(--vts-step--1);color:var(--vts-muted);
+  line-height:1.55}
+
+/* --- lista wpisów -------------------------------------------------------
+ * WSZYSTKO tutaj jest zawężone do body.blog. Bez tego reguła dla .page-content
+ * obejmowała każdą stronę — także główną, gdzie zamykała hero w pudełku
+ * szerokim na 1180 px i ucinała zdjęcie auta.
+ *
+ * Szablon motywu daje surowe <article class="post"> bez naszego kontenera.
+ * Zamiast walczyć z szablonem, ubieramy to, co przysyła: wspólna szerokość,
+ * ta sama lewa krawędź co reszta strony i kafelek jak w pozostałych sekcjach.
+ */
+.vts-blog-wstep .vts-section{padding-block:var(--vts-gap-m) 0}
+.vts-blog-wstep p{color:var(--vts-muted)}
+/* Nagłówek i wstęp doklejamy WEWNĄTRZ .page-content, który ma już własny
+   odstęp boczny. Ich kontenery dokładały drugi i treść lądowała 30 px dalej
+   niż kafelki wpisów — czyli znowu dwie lewe krawędzie na jednej stronie. */
+body.blog .site-main > .page-content .vts-wrap{padding-inline:0;max-width:none}
+/* Pas nagłówka na każdej innej podstronie ciągnie się od krawędzi do krawędzi.
+   Tutaj siedzi w wyśrodkowanym .page-content, więc wypuszczamy go poza jego
+   ramy — inaczej blog byłby jedyną stroną z nagłówkiem w pudełku. */
+body.blog .vts-hero{margin-inline:calc(50% - 50vw);padding-inline:calc(50vw - 50%)}
+
+body.blog .site-main > .page-content{max-width:var(--vts-wide);margin-inline:auto;
+  padding:var(--vts-gap-l) clamp(16px,4vw,30px) var(--vts-gap-xl);
+  display:grid;gap:var(--vts-gap-s)}
+body.blog .site-main article.post{max-width:var(--vts-content);
+  background:var(--vts-surface);border:1px solid var(--vts-line);
+  border-radius:var(--vts-radius);padding:var(--vts-gap-m);
+  transition:border-color .18s,transform .18s}
+body.blog .site-main article.post:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
+body.blog .site-main article.post .entry-title{font-size:var(--vts-step-1);margin:0 0 10px;
+  letter-spacing:-.02em}
+body.blog .site-main article.post .entry-title a{text-decoration:none;color:var(--vts-text)}
+body.blog .site-main article.post:hover .entry-title a{color:var(--vts-accent)}
+body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
+  font-size:var(--vts-step--1);line-height:1.6}
+.vts-post__meta{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.vts-post__meta .vts-i{width:20px;height:20px;color:var(--vts-accent)}
+.vts-post__data{font-family:var(--vts-font-mono);
+  font-size:var(--vts-step--3);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--vts-accent)}
+
+/* --- przykładowe wyniki --------------------------------------------------
+ * Kafelki wiszą na .vts-grid, żeby odziedziczyć reguły przeciw sierotom —
+ * pięć pozycji rozkłada się wtedy 3+2, a nie 3+1+1.
+ */
+.vts-wynik{display:flex;flex-direction:column;gap:var(--vts-gap-s);
+  padding:var(--vts-gap-m) var(--vts-gap-s);text-decoration:none;
+  background:var(--vts-surface);border:1px solid var(--vts-line);
+  border-radius:var(--vts-radius);transition:border-color .18s,transform .18s}
+.vts-wynik:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
+
+.vts-wynik__auto{display:block;padding-inline:6px}
+.vts-wynik__auto b{display:block;font-family:var(--vts-font-display);font-weight:700;
+  font-size:var(--vts-step-1);letter-spacing:-.02em;color:var(--vts-text);margin-bottom:4px}
+.vts-wynik__auto > span{display:block;font-family:var(--vts-font-mono);
+  font-size:var(--vts-step--3);letter-spacing:.08em;text-transform:uppercase;color:#8A919E}
+
+.vts-wynik__liczby{display:flex;gap:26px;padding-inline:6px;flex-wrap:wrap}
+.vts-wynik__liczby > span{display:block}
+.vts-wynik__liczby em{display:block;font-style:normal;font-family:var(--vts-font-mono);
+  font-size:var(--vts-step--3);letter-spacing:.13em;text-transform:uppercase;
+  color:#8A919E;margin-bottom:4px}
+.vts-wynik__liczby b{font-family:var(--vts-font-mono);font-weight:500;
+  font-size:var(--vts-step-1);color:var(--vts-accent);font-variant-numeric:tabular-nums}
+.vts-wynik__liczby i{font-style:normal;font-family:var(--vts-font-mono);
+  font-size:var(--vts-step--2);color:#8A919E;margin-left:5px}
+
+/* --- wykres mocy ---------------------------------------------------------
+ * Realne dane to WYŁĄCZNIE dwa punkty szczytowe — one są zaznaczone kropkami
+ * i opisane liczbą. Przebieg między nimi jest przerywany i podpisany na samym
+ * rysunku, żeby nikt nie wziął go za pomiar z hamowni.
+ */
+.vts-chart{display:block}
+.vts-chart svg{display:block;width:100%;height:auto}
+.vts-chart__os{stroke:var(--vts-line);stroke-width:1}
+.vts-chart__linia{stroke:#5A626D;stroke-width:2;stroke-dasharray:5 4;stroke-linecap:round}
+.vts-chart__linia.is-po{stroke:var(--vts-accent);stroke-width:2.4}
+.vts-chart__pkt{fill:#8A919E}
+.vts-chart__pkt.is-po{fill:var(--vts-accent);filter:drop-shadow(0 0 5px rgba(255,122,0,.8))}
+.vts-chart__opis{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);fill:#8A919E}
+.vts-chart__opis.is-po{fill:var(--vts-accent)}
+.vts-chart__stopka{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
+  fill:#767D88;letter-spacing:.08em}
+
+/* odsłanianie od lewej — krzywa jest przerywana, więc animowanie dashoffset
+   walczyłoby ze wzorem kreskowania; zamiast tego przycinamy rysunek maską */
+.vts-chart__wipe{transform-origin:0 0}
+.js-anim .vts-chart__wipe{transform:scaleX(0)}
+.js-anim .vts-wynik.is-in .vts-chart__wipe{transform:scaleX(1);
+  transition:transform 1.05s cubic-bezier(.25,.7,.3,1) .1s}
+
+/* --- pasek liczb --------------------------------------------------------- */
+.vts-liczby{display:grid;gap:var(--vts-gap-m) var(--vts-gap-l);margin-top:var(--vts-gap-l);
+  padding-top:var(--vts-gap-m);border-top:1px solid var(--vts-line);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr))}
+.vts-liczba{border-left:2px solid var(--vts-accent);padding-left:14px}
+.vts-liczba b{display:block;font-family:var(--vts-font-display);font-weight:700;
+  font-size:var(--vts-step-2);letter-spacing:-.025em;color:var(--vts-text);
+  font-variant-numeric:tabular-nums;margin-bottom:5px}
+.vts-liczba span{display:block;font-family:var(--vts-font-mono);
+  font-size:var(--vts-step--3);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--vts-muted);line-height:1.5}
+
 /* --- pas ze zdjęciem ------------------------------------------------------
  * Zdjęcie jest teksturą rozdzielającą sekcje, nie ilustracją poglądową: siedzi
  * pod ciemnym gradientem, z podpisem na dole. Adnotacja „ilustracyjne" jest
@@ -343,7 +567,7 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
 .vts-band img{display:block;width:100%;height:auto;aspect-ratio:16/6;object-fit:cover}
 .vts-band figcaption{position:absolute;inset:auto 0 0;padding:var(--vts-gap-l) var(--vts-gap-m) var(--vts-gap-m);
   background:linear-gradient(180deg,rgba(8,9,12,0) 0%,rgba(8,9,12,.72) 42%,rgba(8,9,12,.97) 100%)}
-.vts-band__e{display:block;font-family:var(--vts-font-mono);font-size:10.5px;
+.vts-band__e{display:block;font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
   letter-spacing:.2em;text-transform:uppercase;color:var(--vts-accent);margin-bottom:7px}
 /* kolor jawnie — figcaption dziedziczy przygaszoną barwę z motywu bazowego
    i podpis robi się nieczytelny na zdjęciu */
@@ -352,7 +576,7 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
   font-size:var(--vts-step-1);letter-spacing:-.02em;max-width:34ch;text-wrap:balance;
   text-shadow:0 2px 18px rgba(0,0,0,.8)}
 .vts-band__note{position:absolute;right:var(--vts-gap-m);bottom:var(--vts-gap-m);
-  font-family:var(--vts-font-mono);font-size:9px;letter-spacing:.14em;
+  font-family:var(--vts-font-mono);font-size:var(--vts-step--3);letter-spacing:.14em;
   text-transform:uppercase;color:#6B7482}
 @media (max-width:640px){
   .vts-band img{aspect-ratio:16/9}
@@ -366,8 +590,8 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
   border-bottom:1px solid var(--vts-line-soft)}
 .vts-ilist .vts-i{width:23px;height:23px;color:var(--vts-accent);margin-top:2px}
 .vts-ilist div{min-width:0}
-.vts-ilist b{display:block;margin-bottom:4px;font-size:15px}
-.vts-ilist span{color:var(--vts-muted);font-size:14.5px;line-height:1.55}
+.vts-ilist b{display:block;margin-bottom:4px;font-size:var(--vts-step-0)}
+.vts-ilist span{color:var(--vts-muted);font-size:var(--vts-step--1);line-height:1.55}
 
 /* --- FAQ (natywne <details>, bez wtyczki) --- */
 .vts-faq{border-top:1px solid var(--vts-line)}
@@ -376,12 +600,12 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
   font-family:var(--vts-font-display);font-weight:600;font-size:var(--vts-step-0);position:relative}
 .vts-faq summary::-webkit-details-marker{display:none}
 .vts-faq summary::after{content:'+';position:absolute;right:6px;top:50%;translate:0 -50%;
-  color:var(--vts-accent);font-size:20px;font-weight:400}
+  color:var(--vts-accent);font-size:var(--vts-step-1);font-weight:400}
 .vts-faq details[open] summary::after{content:'–'}
 .vts-faq details > div{padding:0 0 var(--vts-gap-s);color:var(--vts-muted);max-width:72ch}
 
 /* --- okruszki --- */
-.vts-crumbs{font-size:12.5px;color:var(--vts-muted);padding-block:var(--vts-gap-s)}
+.vts-crumbs{font-size:var(--vts-step--2);color:var(--vts-muted);padding-block:var(--vts-gap-s)}
 .vts-crumbs a{text-decoration:none}
 .vts-crumbs a:hover{color:var(--vts-accent)}
 .vts-crumbs span{margin-inline:7px;opacity:.5}
@@ -391,15 +615,15 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
   margin-top:var(--vts-gap-xl);padding-block:var(--vts-gap-l) var(--vts-gap-m)}
 .vts-footer__cols{display:grid;gap:var(--vts-gap-l);
   grid-template-columns:repeat(auto-fit,minmax(min(100%,215px),1fr))}
-.vts-footer h4{font-family:var(--vts-font-mono);font-size:11px;letter-spacing:.16em;
+.vts-footer h4{font-family:var(--vts-font-mono);font-size:var(--vts-step--2);letter-spacing:.16em;
   text-transform:uppercase;color:var(--vts-muted);font-weight:500;margin:0 0 var(--vts-gap-s)}
 .vts-footer ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
-.vts-footer a{font-size:14px;text-decoration:none;color:#C7CCD4}
+.vts-footer a{font-size:var(--vts-step--1);text-decoration:none;color:#C7CCD4}
 .vts-footer a:hover{color:var(--vts-accent)}
-.vts-footer__meta{font-size:13px;color:var(--vts-muted);display:grid;gap:6px}
+.vts-footer__meta{font-size:var(--vts-step--1);color:var(--vts-muted);display:grid;gap:6px}
 .vts-footer__bottom{margin-top:var(--vts-gap-l);padding-top:var(--vts-gap-s);
   border-top:1px solid var(--vts-line-soft);display:flex;justify-content:space-between;
-  gap:var(--vts-gap-s);flex-wrap:wrap;font-size:12.5px;color:var(--vts-dim)}
+  gap:var(--vts-gap-s);flex-wrap:wrap;font-size:var(--vts-step--2);color:var(--vts-dim)}
 /* dyskretne wejście do panelu wykresów — to wygoda, nie zabezpieczenie */
 .vts-footer__panel{opacity:.65}
 
@@ -407,7 +631,7 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
 .vts-fab{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;gap:1px;
   background:var(--vts-line);border-top:1px solid var(--vts-line)}
 .vts-fab a{flex:1;text-align:center;padding:13px 8px;background:var(--vts-surface);
-  text-decoration:none;font-weight:700;font-size:13.5px}
+  text-decoration:none;font-weight:700;font-size:var(--vts-step--1)}
 .vts-fab a.is-accent{background:var(--vts-accent);color:var(--vts-on-accent)}
 @media (max-width:720px){.vts-fab{display:flex}body{padding-bottom:52px}}
 
@@ -437,13 +661,13 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
   transition:border-color .16s,background .16s}
 .vts-cat-tile:hover{border-color:var(--vts-accent);background:var(--vts-surface-2)}
 .vts-cat-tile b{display:block;font-family:var(--vts-font-display);font-weight:600;
-  font-size:15px;margin-bottom:3px}
-.vts-cat-tile span{font-family:var(--vts-font-mono);font-size:10.5px;
+  font-size:var(--vts-step-0);margin-bottom:3px}
+.vts-cat-tile span{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
   letter-spacing:.1em;text-transform:uppercase;color:var(--vts-muted)}
 
 .vts-table-wrap{overflow-x:auto;border:1px solid var(--vts-line);border-radius:var(--vts-radius)}
-.vts-table{width:100%;border-collapse:collapse;font-size:14.5px;min-width:600px}
-.vts-table th{text-align:left;font-family:var(--vts-font-mono);font-size:10px;
+.vts-table{width:100%;border-collapse:collapse;font-size:var(--vts-step--1);min-width:600px}
+.vts-table th{text-align:left;font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
   letter-spacing:.14em;text-transform:uppercase;color:var(--vts-muted);font-weight:500;
   padding:12px 16px;border-bottom:1px solid var(--vts-line);background:var(--vts-surface)}
 .vts-table td{padding:12px 16px;border-bottom:1px solid var(--vts-line-soft);
@@ -452,16 +676,16 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
 .vts-table tbody tr:hover{background:var(--vts-surface)}
 .vts-table a{color:var(--vts-text);text-decoration:none;font-weight:600}
 .vts-table a:hover{color:var(--vts-accent)}
-.vts-table__go{font-size:13px;color:var(--vts-accent)!important;white-space:nowrap}
+.vts-table__go{font-size:var(--vts-step--1);color:var(--vts-accent)!important;white-space:nowrap}
 
 .vts-cat-siblings{list-style:none;padding:0;margin:0;display:grid;gap:1px;
   background:var(--vts-line);border:1px solid var(--vts-line);border-radius:var(--vts-radius);
   overflow:hidden}
 .vts-cat-siblings li{background:var(--vts-surface);padding:10px 14px;display:flex;
-  justify-content:space-between;gap:12px;font-size:14px}
+  justify-content:space-between;gap:12px;font-size:var(--vts-step--1)}
 .vts-cat-siblings a{text-decoration:none}
 .vts-cat-siblings a:hover{color:var(--vts-accent)}
-.vts-cat-siblings span{font-family:var(--vts-font-mono);font-size:12.5px;color:var(--vts-muted);
+.vts-cat-siblings span{font-family:var(--vts-font-mono);font-size:var(--vts-step--2);color:var(--vts-muted);
   font-variant-numeric:tabular-nums}
 
 /* --- ekrany dotykowe ---------------------------------------------------
@@ -475,6 +699,11 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
   .vts-cat-siblings a,
   .vts-table a,
   .vts-crumbs a { display:inline-flex; align-items:center; min-height:44px }
+  /* Logo jest odnośnikiem na stronę główną, a po zejściu ze stopnia skali
+     spadło tuż poniżej progu. Wysokość dokładamy odstępem, NIE zmieniając
+     układu: flex w kolumnie rozbijał „VITESSE" na „V" i „ITESSE", bo pierwsza
+     litera jest osobnym elementem. */
+  .vts-brand { display:inline-block; min-height:44px; padding-block:4px }
   .vts-footer ul { gap:0 }
 
   /* Domyślne podświetlenie dotknięcia daje różowy prostokąt — obcy palecie.

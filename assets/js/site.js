@@ -66,6 +66,21 @@
     });
   }
 
+  /* ----------------------------------------------------- światła pojazdu
+   *
+   * Włącznik na rzędzie presetów gasi i zapala reflektory. Zapalenie ponownie
+   * odpala pełną sekwencję zapłonu, bo to ta sama klasa is-lit, którą wiesza
+   * skrypt po wczytaniu zdjęcia.
+   */
+  var power = document.querySelector('[data-power]');
+  if (power && hero) {
+    power.addEventListener('click', function () {
+      var on = !hero.classList.contains('is-lit');
+      hero.classList.toggle('is-lit', on);
+      power.setAttribute('aria-pressed', String(on));
+    });
+  }
+
   /* ------------------------------------------------------- menu mobilne
    *
    * Menu jest nakładką na cały ekran, ale ma zostać POD nagłówkiem, żeby
@@ -115,6 +130,75 @@
     }, { passive: true });
   }
 
+  /* ------------------------------------------------- akordeon z wyłącznością
+   *
+   * Wyłączność robi natywny atrybut name na <details> — działa bez skryptu.
+   * Ten blok jest wyłącznie asekuracją dla przeglądarek, które go jeszcze nie
+   * znają: bez niego rozwijałyby się tam wszystkie pozycje naraz.
+   */
+  if (!('name' in document.createElement('details'))) {
+    document.querySelectorAll('details[name]').forEach(function (d) {
+      d.addEventListener('toggle', function () {
+        if (!d.open) { return; }
+        var grupa = d.getAttribute('name');
+        document.querySelectorAll('details[name="' + grupa + '"]').forEach(function (inny) {
+          if (inny !== d) { inny.open = false; }
+        });
+      });
+    });
+  }
+
+  /* --------------------------------------------------- odliczanie liczb
+   *
+   * Ruszamy z opóźnieniem, żeby liczba dobiła do wartości mniej więcej wtedy,
+   * gdy wskazówka kończy powrót z pełnego wychyłu — inaczej odczyt wyprzedza
+   * przyrząd i sekwencja się rozjeżdża.
+   *
+   * Liczbę bierzemy z atrybutu, a przedrostek i format z tekstu, który wyszedł
+   * z serwera. Dzięki temu „+28", „6,5", „4 853" i „4×4" zachowują się poprawnie —
+   * to ostatnie nie jest liczbą i nie ma atrybutu, więc nie rusza się wcale.
+   *
+   * Ten sam mechanizm obsługuje zegary i pasek liczb — stąd „w środku elementu",
+   * a nie „w zegarze".
+   */
+  function odliczWSrodku(el) {
+    if (!motionOK || !el.querySelectorAll) { return; }
+    [].slice.call(el.querySelectorAll('[data-vts-count]')).forEach(odliczPole);
+  }
+
+  function odliczPole(pole) {
+    if (pole.dataset.vtsDone) { return; }
+    pole.dataset.vtsDone = '1';
+
+    var surowa = pole.dataset.vtsCount.replace(',', '.');
+    var cel    = parseFloat(surowa);
+    if (isNaN(cel)) { return; }
+
+    var wyjsciowy = pole.textContent.trim();
+    var miejsc    = (surowa.split('.')[1] || '').length;
+    var przecin   = pole.dataset.vtsCount.indexOf(',') >= 0;
+    var przed     = wyjsciowy.charAt(0) === '+' ? '+' : '';
+    // Serwer podaje tysiące ze spacją („4 853"). Bez tego licznik kończyłby na
+    // „4853" i format zmieniałby się w trakcie animacji.
+    var spacja    = /\d[\s\u00a0]\d/.test(wyjsciowy);
+    var zapisz    = function (v) {
+      var t = v.toFixed(miejsc);
+      if (spacja) { t = t.replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0'); }
+      pole.textContent = przed + (przecin ? t.replace('.', ',') : t);
+    };
+
+    var start = null, czas = 900;
+    zapisz(0);
+    setTimeout(function () {
+      requestAnimationFrame(function krok(t) {
+        if (start === null) { start = t; }
+        var p = Math.min(1, (t - start) / czas);
+        zapisz(cel * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) { requestAnimationFrame(krok); } else { zapisz(cel); }
+      });
+    }, 700);
+  }
+
   /* ------------------------------------------------- delikatne wejścia kart
    *
    * Animujemy wyłącznie kafelki i karty — bloki tekstowe zostawiamy w spokoju,
@@ -123,7 +207,7 @@
    */
   if (motionOK && 'IntersectionObserver' in window) {
     var items = document.querySelectorAll(
-      '.vts-card, .vts-cat-tile, .vts-dyno__card'
+      '.vts-card, .vts-cat-tile, .vts-dyno__card, .vts-gauge, .vts-wynik, .vts-liczba'
     );
 
     if (items.length) {
@@ -142,6 +226,7 @@
           });
           el.style.transitionDelay = Math.min(sibs.indexOf(el), 7) * 60 + 'ms';
           el.classList.add('is-in');
+          odliczWSrodku(el);
           obs.unobserve(el);
         });
       }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });

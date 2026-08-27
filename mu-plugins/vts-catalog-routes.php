@@ -171,7 +171,8 @@ function vts_render_catalog(array $r): void
 {
     echo '<section class="vts-hero" style="padding-block:var(--vts-gap-m) var(--vts-gap-s)"><div class="vts-wrap">';
     echo vts_catalog_crumbs($r);
-    echo '<h1 style="font-size:var(--vts-step-3);font-style:normal;font-weight:700">'
+    // Rozmiar bierze się teraz z globalnej reguły dla H1 — bez nadpisywania.
+    echo '<h1 style="font-style:normal;font-weight:700">'
        . esc_html(vts_catalog_title($r)) . '</h1>';
     echo '<p class="vts-lead">' . esc_html(vts_catalog_intro($r)) . '</p>';
     echo '</div></section>';
@@ -272,7 +273,7 @@ function vts_view_engine(array $r): void
         <div class="vts-ps__res" style="margin-bottom:var(--vts-gap-m)">
           <div class="vts-ps__cell"><span>Moc fabryczna</span><b><?= (int) $e['stock_hp'] ?> KM</b></div>
           <div class="vts-ps__cell"><span>Moment fabryczny</span><b><?= (int) $e['stock_nm'] ?> Nm</b></div>
-          <div class="vts-ps__cell"><span>Paliwo</span><b style="font-size:16px"><?= esc_html($e['fuel']) ?></b></div>
+          <div class="vts-ps__cell"><span>Paliwo</span><b style="font-size:var(--vts-step-0)"><?= esc_html($e['fuel']) ?></b></div>
           <div class="vts-ps__cell"><span>Moc [kW]</span><b><?= (int) $e['stock_kw'] ?></b></div>
         </div>
 

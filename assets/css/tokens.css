@@ -34,6 +34,12 @@
   --vts-font-body:    'IBM Plex Sans', system-ui, sans-serif;
   --vts-font-mono:    'IBM Plex Mono', ui-monospace, monospace;
 
+  /* Dwa najniższe stopnie istnieją, bo ich brak wymuszał sypanie sztywnych
+   * wartości: drobne etykiety monospace pisano jako 8, 8.5, 9, 9.5, 10, 10.5
+   * i 11 px, zależnie od tego, kto akurat pisał. Teraz są dwa stopnie i tyle.
+   * Dolny nie schodzi poniżej 10 px — niżej podpisy przestają być czytelne. */
+  --vts-step--3: 10px;
+  --vts-step--2: clamp(11.5px, .2vw + 11px, 12.5px);
   --vts-step--1: clamp(13px, .35vw + 12px, 14px);
   --vts-step-0:  clamp(15px, .4vw + 14px, 17px);
   --vts-step-1:  clamp(19px, .7vw + 17px, 23px);
@@ -48,7 +54,10 @@
   --vts-gap-l:  44px;
   --vts-gap-xl: 78px;
 
-  --vts-content: 780px;   /* szerokość tekstu czytanego */
+  --vts-content: 680px;   /* szerokość tekstu czytanego — jedna dla całej strony,
+                             także dla hero. 760 px dawało 93 znaki w wierszu,
+                             czyli powyżej zakresu, w którym czyta się wygodnie;
+                             680 px to około 83 znaki. */
   --vts-wide:   1240px;   /* szerokość kontenera */
   --vts-radius: 4px;      /* twardy, techniczny — nie zaokrąglamy hojnie */
 }
