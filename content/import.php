@@ -17,50 +17,129 @@ function vts_log(string $m): void { echo $m . "\n"; }
 
 /* ------------------------------------------------- formularz kontaktowy */
 
+/**
+ * Definicje formularzy. Osobny formularz per podstrona zamiast jednego z ukrytym
+ * polem tematu: każda strona pyta o co innego, a leady flotowe idą na inną skrzynkę.
+ *
+ * `fields` to wiersze treści maila do warsztatu — pola muszą istnieć w szablonie
+ * z content/forms/{slug}.html, inaczej CF7 wstawi pusty znacznik.
+ */
+function vts_form_defs(): array
+{
+    return [
+        'kontakt' => [
+            'title'   => 'Formularz kontaktowy',
+            'subject' => 'Zapytanie ze strony: [vehicle]',
+            'inbox'   => 'retail',
+            'fields'  => ['Imię' => 'your-name', 'E-mail' => 'your-email',
+                          'Telefon' => 'your-phone', 'Pojazd' => 'vehicle'],
+        ],
+        'floty' => [
+            'title'   => 'Zapytanie flotowe B2B',
+            'subject' => 'Zapytanie flotowe: [company-name] ([fleet-size] szt.)',
+            'inbox'   => 'fleet',
+            'fields'  => ['Imię' => 'your-name', 'Firma' => 'company-name',
+                          'E-mail' => 'your-email', 'Telefon' => 'your-phone',
+                          'Liczba pojazdów' => 'fleet-size', 'Marki' => 'fleet-brands',
+                          'Zakres' => 'scope'],
+        ],
+        'powerbox' => [
+            'title'   => 'Zapytanie o PowerBox',
+            'subject' => 'PowerBox: [vehicle]',
+            'inbox'   => 'retail',
+            'fields'  => ['Imię' => 'your-name', 'E-mail' => 'your-email',
+                          'Telefon' => 'your-phone', 'Pojazd' => 'vehicle',
+                          'Status' => 'status'],
+        ],
+        'ev' => [
+            'title'   => 'Zapytanie EV / Hybryda',
+            'subject' => 'EV / Hybryda: [vehicle]',
+            'inbox'   => 'retail',
+            'fields'  => ['Imię' => 'your-name', 'E-mail' => 'your-email',
+                          'Telefon' => 'your-phone', 'Pojazd' => 'vehicle',
+                          'Zakres' => 'scope', 'Przyłącze' => 'power-supply'],
+        ],
+        'hamownia' => [
+            'title'   => 'Rezerwacja pomiaru na hamowni',
+            'subject' => 'Hamownia: [vehicle] ([kind])',
+            'inbox'   => 'retail',
+            'fields'  => ['Imię' => 'your-name', 'E-mail' => 'your-email',
+                          'Telefon' => 'your-phone', 'Pojazd' => 'vehicle',
+                          'Rodzaj' => 'kind', 'Termin' => 'preferred-date'],
+        ],
+        'ecu' => [
+            'title'   => 'Zgłoszenie — dodatkowe usługi ECU',
+            'subject' => 'Usługi ECU: [vehicle]',
+            'inbox'   => 'retail',
+            'fields'  => ['Imię' => 'your-name', 'E-mail' => 'your-email',
+                          'Telefon' => 'your-phone', 'Pojazd' => 'vehicle',
+                          'Zakres' => 'scope'],
+        ],
+    ];
+}
+
 function vts_import_form(): void
 {
     if (!post_type_exists('wpcf7_contact_form')) {
-        vts_log('Contact Form 7 nieaktywny — pomijam formularz');
+        vts_log('Contact Form 7 nieaktywny — pomijam formularze');
         return;
     }
 
-    $body = file_get_contents(VTS_CONTENT . '/forms/kontakt.html');
     $c    = vts_company();
-    $to   = vts_lead_inbox('retail');
     $from = 'no-reply@' . wp_parse_url(home_url(), PHP_URL_HOST);
 
-    $existing = get_page_by_path('kontakt', OBJECT, 'wpcf7_contact_form');
-    $id = $existing ? $existing->ID : wp_insert_post([
-        'post_type'   => 'wpcf7_contact_form',
-        'post_status' => 'publish',
-        'post_title'  => 'Formularz kontaktowy',
-        'post_name'   => 'kontakt',
-    ]);
-
-    update_post_meta($id, '_form', $body);
-    update_post_meta($id, '_mail', [
-        'active'          => true,
-        'subject'         => '[Vitesse] Zapytanie ze strony: [vehicle]',
-        'sender'          => $c['name'] . ' <' . $from . '>',
-        'recipient'       => $to,
-        'body'            => "Imię:     [your-name]\nE-mail:   [your-email]\nTelefon:  [your-phone]\n"
-                           . "Pojazd:   [vehicle]\n\nTreść:\n[your-message]\n",
-        'additional_headers' => 'Reply-To: [your-email]',
-        'attachments'     => '',
-        'use_html'        => false,
-        'exclude_blank'   => false,
-    ]);
-    update_post_meta($id, '_messages', [
+    $messages = [
         'mail_sent_ok'     => 'Dziękujemy. Odezwiemy się w godzinach pracy warsztatu.',
         'mail_sent_ng'     => 'Nie udało się wysłać wiadomości. Zadzwońcie do nas — ' . $c['phones']['tuning']['number'] . '.',
         'validation_error' => 'Uzupełnijcie zaznaczone pola.',
         'accept_terms'     => 'Zaznaczcie zgodę na kontakt.',
         'invalid_email'    => 'Ten adres e-mail wygląda na niepoprawny.',
         'invalid_required' => 'To pole jest wymagane.',
-    ]);
-    update_post_meta($id, '_locale', 'pl_PL');
+    ];
 
-    vts_log('formularz kontaktowy: id ' . $id . ', odbiorca ' . $to);
+    foreach (vts_form_defs() as $slug => $def) {
+        $plik = VTS_CONTENT . '/forms/' . $slug . '.html';
+        if (!is_readable($plik)) {
+            vts_log('  brak szablonu formularza: ' . $slug . ' — pomijam');
+            continue;
+        }
+
+        $to = vts_lead_inbox($def['inbox']);
+
+        $existing = get_page_by_path($slug, OBJECT, 'wpcf7_contact_form');
+        $id = $existing ? $existing->ID : wp_insert_post([
+            'post_type'   => 'wpcf7_contact_form',
+            'post_status' => 'publish',
+            'post_title'  => $def['title'],
+            'post_name'   => $slug,
+        ]);
+
+        // Wyrównanie etykiet w mailu — Krzysiek czyta to na telefonie, nie w kliencie
+        // z proporcjonalną czcionką, więc kolumna wartości musi trzymać pion.
+        $szer  = max(array_map('mb_strlen', array_keys($def['fields']))) + 2;
+        $body  = '';
+        foreach ($def['fields'] as $etykieta => $pole) {
+            $body .= str_pad($etykieta . ':', $szer) . '[' . $pole . "]\n";
+        }
+        $body .= "\nTreść:\n[your-message]\n";
+
+        update_post_meta($id, '_form', file_get_contents($plik));
+        update_post_meta($id, '_mail', [
+            'active'             => true,
+            'subject'            => '[Vitesse] ' . $def['subject'],
+            'sender'             => $c['name'] . ' <' . $from . '>',
+            'recipient'          => $to,
+            'body'               => $body,
+            'additional_headers' => 'Reply-To: [your-email]',
+            'attachments'        => '',
+            'use_html'           => false,
+            'exclude_blank'      => true,
+        ]);
+        update_post_meta($id, '_messages', $messages);
+        update_post_meta($id, '_locale', 'pl_PL');
+
+        vts_log('formularz ' . $slug . ': id ' . $id . ', odbiorca ' . $to);
+    }
 }
 
 $manifest = json_decode(file_get_contents(VTS_CONTENT . '/pages.json'), true);
@@ -80,17 +159,18 @@ function vts_configure_kit(): void
     $settings = get_post_meta($kit_id, '_elementor_page_settings', true) ?: [];
 
     $settings['system_colors'] = [
-        ['_id' => 'primary',   'title' => 'Pomarańcz',  'color' => '#FF7A00'],
+        ['_id' => 'primary',   'title' => 'Pomarańcz',  'color' => '#F46A00'],
         ['_id' => 'secondary', 'title' => 'Grafit',     'color' => '#171A21'],
         ['_id' => 'text',      'title' => 'Tekst',      'color' => '#F1F2F4'],
         ['_id' => 'accent',    'title' => 'Wyciszony',  'color' => '#8A919E'],
     ];
+    // Jedna rodzina z księgi znaku — nagłówki i tekst różni tylko grubość.
     $settings['system_typography'] = [
         ['_id' => 'primary',   'title' => 'Nagłówki',
-         'typography_typography' => 'custom', 'typography_font_family' => 'Archivo',
+         'typography_typography' => 'custom', 'typography_font_family' => 'IBM Plex Sans',
          'typography_font_weight' => '700'],
         ['_id' => 'secondary', 'title' => 'Podtytuły',
-         'typography_typography' => 'custom', 'typography_font_family' => 'Archivo',
+         'typography_typography' => 'custom', 'typography_font_family' => 'IBM Plex Sans',
          'typography_font_weight' => '600'],
         ['_id' => 'text',      'title' => 'Tekst',
          'typography_typography' => 'custom', 'typography_font_family' => 'IBM Plex Sans',

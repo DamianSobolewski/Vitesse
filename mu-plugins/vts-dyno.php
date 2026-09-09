@@ -126,22 +126,39 @@ function vts_dyno_query(array $args): array
 /* -------------------------------------------------------- shortcode */
 
 add_shortcode('vts_dyno_grid', function () {
-    $data  = vts_dyno_query(['page' => 1]);
-    $marki = get_terms(['taxonomy' => 'vts_dyno_marka', 'hide_empty' => true]);
+    $data = vts_dyno_query(['page' => 1]);
+
+    // Trzy osie filtrowania. Grupę pomijamy, gdy w bazie jest najwyżej jeden term —
+    // rząd chipów z jedną pozycją niczego nie filtruje, a wygląda na zepsuty.
+    $grupy = [
+        ['marka',  'vts_dyno_marka',  'Marka'],
+        ['paliwo', 'vts_dyno_paliwo', 'Paliwo'],
+        ['usluga', 'vts_dyno_usluga', 'Rodzaj usługi'],
+    ];
 
     ob_start(); ?>
     <div class="vts-dyno" data-vts-dyno data-rest="<?= esc_attr(rest_url('vitesse/v1/dyno')) ?>">
-      <?php if (!is_wp_error($marki) && $marki) : ?>
-        <div class="vts-dyno__filters">
-          <a href="<?= esc_url(get_permalink()) ?>" class="vts-dyno__chip is-active" data-filter="">Wszystkie</a>
-          <?php foreach ($marki as $t) : ?>
-            <a href="<?= esc_url(get_term_link($t)) ?>" class="vts-dyno__chip"
-               data-filter="<?= esc_attr($t->slug) ?>"><?= esc_html($t->name) ?></a>
-          <?php endforeach; ?>
-        </div>
-      <?php endif; ?>
 
-      <div class="vts-dyno__grid" data-grid>
+      <?php foreach ($grupy as [$klucz, $tax, $label]) :
+          $terms = get_terms(['taxonomy' => $tax, 'hide_empty' => true]);
+          if (is_wp_error($terms) || count($terms) < 2) {
+              continue;
+          } ?>
+        <div class="vts-dyno__group">
+          <span class="vts-dyno__glabel"><?= esc_html($label) ?></span>
+          <div class="vts-dyno__filters" role="group" aria-label="<?= esc_attr($label) ?>">
+            <a href="<?= esc_url(get_permalink()) ?>" class="vts-dyno__chip is-active"
+               data-filter-group="<?= esc_attr($klucz) ?>" data-filter="">Wszystkie</a>
+            <?php foreach ($terms as $t) : ?>
+              <a href="<?= esc_url(get_term_link($t)) ?>" class="vts-dyno__chip"
+                 data-filter-group="<?= esc_attr($klucz) ?>"
+                 data-filter="<?= esc_attr($t->slug) ?>"><?= esc_html($t->name) ?></a>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      <?php endforeach; ?>
+
+      <div class="vts-grid vts-dyno__grid" data-grid>
         <?php if (!$data['items']) : ?>
           <p class="vts-dyno__empty">Nie ma jeszcze opublikowanych wykresów.
             Pierwsze pojawią się tu zaraz po wprowadzeniu ich do panelu.</p>

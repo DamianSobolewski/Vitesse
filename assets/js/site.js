@@ -235,3 +235,76 @@
     }
   }
 })();
+
+/* ------------------------------------------------------------ slajder hero
+ *
+ * Cztery hasła na jednym tle sekcji. Slajd 0 nosi <h1> i warstwę świateł, więc
+ * sekcja startuje właśnie od niego — LCP i sekwencja zapłonu zostają nietknięte.
+ *
+ * Autoprzewijanie zatrzymuje się pod kursorem i przy fokusie klawiatury, a przy
+ * `prefers-reduced-motion` nie startuje wcale: kręcąca się karuzela to jeden
+ * z najczęstszych powodów, dla których ludzie tę preferencję włączają.
+ */
+(function () {
+  'use strict';
+
+  var hero = document.querySelector('[data-vts-hero-slider]');
+  if (!hero) { return; }
+
+  var slajdy = [].slice.call(hero.querySelectorAll('[data-slide]'));
+  var tla    = [].slice.call(hero.querySelectorAll('[data-slide-bg]'));
+  var kropki = [].slice.call(hero.querySelectorAll('[data-slide-dot]'));
+  if (slajdy.length < 2) { return; }
+
+  var ruchOK = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var teraz  = 0;
+  var timer  = null;
+
+  function pokaz(i) {
+    if (i === teraz) { return; }
+    teraz = (i + slajdy.length) % slajdy.length;
+
+    slajdy.forEach(function (el, n) {
+      var on = n === teraz;
+      // `hidden` zdejmujemy przed animacją, żeby przejście miało od czego wystartować.
+      if (on) { el.hidden = false; }
+      requestAnimationFrame(function () { el.classList.toggle('is-active', on); });
+      if (!on) { setTimeout(function () { if (n !== teraz) { el.hidden = true; } }, 500); }
+    });
+
+    tla.forEach(function (el, n) { el.classList.toggle('is-active', n === teraz); });
+    kropki.forEach(function (el, n) {
+      el.classList.toggle('is-active', n === teraz);
+      el.setAttribute('aria-selected', n === teraz ? 'true' : 'false');
+    });
+
+    hero.dataset.active = String(teraz);
+  }
+
+  function start() {
+    if (!ruchOK || timer) { return; }
+    timer = setInterval(function () { pokaz(teraz + 1); }, 7000);
+  }
+
+  function stop() {
+    clearInterval(timer);
+    timer = null;
+  }
+
+  kropki.forEach(function (el, n) {
+    el.addEventListener('click', function () { stop(); pokaz(n); });
+  });
+
+  hero.addEventListener('mouseenter', stop);
+  hero.addEventListener('mouseleave', start);
+  hero.addEventListener('focusin', stop);
+  hero.addEventListener('focusout', function (e) {
+    if (!hero.contains(e.relatedTarget)) { start(); }
+  });
+  // Karta w tle nie ma po co przewijać slajdów.
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) { stop(); } else { start(); }
+  });
+
+  start();
+})();

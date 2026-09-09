@@ -255,8 +255,9 @@ for (const [w, h, opis] of [[1440, 1000, 'desktop'], [390, 844, 'telefon']]) {
   const widoczna = await p.locator('[data-sel=make]').isVisible();
   const marek = await p.locator('[data-sel=make] option').count();
   const zegarow = await p.locator('.vts-gauge').count();
-  widoczna && marek > 50 && zegarow === 4
-    ? ok(`bez JS: kaskada widoczna (${marek} marek), ${zegarow} zegary narysowane`)
+  // Pięć filarów oferty, zgodnie ze strukturą serwisu (było cztery).
+  widoczna && marek > 50 && zegarow === 5
+    ? ok(`bez JS: kaskada widoczna (${marek} marek), ${zegarow} zegarow narysowanych`)
     : zle(`bez JS: kaskada=${widoczna}, marek=${marek}, zegarow=${zegarow}`);
   await c.close();
 }

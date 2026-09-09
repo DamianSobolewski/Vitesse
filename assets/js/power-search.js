@@ -36,7 +36,12 @@
     var errBox = root.querySelector('[data-err]');
     var note   = root.querySelector('[data-note]');
 
-    var token = null, engine = null, stockHp = 0, warianty = null;
+    var token = null, engine = null, stockHp = 0, warianty = null, vin = '';
+
+    var vinBox   = root.querySelector('[data-vin]');
+    var vinInput = root.querySelector('[data-vin-input]');
+    var vinMsg   = root.querySelector('[data-vin-msg]');
+    var cta      = root.querySelector('[data-cta]');
 
     function reset(select, placeholder) {
       select.innerHTML = '';
@@ -80,6 +85,7 @@
 
     function zgasCaly() {
       zgas();
+      if (cta) { cta.disabled = true; }
       ['shp', 'snm'].forEach(function (k) { field(k).textContent = PUSTE; });
       field('veh').textContent = 'Wybierz pojazd z listy poniżej';
       field('veh').classList.remove('is-set');
@@ -122,6 +128,7 @@
 
       zgas();
       out.hidden = false;
+      if (cta) { cta.disabled = false; }
 
       var pojazd = sel('make').selectedOptions[0].text + ' ' +
                    sel('model').selectedOptions[0].text + ' · ' + row.name;
@@ -140,6 +147,69 @@
       if (row.stock_nm) { licz(field('snm'), 0, row.stock_nm, ' Nm'); }
       else { field('snm').textContent = 'brak danych'; }
     });
+
+    /* Górny rząd: VIN.
+       Endpoint zwraca wyłącznie markę i rok — nigdy wartości po modyfikacji.
+       Trafienie ustawia pierwszy select i wyzwala tę samą kaskadę co klik,
+       więc nie ma tu drugiej ścieżki do utrzymania. Pudło sprowadza użytkownika
+       o rząd niżej zamiast zostawiać go z samym błędem. */
+    if (vinBox && vinInput) {
+      var vinGo   = root.querySelector('[data-vin-go]');
+      var vinAuto = false;
+
+      var vinPokaz = function (tekst, ok) {
+        vinMsg.textContent = tekst;
+        vinMsg.hidden = !tekst;
+        vinMsg.classList.toggle('is-ok', !!ok);
+      };
+
+      var vinSzukaj = function () {
+        var v = (vinInput.value || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+        vinInput.value = v;
+
+        if (!v) { vinPokaz('', false); return; }
+        if (v.length !== 17) { vinPokaz('Numer VIN ma 17 znaków — wpisano ' + v.length + '.', false); return; }
+
+        vinGo.disabled = true;
+        get('/catalog/vin', { vin: v })
+          .then(function (res) {
+            vinPokaz(res.message, res.ok);
+            if (!res.ok || !res.make) { sel('make').focus(); return; }
+
+            // Podstawienie marki wyzwala ten sam `change` co klik, a ten czyści VIN.
+            // Flaga odróżnia zmianę z dekodera od ręcznej.
+            vinAuto = true;
+            sel('make').value = res.make.slug;
+            sel('make').dispatchEvent(new Event('change'));
+            vinAuto = false;
+            vin = v;
+            sel('model').focus();
+          })
+          .catch(function () { vinPokaz('Nie udało się sprawdzić numeru — wybierzcie pojazd z list poniżej.', false); })
+          .finally(function () { vinGo.disabled = false; });
+      };
+
+      vinGo.addEventListener('click', vinSzukaj);
+      vinInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); vinSzukaj(); }
+      });
+      // Ręczna zmiana marki unieważnia VIN — inaczej lead niósłby numer pojazdu,
+      // którego użytkownik już nie wybiera.
+      sel('make').addEventListener('change', function () {
+        if (!vinAuto) { vin = ''; }
+      });
+    }
+
+    /* Przycisk konwersji. Bramka i tak siedzi niżej w formularzu — CTA tylko
+       do niej przewija, żeby na telefonie nie trzeba było szukać pola e-mail. */
+    if (cta) {
+      cta.addEventListener('click', function () {
+        if (out.hidden) { return; }
+        out.scrollIntoView({ behavior: motionOK ? 'smooth' : 'auto', block: 'center' });
+        var email = gate.querySelector('[name=email]');
+        if (email && !gate.hidden) { email.focus({ preventScroll: true }); }
+      });
+    }
 
     gate.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -162,6 +232,7 @@
           engine_id: engine,
           token: token,
           email: email.value,
+          vin: vin,
           consent: true,
           company: gate.querySelector('[name=company]').value
         })

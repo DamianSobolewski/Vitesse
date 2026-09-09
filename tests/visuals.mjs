@@ -10,10 +10,17 @@
 import { chromium } from 'playwright';
 import { readFileSync } from 'node:fs';
 import { execSync } from 'node:child_process';
+import { tmpdir } from 'node:os';
 
 const BASE = process.env.VTS_BASE || 'http://localhost:8090';
-const OUT  = '/tmp/claude-1000/-home-damian-Workspace-Vitesse/bdf3180e-44cb-47e5-a8c4-6c4d5405a949/scratchpad';
-const SZEROKOSCI = [1440, 1280, 1100, 950, 700, 390];
+// Katalog na zrzuty. Wcześniej stała tu ścieżka jednej sesji roboczej, która
+// na innej maszynie po prostu nie istnieje — test wywracał się na ostatnim
+// kroku. Domyślnie idzie do systemowego katalogu tymczasowego.
+const OUT  = process.env.VTS_OUT || tmpdir();
+// Szerokosci dobrane pod progi kolumn, a nie „okraglo": 1000 i 620 wychwycily
+// realne bledy (stopka 3+1, pasek liczb 3+1), ktorych zestaw 1440/1280/1100/950
+// nie widzial.
+const SZEROKOSCI = [1440, 1280, 1100, 1000, 950, 700, 620, 500, 390];
 const STRONY = ['/', '/podnoszenie-mocy/', '/podnoszenie-mocy/chip-tuning/',
   '/podnoszenie-mocy/powerboxy/', '/podnoszenie-mocy/odblokowywanie-sterownikow/',
   '/podnoszenie-mocy/oferta-dla-flot/', '/podnoszenie-mocy/dodatkowe-uslugi-ecu/',
@@ -24,15 +31,20 @@ let bledy = 0;
 const zle = (m) => { bledy++; console.log('  BLAD  ' + m); };
 const ok  = (m) => console.log('  ok    ' + m);
 
-/* --- 1. sierory w siatkach ------------------------------------------------ */
+/* --- 1. ostatni rzad siatki -----------------------------------------------
+ * Zasada z theme.css: ostatni rzad jest albo pelny, albo wysrodkowany, albo —
+ * gdy zostal w nim jeden kafelek — rozciagniety na cala szerokosc. Kafelek
+ * wiszacy przy lewej krawedzi to blad ukladu, nie wariant. Sprawdzamy oba
+ * rodzaje siatek kafelkowych: .vts-grid i .vts-gauges.
+ */
 for (const w of SZEROKOSCI) {
   const p = await b.newPage({ viewport: { width: w, height: 900 } });
   const znalezione = [];
   for (const s of STRONY) {
     await p.goto(BASE + s, { waitUntil: 'domcontentloaded' });
     await p.waitForTimeout(120);
-    const r = await p.evaluate(() => [...document.querySelectorAll('.vts-grid')].map((g) => {
-      const szer = g.getBoundingClientRect().width;
+    const r = await p.evaluate(() => [...document.querySelectorAll('.vts-grid,.vts-gauges')].map((g) => {
+      const pud = g.getBoundingClientRect();
       const rzedy = new Map();
       for (const c of g.children) {
         const t = Math.round(c.getBoundingClientRect().top);
@@ -41,17 +53,20 @@ for (const w of SZEROKOSCI) {
       }
       const klucze = [...rzedy.keys()].sort((a, c) => a - c);
       const uklad  = klucze.map((k) => rzedy.get(k).length);
-      const kolumn = Math.max(...uklad);
       const ostatni = rzedy.get(klucze[klucze.length - 1]);
-      // sierota = jeden kafelek w ostatnim rzedzie, ktory NIE zajmuje calej szerokosci
-      const sierota = kolumn > 1 && uklad.length > 1 && ostatni.length === 1
-        && ostatni[0].getBoundingClientRect().width < szer * 0.9;
-      return { n: g.children.length, uklad: uklad.join('+'), sierota };
+      const pierwszy = rzedy.get(klucze[0]);
+      // rzad pelny albo jedyny — nie ma czego sprawdzac
+      if (uklad.length < 2 || ostatni.length === pierwszy.length) return { ok: true };
+      const L = ostatni[0].getBoundingClientRect().left - pud.left;
+      const P = pud.right - ostatni[ostatni.length - 1].getBoundingClientRect().right;
+      // dopuszczalne: cala szerokosc (L i P przy zerze) albo srodek (L = P)
+      const dobry = (L < 2 && P < 2) || Math.abs(L - P) < 4;
+      return { ok: dobry, n: g.children.length, uklad: uklad.join('+'), L: Math.round(L), P: Math.round(P) };
     }));
-    r.forEach((x) => { if (x.sierota) znalezione.push(`${s} ${x.n}=${x.uklad}`); });
+    r.forEach((x) => { if (!x.ok) znalezione.push(`${s} ${x.n}=${x.uklad} (lewa ${x.L}, prawa ${x.P})`); });
   }
-  znalezione.length ? zle(`${w}px — sieroty: ${znalezione.join(' | ')}`)
-                    : ok(`${w}px — zaden rzad nie zostawia samotnego kafelka`);
+  znalezione.length ? zle(`${w}px — niepelny rzad przy lewej krawedzi: ${znalezione.join(' | ')}`)
+                    : ok(`${w}px — ostatni rzad zawsze pelny, wysrodkowany albo na cala szerokosc`);
   await p.close();
 }
 
@@ -144,12 +159,12 @@ for (const w of [1440, 1280, 1100]) {
 /* --- 2. cztery kafelki na laptopie ukladaja sie 2x2 ----------------------- */
 {
   const p = await b.newPage({ viewport: { width: 1100, height: 900 } });
-  await p.goto(BASE + '/', { waitUntil: 'domcontentloaded' });
+  // Szukamy siatki z DOKLADNIE czterema kafelkami — to jej dotyczy regula.
+  // Strona glowna po przebudowie ma siatki 3- i 5-elementowe, wiec czterech
+  // kafelkow szukamy tam, gdzie faktycznie sa: na hamowni.
+  await p.goto(BASE + '/hamownia/', { waitUntil: 'domcontentloaded' });
   await p.waitForTimeout(150);
   const u = await p.evaluate(() => {
-    // Szukamy siatki z DOKLADNIE czterema kafelkami — to jej dotyczy regula.
-    // Wczesniej test bral pierwsza siatke na stronie i przestal cokolwiek
-    // sprawdzac, gdy na gorze pojawila sie sekcja z piecioma wynikami.
     const g = [...document.querySelectorAll('.vts-grid')].find((x) => x.children.length === 4);
     if (!g) return { rzedow: 0, n: 0 };
     const rzedy = new Set([...g.children].map((c) => Math.round(c.getBoundingClientRect().top)));

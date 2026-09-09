@@ -4,8 +4,10 @@
   border:1px solid var(--vts-line);border-radius:100px;color:var(--vts-muted);
   transition:border-color .18s,color .18s}
 .vts-dyno__chip:hover,.vts-dyno__chip.is-active{border-color:var(--vts-accent);color:var(--vts-accent)}
-.vts-dyno__grid{display:grid;gap:var(--vts-gap-s);
-  grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))}
+/* Siatkę bierze ze wspólnej .vts-grid (klasa jest w znaczniku) — razem
+   z regułami, które pilnują, żeby ostatni rząd nie został z jednym kafelkiem
+   przy lewej krawędzi. Wcześniej miała własny auto-fill i przy czterech
+   wykresach wychodziło 3+1. */
 .vts-dyno__card{background:var(--vts-surface);border:1px solid var(--vts-line);
   border-radius:var(--vts-radius);overflow:hidden;text-decoration:none;display:block;
   transition:border-color .18s,transform .18s}

@@ -62,14 +62,14 @@ i `pages.json`. Zmiany klikane w edytorze zostaną nadpisane przy następnym imp
 | `vts-schema.php` | 7 własnych tabel, `dbDelta`, klucze obce |
 | `vts-catalog.php` | odczyt katalogu, słownik usług, `vts_visibility_sql()` |
 | `vts-catalog-routes.php` | adresy `/chiptuning/{marka}/{model}/{generacja}/{silnik}/` |
-| `vts-power-search.php` | REST kaskady, token HMAC, bramka leadowa |
+| `vts-power-search.php` | REST kaskady, dekoder VIN, token HMAC, bramka leadowa |
 | `vts-leads.php` | zapis leada, mail, autoresponder, retencja, podgląd w adminie |
 | `vts-fleet-calc.php` | kalkulator oszczędności flotowych |
 | `vts-dyno.php` | CPT wykresów, taksonomie, siatka z filtrem |
 | `vts-dyno-panel.php` | rola `vts_dyno_operator`, okrojony wp-admin |
 | `vts-redirects.php` | matryca 301 ze starego serwisu |
 | `vts-site.php` | zasoby, nagłówek, stopka 4-kolumnowa, FAB |
-| `vts-content.php` | hero, FAQ, kontakt, okruszki, JSON-LD |
+| `vts-content.php` | hero (slajder + hero podstron), przewagi, proces, etapy, FAQ, kontakt, mapa, JSON-LD |
 | `vts-dev-mail.php` | poczta → Mailpit, samowyłączenie poza localhostem |
 
 ---
@@ -166,8 +166,8 @@ node tests/redirects.mjs    # 71 starych adresów → 301 w jednym skoku na stro
 node tests/full-check.mjs   # kaskada, bramka, kalkulator, wykresy, LCP
 ```
 
-Stan ostatniego przebiegu: RWD bez zastrzeżeń, 71/71 przekierowań, LCP ~250 ms,
-zero błędów JavaScriptu.
+Stan ostatniego przebiegu: wszystkie osiem zestawów przechodzi — RWD bez zastrzeżeń,
+72/72 przekierowania, LCP ~330 ms, zero błędów JavaScriptu.
 
 ---
 
@@ -178,11 +178,56 @@ zero błędów JavaScriptu.
 - [ ] Skrzynki leadowe w `.env`: `VTS_LEAD_INBOX`, `VTS_LEAD_INBOX_FLEET`
 - [ ] SMTP produkcyjny + SPF/DKIM/DMARC (bez tego leady trafią do spamu)
 - [ ] Zastąpić zdjęcia zastępcze materiałem klienta; usunąć dane z `bin/seed-dev.sh`
+- [ ] **Dowód społeczny** — realne opinie i ocena z profilu Google zamiast danych
+      demonstracyjnych z `bin/seed-dev.sh`:
+      `wp option update vts_google_rating|vts_google_reviews_count|vts_google_reviews_url|vts_reviews`.
+      Dopóki `vts_reviews` jest puste, sekcja „Co mówią klienci" **nie renderuje się wcale** —
+      i tak ma zostać, dopóki nie ma czego pokazać.
+- [ ] **Certyfikat V-tech** — skan lub zdjęcie do sekcji dowodu społecznego (brak materiału)
 - [ ] Archiwum wykresów z hamowni + zgody właścicieli na publikację
-- [ ] Akceptacja prawna: regulamin, polityka prywatności, treści o układach spalin
+- [ ] **Akceptacja prawna treści DPF / EGR / SCR.** Flaga `vts_feature_emissions_pages`
+      jest **włączona** na wyraźną decyzję klienta (mail o strukturze serwisu), a kafle
+      tych układów stoją na `/podnoszenie-mocy/dodatkowe-uslugi-ecu/` i w bloku flotowym.
+      Wyłączenie z powrotem to `wp option update vts_feature_emissions_pages 0`.
+- [ ] Akceptacja prawna: regulamin, polityka prywatności
+- [ ] **Dekoder VIN** — `vts_feature_vin_decoder` jest włączony i rozpoznaje markę
+      po WMI z własnego katalogu (100 kodów, `vts_vin_wmi_map()`). Do decyzji, czy
+      dokładamy płatne API pełnego dekodowania (model + wersja silnika) — patrz
+      `PYTANIA-DO-KLIENTA.md`. Bez niego użytkownik po rozpoznaniu marki i tak
+      wybiera model i silnik ręcznie.
+- [ ] Zdjęcia hero dla slajdów 2–4 i dla hero podstron — dziś slajder korzysta
+      z pasów `pas-chip`, `pas-floty` i `pas-onas`, czyli materiału ilustracyjnego
 - [ ] GA4 + Consent Mode v2 i baner zgody (jeszcze nie wdrożone)
 - [ ] Google Search Console, sitemapa katalogu (provider jeszcze nie wdrożony)
 - [ ] Przełączenie DNS; stary serwer zostawić działający ~30 dni jako siatka bezpieczeństwa
+
+---
+
+## Struktura sekcji
+
+Układ podstron odpowiada zaktualizowanej strukturze serwisu przysłanej przez klienta.
+Trzy rzeczy warto pamiętać przy dokładaniu kolejnych sekcji:
+
+**1. Żadna sekcja nie może być samotną kolumną prozy.**
+`--vts-content: 680px` (`assets/css/tokens.css`) to miara długości wiersza, nie szerokość
+sekcji — i taka zostaje. Ale sekcja złożona z samego `.vts-narrow` renderuje się jako wąski
+słupek w kontenerze 1240 px, z pustą prawą połową. Każdy blok tekstu dostaje więc towarzysza:
+`.vts-split` z kartą, listą ikon, pasem zdjęciowym, wyszukiwarką albo formularzem.
+
+**2. Sekcje wielokrotnego użytku są shortcode'ami, nie kopiowanym HTML-em.**
+`[vts_usps]` (5 przewag), `[vts_proces]` (5 kroków), `[vts_stages]` (Stage 1/2),
+`[vts_social_proof]`, `[vts_map]`, `[vts_gauges]` (5 filarów). Proces stoi na stronie
+głównej i na `/podnoszenie-mocy/` — z jednego źródła.
+
+**3. Hero podstrony konfiguruje `vts_page_hero($slug)` w `vts-content.php`.**
+Slug bez wpisu dostaje wariant minimalny (okruszki + H1), więc strony prawne i katalog
+nie wymagają niczego. Slajder strony głównej: `vts_hero_slides()` — nagłówek `<h1>` nosi
+wyłącznie slajd 0, bo na stronie jest jeden nagłówek pierwszego poziomu.
+
+**4. Formularze: osobny CF7 na podstronę.**
+Definicje w `vts_form_defs()` (`content/import.php`), szablony pól w `content/forms/*.html`,
+wstawianie przez `[vts_contact_form form="floty"]`. Zapytania flotowe idą na
+`VTS_LEAD_INBOX_FLEET`, reszta na `VTS_LEAD_INBOX`.
 
 ---
 
@@ -190,9 +235,9 @@ zero błędów JavaScriptu.
 
 ```bash
 wp option update vts_feature_jlr_service 1      # linia serwisowa Jaguar / Land Rover
-wp option update vts_feature_vin_decoder 1      # dekoder VIN (etap 2)
+wp option update vts_feature_vin_decoder 0      # wyłączenie pola VIN w wyszukiwarce
 wp option update vts_feature_ai_agent 1         # asystent AI (etap 2)
-wp option update vts_feature_emissions_pages 1  # treści DPF/EGR/SCR — po opinii prawnej
+wp option update vts_feature_emissions_pages 0  # ukrycie treści DPF/EGR/SCR (domyślnie włączone)
 wp option update vts_catalog_index_level model  # cofnięcie indeksowania katalogu
 ```
 

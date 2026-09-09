@@ -31,12 +31,14 @@ function vts_feature(string $flag): bool
     static $defaults = [
         // Serwis aut osobowych (Jaguar / Land Rover) — architektura gotowa, treść niewidoczna.
         'jlr_service'     => false,
-        // Dekoder VIN jako trzecie wejście wyszukiwarki (faza 5).
-        'vin_decoder'     => false,
+        // Dekoder VIN jako trzecie wejście wyszukiwarki. Rozpoznanie marki po WMI
+        // z własnego katalogu — bez płatnego API. Brak trafienia → wybór ręczny.
+        'vin_decoder'     => true,
         // Agent AI nad katalogiem (faza 5). Bez niego działa wyszukiwanie pełnotekstowe.
         'ai_agent'        => false,
-        // Podstrony DPF/EGR/SCR. Domyślnie WYŁĄCZONE do czasu akceptacji prawnej klienta.
-        'emissions_pages' => false,
+        // Podstrony DPF/EGR/SCR. Włączone na wyraźną decyzję klienta (mail o strukturze
+        // serwisu). Akceptacja prawna treści pozostaje pozycją na liście przed startem.
+        'emissions_pages' => true,
     ];
 
     if (!array_key_exists($flag, $defaults)) {

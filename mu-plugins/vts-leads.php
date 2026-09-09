@@ -67,6 +67,7 @@ function vts_lead_store(array $data)
         'phone'             => sanitize_text_field($data['phone'] ?? '') ?: null,
         'name'              => sanitize_text_field($data['name'] ?? '') ?: null,
         'engine_id'         => !empty($data['engine_id']) ? (int) $data['engine_id'] : null,
+        'vin'               => strtoupper(sanitize_text_field($data['vin'] ?? '')) ?: null,
         'service_code'      => sanitize_key($data['service_code'] ?? '') ?: null,
         'query_text'        => sanitize_text_field($data['query_text'] ?? '') ?: null,
         'payload_json'      => !empty($data['payload']) ? wp_json_encode($data['payload']) : null,
@@ -108,6 +109,9 @@ function vts_lead_notify(int $id, array $data): void
     ];
     if (!empty($data['phone'])) {
         $lines[] = 'Telefon: ' . $data['phone'];
+    }
+    if (!empty($data['vin'])) {
+        $lines[] = 'VIN:     ' . $data['vin'];
     }
     $lines[] = 'Źródło:  ' . ($data['source'] ?? '—');
 

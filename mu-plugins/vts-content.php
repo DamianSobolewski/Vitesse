@@ -193,25 +193,124 @@ function vts_render_hero_light(): void
     <?php
 }
 
+/**
+ * Slajdy hero strony głównej.
+ *
+ * Nagłówek nosi tylko pierwszy slajd — to jedyny <h1> na stronie i nie może się
+ * mnożyć razem z karuzelą. Pozostałe dostają <p> w tej samej skali; dla czytnika
+ * ekranu i tak liczy się wyłącznie slajd aktywny, bo nieaktywne są `hidden`.
+ *
+ * Warstwa świetlna („zapłon") jest przypisana do geometrii hero.webp — reflektory
+ * mają w niej stałe współrzędne — więc jedzie wyłącznie ze slajdem 0.
+ */
+function vts_hero_slides(): array
+{
+    return [
+        [
+            'img'     => 'hero',
+            'light'   => true,
+            'eyebrow' => 'Hamownia 4×4 · Łódź',
+            'title'   => 'Odblokowanie sterowników ECU <span style="color:var(--vts-accent)">na miejscu</span>, w kilka godzin.',
+            'lead'    => 'Najnowsze modele bez wysyłki za granicę. Zamknięty sterownik otwieramy '
+                       . 'u siebie, więc cała robota mieści się w jednej wizycie.',
+        ],
+        [
+            'img'     => 'pas-chip',
+            'eyebrow' => 'Gwarancja i leasing',
+            'title'   => 'Chip tuning aut na gwarancji i w leasingu.',
+            'lead'    => 'Mówimy wprost, co producent może wykryć i co mówi umowa. Tam, gdzie ryzyko '
+                       . 'jest zbyt duże, proponujemy zdejmowany PowerBox zamiast zapisu w sterowniku.',
+        ],
+        [
+            'img'     => 'pas-floty',
+            'eyebrow' => 'Floty B2B',
+            'title'   => 'Eco-tuning i zarządzanie flotą.',
+            'lead'    => 'Zmniejsz zużycie paliwa i załóż limitery prędkości w firmowym parku pojazdów. '
+                       . 'Obsługa partiami, faktura VAT, pomiar na każdym egzemplarzu.',
+        ],
+        [
+            'img'     => 'pas-onas',
+            'eyebrow' => 'Zaplecze pomiarowe',
+            'title'   => 'Hamownia obciążeniowa 4×4 i stanowisko motocyklowe w Łodzi.',
+            'lead'    => 'Pomiar mocy i momentu na kołach — auta 2WD i 4×4, dostawcze, kampery '
+                       . 'oraz motocykle. Także jako samodzielna usługa.',
+        ],
+    ];
+}
+
+/** Adres obrazu slajdu; `hero` respektuje podmianę z opcji `vts_hero_image`. */
+function vts_hero_slide_img(string $name, string $size = ''): string
+{
+    if ($name === 'hero') {
+        return vts_hero_image_url($size);
+    }
+
+    $file  = $name . ($size === 'sm' ? '-sm' : '') . '.webp';
+    $local = VTS_ASSETS_DIR . '/img/' . $file;
+
+    return file_exists($local) ? VTS_ASSETS_URL . '/img/' . $file : '';
+}
+
 function vts_render_home_hero(): void
 {
-    $img = vts_hero_image_url();
+    $slides = array_values(array_filter(vts_hero_slides(), function ($s) {
+        return vts_hero_slide_img($s['img']) !== '';
+    }));
+
+    if (!$slides) {
+        $slides = [vts_hero_slides()[0]];
+    }
+
+    $multi = count($slides) > 1;
     ?>
-    <section class="vts-hero">
-      <?php if ($img) : ?>
-        <div class="vts-hero__bg"
-             style="--vts-hero-img:url('<?= esc_url($img) ?>');--vts-hero-img-sm:url('<?= esc_url(vts_hero_image_url('sm') ?: $img) ?>')"></div>
-        <?php vts_render_hero_light(); ?>
-      <?php endif; ?>
+    <section class="vts-hero vts-hero--slider" data-active="0"
+             <?= $multi ? 'data-vts-hero-slider' : '' ?>>
+      <?php foreach ($slides as $i => $s) :
+          $img = vts_hero_slide_img($s['img']);
+          if (!$img) {
+              continue;
+          }
+          $sm = vts_hero_slide_img($s['img'], 'sm') ?: $img;
+          ?>
+        <?php /* Obraz przypisujemy dopiero klasie .is-active (theme.css) — dzięki temu
+                 przeglądarka pobiera tło slajdu 0 od razu, a pozostałe dopiero przy
+                 przewinięciu. Bez tego cztery zdjęcia konkurowałyby o LCP. */ ?>
+        <div class="vts-hero__bg<?= $i === 0 ? ' is-active' : '' ?>" data-slide-bg="<?= $i ?>"
+             style="--vts-hero-img:url('<?= esc_url($img) ?>');--vts-hero-img-sm:url('<?= esc_url($sm) ?>')"></div>
+        <?php if (!empty($s['light'])) { vts_render_hero_light(); } ?>
+      <?php endforeach; ?>
+
       <div class="vts-hero__scrim"></div>
       <div class="vts-wrap">
         <div class="vts-hero__in">
-          <p class="vts-eyebrow">Hamownia 4×4 · Łódź</p>
-          <h1>Moc z pomiaru,<br>nie z <span style="color:var(--vts-accent)">folderu</span>.</h1>
-          <p class="vts-lead">Chip tuning i modyfikacje sterowników. Każdą zmianę potwierdzamy
-            pomiarem na hamowni — przed i po, na tym samym stanowisku.</p>
 
-          <?= do_shortcode('[vts_power_search]') ?>
+          <div class="vts-hero__slides" aria-live="polite">
+            <?php foreach ($slides as $i => $s) : ?>
+              <div class="vts-hero__slide<?= $i === 0 ? ' is-active' : '' ?>"
+                   data-slide="<?= $i ?>" <?= $i === 0 ? '' : 'hidden' ?>>
+                <p class="vts-eyebrow"><?= esc_html($s['eyebrow']) ?></p>
+                <?php if ($i === 0) : ?>
+                  <h1><?= wp_kses_post($s['title']) ?></h1>
+                <?php else : ?>
+                  <p class="vts-hero__title"><?= wp_kses_post($s['title']) ?></p>
+                <?php endif; ?>
+                <p class="vts-lead"><?= esc_html($s['lead']) ?></p>
+              </div>
+            <?php endforeach; ?>
+          </div>
+
+          <?php if ($multi) : ?>
+            <div class="vts-hero__dots" role="tablist" aria-label="Slajdy">
+              <?php foreach ($slides as $i => $s) : ?>
+                <button type="button" role="tab" data-slide-dot="<?= $i ?>"
+                        class="<?= $i === 0 ? 'is-active' : '' ?>"
+                        aria-selected="<?= $i === 0 ? 'true' : 'false' ?>"
+                        aria-label="<?= esc_attr($s['eyebrow']) ?>"></button>
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
+
+          <?= do_shortcode('[vts_power_search layout="hero"]') ?>
 
           <div class="vts-stats">
             <div class="vts-stat"><b>2008</b><span>autoryzacja V-tech</span></div>
@@ -224,14 +323,103 @@ function vts_render_home_hero(): void
     <?php
 }
 
+/**
+ * Hero podstrony.
+ *
+ * Do niedawna były to same okruszki i H1, przez co każda podstrona zaczynała się
+ * akapitem prozy w kolumnie 680 px — klient słusznie zgłosił, że to wygląda
+ * na niedokończone. Konfiguracja poniżej dokłada nadkreślenie, lead i zdjęcie tła.
+ * Strony spoza mapy (prawne, katalog, wpisy) zachowują wariant minimalny.
+ */
+function vts_page_hero(string $slug): array
+{
+    $map = [
+        'podnoszenie-mocy' => [
+            'eyebrow' => 'Tuning i performance',
+            'lead'    => 'Chip tuning, PowerBoxy, odblokowywanie sterowników, eco-tuning dla flot '
+                       . 'i dodatkowe prace na ECU. Każdą zmianę potwierdzamy pomiarem.',
+        ],
+        'chip-tuning' => [
+            'eyebrow' => 'Tuning i performance',
+            'lead'    => 'Rezerwy mocy, które producent zostawił w silniku, uwalniamy bezpiecznie — '
+                       . 'z zapisem oryginalnego oprogramowania i pomiarem na hamowni przed i po.',
+            'img'     => 'pas-chip',
+        ],
+        'powerboxy' => [
+            'eyebrow' => 'Plug &amp; Play',
+            'lead'    => 'Moduł bez ingerencji w oprogramowanie sterownika. Montaż i demontaż '
+                       . 'zajmują kilkanaście minut — także w rodzinie silników Volvo VEA.',
+        ],
+        'odblokowywanie-sterownikow' => [
+            'eyebrow' => 'ECU unlock',
+            'lead'    => 'Zamknięte sterowniki otwieramy na miejscu, w kilka godzin. '
+                       . 'Bez wysyłki do firmy zewnętrznej i bez tygodnia postoju.',
+        ],
+        'oferta-dla-flot' => [
+            'eyebrow' => 'Eco-tuning i floty B2B',
+            'lead'    => 'Zredukuj koszty paliwa i zwiększ bezpieczeństwo w swojej flocie '
+                       . 'nawet o 15%. Eco-tuning, limitery, obsługa partiami, faktura VAT.',
+            'img'     => 'pas-floty',
+        ],
+        'dodatkowe-uslugi-ecu' => [
+            'eyebrow' => 'Zaawansowana elektronika ECU',
+            'lead'    => 'Prace na sterowniku, które rozwiązują znane problemy fabryczne — '
+                       . 'od układów oczyszczania spalin po ciśnienie oleju i limitery.',
+        ],
+        'ev-hybryda' => [
+            'eyebrow' => 'Strefa EV &amp; Hybrid',
+            'lead'    => 'Zasięg, moc i ładowanie w samochodach elektrycznych oraz hybrydowych. '
+                       . 'Pracujemy na sterownikach, nie na baterii.',
+            'img'     => 'pas-ev',
+        ],
+        'hamownia' => [
+            'eyebrow' => 'Zaplecze pomiarowe Vitesse',
+            'lead'    => 'Hamownia obciążeniowa 4×4 i dedykowane stanowisko motocyklowe. '
+                       . 'Mierzymy moc i moment tam, gdzie realnie trafiają — na kołach.',
+        ],
+        'o-nas' => [
+            'eyebrow' => 'Kim jesteśmy',
+            'lead'    => 'Warsztat w Łodzi z autoryzacją V-tech od 2008 roku. '
+                       . 'Elektronika i pomiary, bez napraw mechanicznych.',
+            'img'     => 'pas-onas',
+        ],
+        'wykresy-i-osiagi' => [
+            'eyebrow' => 'Baza realizacji',
+            'lead'    => 'Wykresy z naszej hamowni — przed modyfikacją i po niej. '
+                       . 'Publikujemy je za zgodą właścicieli pojazdów.',
+        ],
+        'kontakt' => [
+            'eyebrow' => 'Łódź, ul. Kolumny 267C',
+            'lead'    => 'Zadzwońcie albo napiszcie — odpowiadamy w godzinach pracy warsztatu.',
+        ],
+    ];
+
+    return $map[$slug] ?? [];
+}
+
 function vts_render_page_header(): void
 {
+    $hero = is_page() ? vts_page_hero((string) get_post_field('post_name', get_the_ID())) : [];
+    $img  = !empty($hero['img']) ? vts_hero_slide_img($hero['img']) : '';
+    $pad  = $img ? '' : ' style="padding-block:var(--vts-gap-l) var(--vts-gap-m)"';
     ?>
-    <section class="vts-hero" style="padding-block:var(--vts-gap-l) var(--vts-gap-m)">
+    <section class="vts-hero vts-hero--page<?= $img ? ' has-img' : '' ?>"<?= $pad ?>>
+      <?php if ($img) : ?>
+        <div class="vts-hero__bg is-active"
+             style="--vts-hero-img:url('<?= esc_url($img) ?>');--vts-hero-img-sm:url('<?= esc_url(vts_hero_slide_img($hero['img'], 'sm') ?: $img) ?>')"></div>
+      <?php endif; ?>
       <div class="vts-hero__scrim"></div>
       <div class="vts-wrap">
         <?= vts_breadcrumbs() ?>
-        <h1 style="max-width:20ch"><?= esc_html(get_the_title()) ?></h1>
+        <div class="vts-hero__in">
+          <?php if (!empty($hero['eyebrow'])) : ?>
+            <p class="vts-eyebrow"><?= wp_kses_post($hero['eyebrow']) ?></p>
+          <?php endif; ?>
+          <h1 style="max-width:20ch"><?= esc_html(get_the_title()) ?></h1>
+          <?php if (!empty($hero['lead'])) : ?>
+            <p class="vts-lead"><?= wp_kses_post($hero['lead']) ?></p>
+          <?php endif; ?>
+        </div>
       </div>
     </section>
     <?php
@@ -377,46 +565,57 @@ add_shortcode('vts_gauges', function () {
     $chip = vts_sredni_przyrost('chip');
     $eco  = (float) get_option('vts_eco_saving_pct', 6.5);
 
+    // Pięć filarów oferty w kolejności ze struktury serwisu. Każdy prowadzi
+    // w miejsce, które odpowiada na pytanie „czy robicie to, czego szukam?".
     $zegary = [
         [
-            'href'  => home_url('/podnoszenie-mocy/chip-tuning/'),
+            'href'  => home_url('/podnoszenie-mocy/'),
             'val'   => '+' . $chip, 'unit' => 'KM',
             'frac'  => $chip / 100,                       // skala 0–100 KM
-            'title' => 'Chip tuning',
+            'title' => 'Podnoszenie mocy i PowerBoxy',
             'meta'  => 'średni przyrost z katalogu',
-            'desc'  => 'Modyfikacja oprogramowania sterownika. Osobowe, dostawcze, '
-                     . 'ciężarowe, autobusy, kampery, ciągniki i maszyny.',
-        ],
-        [
-            'href'  => home_url('/podnoszenie-mocy/powerboxy/'),
-            'val'   => '15', 'unit' => 'min',
-            'frac'  => 15 / 60,                           // skala 0–60 min
-            'title' => 'PowerBoxy',
-            'meta'  => 'montaż i demontaż',
-            'desc'  => 'Moduł Plug&Play bez ingerencji w oprogramowanie. '
-                     . 'Zdejmowany w kilkanaście minut, także dla Volvo VEA.',
+            'desc'  => 'Chip tuning osobowych, dostawczych, kamperów i ciągników, '
+                     . 'moduły Plug&Play (także Volvo VEA) oraz skrzynie biegów.',
         ],
         [
             'href'  => home_url('/podnoszenie-mocy/oferta-dla-flot/'),
             'val'   => number_format_i18n($eco, 1), 'unit' => '%',
             'frac'  => $eco / 10,                         // skala 0–10 %
-            'title' => 'Eco-tuning dla flot',
+            'title' => 'Oferta dla flot i eco-tuning',
             'meta'  => 'mniej paliwa, zakres 5–8%',
-            'desc'  => 'Niższe spalanie, limitery prędkości i obrotów, '
-                     . 'rozliczenie na fakturę. Policzcie zwrot w kalkulatorze.',
+            'desc'  => 'Redukcja zużycia paliwa w autach firmowych, limitery prędkości '
+                     . 'i obrotów, kalkulator oszczędności.',
+        ],
+        [
+            'href'  => home_url('/podnoszenie-mocy/dodatkowe-uslugi-ecu/'),
+            'val'   => '7', 'unit' => 'prac',
+            'frac'  => 7 / 10,                            // skala 0–10 pozycji
+            'title' => 'Modyfikacje i serwis ECU',
+            'meta'  => 'poza samą mocą',
+            'desc'  => 'Układy oczyszczania spalin, ciśnienie oleju, temperatura pracy, '
+                     . 'limitery, klapy wirowe, doloty, TCU.',
+        ],
+        [
+            'href'  => home_url('/ev-hybryda/'),
+            'val'   => 'EV', 'unit' => '',
+            'frac'  => 0.62,                              // wskaźnik trybu, nie pomiar
+            'title' => 'Pojazdy elektryczne i hybrydy',
+            'meta'  => 'zasięg, moc, ładowanie',
+            'desc'  => 'Zwiększanie zasięgu, odblokowanie momentu oraz dobór, sprzedaż '
+                     . 'i montaż stacji Wallbox.',
         ],
         [
             'href'  => home_url('/hamownia/'),
             'val'   => '4×4', 'unit' => '',
             'frac'  => 0.5,                               // wskaźnik trybu, nie pomiar
-            'title' => 'Hamownia',
+            'title' => 'Hamownia 4×4 i motocyklowa',
             'meta'  => 'napęd na obie osie + moto',
-            'desc'  => 'Pomiar mocy i momentu przed i po modyfikacji. '
-                     . 'Także jako samodzielna usługa diagnostyczna.',
+            'desc'  => 'Pomiary obciążeniowe aut 2WD i 4WD, dostawczych, kamperów '
+                     . 'oraz motocykli. Także jako samodzielna usługa.',
         ],
     ];
 
-    return '<div class="vts-gauges">' . implode('', array_map('vts_gauge', $zegary)) . '</div>';
+    return '<div class="vts-gauges vts-gauges--5">' . implode('', array_map('vts_gauge', $zegary)) . '</div>';
 });
 
 /* Komentarze wyłączone. Warsztat nie ma kto moderować, a domyślny formularz
@@ -664,6 +863,180 @@ add_shortcode('vts_liczby', function () {
     return $out . '</div>';
 });
 
+/* ------------------------------------------------- przewagi, proces, etapy
+ *
+ * Pięć przewag i pięć kroków procesu to treść, która wg struktury serwisu ma stać
+ * na stronie głównej, ale wraca też na podstronach ofertowych. Trzymamy ją
+ * w shortcode'ach, żeby nie rozjechała się między kopiami w plikach HTML.
+ */
+
+/** Kluczowe przewagi konkurencyjne — sekcja 3 strony głównej. */
+add_shortcode('vts_usps', function () {
+    $poz = [
+        ['unlock', 'Odblokowywanie sterowników na miejscu',
+         'Zamknięte ECU otwieramy u siebie, w kilka godzin. Bez wysyłki za granicę '
+         . 'i bez tygodnia postoju — także w najnowszych modelach.'],
+        ['shield', 'Bezpieczny tuning aut na gwarancji i w leasingu',
+         'Mówimy wprost, co producent może wykryć i co mówi umowa leasingu. Tam, gdzie '
+         . 'zapis w sterowniku jest zbyt ryzykowny, zostaje zdejmowany PowerBox.'],
+        ['fuel', 'Eco-tuning i kompleksowa obsługa flot',
+         'Program redukcji zużycia paliwa, limitery prędkości i obrotów, obsługa partiami '
+         . 'i faktura VAT. Zaczynamy od jednego auta, nie od umowy na dwadzieścia.'],
+        ['camper', 'Indywidualny tuning kamperów pod obciążeniem',
+         'Kamper to podwozie dostawcze obciążone ponad projekt. Strojenie pod podjazdy, '
+         . 'pracę przy pełnym obciążeniu i spalanie w trasie.'],
+        ['dyno', 'Hamownia 4×4 i stanowisko motocyklowe',
+         'Pomiar obciążeniowy dla napędu na jedną i obie osie, dla dostawczych, kamperów '
+         . 'i motocykli. Przed modyfikacją i po niej, w cenie usługi.'],
+    ];
+
+    $out = '<div class="vts-grid vts-usps">';
+    foreach ($poz as [$ikona, $tytul, $tresc]) {
+        $out .= '<div class="vts-card">' . vts_icon($ikona)
+              . '<h3>' . esc_html($tytul) . '</h3><p>' . esc_html($tresc) . '</p></div>';
+    }
+
+    return $out . '</div>';
+});
+
+/** Proces bezpiecznego tuningu — pięć kroków, jedno źródło dla wszystkich stron. */
+add_shortcode('vts_proces', function () {
+    $kroki = [
+        ['Diagnostyka wstępna', 'Sprawdzamy wersję silnika i stan techniczny pojazdu. '
+         . 'Jeśli nie widzimy sensownego zysku albo coś wymaga wcześniejszej naprawy — mówimy wprost.'],
+        ['Pomiar seryjny na hamowni', 'Auto na rolki. Zapisujemy stan przed modyfikacją, '
+         . 'łącznie z odczytem błędów sterownika.'],
+        ['Indywidualne strojenie', 'Chip tuning, PowerBox albo eco-tuning. Kopia oryginalnego '
+         . 'oprogramowania zostaje u nas i u Was.'],
+        ['Pomiar końcowy i wykres', 'Drugi przejazd na tej samej hamowni. Dostajecie wydruk '
+         . 'mocy i momentu, a nie zapewnienie.'],
+        ['Certyfikat i 2 lata gwarancji', 'Jeśli wynik nie odpowiada zapowiedzi — poprawiamy '
+         . 'albo przywracamy oprogramowanie fabryczne.'],
+    ];
+
+    $out = '<div class="vts-grid vts-steps">';
+    foreach ($kroki as $i => [$tytul, $tresc]) {
+        $out .= '<div class="vts-card"><span class="vts-card__n">Krok ' . ($i + 1) . '</span>'
+              . '<h3>' . esc_html($tytul) . '</h3><p>' . esc_html($tresc) . '</p></div>';
+    }
+
+    return $out . '</div>';
+});
+
+/** Etapy modyfikacji: Stage 1 / Stage 2. */
+add_shortcode('vts_stages', function () {
+    $etapy = [
+        [
+            'Stage 1',
+            'Bez zmian mechanicznych',
+            'Modyfikacja wyłącznie programowa, na fabrycznym osprzęcie. Pracujemy w zapasie, '
+            . 'który producent zostawił na słabsze wersje tego samego silnika i na gorsze paliwo.',
+            [
+                'Silnik i osprzęt pozostają seryjne',
+                'Najczęstszy wybór — obejmuje zdecydowaną większość realizacji',
+                'Odwracalny: oryginalne oprogramowanie zapisujemy przed każdą zmianą',
+                'Zakres przyrostu sprawdzicie w wyszukiwarce mocy',
+            ],
+        ],
+        [
+            'Stage 2',
+            'Po modyfikacjach mechanicznych',
+            'Program dopasowany do już wykonanych zmian w układzie dolotowym, wydechowym '
+            . 'lub chłodzeniu. Sami nie prowadzimy prac mechanicznych — strojymy to, co jest w aucie.',
+            [
+                'Wymaga sprawnego, zmierzonego wcześniej pojazdu',
+                'Zwykle łączy się z modyfikacją sterownika skrzyni (TCU)',
+                'Zakres ustalamy indywidualnie, po pomiarze seryjnym',
+                'Dla części silników nie ma sensownego Stage 2 — wtedy to mówimy',
+            ],
+        ],
+    ];
+
+    $out = '<div class="vts-grid vts-stages">';
+    foreach ($etapy as [$nazwa, $pod, $opis, $punkty]) {
+        $out .= '<div class="vts-card"><span class="vts-card__n">' . esc_html($nazwa) . '</span>'
+              . '<h3>' . esc_html($pod) . '</h3><p>' . esc_html($opis) . '</p><ul>';
+        foreach ($punkty as $pkt) {
+            $out .= '<li>' . esc_html($pkt) . '</li>';
+        }
+        $out .= '</ul></div>';
+    }
+
+    return $out . '</div>';
+});
+
+/* -------------------------------------------------------- dowód społeczny
+ *
+ * Opinie i oceny biorą się z opcji, nie z kodu. Dopóki klient nie dostarczy
+ * realnych materiałów, sekcja renderuje się jako pusty string — wymyślona
+ * opinia w serwisie usługowym to nie placeholder, tylko wprowadzanie w błąd.
+ */
+add_shortcode('vts_social_proof', function () {
+    $ocena  = (float) get_option('vts_google_rating', 0);
+    $liczba = (int) get_option('vts_google_reviews_count', 0);
+    $link   = (string) get_option('vts_google_reviews_url', '');
+    $opinie = get_option('vts_reviews', []);
+    $opinie = is_array($opinie) ? $opinie : [];
+
+    // Bez materiałów nie zostaje nawet nagłówek — pusta sekcja „Co mówią klienci"
+    // wyglądałaby jak błąd. Dlatego shortcode oddaje całą sekcję albo nic.
+    if (!$ocena && !$opinie) {
+        return '';
+    }
+
+    $out = '<div class="vts-section"><div class="vts-wrap">'
+         . '<p class="vts-eyebrow">Zaufanie</p><h2>Co mówią klienci</h2>'
+         . '<div class="vts-proof">';
+
+    if ($ocena) {
+        $out .= '<div class="vts-proof__score">'
+              . '<b>' . esc_html(number_format_i18n($ocena, 1)) . '</b>'
+              . '<span>' . vts_icon('star') . 'Google'
+              . ($liczba ? ' · ' . esc_html(number_format_i18n($liczba)) . ' opinii' : '')
+              . '</span>';
+        if ($link) {
+            $out .= '<a href="' . esc_url($link) . '" rel="nofollow noopener" target="_blank">'
+                  . 'Zobacz opinie</a>';
+        }
+        $out .= '</div>';
+    }
+
+    if ($opinie) {
+        $out .= '<div class="vts-grid vts-proof__list">';
+        foreach (array_slice($opinie, 0, 3) as $o) {
+            if (empty($o['text'])) {
+                continue;
+            }
+            $out .= '<figure class="vts-card"><blockquote>' . esc_html($o['text']) . '</blockquote>';
+            if (!empty($o['author'])) {
+                $out .= '<figcaption>' . esc_html($o['author']) . '</figcaption>';
+            }
+            $out .= '</figure>';
+        }
+        $out .= '</div>';
+    }
+
+    return $out . '</div></div></div>';
+});
+
+/* --------------------------------------------------------------- mapa
+ *
+ * Osadzamy tryb `q=` bez klucza API — nie wymaga konta Google Cloud i nie
+ * dokłada skryptu do strony. Ramka jest leniwa, żeby nie konkurowała o LCP.
+ */
+add_shortcode('vts_map', function () {
+    $c     = vts_company();
+    $adres = $c['street'] . ', ' . $c['postal_code'] . ' ' . $c['city'];
+    $q     = rawurlencode($adres);
+
+    return '<div class="vts-map">'
+         . '<iframe src="https://maps.google.com/maps?q=' . $q . '&output=embed"'
+         . ' loading="lazy" referrerpolicy="no-referrer-when-downgrade"'
+         . ' title="Mapa dojazdu — ' . esc_attr($adres) . '"></iframe>'
+         . '</div><p class="vts-note"><a href="https://maps.google.com/?q=' . $q . '"'
+         . ' rel="noopener" target="_blank">Otwórz w Mapach Google i wyznacz trasę</a></p>';
+});
+
 /* ----------------------------------------------------------- pas ze zdjęciem
  *
  * Rozdziela sekcje na podstronach, które były samym tekstem. Zdjęcia są
@@ -693,7 +1066,13 @@ add_shortcode('vts_band', function ($atts) {
     <figure class="vts-band">
       <img src="<?= esc_url($duzy_url) ?>"
            srcset="<?= esc_url($maly_url) ?> 900w, <?= esc_url($duzy_url) ?> 1800w"
-           sizes="(max-width:900px) 100vw, 1240px"
+           <?php /* Pas nigdy nie idzie przez całą szerokość strony — siedzi
+                    w węższej kolumnie układu dwudzielnego. Zadeklarowane
+                    wcześniej 1240 px kazało przeglądarce brać plik 1800 px
+                    nawet na zwykłym ekranie, gdzie wystarczał wariant 900 px.
+                    Wartości zmierzone w przeglądarce: ~92vw do 900 px,
+                    ~40vw do 1240 px, wyżej stałe 509 px. */ ?>
+           sizes="(max-width:900px) 92vw, (max-width:1240px) 40vw, 509px"
            width="1800" height="675" loading="lazy" decoding="async"
            alt="<?= esc_attr($a['alt']) ?>">
       <figcaption>
@@ -791,11 +1170,24 @@ add_shortcode('vts_contact_details', function () {
     return ob_get_clean();
 });
 
-add_shortcode('vts_contact_form', function () {
-    $form = get_page_by_path('kontakt', OBJECT, 'wpcf7_contact_form');
+/**
+ * Formularz kontaktowy. `form` wskazuje slug szablonu z content/forms/.
+ *
+ * Osobne formularze zamiast jednego z ukrytym polem tematu: każda podstrona pyta
+ * o co innego (liczbę aut we flocie, wersję silnika, termin pomiaru), a leady
+ * flotowe idą na inną skrzynkę niż reszta.
+ */
+add_shortcode('vts_contact_form', function ($atts) {
+    $a    = shortcode_atts(['form' => 'kontakt'], $atts);
+    $slug = sanitize_key($a['form']);
+
+    $form = get_page_by_path($slug, OBJECT, 'wpcf7_contact_form')
+         ?: get_page_by_path('kontakt', OBJECT, 'wpcf7_contact_form');
+
     if ($form) {
         return do_shortcode('[contact-form-7 id="' . $form->ID . '"]');
     }
+
     return '<p style="color:var(--vts-muted)">Formularz nie został jeszcze zaimportowany —
             uruchom <code>./bin/import.sh</code>.</p>';
 });
@@ -813,6 +1205,9 @@ add_action('wp_head', function () {
         '@type'    => 'AutoRepair',
         'name'     => $c['name'],
         'url'      => home_url('/'),
+        // Znak firmowy w wersji wektorowej — wyszukiwarka bierze go do wizytówki
+        // firmy. Wskazujemy wariant na ciemne tło, bo taki jest w serwisie.
+        'logo'     => VTS_ASSETS_URL . '/img/logo-vitesse.svg',
         'email'    => $c['email'],
         'telephone'=> $c['phones']['tuning']['number'],
         'address'  => [

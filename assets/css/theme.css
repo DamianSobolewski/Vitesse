@@ -17,15 +17,34 @@ a{color:inherit}
 }
 ::selection{background:var(--vts-accent);color:var(--vts-on-accent)}
 
-h1,h2,h3,h4{font-family:var(--vts-font-display);font-weight:700;letter-spacing:-.028em;
+/* Nagłówki idą z tej samej rodziny co tekst (IBM Plex Sans z księgi znaku),
+   więc hierarchię musi nieść grubość i stopień, a nie zmiana kroju:
+   700 dla H1–H2, 600 dla H3–H4.
+
+   Nie ma tu już pochylenia. Wcześniej H1 szły kursywą 800 z Archivo — imitacją
+   pochyłych liter ze znaku. Znak jest teraz na stronie naprawdę, wektorem,
+   i to on niesie dynamikę; nagłówek pisany obok drugą, przybliżoną kursywą
+   konkurował z nim zamiast go wspierać. IBM Plex Sans nie ma zresztą odmiany
+   800 ani obliku — przeglądarka pochylałaby i pogrubiała litery sztucznie.
+
+   Światło międzyliterowe jest luźniejsze niż przy Archivo: Plex ma węższe
+   litery i przy -.028em nagłówki sklejały się w jedną plamę. */
+h1,h2,h3,h4{font-family:var(--vts-font-display);font-weight:700;letter-spacing:var(--vts-track-head);
   line-height:1.08;margin:0 0 var(--vts-gap-s);text-wrap:balance}
 /* Tytuł podstrony jest o stopień niższy niż nagłówek hero na stronie głównej —
    inaczej każda podstrona krzyczy tak samo głośno jak wejście na serwis.
    Wcześniej wszystkie H1 miały 66 px, a katalog wyłamywał się na 44. */
-h1{font-size:var(--vts-step-3);font-weight:800;font-style:italic;letter-spacing:-.035em;line-height:.99}
+h1{font-size:var(--vts-step-3);letter-spacing:var(--vts-track-display);line-height:1.03}
 .vts-hero__in h1{font-size:var(--vts-step-4)}
 h2{font-size:var(--vts-step-3)}
-h3{font-size:var(--vts-step-1)}
+h3{font-size:var(--vts-step-1);font-weight:600;letter-spacing:var(--vts-track-tight)}
+h4{font-weight:600;letter-spacing:var(--vts-track-tight)}
+/* W rodzinie z księgi znaku nie ma kursywy, a przeglądarka, gdy jej nie znajdzie,
+   pochyla litery sama — to nie jest drugi krój, tylko ścięty pod kątem prostokąt,
+   z gorszym rytmem i cieńszymi łukami. Zdejmujemy więc kursywę u źródła: domyślną
+   z <em>/<i>/<cite> i tę, którą motyw bazowy nakłada na podpisy pod zdjęciami.
+   Wyróżnienie niosą u nas kolor, grubość i krój techniczny (mono), nie pochylenie. */
+em,i,cite,figcaption,address{font-style:normal}
 p{margin:0 0 var(--vts-gap-s);text-wrap:pretty}
 p:last-child{margin-bottom:0}
 
@@ -44,7 +63,7 @@ p:last-child{margin-bottom:0}
   grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .vts-split--wide-left{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}
 @media (max-width:900px){.vts-split,.vts-split--wide-left{grid-template-columns:minmax(0,1fr)}}
-.vts-eyebrow{font-family:var(--vts-font-mono);font-size:var(--vts-step--2);letter-spacing:.2em;
+.vts-eyebrow{font-family:var(--vts-font-mono);font-size:var(--vts-step--2);letter-spacing:var(--vts-track-eyebrow);
   text-transform:uppercase;color:var(--vts-accent);margin:0 0 var(--vts-gap-s);
   display:flex;align-items:center;gap:10px}
 .vts-eyebrow::after{content:'';height:1px;flex:0 0 56px;background:currentColor;opacity:.45}
@@ -96,11 +115,25 @@ p:last-child{margin-bottom:0}
 .vts-header{position:sticky;top:0;z-index:50;background:rgba(15,17,22,.94);
   backdrop-filter:blur(10px);border-bottom:1px solid var(--vts-line)}
 .vts-header .vts-wrap{display:flex;align-items:center;gap:var(--vts-gap-m);padding-block:14px}
-.vts-brand{font-family:var(--vts-font-display);font-weight:800;font-style:italic;
-  font-size:var(--vts-step-1);letter-spacing:-.035em;text-decoration:none;line-height:1;white-space:nowrap}
-.vts-brand span{color:var(--vts-accent)}
-.vts-brand small{display:block;font-family:var(--vts-font-mono);font-style:normal;
-  font-weight:500;font-size:var(--vts-step--3);letter-spacing:.24em;color:var(--vts-muted);margin-top:2px}
+/* Znak firmowy — wektor z księgi znaku, wstawiany w kod przez vts_render_brand().
+ * Wcześniej stał tu napis „VITESSE" złożony Archivo z pomarańczową literą V:
+ * przybliżenie znaku, a nie znak. Teraz to ten sam plik, co na aucie i kurtce.
+ *
+ * Litery dziedziczą barwę przez currentColor — na ciemnym tle srebro z księgi,
+ * na :hover rozjaśnienie do bieli. Pomarańczowe akcenty siedzą w SVG na stałe:
+ * księga wyklucza zmianę kolorystyki znaku, więc nie wpinamy ich w motyw.
+ *
+ * Szerokość nigdy nie schodzi poniżej 160 px — to minimum czytelności podane
+ * w księdze; niżej rozjeżdżają się poziome podziały wewnątrz liter. */
+.vts-brand{display:block;flex:none;text-decoration:none;line-height:1;
+  color:var(--vts-silver);transition:color .18s}
+.vts-brand:hover{color:var(--vts-text)}
+/* color:inherit jest tu konieczne: plik SVG niesie własny atrybut color
+ * (żeby wstawiony jako <img> też był srebrny), a atrybut prezentacyjny
+ * wygrywa z dziedziczeniem. Bez tej linii :hover nic by nie zmieniał. */
+.vts-brand svg{display:block;color:inherit;width:clamp(164px,14vw,188px);height:auto}
+/* W stopce znak jest jedynym elementem marki w kolumnie i może odetchnąć. */
+.vts-footer .vts-brand svg{width:clamp(180px,20vw,212px)}
 
 .vts-nav{margin-left:auto}
 .vts-nav ul{list-style:none;display:flex;gap:22px;margin:0;padding:0}
@@ -121,16 +154,48 @@ p:last-child{margin-bottom:0}
 /* przełącznik menu na wąskich ekranach */
 .vts-burger{display:none;margin-left:auto;background:transparent;border:1px solid var(--vts-line);
   color:var(--vts-text);border-radius:var(--vts-radius);padding:10px 13px;cursor:pointer;
-  font-family:var(--vts-font-mono);font-size:var(--vts-step--2);letter-spacing:.1em}
-/* hello-elementor maluje button:focus/:hover na malinowy #c36 i wygrywa
- * specyficznoscia z sama klasa. Przycisk menu jest jedynym miejscem, gdzie ten
- * obcy kolor przechodzil — po dotknieciu stan zostaje na telefonie na stale. */
+  font-family:var(--vts-font-mono);font-size:var(--vts-step--2);letter-spacing:var(--vts-track-label)}
+/* hello-elementor maluje gole <button> na malinowy #c36 — kolor tekstu, obramowania
+ * oraz stany :hover/:focus. Wygrywa specyficznoscia z sama klasa, a na telefonie
+ * stan po dotknieciu zostaje, wiec obcy kolor zapadal na ekranie na stale.
+ *
+ * Regula jest ogolna, a nie per komponent: kazdy kolejny przycisk w serwisie
+ * dziedziczylby ten kolor, a wychodzi to na jaw dopiero na tescie mobilnym.
+ * Kolor obramowania trzeba nadpisac jawnie — `border:0` zeruje szerokosc, ale
+ * zostawia odziedziczone `border-color` w wartosciach wyliczonych.
+ *
+ * Wylaczamy z niej przyciski, ktore maja wlasna palete. Bez `:not()` selektor
+ * `.vts-ps button` (0,1,1) bil `.vts-btn--primary` (0,1,0) i pomaranczowy przycisk
+ * dostawal jasny tekst — kontrast 2,33:1 zamiast wymaganych 4,5:1. */
+:is(.vts-hero,.vts-ps,.vts-cf7,.vts-dyno,.vts-fleet) button:not(.vts-btn):not(.vts-ps__toy),
+.vts-burger{
+  color:var(--vts-text);border-color:var(--vts-line)}
+:is(.vts-hero,.vts-ps,.vts-cf7,.vts-dyno,.vts-fleet) button:not(.vts-btn):not(.vts-ps__toy):is(:hover,:focus,:active){
+  color:inherit;border-color:inherit}
+
 .vts-burger:hover,.vts-burger:focus,.vts-burger:active{
   background:transparent;border-color:var(--vts-accent);color:var(--vts-accent)}
 
+/* Przyciski z wlasna paleta — jedna deklaracja na wszystkie stany, zeby motyw
+ * bazowy nie mial gdzie sie wstrzelic. */
+.vts-btn,.vts-btn:hover,.vts-btn:focus,.vts-btn:active{border-color:var(--vts-line)}
+.vts-btn--primary,.vts-btn--primary:hover,.vts-btn--primary:focus,.vts-btn--primary:active{
+  color:var(--vts-on-accent);border-color:transparent}
+.vts-btn--ghost,.vts-btn--ghost:focus,.vts-btn--ghost:active{color:var(--vts-text)}
+.vts-btn--ghost:hover{color:var(--vts-accent);border-color:var(--vts-accent)}
+
+/* Przycisk „Umów pomiar" znika z paska wcześniej niż menu.
+ * Znak firmowy ma z księgi znaku minimum 160 px szerokości i zabiera w pasku
+ * o jakieś 60 px więcej niż dawny napis „VITESSE" — poniżej ~1200 px nie
+ * mieszczą się już obok siebie znak, pełne menu i przycisk. Wypada przycisk:
+ * ten sam kontakt stoi w pasku nad nagłówkiem, w menu i w stopce, a zwinięcie
+ * menu do „hamburgera" kosztowałoby kliknięcie przy każdym przejściu. */
+@media (max-width:1200px){
+  .vts-header__cta{display:none}
+}
+
 @media (max-width:1080px){
   .vts-burger{display:block}
-  .vts-header__cta{display:none}
 
   /* backdrop-filter czyni element BLOKIEM ZAWIERAJĄCYM dla potomków
    * position:fixed — dokładnie tak jak transform czy filter. Menu zamiast
@@ -190,12 +255,18 @@ p:last-child{margin-bottom:0}
  * 1100 px prawy reflektor był już poza oknem. Teraz przesunięcie schodzi do zera
  * w okolicach 1080 px, czyli tam, gdzie kadr przestaje mieć zapas. */
 .vts-hero{--vts-hero-shift:clamp(0px, (100vw - 1080px) * .36, 120px)}
-.vts-hero__bg{position:absolute;inset:0;z-index:0;opacity:.9;
-  background-image:var(--vts-hero-img);background-size:cover;background-repeat:no-repeat;
-  background-position:calc(50% + var(--vts-hero-shift)) 50%}
+/* Obraz przypisujemy dopiero aktywnemu slajdowi. Deklaracja, która nie obowiązuje,
+   nie powoduje pobrania pliku — więc na starcie leci jedno zdjęcie, nie cztery,
+   i LCP zostaje tam, gdzie było. */
+.vts-hero__bg{position:absolute;inset:0;z-index:0;opacity:0;
+  background-size:cover;background-repeat:no-repeat;
+  background-position:calc(50% + var(--vts-hero-shift)) 50%;
+  transition:opacity .7s ease}
+.vts-hero__bg.is-active{opacity:.9;background-image:var(--vts-hero-img)}
 @media (max-width:640px){
-  .vts-hero__bg{background-image:var(--vts-hero-img-sm,var(--vts-hero-img))}
+  .vts-hero__bg.is-active{background-image:var(--vts-hero-img-sm,var(--vts-hero-img))}
 }
+@media (prefers-reduced-motion:reduce){.vts-hero__bg{transition:none}}
 /* Zasłona ma tłumić zapalone na zdjęciu reflektory, więc NIE może być w warstwie
    rozjaśniającej — tam kolor tła byłby niewidoczny. Stąd osobna warstwa nad tłem. */
 /* Zasłona i światła muszą jechać razem ze zdjęciem — inaczej poświata zostaje
@@ -205,6 +276,12 @@ p:last-child{margin-bottom:0}
 .vts-hero__veil svg{position:absolute;inset:0;width:100%;height:100%}
 .vts-hero__light{position:absolute;inset:0;z-index:2;pointer-events:none;
   mix-blend-mode:screen;transform:translateX(var(--vts-hero-shift))}
+/* Reflektory mają w warstwie świetlnej stałe współrzędne dopasowane do hero.webp,
+   więc znikają razem ze swoim slajdem — na innym zdjęciu świeciłyby w próżnię.
+   `display:none`, a nie `opacity`: warstwa światła używa mix-blend-mode, a ten
+   przestaje działać, gdy rodzic ma przezroczystość i tworzy własny kontekst. */
+.vts-hero--slider:not([data-active="0"]) .vts-hero__veil,
+.vts-hero--slider:not([data-active="0"]) .vts-hero__light{display:none}
 .vts-hero__scrim{position:absolute;inset:0;z-index:3;pointer-events:none;
   background:linear-gradient(100deg,var(--vts-bg) 24%,rgba(15,17,22,.78) 54%,rgba(15,17,22,.36))}
 .vts-hero .vts-wrap{position:relative;z-index:4}
@@ -294,37 +371,78 @@ p:last-child{margin-bottom:0}
 .vts-stats{display:flex;gap:34px;flex-wrap:wrap;margin-top:var(--vts-gap-m)}
 .vts-stat{border-left:2px solid var(--vts-accent);padding-left:13px}
 .vts-stat b{display:block;font-family:var(--vts-font-display);font-weight:700;
-  font-size:var(--vts-step-1);letter-spacing:-.02em}
-.vts-stat span{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);letter-spacing:.13em;
+  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head)}
+.vts-stat span{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);
   text-transform:uppercase;color:var(--vts-muted)}
 
 /* --- karty --- */
 .vts-grid{display:grid;gap:var(--vts-gap-s);
   grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))}
 
-/* Ostatni rząd nie może zawierać dokładnie jednego kafelka.
+/* Ostatni rząd: albo pełny, albo na środku.
  *
  * auto-fit dobiera kolumny szerokością i nie wie, ile jest elementów — stąd
- * 3+1 na laptopie i 4+1 na desktopie. Dokładamy wyjątki tam, gdzie liczba
- * kafelków dzieli się źle przez liczbę kolumn. Progi zmierzone w przeglądarce:
- * 4 kolumny od 1180 px, 3 od 896, 2 od 600.
+ * 3+1 na laptopie i 4+1 na desktopie. Wcześniej prostowaliśmy tylko sieroty,
+ * czyli pojedynczy kafelek w ostatnim rzędzie. Niepełny rząd DWÓCH kafelków
+ * przechodził bez poprawki i dosuwał się do lewej — sekcja wyglądała, jakby
+ * zabrakło trzeciego kafelka (widać to było na stronie głównej: 3+2 przy
+ * lewej krawędzi, tuż pod sekcją pięciu filarów, gdzie ten sam rząd stoi
+ * na środku). Teraz obowiązuje jedna zasada w całym serwisie:
+ *
+ *   • rząd pełny        → bez zmian,
+ *   • rząd niepełny ≥2  → na środku,
+ *   • pojedynczy kafelek → na całą szerokość (wyśrodkowany wąski kafelek
+ *     czyta się jak pomyłka składu, a nie jak układ).
+ *
+ * Wyśrodkowanie robi siatka o dwa razy większej liczbie ścieżek: kafelek
+ * zajmuje dwie, więc niepełny rząd da się przesunąć o jedną i siada na środku.
+ * `justify-content` tu nie pomoże — ustawia całą siatkę, nie jej ostatni rząd.
  *
  * Liczbę kafelków rozpoznaje zapytanie ilościowe (ostatnie dziecko o danym
- * numerze), więc reguła obejmuje też sekcje, których dziś w treści nie ma —
- * bez klas do pamiętania przy pisaniu kolejnych stron.
+ * numerze), więc reguły obejmują też sekcje, których dziś w treści nie ma —
+ * bez klas do pamiętania przy pisaniu kolejnych stron. Rozpisane są liczby
+ * 3–9; przy większej sekcji dokłada się rząd według tego samego wzoru.
+ * Progi kolumn zmierzone w przeglądarce: 4 kolumny od 1180 px, 3 od 896, 2 od 600.
  */
-@media (min-width:1180px){                    /* 4 kolumny */
-  /* 3 kafelki zostawiłyby puste pole, 5 dałoby 4+1 */
+@media (min-width:1182px){                    /* 4 kolumny */
+  /* 3 kafelki zostawiłyby puste pole w rzędzie, 6 dałoby 4+2 */
   .vts-grid:has(> :nth-child(3):last-child),
-  .vts-grid:has(> :nth-child(5):last-child){grid-template-columns:repeat(3,minmax(0,1fr))}
+  .vts-grid:has(> :nth-child(6):last-child){grid-template-columns:repeat(3,minmax(0,1fr))}
+
+  /* 5 → 3+2, drugi rząd na środku */
+  .vts-grid:has(> :nth-child(5):last-child){grid-template-columns:repeat(6,minmax(0,1fr))}
+  .vts-grid:has(> :nth-child(5):last-child) > *{grid-column:span 2}
+  .vts-grid:has(> :nth-child(5):last-child) > :nth-child(4){grid-column:2/span 2}
+  .vts-grid:has(> :nth-child(5):last-child) > :nth-child(5){grid-column:4/span 2}
+
+  /* 7 → 4+3, drugi rząd na środku */
+  .vts-grid:has(> :nth-child(7):last-child){grid-template-columns:repeat(8,minmax(0,1fr))}
+  .vts-grid:has(> :nth-child(7):last-child) > *{grid-column:span 2}
+  .vts-grid:has(> :nth-child(7):last-child) > :nth-child(5){grid-column:2/span 2}
+  .vts-grid:has(> :nth-child(7):last-child) > :nth-child(6){grid-column:4/span 2}
+  .vts-grid:has(> :nth-child(7):last-child) > :nth-child(7){grid-column:6/span 2}
+
+  /* 9 → 4+4+1, sierota na całą szerokość */
   .vts-grid:has(> :nth-child(9):last-child) > :last-child{grid-column:1/-1}
 }
-@media (min-width:896px) and (max-width:1179px){   /* 3 kolumny */
+@media (min-width:898px) and (max-width:1181px){   /* 3 kolumny */
   /* 4 kafelki dałyby 3+1 — stąd cała uwaga */
   .vts-grid:has(> :nth-child(4):last-child){grid-template-columns:repeat(2,minmax(0,1fr))}
+
+  /* 5 → 3+2 i 8 → 3+3+2: ostatni rząd na środku */
+  .vts-grid:has(> :nth-child(5):last-child),
+  .vts-grid:has(> :nth-child(8):last-child){grid-template-columns:repeat(6,minmax(0,1fr))}
+  .vts-grid:has(> :nth-child(5):last-child) > *,
+  .vts-grid:has(> :nth-child(8):last-child) > *{grid-column:span 2}
+  .vts-grid:has(> :nth-child(5):last-child) > :nth-child(4),
+  .vts-grid:has(> :nth-child(8):last-child) > :nth-child(7){grid-column:2/span 2}
+  .vts-grid:has(> :nth-child(5):last-child) > :nth-child(5),
+  .vts-grid:has(> :nth-child(8):last-child) > :nth-child(8){grid-column:4/span 2}
+
+  /* 7 → 3+3+1, sierota na całą szerokość */
   .vts-grid:has(> :nth-child(7):last-child) > :last-child{grid-column:1/-1}
 }
-@media (min-width:600px) and (max-width:895px){    /* 2 kolumny */
+@media (min-width:600px) and (max-width:897px){    /* 2 kolumny */
   /* nieparzysta liczba w dwóch kolumnach zawsze zostawia sierotę */
   .vts-grid:has(> :nth-child(odd):last-child) > :last-child{grid-column:1/-1}
 }
@@ -334,7 +452,7 @@ p:last-child{margin-bottom:0}
 a.vts-card:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
 .vts-card h3{font-size:var(--vts-step-1);margin-bottom:8px}
 .vts-card p{color:var(--vts-muted);font-size:var(--vts-step--1);margin:0}
-.vts-card__n{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);letter-spacing:.14em;
+.vts-card__n{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);
   color:var(--vts-accent);display:block;margin-bottom:12px}
 
 /* --- ikony ---------------------------------------------------------------
@@ -355,11 +473,15 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
  * Rysuje się przy wejściu kafelka w kadr — korzysta z klasy is-in, którą i tak
  * nadaje obserwator w site.js, więc nie dokładamy ani linijki JavaScriptu.
  *
- * Tylko od 1180 px: niżej cztery kafelki układają się 2×2 i łącznik między
- * drugim a trzecim prowadziłby donikąd.
+ * Tylko od 1182 px (próg czwartej kolumny): niżej cztery kafelki układają się
+ * 2×2 i łącznik między drugim a trzecim prowadziłby donikąd.
  */
-@media (min-width:1180px){
+@media (min-width:1182px){
   .vts-steps > .vts-card{position:relative}
+  /* Kafelek otwierający drugi rząd nie ma po lewej poprzednika — łącznik
+     prowadziłby z pustego miejsca. Przy pięciu krokach drugi rząd zaczyna
+     czwarty kafelek. */
+  .vts-steps:has(> :nth-child(5):last-child) > :nth-child(4)::before{content:none}
   .vts-steps > .vts-card + .vts-card::before{
     content:'';position:absolute;top:34px;left:calc(-1px - var(--vts-gap-s));
     width:var(--vts-gap-s);height:1px;background:var(--vts-accent);opacity:.6;
@@ -441,16 +563,16 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
 .vts-gauge__val{position:absolute;left:50%;top:78%;transform:translate(-50%,-50%);
   z-index:2;display:flex;align-items:baseline;gap:4px;white-space:nowrap}
 .vts-gauge__val b{font-family:var(--vts-font-display);font-weight:700;
-  font-size:var(--vts-step-2);letter-spacing:-.03em;color:var(--vts-text);
+  font-size:var(--vts-step-2);letter-spacing:var(--vts-track-head);color:var(--vts-text);
   font-variant-numeric:tabular-nums;text-shadow:0 0 18px rgba(255,138,30,.35)}
 .vts-gauge__val i{font-style:normal;font-family:var(--vts-font-mono);
   font-size:var(--vts-step--2);color:var(--vts-accent)}
 
 .vts-gauge__body{display:block;max-width:30ch}
 .vts-gauge__body > b{display:block;font-family:var(--vts-font-display);font-weight:700;
-  font-size:var(--vts-step-1);letter-spacing:-.02em;color:var(--vts-text);margin-bottom:5px}
+  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head);color:var(--vts-text);margin-bottom:5px}
 .vts-gauge__meta{display:block;font-family:var(--vts-font-mono);
-  font-size:var(--vts-step--3);letter-spacing:.11em;text-transform:uppercase;
+  font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);text-transform:uppercase;
   color:var(--vts-accent);margin-bottom:9px}
 .vts-gauge__desc{display:block;font-size:var(--vts-step--1);color:var(--vts-muted);
   line-height:1.55}
@@ -484,7 +606,7 @@ body.blog .site-main article.post{max-width:var(--vts-content);
   transition:border-color .18s,transform .18s}
 body.blog .site-main article.post:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
 body.blog .site-main article.post .entry-title{font-size:var(--vts-step-1);margin:0 0 10px;
-  letter-spacing:-.02em}
+  letter-spacing:var(--vts-track-head)}
 body.blog .site-main article.post .entry-title a{text-decoration:none;color:var(--vts-text)}
 body.blog .site-main article.post:hover .entry-title a{color:var(--vts-accent)}
 body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
@@ -492,7 +614,7 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-post__meta{display:flex;align-items:center;gap:9px;margin-bottom:10px}
 .vts-post__meta .vts-i{width:20px;height:20px;color:var(--vts-accent)}
 .vts-post__data{font-family:var(--vts-font-mono);
-  font-size:var(--vts-step--3);letter-spacing:.13em;text-transform:uppercase;
+  font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);text-transform:uppercase;
   color:var(--vts-accent)}
 
 /* --- przykładowe wyniki --------------------------------------------------
@@ -507,14 +629,14 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 
 .vts-wynik__auto{display:block;padding-inline:6px}
 .vts-wynik__auto b{display:block;font-family:var(--vts-font-display);font-weight:700;
-  font-size:var(--vts-step-1);letter-spacing:-.02em;color:var(--vts-text);margin-bottom:4px}
+  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head);color:var(--vts-text);margin-bottom:4px}
 .vts-wynik__auto > span{display:block;font-family:var(--vts-font-mono);
-  font-size:var(--vts-step--3);letter-spacing:.08em;text-transform:uppercase;color:#8A919E}
+  font-size:var(--vts-step--3);letter-spacing:var(--vts-track-caps);text-transform:uppercase;color:#8A919E}
 
 .vts-wynik__liczby{display:flex;gap:26px;padding-inline:6px;flex-wrap:wrap}
 .vts-wynik__liczby > span{display:block}
 .vts-wynik__liczby em{display:block;font-style:normal;font-family:var(--vts-font-mono);
-  font-size:var(--vts-step--3);letter-spacing:.13em;text-transform:uppercase;
+  font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);text-transform:uppercase;
   color:#8A919E;margin-bottom:4px}
 .vts-wynik__liczby b{font-family:var(--vts-font-mono);font-weight:500;
   font-size:var(--vts-step-1);color:var(--vts-accent);font-variant-numeric:tabular-nums}
@@ -536,7 +658,7 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-chart__opis{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);fill:#8A919E}
 .vts-chart__opis.is-po{fill:var(--vts-accent)}
 .vts-chart__stopka{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
-  fill:#767D88;letter-spacing:.08em}
+  fill:#767D88;letter-spacing:var(--vts-track-caps)}
 
 /* odsłanianie od lewej — krzywa jest przerywana, więc animowanie dashoffset
    walczyłoby ze wzorem kreskowania; zamiast tego przycinamy rysunek maską */
@@ -546,15 +668,26 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
   transition:transform 1.05s cubic-bezier(.25,.7,.3,1) .1s}
 
 /* --- pasek liczb --------------------------------------------------------- */
+/* Pasek liczb też ma stałe cztery pozycje — i tak samo nie ma sensu w trzech
+ * kolumnach, bo czwarta zostaje sama. Cztery mieszczą się od 872 px okna
+ * (4×170 + 3×44 = 812 px kontenera), niżej idą 2×2. Dolna granica to 480 px:
+ * poniżej i tak wchodzi jedna kolumna, bo etykiety („wersji silnikowych")
+ * przestają się mieścić obok siebie. Uwaga na przerwę: poniżej 720 px
+ * --vts-gap-l schodzi z 44 na 30 px, więc trzy kolumny mieszczą się już
+ * przy 620 px okna — dlatego zakres zaczyna się niżej, niż wychodzi
+ * z rachunku dla przerwy 44 px. */
 .vts-liczby{display:grid;gap:var(--vts-gap-m) var(--vts-gap-l);margin-top:var(--vts-gap-l);
   padding-top:var(--vts-gap-m);border-top:1px solid var(--vts-line);
   grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr))}
+@media (min-width:480px) and (max-width:871px){
+  .vts-liczby{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 .vts-liczba{border-left:2px solid var(--vts-accent);padding-left:14px}
 .vts-liczba b{display:block;font-family:var(--vts-font-display);font-weight:700;
-  font-size:var(--vts-step-2);letter-spacing:-.025em;color:var(--vts-text);
+  font-size:var(--vts-step-2);letter-spacing:var(--vts-track-head);color:var(--vts-text);
   font-variant-numeric:tabular-nums;margin-bottom:5px}
 .vts-liczba span{display:block;font-family:var(--vts-font-mono);
-  font-size:var(--vts-step--3);letter-spacing:.13em;text-transform:uppercase;
+  font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);text-transform:uppercase;
   color:var(--vts-muted);line-height:1.5}
 
 /* --- pas ze zdjęciem ------------------------------------------------------
@@ -565,21 +698,29 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-band{position:relative;margin:var(--vts-gap-l) 0 0;overflow:hidden;
   border:1px solid var(--vts-line);border-radius:var(--vts-radius)}
 .vts-band img{display:block;width:100%;height:auto;aspect-ratio:16/6;object-fit:cover}
-.vts-band figcaption{position:absolute;inset:auto 0 0;padding:var(--vts-gap-l) var(--vts-gap-m) var(--vts-gap-m);
+/* Nota „zdjęcie ilustracyjne" siedzi w prawym dolnym rogu jako element
+   pozycjonowany, więc nie odsuwa podpisu — przy dłuższym podpisie ostatni wiersz
+   wchodził jej pod spód i oba napisy nakładały się na siebie (widoczne na
+   /hamownia/, /o-nas/ i /oferta-dla-flot/ powyżej ~1000 px). Rezerwujemy na notę
+   wiersz u dołu podpisu; poniżej 640 px nota wraca do zwykłego przepływu i
+   dodatkowe światło nie jest już potrzebne. */
+.vts-band figcaption{position:absolute;inset:auto 0 0;
+  padding:var(--vts-gap-l) var(--vts-gap-m) calc(var(--vts-gap-m) + 17px);
   background:linear-gradient(180deg,rgba(8,9,12,0) 0%,rgba(8,9,12,.72) 42%,rgba(8,9,12,.97) 100%)}
 .vts-band__e{display:block;font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
-  letter-spacing:.2em;text-transform:uppercase;color:var(--vts-accent);margin-bottom:7px}
+  letter-spacing:var(--vts-track-eyebrow);text-transform:uppercase;color:var(--vts-accent);margin-bottom:7px}
 /* kolor jawnie — figcaption dziedziczy przygaszoną barwę z motywu bazowego
    i podpis robi się nieczytelny na zdjęciu */
 .vts-band b{display:block;color:var(--vts-text);
   font-family:var(--vts-font-display);font-weight:700;
-  font-size:var(--vts-step-1);letter-spacing:-.02em;max-width:34ch;text-wrap:balance;
+  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head);max-width:34ch;text-wrap:balance;
   text-shadow:0 2px 18px rgba(0,0,0,.8)}
 .vts-band__note{position:absolute;right:var(--vts-gap-m);bottom:var(--vts-gap-m);
-  font-family:var(--vts-font-mono);font-size:var(--vts-step--3);letter-spacing:.14em;
+  font-family:var(--vts-font-mono);font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);
   text-transform:uppercase;color:#6B7482}
 @media (max-width:640px){
   .vts-band img{aspect-ratio:16/9}
+  .vts-band figcaption{padding-bottom:var(--vts-gap-m)}
   .vts-band__note{position:static;display:block;margin-top:8px}
 }
 
@@ -615,7 +756,15 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
   margin-top:var(--vts-gap-xl);padding-block:var(--vts-gap-l) var(--vts-gap-m)}
 .vts-footer__cols{display:grid;gap:var(--vts-gap-l);
   grid-template-columns:repeat(auto-fit,minmax(min(100%,215px),1fr))}
-.vts-footer h4{font-family:var(--vts-font-mono);font-size:var(--vts-step--2);letter-spacing:.16em;
+/* Stopka ma zawsze cztery kolumny treści, więc trzy to układ, którego nigdy
+ * nie chcemy: czwarta („Kontakt", z telefonami i przyciskiem) spadała sama pod
+ * spód. Czwarta kolumna mieści się dopiero, gdy kontener ma 4×215 px treści
+ * i 3×44 px przerwy, czyli 992 px — a to okno od 1052 px. Poniżej schodzimy
+ * od razu na 2×2; jedna kolumna wchodzi sama, gdy zabraknie miejsca na dwie. */
+@media (min-width:560px) and (max-width:1051px){
+  .vts-footer__cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+.vts-footer h4{font-family:var(--vts-font-mono);font-size:var(--vts-step--2);letter-spacing:var(--vts-track-label);
   text-transform:uppercase;color:var(--vts-muted);font-weight:500;margin:0 0 var(--vts-gap-s)}
 .vts-footer ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
 .vts-footer a{font-size:var(--vts-step--1);text-decoration:none;color:#C7CCD4}
@@ -663,12 +812,12 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-cat-tile b{display:block;font-family:var(--vts-font-display);font-weight:600;
   font-size:var(--vts-step-0);margin-bottom:3px}
 .vts-cat-tile span{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
-  letter-spacing:.1em;text-transform:uppercase;color:var(--vts-muted)}
+  letter-spacing:var(--vts-track-label);text-transform:uppercase;color:var(--vts-muted)}
 
 .vts-table-wrap{overflow-x:auto;border:1px solid var(--vts-line);border-radius:var(--vts-radius)}
 .vts-table{width:100%;border-collapse:collapse;font-size:var(--vts-step--1);min-width:600px}
 .vts-table th{text-align:left;font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
-  letter-spacing:.14em;text-transform:uppercase;color:var(--vts-muted);font-weight:500;
+  letter-spacing:var(--vts-track-label);text-transform:uppercase;color:var(--vts-muted);font-weight:500;
   padding:12px 16px;border-bottom:1px solid var(--vts-line);background:var(--vts-surface)}
 .vts-table td{padding:12px 16px;border-bottom:1px solid var(--vts-line-soft);
   font-variant-numeric:tabular-nums}
@@ -699,10 +848,10 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
   .vts-cat-siblings a,
   .vts-table a,
   .vts-crumbs a { display:inline-flex; align-items:center; min-height:44px }
-  /* Logo jest odnośnikiem na stronę główną, a po zejściu ze stopnia skali
-     spadło tuż poniżej progu. Wysokość dokładamy odstępem, NIE zmieniając
-     układu: flex w kolumnie rozbijał „VITESSE" na „V" i „ITESSE", bo pierwsza
-     litera jest osobnym elementem. */
+  /* Znak jest odnośnikiem na stronę główną, a sam wektor ma przy minimalnej
+     szerokości ~14 px wysokości — poniżej progu dla palca. Brakującą wysokość
+     dokładamy odstępem, nie skalowaniem znaku: księga znaku nie pozwala
+     zmieniać jego proporcji, a 160 px szerokości to jej minimum. */
   .vts-brand { display:inline-block; min-height:44px; padding-block:4px }
   .vts-footer ul { gap:0 }
 
@@ -715,3 +864,184 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
   select, textarea, button, .vts-btn,
   input:not([type="checkbox"]):not([type="radio"]) { min-height:46px }
 }
+
+/* --------------------------------------------------------------- slajder hero
+ *
+ * Slajdy tekstu leżą na sobie w gridzie, nie w absolutnym pozycjonowaniu —
+ * dzięki temu sekcja ma wysokość najwyższego slajdu i nie skacze przy zmianie.
+ * Nieaktywne noszą atrybut `hidden`, więc znikają też z drzewa dostępności.
+ */
+/* Slajdy leżą jeden na drugim w tej samej komórce siatki, więc sekcja jest
+ * zawsze tak wysoka jak NAJDŁUŻSZE hasło — także wtedy, gdy akurat widać
+ * krótsze. Wcześniej niewidoczne slajdy wypadały z układu (`display:none`)
+ * i wysokość jechała za treścią: przy przełączeniu wyszukiwarka pod spodem
+ * skakała o 101 px na monitorze i 123 px na telefonie. Panel jest tu główną
+ * ścieżką zakupową — nie może uciekać spod kursora co siedem sekund.
+ *
+ * Ukryty slajd zostaje więc w siatce, tylko przestaje być widoczny.
+ * `visibility:hidden`, a nie samo `opacity:0`: to pierwsze wyjmuje treść
+ * z drzewa dostępności i spod fokusu klawiatury, drugie nie. Bez JavaScriptu
+ * atrybut `hidden` zostaje na slajdach 2–4 i widać tylko pierwszy — tyle że
+ * kadr od razu ma docelową wysokość. */
+.vts-hero__slides{display:grid}
+.vts-hero__slide{grid-area:1/1;opacity:0;transition:opacity .5s ease}
+.vts-hero__slide.is-active{opacity:1}
+.vts-hero__slide[hidden]{display:block;visibility:hidden}
+@media (prefers-reduced-motion:reduce){.vts-hero__slide{transition:none}}
+
+/* Slajdy 2–4 nie mogą nieść <h1> — na stronie jest jeden nagłówek pierwszego
+   poziomu. Dostają jego skalę, nie jego rangę. */
+/* --vts-step-5 nigdy nie istniało w tokenach — deklaracja była nieważna
+   i tytuły slajdów 2–4 spadały do stopnia tekstu. Skala kończy się na 4
+   i to jest stopień nagłówka hero. */
+.vts-hero__title{font-family:var(--vts-font-display);font-weight:700;
+  font-size:var(--vts-step-4);line-height:1.03;letter-spacing:var(--vts-track-display);
+  margin:0 0 var(--vts-gap-s);text-wrap:balance}
+
+.vts-hero__dots{display:flex;gap:9px;margin:var(--vts-gap-s) 0 var(--vts-gap-m)}
+.vts-hero__dots button{width:30px;height:4px;padding:0;border:0 solid transparent;
+  border-radius:100px;color:var(--vts-text);
+  background:var(--vts-line);cursor:pointer;transition:background .2s,width .2s}
+.vts-hero__dots button:hover,.vts-hero__dots button:focus{background:var(--vts-muted)}
+.vts-hero__dots button.is-active,
+.vts-hero__dots button.is-active:hover,
+.vts-hero__dots button.is-active:focus{background:var(--vts-accent);width:44px}
+.vts-hero__dots button:focus-visible{outline:2px solid var(--vts-accent);outline-offset:3px}
+
+/* --------------------------------------------------------------- pięć filarów
+ * auto-fit rozłożyłby pięć kafli na 5×1 albo 4+1. Rozkład 3+2 trzyma rytm
+ * i nie zostawia sieroty w ostatnim rzędzie. */
+@media (min-width:1000px){
+  .vts-gauges--5{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .vts-gauges--5 > *{grid-column:span 2}
+  .vts-gauges--5 > :nth-child(4){grid-column:2/span 2}
+  .vts-gauges--5 > :nth-child(5){grid-column:4/span 2}
+}
+/* Poniżej 1000 px te same pięć zegarów układa się 2+2+1 i piąty zostawał sam
+ * przy lewej krawędzi — dokładnie ta sierota, którą kafelkom prostujemy wyżej.
+ * Stosujemy więc tę samą zasadę co w .vts-grid: pojedynczy kafelek w ostatnim
+ * rzędzie idzie na całą szerokość. Rozpięcie na wszystkie ścieżki jest przy tym
+ * bezpieczne przy każdej liczbie kolumn — przy jednej nic nie zmienia — więc
+ * reguła nie potrzebuje progu dobranego pod szerokość zegara. */
+@media (max-width:999px){
+  .vts-gauges--5 > :nth-child(5){grid-column:1/-1}
+}
+
+/* ------------------------------------------------------------------- etapy */
+.vts-stages > .vts-card ul{list-style:none;margin:var(--vts-gap-s) 0 0;padding:0}
+.vts-stages > .vts-card li{position:relative;padding-left:20px;margin-top:9px;
+  color:var(--vts-muted);font-size:var(--vts-step--1)}
+.vts-stages > .vts-card li::before{content:"";position:absolute;left:0;top:.62em;
+  width:7px;height:7px;border-radius:2px;background:var(--vts-accent)}
+@media (min-width:900px){.vts-stages{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ---------------------------------------------------------- dowód społeczny */
+.vts-proof{margin-top:var(--vts-gap-m)}
+.vts-proof__score{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:var(--vts-gap-s) var(--vts-gap-m);background:var(--vts-surface);
+  border:1px solid var(--vts-line);border-radius:var(--vts-radius)}
+.vts-proof__score b{font-family:var(--vts-font-display);font-size:var(--vts-step-3);line-height:1}
+.vts-proof__score span{display:flex;align-items:center;gap:7px;color:var(--vts-muted);
+  font-size:var(--vts-step--1)}
+.vts-proof__score .vts-i{width:19px;height:19px;color:var(--vts-accent);fill:currentColor}
+.vts-proof__score a{margin-left:auto;color:var(--vts-accent);font-size:var(--vts-step--1)}
+.vts-proof__list{margin-top:var(--vts-gap-s)}
+.vts-proof__list blockquote{margin:0;color:var(--vts-muted);font-size:var(--vts-step--1)}
+.vts-proof__list figcaption{margin-top:11px;font-size:var(--vts-step--2);
+  font-family:var(--vts-font-mono);letter-spacing:var(--vts-track-label);text-transform:uppercase;
+  color:var(--vts-accent)}
+
+/* -------------------------------------------------------------------- mapa */
+.vts-map{margin-top:var(--vts-gap-m);border:1px solid var(--vts-line);
+  border-radius:var(--vts-radius);overflow:hidden;aspect-ratio:16/7;
+  background:var(--vts-surface)}
+.vts-map iframe{width:100%;height:100%;border:0;display:block;
+  filter:grayscale(.35) contrast(1.05)}
+@media (max-width:720px){.vts-map{aspect-ratio:4/3}}
+
+/* ------------------------------------------------------------ formularze
+ *
+ * Contact Form 7 nie wnosi żadnych stylów, a hello-elementor zostawia pola
+ * w domyślnym wyglądzie przeglądarki — biały prostokąt z czarnym tekstem na
+ * ciemnym serwisie. Do niedawna dotyczyło to jednego formularza na /kontakt/,
+ * po dołożeniu pięciu dedykowanych formularzy trzeba to opisać raz, a porządnie.
+ *
+ * Pola trzymają tę samą miarę co listy wyszukiwarki (power-search.css), żeby
+ * te dwa mechanizmy zbierania danych nie wyglądały jak z dwóch różnych serwisów.
+ */
+.vts-cf7{margin-top:var(--vts-gap-m)}
+.vts-cf7 p{margin:0 0 var(--vts-gap-s)}
+.vts-cf7 label{display:block;font-size:var(--vts-step--2);color:var(--vts-muted);
+  font-family:var(--vts-font-mono);letter-spacing:var(--vts-track-caps)}
+
+.vts-cf7 input[type=text],.vts-cf7 input[type=email],.vts-cf7 input[type=tel],
+.vts-cf7 input[type=number],.vts-cf7 input[type=date],.vts-cf7 input[type=url],
+.vts-cf7 textarea,.vts-cf7 select{
+  width:100%;margin-top:7px;padding:11px 13px;
+  background:#0F1319;color:var(--vts-text);
+  border:1px solid var(--vts-line);border-radius:var(--vts-radius);
+  font-family:var(--vts-font-sans);font-size:var(--vts-step-0);line-height:1.4;
+  transition:border-color .18s}
+.vts-cf7 textarea{min-height:132px;resize:vertical}
+.vts-cf7 input::placeholder,.vts-cf7 textarea::placeholder{color:#5C6472}
+.vts-cf7 :is(input,textarea,select):hover{border-color:#3C4451}
+.vts-cf7 :is(input,textarea,select):focus-visible{outline:2px solid var(--vts-accent);outline-offset:2px}
+/* Pole daty w Chrome ma jasną ikonę kalendarza — na ciemnym tle znika. */
+.vts-cf7 input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.6)}
+
+/* Grupy wyboru. Domyślnie CF7 stawia je w jednym ciągu inline, przez co
+   „Zakres usług" z dziewięcioma pozycjami robi się nieczytelną ścianą. */
+.vts-cf7 .wpcf7-checkbox,.vts-cf7 .wpcf7-radio{display:grid;gap:9px;margin-top:9px;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.vts-cf7 .wpcf7-list-item{margin:0}
+.vts-cf7 .wpcf7-list-item label{display:flex;align-items:flex-start;gap:9px;cursor:pointer;
+  padding:10px 12px;border:1px solid var(--vts-line);border-radius:var(--vts-radius);
+  background:var(--vts-surface);color:var(--vts-text);font-family:var(--vts-font-body);
+  font-size:var(--vts-step--1);letter-spacing:0;transition:border-color .18s}
+.vts-cf7 .wpcf7-list-item label:hover{border-color:var(--vts-accent)}
+.vts-cf7 :is(input[type=checkbox],input[type=radio]){accent-color:var(--vts-accent);
+  width:17px;height:17px;margin:1px 0 0;flex:0 0 auto}
+.vts-cf7 .wpcf7-list-item-label{min-width:0}
+
+/* Zgoda RODO — pojedynczy checkbox poza siatką grup. */
+.vts-cf7 .wpcf7-acceptance .wpcf7-list-item label{border:0;background:transparent;padding:0;
+  color:var(--vts-muted);font-size:var(--vts-step--2)}
+.vts-cf7 .wpcf7-acceptance .wpcf7-list-item label:hover{border:0}
+
+.vts-cf7 input[type=submit],.vts-cf7 .wpcf7-submit{width:auto;margin-top:var(--vts-gap-s)}
+
+/* Komunikaty walidacji. Bez tego czerwony tekst CF7 siada na ciemnym tle
+   poniżej progu kontrastu 4,5:1. */
+.vts-cf7 .wpcf7-not-valid-tip{color:#FF8A80;font-size:var(--vts-step--2);margin-top:6px}
+.vts-cf7 :is(input,textarea,select).wpcf7-not-valid{border-color:#FF8A80}
+.vts-cf7 .wpcf7-response-output{margin:var(--vts-gap-s) 0 0;padding:12px 14px;
+  border:1px solid var(--vts-line);border-radius:var(--vts-radius);
+  font-size:var(--vts-step--1);color:var(--vts-text)}
+.vts-cf7 form.sent .wpcf7-response-output{border-color:var(--vts-accent)}
+.vts-cf7 form.invalid .wpcf7-response-output,
+.vts-cf7 form.failed .wpcf7-response-output{border-color:#FF8A80}
+
+/* ------------------------------------------------------- odnosniki w tresci
+ *
+ * `a{color:inherit}` z resetu sprawialo, ze odnosnik w akapicie nie rozni sie
+ * niczym od zwyklego tekstu — ani kolorem, ani podkresleniem. Przy jednym linku
+ * na podstronie uchodzilo to uwadze; po przebudowie kazda sekcja konczy sie
+ * przejsciem dalej, wiec przestaje.
+ *
+ * Podkreslenie, a nie sam kolor: WCAG 1.4.1 wymaga, zeby odnosnika dalo sie
+ * rozpoznac bez rozrozniania barw. Wykluczamy miejsca, ktore niosa wlasny
+ * sygnal — karty, nawigacje, stopke, przyciski i chipy.
+ */
+.vts-section :is(p,li,dd,blockquote) a:not(.vts-btn):not(.vts-card):not(.vts-dyno__chip),
+.vts-ilist span a{
+  color:var(--vts-accent);text-decoration:underline;
+  text-decoration-thickness:1px;text-underline-offset:3px;
+  text-decoration-color:color-mix(in srgb,var(--vts-accent) 45%,transparent);
+  transition:text-decoration-color .18s}
+.vts-section :is(p,li,dd,blockquote) a:not(.vts-btn):not(.vts-card):hover,
+.vts-ilist span a:hover{text-decoration-color:var(--vts-accent)}
+
+/* Numery telefonu i adres e-mail w karcie kontaktowej maja juz kolor akcentu
+   i pogrubienie z wlasnych regul — podkreslenie robiloby z nich gaszcz. */
+.vts-section .vts-card :is(p,li) a[href^="tel:"],
+.vts-section .vts-card :is(p,li) a[href^="mailto:"]{text-decoration:none}

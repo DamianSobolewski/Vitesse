@@ -18,19 +18,31 @@
   --vts-muted:     #8A919E;
   --vts-dim:       #6A7280;
 
-  /* --- marka --- */
-  --vts-accent:      #FF7A00;  /* pomarańcz z logo, lekko przygaszony */
-  --vts-accent-soft: #FFB067;
+  /* --- marka ---
+   * Trzy barwy wprost z księgi znaku. Wcześniej akcent był o pół tonu jaśniejszy
+   * (#FF7A00) niż pomarańcz w logo — na jednym ekranie z wektorowym znakiem
+   * widać było dwa różne pomarańcze obok siebie. Teraz to jedna wartość.
+   * Grafit i srebro nie są tu kolorem tła strony (to osobna, ciemniejsza skala),
+   * tylko barwami samego znaku i elementów, które mają się z nim zestroić. */
+  --vts-accent:      #F46A00;  /* księga znaku: pomarańcz, RGB 244/106/0 */
+  --vts-accent-soft: #FFB067;  /* rozjaśnienie akcentu na :hover */
   --vts-accent-dim:  #1D1509;  /* tło podświetleń */
-  --vts-on-accent:   #0F1116;  /* tekst na pomarańczu — kontrast 5.9:1 */
+  --vts-on-accent:   #0F1116;  /* tekst na pomarańczu — kontrast 6.3:1 */
+  --vts-silver:      #B7B8BA;  /* księga znaku: szary/srebrny — litery znaku */
+  --vts-graphite:    #494A4E;  /* księga znaku: grafit — znak na jasnym tle */
 
   /* --- semantyka --- */
   --vts-ok:      #3DBE8B;
   --vts-warn:    #E5A83C;
   --vts-danger:  #E5544B;
 
-  /* --- typografia --- */
-  --vts-font-display: 'Archivo', system-ui, sans-serif;
+  /* --- typografia ---
+   * Księga znaku wskazuje IBM Plex Sans jako podstawowy krój marki, więc
+   * nagłówki i tekst idą z jednej rodziny, a rozróżnia je grubość. Zmienna
+   * --vts-font-display zostaje, bo w kodzie oznacza rolę („to jest nagłówek"),
+   * a nie konkretny krój — gdyby marka kiedyś dostała krój firmowy, zmienia
+   * się jedno miejsce. */
+  --vts-font-display: 'IBM Plex Sans', system-ui, sans-serif;
   --vts-font-body:    'IBM Plex Sans', system-ui, sans-serif;
   --vts-font-mono:    'IBM Plex Mono', ui-monospace, monospace;
 
@@ -46,6 +58,27 @@
   --vts-step-2:  clamp(24px, 1.4vw + 20px, 32px);
   --vts-step-3:  clamp(30px, 2.4vw + 23px, 44px);
   --vts-step-4:  clamp(36px, 4.6vw + 22px, 66px);
+
+  /* --- światło międzyliterowe wersalików ---
+   * Wielkie litery bez rozstrzelenia sklejają się w jedną plamę, więc etykiety
+   * pisane monospace zawsze je dostają. Tyle że wartość dobierano dotąd na oko,
+   * osobno w każdym komponencie: .08, .1, .11, .12, .13, .14, .16 i .2em —
+   * osiem różnych świateł na trzy role. Role są teraz nazwane i jest ich tyle,
+   * ile naprawdę: nadtytuł sekcji (najszerszy, bo to jedno-dwa słowa), etykieta
+   * (najczęstsza) i dłuższy ciąg wersalikami, który przy szerokim świetle
+   * przestaje się mieścić i zaczyna łamać. */
+  --vts-track-eyebrow: .2em;   /* nadtytuł sekcji */
+  --vts-track-label:   .14em;  /* etykiety, podpisy, dane techniczne */
+  --vts-track-caps:    .06em;  /* dłuższe ciągi: nazwa pojazdu, VIN, podpisy */
+
+  /* Ściąganie nagłówków i liczb działa odwrotnie: im większy stopień, tym
+   * bardziej trzeba domknąć odstępy, bo przy 66 px domyślne światło robi się
+   * dziurą. Tu też było siedem wartości na oko (-.01 do -.03); są trzy,
+   * przypisane do zakresów skali, więc przy nowym komponencie nie trzeba
+   * niczego zgadywać — wystarczy spojrzeć, jakiego stopnia się używa. */
+  --vts-track-display: -.024em;  /* stopnie 3–4 — nagłówki stron i hero */
+  --vts-track-head:    -.02em;   /* stopnie 1–2 — nagłówki kafelków, liczby */
+  --vts-track-tight:   -.01em;   /* stopień 0 i niżej — podtytuły, dane */
 
   /* --- rytm --- */
   --vts-gap-xs: 8px;

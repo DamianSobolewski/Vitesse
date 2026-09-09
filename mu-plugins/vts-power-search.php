@@ -116,6 +116,27 @@ add_action('rest_api_init', function () {
         },
     ]);
 
+    /**
+     * Rozpoznanie pojazdu z numeru VIN.
+     *
+     * Bez płatnego API: pierwsze trzy znaki (WMI) identyfikują producenta, więc
+     * mapujemy je na markę z własnego katalogu, a z dziesiątego znaku czytamy rok
+     * modelowy. To wystarcza, żeby ustawić pierwszy krok kaskady — reszta zostaje
+     * po stronie użytkownika. Endpoint NIE zwraca wartości po modyfikacji;
+     * bramka leadowa pozostaje wyłącznie w POST /lead.
+     */
+    register_rest_route(VTS_NS, '/catalog/vin', [
+        'methods'  => 'GET',
+        'permission_callback' => $open,
+        'args'     => ['vin' => ['required' => true]],
+        'callback' => function (WP_REST_Request $r) {
+            if (vts_rate_limited('vin', 30)) {
+                return new WP_Error('vts_rate', 'Zbyt wiele zapytań. Spróbuj za chwilę.', ['status' => 429]);
+            }
+            return vts_vin_decode((string) $r->get_param('vin'));
+        },
+    ]);
+
     register_rest_route(VTS_NS, '/catalog/search', [
         'methods'  => 'GET',
         'permission_callback' => $open,
@@ -155,6 +176,119 @@ function vts_flush_catalog_cache(): void
                      OR option_name LIKE '_transient_timeout_vts_rest_%'");
 }
 
+/* --------------------------------------------------------------- VIN
+ *
+ * Tablica WMI → slug marki w naszym katalogu. Świadomie niepełna: pokrywa
+ * producentów obecnych w katalogu V-techa, a nie cały świat. Nierozpoznany VIN
+ * nie jest błędem — użytkownik schodzi rząd niżej, do wyboru ręcznego.
+ */
+function vts_vin_wmi_map(): array
+{
+    return [
+        // VAG
+        'WVW' => 'volkswagen', 'WV1' => 'volkswagen', 'WV2' => 'volkswagen',
+        '1VW' => 'volkswagen', '3VW' => 'volkswagen', 'WVG' => 'volkswagen',
+        'WAU' => 'audi',       'WA1' => 'audi',       'TRU' => 'audi',
+        'TMB' => 'skoda',      'TMP' => 'skoda',
+        'VSS' => 'seat',       'VSZ' => 'cupra',
+        // niemieckie
+        'WBA' => 'bmw',        'WBS' => 'bmw',        'WBY' => 'bmw',        'WBX' => 'bmw',
+        'WMW' => 'mini',       'WMZ' => 'mini',
+        'WDD' => 'mercedes',   'WDB' => 'mercedes',   'WDC' => 'mercedes',
+        'W1K' => 'mercedes',   'W1N' => 'mercedes',   'WDF' => 'mercedes',
+        'WDA' => 'mercedes-truck', 'WMA' => 'man',
+        'WME' => 'smart',      'WP0' => 'porsche',    'WP1' => 'porsche',
+        'W0L' => 'opel',       'W0V' => 'opel',       'VXK' => 'opel',       'LRB' => 'opel',
+        // francuskie
+        'VF1' => 'renault',    'VF3' => 'peugeot',    'VF7' => 'citroen',    'VR1' => 'ds',
+        'UU1' => 'dacia',      'UU2' => 'dacia',
+        // włoskie
+        'ZFA' => 'fiat',       'ZFC' => 'fiat',       'ZAR' => 'alfa-romeo',
+        'ZLA' => 'lancia',     'ZAM' => 'maserati',   'ZCF' => 'iveco',      'ZFF' => 'abarth',
+        'VNE' => 'iveco',      'WJM' => 'iveco',
+        // skandynawskie i brytyjskie
+        'YV1' => 'volvo',      'YV4' => 'volvo',      'YV3' => 'volvo',
+        'YS3' => 'saab',       'YS2' => 'scania',
+        'SAL' => 'land-rover', 'SAJ' => 'jaguar',     'SAD' => 'jaguar',
+        'SCF' => 'aston-martin',
+        'XLR' => 'daf',        'XLU' => 'daf',
+        // azjatyckie
+        'VNK' => 'toyota',     'JTD' => 'toyota',     'JTM' => 'toyota',     'SB1' => 'toyota',
+        'JTH' => 'lexus',      'JTJ' => 'lexus',
+        'JHM' => 'honda',      'SHH' => 'honda',
+        'JMB' => 'mitsubishi', 'JMZ' => 'mazda',      'JM1' => 'mazda',
+        'JN1' => 'nissan',     'VSK' => 'nissan',     'SJN' => 'nissan',
+        'JNK' => 'infiniti',
+        'KNA' => 'kia',        'KNE' => 'kia',        'KNH' => 'kia',        'U5Y' => 'kia',
+        'KMH' => 'hyundai',    'TMA' => 'hyundai',    'NLH' => 'hyundai',
+        'JSA' => 'suzuki',     'TSM' => 'suzuki',     'JF1' => 'subaru',     'JF2' => 'subaru',
+        'KPT' => 'ssangyong',  'JAA' => 'isuzu',      'JAC' => 'isuzu',
+        // amerykańskie
+        'WF0' => 'ford',       '1FA' => 'ford',       '1FT' => 'ford',       '1FM' => 'ford',
+        '1G1' => 'chevrolet',  'KL1' => 'chevrolet',  '1G6' => 'cadillac',
+        '1C3' => 'chrysler',   '1C4' => 'jeep',       '1J4' => 'jeep',       '1B3' => 'dodge',
+    ];
+}
+
+/** Rok modelowy z 10. znaku VIN. Kod jest cykliczny (30 lat), więc wybieramy bliższy cykl. */
+function vts_vin_year(string $code): int
+{
+    $tab = 'ABCDEFGHJKLMNPRSTVWXY123456789';
+    $i   = strpos($tab, $code);
+    if ($i === false) {
+        return 0;
+    }
+
+    $rok = 1980 + $i;
+    while ($rok + 30 <= (int) date('Y') + 1) {
+        $rok += 30;
+    }
+
+    return $rok;
+}
+
+/**
+ * @return array{ok:bool,message:string,make?:array{slug:string,name:string},year?:int}
+ */
+function vts_vin_decode(string $vin): array
+{
+    $vin = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $vin));
+
+    // I, O i Q nie występują w VIN-ie — mylą się z 1 i 0, więc norma ich nie dopuszcza.
+    if (strlen($vin) !== 17 || preg_match('/[IOQ]/', $vin)) {
+        return ['ok' => false, 'message' => 'To nie wygląda na poprawny numer VIN (17 znaków, bez liter I, O i Q).'];
+    }
+
+    $slug = vts_vin_wmi_map()[substr($vin, 0, 3)] ?? '';
+    $rok  = vts_vin_year(substr($vin, 9, 1));
+
+    if ($slug === '') {
+        return ['ok' => false, 'message' => 'Nie rozpoznaliśmy marki z tego numeru VIN — wybierzcie pojazd z list poniżej.'];
+    }
+
+    // Marka musi być widoczna w katalogu; ukryta zachowuje się jak nieznana.
+    $marka = null;
+    foreach (vts_makes() as $m) {
+        if ($m['slug'] === $slug) {
+            $marka = ['slug' => $m['slug'], 'name' => $m['name']];
+            break;
+        }
+    }
+
+    if (!$marka) {
+        return ['ok' => false, 'message' => 'Tej marki nie mamy w katalogu — wybierzcie pojazd z list poniżej albo zadzwońcie.'];
+    }
+
+    return [
+        'ok'      => true,
+        'make'    => $marka,
+        'year'    => $rok,
+        'message' => 'Rozpoznaliśmy markę ' . $marka['name']
+                   . ($rok ? ' (rok modelowy ' . $rok . ')' : '')
+                   . '. Wskażcie model i wersję silnika.',
+    ];
+}
+
 function vts_rest_lead(WP_REST_Request $r)
 {
     $engine_id = (int) $r->get_param('engine_id');
@@ -182,11 +316,19 @@ function vts_rest_lead(WP_REST_Request $r)
         return new WP_Error('vts_engine', 'Nie znaleziono wersji silnika.', ['status' => 404]);
     }
 
+    // VIN jest opcjonalny — pole w wyszukiwarce bywa puste, a wybór ręczny go pomija.
+    // Zapisujemy go, bo dla warsztatu jest cenniejszy niż sama nazwa wersji.
+    $vin = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string) $r->get_param('vin')));
+    if (strlen($vin) !== 17 || preg_match('/[IOQ]/', $vin)) {
+        $vin = '';
+    }
+
     $id = vts_lead_store([
         'source'    => 'hero-cascade',
         'email'     => (string) $r->get_param('email'),
         'phone'     => (string) $r->get_param('phone'),
         'engine_id' => $engine_id,
+        'vin'       => $vin,
         'payload'   => ['pojazd' => "{$path['make']} {$path['model']} {$path['generation']} {$path['engine']}"],
     ]);
 
@@ -273,7 +415,14 @@ add_filter('rest_post_dispatch', function ($response, $server, $request) {
 /* -------------------------------------------------------------- shortcode */
 
 add_shortcode('vts_power_search', function ($atts) {
-    $a = shortcode_atts(['title' => 'Sprawdź, ile zyska Twój silnik'], $atts);
+    $a = shortcode_atts([
+        'title'  => 'Sprawdź, ile zyska Twój silnik',
+        'layout' => 'inline',   // hero — z zabawkami przy zdjęciu auta; inline — bez nich
+        'vin'    => '',         // puste = decyduje flaga funkcji
+    ], $atts);
+
+    $vin_on = $a['vin'] === '' ? vts_feature('vin_decoder') : (bool) $a['vin'];
+    $hero   = $a['layout'] === 'hero';
 
     // Marki renderujemy po stronie serwera — bez tego wyszukiwarka jest dla
     // robota pustym divem, a to najważniejszy element strony głównej.
@@ -292,7 +441,8 @@ add_shortcode('vts_power_search', function ($atts) {
     ];
 
     ob_start(); ?>
-    <div class="vts-ps" data-vts-ps data-rest="<?= esc_attr(rest_url(VTS_NS)) ?>">
+    <div class="vts-ps<?= $hero ? ' vts-ps--hero' : '' ?>" data-vts-ps
+         data-rest="<?= esc_attr(rest_url(VTS_NS)) ?>">
 
       <div class="vts-ps__head">
         <span class="vts-ps__title"><?= esc_html($a['title']) ?></span>
@@ -309,6 +459,27 @@ add_shortcode('vts_power_search', function ($atts) {
         </div>
       </div>
 
+      <?php if ($vin_on) : ?>
+        <?php /* Górny rząd: VIN. Rozpoznajemy markę po WMI z własnego katalogu —
+                 bez płatnego API. Trafienie ustawia pierwszy select i odblokowuje
+                 resztę kaskady; brak trafienia sprowadza użytkownika o rząd niżej,
+                 zamiast zostawiać go z komunikatem błędu. */ ?>
+        <div class="vts-ps__vin" data-vin>
+          <label class="vts-ps__slot vts-ps__slot--vin">
+            <span>Wpisz numer VIN</span>
+            <input type="text" data-vin-input inputmode="latin" autocomplete="off"
+                   spellcheck="false" maxlength="17" placeholder="np. WVWZZZ1KZAW123456"
+                   aria-label="Numer VIN">
+          </label>
+          <button type="button" class="vts-btn vts-btn--ghost" data-vin-go>Rozkoduj</button>
+          <p class="vts-ps__vinmsg" data-vin-msg hidden></p>
+        </div>
+
+        <p class="vts-ps__or"><span>lub</span></p>
+      <?php endif; ?>
+
+      <p class="vts-ps__slotslabel"<?= $vin_on ? '' : ' hidden' ?>>Wybierz model ręcznie</p>
+
       <div class="vts-ps__slots">
         <?php foreach ($slots as [$key, $label]) : ?>
           <label class="vts-ps__slot">
@@ -324,7 +495,9 @@ add_shortcode('vts_power_search', function ($atts) {
         <?php endforeach; ?>
       </div>
 
-      <p class="vts-ps__soon">Odczyt z numeru VIN i asystent AI — <b>wkrótce</b></p>
+      <button type="button" class="vts-btn vts-btn--primary vts-ps__cta" data-cta disabled>
+        Sprawdź potencjał i pobierz wycenę
+      </button>
 
       <div data-out hidden>
         <form class="vts-ps__gate" data-gate novalidate>
@@ -353,7 +526,9 @@ add_shortcode('vts_power_search', function ($atts) {
 
       <?php /* Dwa sterowania auta ze zdjęcia obok. Zostają po zdjęciu obudowy,
                bo działają i bo tylko tutaj widać ich efekt — auto jest w hero,
-               nie w sekcjach niżej. Świadomie ciche: to zabawka, nie nawigacja. */ ?>
+               nie w sekcjach niżej. Świadomie ciche: to zabawka, nie nawigacja.
+               Poza hero nie ma czego zapalać, więc ich tam nie renderujemy. */ ?>
+      <?php if ($hero) : ?>
       <div class="vts-ps__toys">
         <button type="button" class="vts-ps__toy vts-ps__toy--haz" data-hazard
                 aria-pressed="false">
@@ -364,6 +539,7 @@ add_shortcode('vts_power_search', function ($atts) {
           <i aria-hidden="true"></i>Światła
         </button>
       </div>
+      <?php endif; ?>
     </div>
     <?php
     return ob_get_clean();

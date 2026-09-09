@@ -7,11 +7,14 @@
     var api  = root.dataset.rest;
     var grid = root.querySelector('[data-grid]');
     var more = root.querySelector('[data-more]');
-    var active = '';
+    // Filtry są niezależne i kumulują się — marka ORAZ paliwo ORAZ rodzaj usługi.
+    var active = { marka: '', paliwo: '', usluga: '' };
 
     function load(page, append) {
       var url = new URL(api, location.origin);
-      if (active) url.searchParams.set('marka', active);
+      Object.keys(active).forEach(function (k) {
+        if (active[k]) url.searchParams.set(k, active[k]);
+      });
       url.searchParams.set('page', page);
 
       return fetch(url, { headers: { Accept: 'application/json' } })
@@ -41,8 +44,11 @@
     root.querySelectorAll('[data-filter]').forEach(function (chip) {
       chip.addEventListener('click', function (e) {
         e.preventDefault();
-        active = chip.dataset.filter;
-        root.querySelectorAll('[data-filter]').forEach(function (c) { c.classList.remove('is-active'); });
+        var grupa = chip.dataset.filterGroup;
+        active[grupa] = chip.dataset.filter;
+
+        root.querySelectorAll('[data-filter-group="' + grupa + '"]')
+            .forEach(function (c) { c.classList.remove('is-active'); });
         chip.classList.add('is-active');
         load(1, false);
       });

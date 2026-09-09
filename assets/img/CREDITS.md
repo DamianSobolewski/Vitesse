@@ -2,6 +2,21 @@
 
 Wszystkie zdjęcia użyte w serwisie muszą mieć tu wpis. Bez wpisu — nie wchodzą na produkcję.
 
+## Znak firmowy
+
+### `logo-vitesse.svg`, `logo-vitesse-light-bg.svg`, `logo-vitesse-mono.svg`
+* **Właściciel:** Vitesse — znak firmowy klienta, nie materiał licencjonowany.
+* **Źródło pliku:** `księga znaku vitesse v2` (PDF), projekt i realizacja Create Hot Look
+  Studio — chl.pl. Krzywe wyjęte wprost z wektorów w PDF-ie, bez przerysowywania:
+  proporcje, podziały i odstępy są dokładnie takie jak w księdze.
+* **Warianty:** podstawowy na ciemne tło (litery srebrne `#B7B8BA`), na jasne tło
+  (litery grafitowe `#494A4E`) oraz monochromatyczny. Pomarańcz `#F46A00` jest w każdym
+  wariancie ten sam — księga znaku nie dopuszcza zmiany kolorystyki akcentów.
+* **Zasady użycia z księgi znaku:** nie rozciągać, nie obracać, nie zmieniać kolorów ani
+  układu elementów, nie dodawać cieni i obrysów. Pole ochronne dookoła znaku ma wysokość
+  samych liter. Minimalna szerokość: **160 px na ekranie**, 35–40 mm w druku — poniżej
+  zlewają się poziome podziały wewnątrz liter.
+
 ## Zdjęcia o potwierdzonej licencji
 
 ### `hero.webp`, `hero-sm.webp` — tło sekcji hero

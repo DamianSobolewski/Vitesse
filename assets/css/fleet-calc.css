@@ -1,6 +1,9 @@
 /* Kalkulator oszczędności flotowych. */
 .vts-calc{background:var(--vts-surface);border:1px solid var(--vts-line);
-  border-radius:var(--vts-radius);padding:var(--vts-gap-m)}
+  border-radius:var(--vts-radius);padding:var(--vts-gap-m);
+  /* Kalkulator stoi w kolumnie układu dwudzielnego — o jego wnętrzu decyduje
+     szerokość samego panelu, nie okna. */
+  container-type:inline-size}
 .vts-calc__head h3{margin:0 0 4px}
 .vts-calc__head p{color:var(--vts-muted);font-size:var(--vts-step--1);margin:0 0 var(--vts-gap-m)}
 
@@ -25,15 +28,23 @@
 .vts-calc__main{display:flex;justify-content:space-between;align-items:flex-end;
   gap:14px;flex-wrap:wrap}
 .vts-calc__lab{display:block;font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
-  letter-spacing:.14em;text-transform:uppercase;color:var(--vts-muted);margin-bottom:5px}
-.vts-calc__val{font-family:var(--vts-font-display);font-weight:800;font-size:var(--vts-step-3);
-  line-height:1;letter-spacing:-.03em;color:var(--vts-accent);margin:0;
+  letter-spacing:var(--vts-track-label);text-transform:uppercase;color:var(--vts-muted);margin-bottom:5px}
+.vts-calc__val{font-family:var(--vts-font-display);font-weight:700;font-size:var(--vts-step-3);
+  line-height:1;letter-spacing:var(--vts-track-display);color:var(--vts-accent);margin:0;
   font-variant-numeric:tabular-nums}
 .vts-calc__side{text-align:right}
 .vts-calc__side b{font-family:var(--vts-font-display);font-weight:700;font-size:var(--vts-step-1);
   font-variant-numeric:tabular-nums}
 .vts-calc__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));
   gap:14px;margin-top:18px;padding-top:16px;border-top:1px solid var(--vts-line)}
+/* Trzy wyniki w dwóch kolumnach zostawiają trzeci sam przy lewej krawędzi.
+   Sam rząd wyników potrzebuje na trzy kolumny 418 px (3×130 + 2×14), ale stoi
+   w bloku wyniku wciętym o 44 px względem panelu — próg liczymy więc od treści
+   panelu: 462 px. Poniżej ostatni wynik bierze cały rząd, tak samo jak sierota
+   w kafelkach. */
+@container (max-width:461px){
+  .vts-calc__grid > :last-child{grid-column:1/-1}
+}
 .vts-calc__grid span{display:block;font-size:var(--vts-step--2);color:var(--vts-muted);margin-bottom:3px}
 .vts-calc__grid b{font-family:var(--vts-font-display);font-weight:700;font-size:var(--vts-step-0);
   font-variant-numeric:tabular-nums}

@@ -113,7 +113,10 @@ Prosimy o informację:
 
 ## 9. Materiały
 
-- Logo w wektorze (SVG / AI / EPS)
+- ~~Logo w wektorze (SVG / AI / EPS)~~ — **mamy.** Dostaliśmy księgę znaku (v2, Create Hot Look
+  Studio). Znak jest w serwisie w wektorze, wprost z krzywych z księgi; barwy i krój (IBM Plex
+  Sans) też są już zgodne z księgą. Oryginały leżą w `design/marka/`, zasady użycia
+  w `design/marka/README.md`.
 - Zdjęcia: warsztat, hamownia, zespół, przykładowe realizacje
 - Certyfikaty i materiały prasowe, jeśli mają zostać
 

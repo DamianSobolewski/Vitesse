@@ -74,3 +74,19 @@ foreach ($seed as [$title, $img, $marka, $paliwo, $usluga, $klasa, $shp, $snm, $
 }
 
 echo "wykresy demonstracyjne: {$created}\n";
+
+/* ------------------------------------------------- dowód społeczny (DEMO)
+ *
+ * Sekcja „Co mówią klienci" na stronie głównej nie renderuje się, dopóki te opcje
+ * są puste — zmyślona opinia w serwisie usługowym to nie placeholder, tylko
+ * wprowadzanie w błąd. Poniższe wpisy są jawnie oznaczone jako demonstracyjne
+ * i mają zostać zastąpione realnymi danymi z profilu Google przed startem.
+ */
+update_option('vts_google_rating', 4.9);
+update_option('vts_google_reviews_count', 0);
+update_option('vts_google_reviews_url', '');
+update_option('vts_reviews', [
+    ['author' => 'Opinia demonstracyjna', 'text' => 'Treść zastępcza — podmienić na realną opinię z profilu Google przed startem produkcyjnym.'],
+]);
+
+echo "dowód społeczny: dane demonstracyjne (do podmiany)\n";

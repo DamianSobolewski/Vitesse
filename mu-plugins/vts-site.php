@@ -51,11 +51,43 @@ add_filter('hello_elementor_page_title', '__return_false');
 
 /* ------------------------------------------------------------- nagłówek */
 
+/**
+ * Znak firmowy z księgi znaku — wektor wstawiany prosto w kod strony.
+ *
+ * Nie <img>, bo wtedy litery nie mogłyby dziedziczyć koloru z motywu
+ * (a znak żyje na ciemnym i na jasnym tle) i doszłoby drugie żądanie
+ * do serwera w najważniejszym miejscu strony. Dwa kilobajty w HTML są
+ * tańsze niż to żądanie, a znak rysuje się ostro w każdej skali.
+ *
+ * Plik czytamy raz na żądanie — nagłówek i stopka dostają tę samą treść.
+ */
+function vts_logo_svg(): string
+{
+    static $svg = null;
+
+    if ($svg === null) {
+        $file = VTS_ASSETS_DIR . '/img/logo-vitesse.svg';
+        $svg  = is_readable($file) ? trim(file_get_contents($file)) : '';
+    }
+
+    return $svg;
+}
+
+/**
+ * Znak jako odnośnik do strony głównej.
+ *
+ * Nazwę dostępną niesie <title> ze środka SVG, więc czytnik ekranu przeczyta
+ * „Vitesse" — nie trzeba dokładać ukrytego tekstu. Dopisek „V-TECH ŁÓDŹ" zszedł
+ * z nagłówka: księga znaku wymaga wokół znaku pola ochronnego o wysokości
+ * samych liter, a przy tym odstępie pasek urósłby o kolejne 30 px. Ta sama
+ * treść stoi zresztą wiersz wyżej, w pasku kontaktowym, i w stopce.
+ */
 function vts_render_brand(): string
 {
     return sprintf(
-        '<a class="vts-brand" href="%s" rel="home"><span>V</span>ITESSE<small>V-TECH ŁÓDŹ</small></a>',
-        esc_url(home_url('/'))
+        '<a class="vts-brand" href="%s" rel="home">%s</a>',
+        esc_url(home_url('/')),
+        vts_logo_svg()
     );
 }
 
