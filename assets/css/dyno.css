@@ -24,3 +24,22 @@
 .vts-dyno__empty{color:var(--vts-muted);grid-column:1/-1;padding:var(--vts-gap-m);
   border:1px dashed var(--vts-line);border-radius:var(--vts-radius);text-align:center}
 .vts-dyno__more{margin-top:var(--vts-gap-m)}
+
+/* --- pojedynczy wykres --- */
+.vts-hero + .vts-dyno-single{padding-top:var(--vts-gap-m)}
+.vts-dyno-single__chart{margin:0 0 var(--vts-gap-m);border:1px solid var(--vts-line);
+  border-radius:var(--vts-radius);overflow:hidden;background:#fff}
+.vts-dyno-single__chart a{display:block}
+.vts-dyno-single__chart img{display:block;width:100%;height:auto}
+.vts-dyno-single__chart figcaption{padding:9px 14px;font-size:var(--vts-step--2);color:var(--vts-muted);
+  background:var(--vts-surface);border-top:1px solid var(--vts-line)}
+.vts-dyno-single__note{max-width:var(--vts-content)}
+.vts-dyno-single__data h2{font-size:var(--vts-step-1);margin-bottom:var(--vts-gap-s)}
+.vts-dyno-single__data dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 18px;align-items:baseline}
+.vts-dyno-single__data dt{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
+  letter-spacing:var(--vts-track-label);text-transform:uppercase;color:var(--vts-muted)}
+.vts-dyno-single__data dd{margin:0;font-family:var(--vts-font-mono);font-size:var(--vts-step-0);
+  font-variant-numeric:tabular-nums;color:var(--vts-text)}
+.vts-dyno-single__data dd.is-accent{color:var(--vts-accent);font-weight:500}
+.vts-dyno-single__cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:var(--vts-gap-m)}
+

@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Vitesse — wyszukiwarka mocy
- * Description: REST kaskady Marka→Model→Generacja→Silnik, bramka leadowa, shortcode [vts_power_search].
+ * Description: REST kaskady Marka→Model→Generacja→Silnik, wynik dla wersji, shortcode [vts_power_search].
  */
 
 if (!defined('ABSPATH')) {
@@ -148,6 +148,30 @@ add_action('rest_api_init', function () {
         },
     ]);
 
+    /**
+     * Wynik dla wybranej wersji: przyrosty i wartości po modyfikacji dla każdego
+     * poziomu produktu. Bez bramki e-mail — klient zrezygnował z niej we wrześniu
+     * 2026 (wyszukiwarka ma pokazywać wynik od razu, tak jak konfigurator V-techa).
+     * Token z listy silników i limit zapytań zostają: to hamulec na masowe
+     * zgarnianie katalogu skryptem, nie na człowieka.
+     */
+    register_rest_route(VTS_NS, '/catalog/result', [
+        'methods'  => 'GET',
+        'permission_callback' => $open,
+        'args'     => ['engine' => ['required' => true], 'token' => ['required' => true]],
+        'callback' => function (WP_REST_Request $r) {
+            $engine_id = (int) $r->get_param('engine');
+            if (!$engine_id || !vts_gate_verify((string) $r->get_param('token'), $engine_id)) {
+                return new WP_Error('vts_token', 'Sesja wygasła. Wybierz silnik ponownie.', ['status' => 403]);
+            }
+            if (vts_rate_limited('result', 120)) {
+                return new WP_Error('vts_rate', 'Zbyt wiele zapytań z tego adresu. Zadzwoń do nas.', ['status' => 429]);
+            }
+            $wynik = vts_engine_result($engine_id);
+            return $wynik ?: new WP_Error('vts_engine', 'Nie znaleziono wersji silnika.', ['status' => 404]);
+        },
+    ]);
+
     register_rest_route(VTS_NS, '/lead', [
         'methods'  => 'POST',
         'permission_callback' => $open,
@@ -263,7 +287,7 @@ function vts_vin_decode(string $vin): array
     $rok  = vts_vin_year(substr($vin, 9, 1));
 
     if ($slug === '') {
-        return ['ok' => false, 'message' => 'Nie rozpoznaliśmy marki z tego numeru VIN — wybierzcie pojazd z list poniżej.'];
+        return ['ok' => false, 'message' => 'Nie rozpoznaliśmy marki z tego numeru VIN. Wybierz pojazd z list poniżej.'];
     }
 
     // Marka musi być widoczna w katalogu; ukryta zachowuje się jak nieznana.
@@ -276,7 +300,7 @@ function vts_vin_decode(string $vin): array
     }
 
     if (!$marka) {
-        return ['ok' => false, 'message' => 'Tej marki nie mamy w katalogu — wybierzcie pojazd z list poniżej albo zadzwońcie.'];
+        return ['ok' => false, 'message' => 'Tej marki nie mamy w katalogu. Wybierz pojazd z list poniżej albo zadzwoń.'];
     }
 
     return [
@@ -285,7 +309,7 @@ function vts_vin_decode(string $vin): array
         'year'    => $rok,
         'message' => 'Rozpoznaliśmy markę ' . $marka['name']
                    . ($rok ? ' (rok modelowy ' . $rok . ')' : '')
-                   . '. Wskażcie model i wersję silnika.',
+                   . '. Wskaż model i wersję silnika.',
     ];
 }
 
@@ -300,7 +324,7 @@ function vts_rest_lead(WP_REST_Request $r)
     }
 
     if (!$engine_id || !vts_gate_verify($token, $engine_id)) {
-        return new WP_Error('vts_token', 'Sesja wygasła — wybierz silnik ponownie.', ['status' => 403]);
+        return new WP_Error('vts_token', 'Sesja wygasła. Wybierz silnik ponownie.', ['status' => 403]);
     }
 
     if (!$r->get_param('consent')) {
@@ -334,6 +358,22 @@ function vts_rest_lead(WP_REST_Request $r)
 
     if (is_wp_error($id)) {
         return new WP_Error('vts_save', $id->get_error_message(), ['status' => 400]);
+    }
+
+    return vts_engine_result($engine_id);
+}
+
+/**
+ * Przyrosty dla wersji silnika — jeden wynik dla wyszukiwarki, strony katalogu
+ * i (gdyby wrócił) formularza leadowego.
+ *
+ * @return array|null null, gdy wersji nie ma
+ */
+function vts_engine_result(int $engine_id): ?array
+{
+    $path = vts_engine_path($engine_id);
+    if (!$path) {
+        return null;
     }
 
     $services = vts_services();
@@ -387,6 +427,7 @@ function vts_rest_lead(WP_REST_Request $r)
 
     return [
         'vehicle'  => "{$path['make']} {$path['model']} {$path['generation']} · {$path['engine']}",
+        'url'      => vts_catalog_url($path['make_slug'], $path['model_slug'], $path['gen_slug'], $path['engine_slug']),
         'stock_hp' => $stock_hp,
         'stock_nm' => $stock_nm ?: null,
         'best'     => $top ? [
@@ -417,12 +458,12 @@ add_filter('rest_post_dispatch', function ($response, $server, $request) {
 add_shortcode('vts_power_search', function ($atts) {
     $a = shortcode_atts([
         'title'  => 'Sprawdź, ile zyska Twój silnik',
-        'layout' => 'inline',   // hero — z zabawkami przy zdjęciu auta; inline — bez nich
+        'layout' => 'inline',   // wide — pełna szerokość pod hero; inline — w kolumnie obok tekstu
         'vin'    => '',         // puste = decyduje flaga funkcji
     ], $atts);
 
     $vin_on = $a['vin'] === '' ? vts_feature('vin_decoder') : (bool) $a['vin'];
-    $hero   = $a['layout'] === 'hero';
+    $wide   = $a['layout'] === 'wide';
 
     // Marki renderujemy po stronie serwera — bez tego wyszukiwarka jest dla
     // robota pustym divem, a to najważniejszy element strony głównej.
@@ -441,29 +482,16 @@ add_shortcode('vts_power_search', function ($atts) {
     ];
 
     ob_start(); ?>
-    <div class="vts-ps<?= $hero ? ' vts-ps--hero' : '' ?>" data-vts-ps
-         data-rest="<?= esc_attr(rest_url(VTS_NS)) ?>">
+    <div class="vts-ps<?= $wide ? ' vts-ps--wide' : '' ?>" data-vts-ps
+         data-rest="<?= esc_attr(rest_url(VTS_NS)) ?>"
+         data-contact="<?= esc_url(home_url('/kontakt/')) ?>">
 
       <div class="vts-ps__head">
         <span class="vts-ps__title"><?= esc_html($a['title']) ?></span>
         <span class="vts-ps__count"><?= esc_html(number_format_i18n($counts['engine'])) ?> wersji silnikowych</span>
       </div>
 
-      <div class="vts-ps__read">
-        <p class="vts-ps__veh" data-f="veh">Wybierz pojazd z list poniżej</p>
-        <div class="vts-ps__cells">
-          <div class="vts-ps__cell"><span>Moc fabryczna</span><b data-f="shp">– – –</b></div>
-          <div class="vts-ps__cell"><span>Moment fabr.</span><b data-f="snm">– – –</b></div>
-          <div class="vts-ps__cell is-gain is-locked"><span>Po modyfikacji</span><b data-f="thp">– – –</b></div>
-          <div class="vts-ps__cell is-gain is-locked"><span>Przyrost mocy</span><b data-f="ghp">– – –</b></div>
-        </div>
-      </div>
-
       <?php if ($vin_on) : ?>
-        <?php /* Górny rząd: VIN. Rozpoznajemy markę po WMI z własnego katalogu —
-                 bez płatnego API. Trafienie ustawia pierwszy select i odblokowuje
-                 resztę kaskady; brak trafienia sprowadza użytkownika o rząd niżej,
-                 zamiast zostawiać go z komunikatem błędu. */ ?>
         <div class="vts-ps__vin" data-vin>
           <label class="vts-ps__slot vts-ps__slot--vin">
             <span>Wpisz numer VIN</span>
@@ -474,11 +502,9 @@ add_shortcode('vts_power_search', function ($atts) {
           <button type="button" class="vts-btn vts-btn--ghost" data-vin-go>Rozkoduj</button>
           <p class="vts-ps__vinmsg" data-vin-msg hidden></p>
         </div>
-
         <p class="vts-ps__or"><span>lub</span></p>
+        <p class="vts-ps__slotslabel">Wybierz model ręcznie</p>
       <?php endif; ?>
-
-      <p class="vts-ps__slotslabel"<?= $vin_on ? '' : ' hidden' ?>>Wybierz model ręcznie</p>
 
       <div class="vts-ps__slots">
         <?php foreach ($slots as [$key, $label]) : ?>
@@ -499,47 +525,30 @@ add_shortcode('vts_power_search', function ($atts) {
         Sprawdź potencjał i pobierz wycenę
       </button>
 
-      <div data-out hidden>
-        <form class="vts-ps__gate" data-gate novalidate>
-          <p>Wynik dla <b data-f="veh2">—</b> jest gotowy. Zostaw adres e-mail,
-             a odsłonimy wartości po modyfikacji.</p>
-          <div class="vts-ps__gatef">
-            <input type="email" name="email" required placeholder="twoj@email.pl" aria-label="Adres e-mail">
-            <button class="vts-btn vts-btn--primary" type="submit">Pokaż wynik</button>
-          </div>
-          <label class="vts-ps__consent">
-            <input type="checkbox" name="consent" required>
-            <span><?= esc_html(vts_consent_text()) ?>
-              <a href="<?= esc_url(home_url('/polityka-prywatnosci/')) ?>">Polityka prywatności</a>.</span>
-          </label>
-          <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" class="vts-ps__hp">
-          <p class="vts-ps__err" data-err hidden></p>
-        </form>
-
-        <p class="vts-ps__note" data-note hidden></p>
+      <?php /* Wynik. Do czasu wyboru silnika blok jest ukryty — nie ma sensu pokazywać
+               kresek, skoro nic nie czeka na odsłonięcie. Wartości wpisuje skrypt
+               z odpowiedzi /catalog/result. */ ?>
+      <div class="vts-ps__out" data-out hidden>
+        <p class="vts-ps__veh" data-f="veh"></p>
+        <div class="vts-ps__cells">
+          <div class="vts-ps__cell"><span>Moc fabryczna</span><b data-f="shp">– – –</b></div>
+          <div class="vts-ps__cell"><span>Moment fabr.</span><b data-f="snm">– – –</b></div>
+          <div class="vts-ps__cell is-gain"><span>Po modyfikacji</span><b data-f="thp">– – –</b></div>
+          <div class="vts-ps__cell is-gain"><span>Przyrost mocy</span><b data-f="ghp">– – –</b></div>
+        </div>
+        <div class="vts-ps__full" data-full></div>
+        <p class="vts-ps__note" data-note></p>
+        <div class="vts-ps__actions">
+          <a class="vts-btn vts-btn--primary" data-go-contact href="<?= esc_url(home_url('/kontakt/')) ?>">Umów pomiar i wycenę</a>
+          <a class="vts-btn vts-btn--ghost" data-go-catalog href="<?= esc_url(vts_catalog_url()) ?>">Zobacz wersję w katalogu</a>
+        </div>
+        <p class="vts-ps__err" data-err hidden></p>
       </div>
 
-      <p class="vts-ps__hint">Nie ma Twojej wersji? Zadzwoń —
+      <p class="vts-ps__hint">Nie ma Twojej wersji? Zadzwoń:
         <a href="<?= esc_attr(vts_phone_href($c['phones']['tuning']['number'])) ?>">
-          <?= esc_html($c['phones']['tuning']['number']) ?></a>
-        — często mamy rozwiązanie, którego nie ma w katalogu.</p>
-
-      <?php /* Dwa sterowania auta ze zdjęcia obok. Zostają po zdjęciu obudowy,
-               bo działają i bo tylko tutaj widać ich efekt — auto jest w hero,
-               nie w sekcjach niżej. Świadomie ciche: to zabawka, nie nawigacja.
-               Poza hero nie ma czego zapalać, więc ich tam nie renderujemy. */ ?>
-      <?php if ($hero) : ?>
-      <div class="vts-ps__toys">
-        <button type="button" class="vts-ps__toy vts-ps__toy--haz" data-hazard
-                aria-pressed="false">
-          <i aria-hidden="true"></i>Awaryjne
-        </button>
-        <button type="button" class="vts-ps__toy vts-ps__toy--pwr" data-power
-                aria-pressed="true">
-          <i aria-hidden="true"></i>Światła
-        </button>
-      </div>
-      <?php endif; ?>
+          <?= esc_html($c['phones']['tuning']['number']) ?></a>.
+        Katalog nie obejmuje wszystkiego, nad czym pracujemy.</p>
     </div>
     <?php
     return ob_get_clean();

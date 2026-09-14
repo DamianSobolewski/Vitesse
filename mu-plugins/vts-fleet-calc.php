@@ -24,14 +24,17 @@ function vts_fleet_config(): array
     ];
 }
 
-add_shortcode('vts_fleet_calc', function () {
+add_shortcode('vts_fleet_calc', function ($atts) {
     $c = vts_fleet_config();
+    // Przycisk pod wynikiem prowadzi do formularza flotowego na tej samej stronie
+    // (kotwica), a nie na ogólny kontakt — lead flotowy ma trafić na skrzynkę flot.
+    $a = shortcode_atts(['cta' => home_url('/kontakt/')], $atts);
 
     ob_start(); ?>
     <div class="vts-calc" data-vts-calc data-cfg="<?= esc_attr(wp_json_encode($c)) ?>">
       <div class="vts-calc__head">
-        <h3>Ile zaoszczędzi Wasza flota?</h3>
-        <p>Przesuńcie suwaki albo wpiszcie własne wartości.</p>
+        <h3>Ile zaoszczędzi Twoja flota?</h3>
+        <p>Przesuń suwaki albo wpisz własne wartości.</p>
       </div>
 
       <?php
@@ -79,13 +82,13 @@ add_shortcode('vts_fleet_calc', function () {
       <p class="vts-calc__disclaim">
         Wyliczenie szacunkowe: zakładamy oszczędność <?= esc_html(number_format_i18n($c['saving_pct'], 1)) ?>%
         (spotykany zakres <?= esc_html($c['saving_min']) ?>–<?= esc_html($c['saving_max']) ?>%)
-        oraz koszt usługi <?= esc_html(number_format_i18n($c['price_per_car'])) ?> zł netto za pojazd —
-        obie wartości ustalamy indywidualnie. Rzeczywisty wynik zależy od stanu technicznego pojazdów,
+        oraz koszt usługi <?= esc_html(number_format_i18n($c['price_per_car'])) ?> zł netto za pojazd.
+        Obie wartości ustalamy indywidualnie. Rzeczywisty wynik zależy od stanu technicznego pojazdów,
         tras i stylu jazdy. Nie stanowi oferty w rozumieniu Kodeksu cywilnego.
       </p>
 
       <a class="vts-btn vts-btn--primary vts-calc__cta"
-         href="<?= esc_url(home_url('/kontakt/')) ?>">Zamów audyt floty</a>
+         href="<?= esc_url($a['cta']) ?>">Zamów wycenę dla floty</a>
     </div>
     <?php
     return ob_get_clean();

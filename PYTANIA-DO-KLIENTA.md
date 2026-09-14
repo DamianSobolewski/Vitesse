@@ -147,7 +147,11 @@ To siatka bezpieczeństwa na wypadek, gdyby coś w przekierowaniach wymagało po
 
 ## 11. Later — do decyzji, nie blokuje
 
-- Dekoder VIN: czy jest budżet na płatne API (europejskie bazy są odpłatne)?
+- Dekoder VIN: rząd VIN jest dziś wyłączony (rozpoznawał tylko markę i wydłużał wyszukiwarkę).
+  Czy wracamy do tematu z płatnym API pełnego dekodowania (europejskie bazy są odpłatne)?
+- Wyszukiwarka pokazuje wynik bez podawania e-maila (jak we wtyczce Artura). Wtyczka ma też pole
+  „rocznik" — u nas rolę rocznika pełni generacja (lata w nazwie). Czy to wystarcza?
+- Liczby „10 000+ modyfikacji" i „60+ flot" wpisaliśmy z Państwa uwag — prosimy potwierdzić.
 - Asystent AI w wyszukiwarce: budżet miesięczny i zgoda na dopisanie dostawcy
   do polityki prywatności jako podmiotu przetwarzającego.
 - Kiedy realnie planowane jest uruchomienie linii serwisowej aut osobowych (Jaguar / Land Rover)?

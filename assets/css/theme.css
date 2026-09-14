@@ -190,7 +190,9 @@ p:last-child{margin-bottom:0}
  * mieszczą się już obok siebie znak, pełne menu i przycisk. Wypada przycisk:
  * ten sam kontakt stoi w pasku nad nagłówkiem, w menu i w stopce, a zwinięcie
  * menu do „hamburgera" kosztowałoby kliknięcie przy każdym przejściu. */
-@media (max-width:1200px){
+/* Bez zakładki „Kontakt" znak, menu i przycisk mieszczą się obok siebie do progu
+ * hamburgera. Na telefonie przycisk zdejmuje dolny pasek z tymi samymi wejściami. */
+@media (max-width:720px){
   .vts-header__cta{display:none}
 }
 
@@ -286,12 +288,12 @@ p:last-child{margin-bottom:0}
   background:linear-gradient(100deg,var(--vts-bg) 24%,rgba(15,17,22,.78) 54%,rgba(15,17,22,.36))}
 .vts-hero .vts-wrap{position:relative;z-index:4}
 .vts-hero__in{max-width:var(--vts-content)}
-/* Nagłówek i lead mogą leżeć na zdjęciu — zasłona pod nimi to załatwia.
- * Nieprzezroczysty panel już nie, więc dostaje własną, węższą miarę. */
-/* Procent liczyłby się od kolumny tekstu (760 px), a nie od szerokości hero —
-   panel zwęziłby się wtedy wszędzie, także tam, gdzie miejsca jest pod
-   dostatkiem. Zostaje stała miara; o zapas dla auta dba przesunięcie zdjęcia. */
-.vts-hero .vts-ps{max-width:640px}
+/* Slajder na stronie głównej dostaje szerszą kolumnę niż tekst czytany: hasło
+ * w stopniu 4 łamało się w 680 px na cztery wiersze i wyglądało na ściśnięte.
+ * Zasłona pod tekstem sięga do 54% szerokości, więc 880 px wciąż leży na niej. */
+.vts-hero--slider .vts-hero__in{max-width:880px}
+.vts-hero--slider h1,.vts-hero--slider .vts-hero__title{max-width:18ch}
+.vts-hero--slider .vts-lead{max-width:56ch}
 
 /* Snopy świateł. Domyślnie ZAPALONE — jeśli JavaScript nie działa, użytkownik
    widzi kompletny kadr, tylko bez sekwencji. */
@@ -450,7 +452,12 @@ p:last-child{margin-bottom:0}
   border-radius:var(--vts-radius);padding:var(--vts-gap-m);text-decoration:none;display:block;
   transition:border-color .18s,transform .18s}
 a.vts-card:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
+/* Kolor nagłówka wpisany jawnie: motyw bazowy maluje a:hover na #336 i kafelek
+ * będący odnośnikiem zmieniał na najechaniu kolor tytułu. Zgłoszenie klienta —
+ * tytuł ma być biały przez cały czas, także w zegarach. */
+.vts-card h3,a.vts-card:hover h3,.vts-card h4,.vts-gauge h3,.vts-gauge:hover h3{color:var(--vts-text)}
 .vts-card h3{font-size:var(--vts-step-1);margin-bottom:8px}
+.vts-card h4{font-size:var(--vts-step-0);margin:0 0 6px}
 .vts-card p{color:var(--vts-muted);font-size:var(--vts-step--1);margin:0}
 .vts-card__n{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);
   color:var(--vts-accent);display:block;margin-bottom:12px}
@@ -463,9 +470,25 @@ a.vts-card:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
 /* ikona wpleciona w nagłówek — np. karta kontaktowa */
 .vts-card h3 > .vts-i{width:18px;height:18px;color:var(--vts-accent);
   margin-right:9px;vertical-align:-.16em}
-.vts-card > .vts-i{display:block;width:27px;height:27px;color:var(--vts-accent);
-  margin-bottom:13px;opacity:.92;transition:opacity .18s,transform .18s}
+/* 50 px — rozmiar z uwag klienta. Przy dużej skali obrys 1,5 z płótna 24 px
+ * robi się gruby (3 px), więc schodzimy do 1,2. */
+.vts-card > .vts-i{display:block;width:50px;height:50px;color:var(--vts-accent);
+  margin-bottom:14px;opacity:.92;stroke-width:1.2;transition:opacity .18s,transform .18s}
 a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
+
+/* Kafelek ze zdjęciem zamiast ikony (przewagi na stronie głównej). Zdjęcie idzie
+ * od krawędzi do krawędzi, treść dostaje własne wcięcie. */
+.vts-card--img{padding:0;overflow:hidden}
+.vts-card--img > img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;
+  border-bottom:1px solid var(--vts-line)}
+.vts-card--img > .vts-card__body{padding:var(--vts-gap-m)}
+/* Kafelek wyśrodkowany — ikona nad tytułem, tekst do środka (limitery, zasięg EV). */
+.vts-grid--center .vts-card{text-align:center}
+.vts-grid--center .vts-card > .vts-i{margin-inline:auto}
+/* Nagłówek sekcji wyśrodkowany razem z wstępem. */
+.vts-center{text-align:center}
+.vts-center .vts-eyebrow{justify-content:center}
+.vts-center .vts-narrow > *,.vts-center > p{margin-inline:auto}
 /* kafelek z numerem kroku ikony nie dostaje — numer już niesie kolejność */
 
 /* --- kroki procesu -------------------------------------------------------
@@ -482,6 +505,7 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
      prowadziłby z pustego miejsca. Przy pięciu krokach drugi rząd zaczyna
      czwarty kafelek. */
   .vts-steps:has(> :nth-child(5):last-child) > :nth-child(4)::before{content:none}
+  /* cztery kroki idą w jednym rzędzie, więc łącznik ma sens między każdymi dwoma */
   .vts-steps > .vts-card + .vts-card::before{
     content:'';position:absolute;top:34px;left:calc(-1px - var(--vts-gap-s));
     width:var(--vts-gap-s);height:1px;background:var(--vts-accent);opacity:.6;
@@ -569,8 +593,8 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
   font-size:var(--vts-step--2);color:var(--vts-accent)}
 
 .vts-gauge__body{display:block;max-width:30ch}
-.vts-gauge__body > b{display:block;font-family:var(--vts-font-display);font-weight:700;
-  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head);color:var(--vts-text);margin-bottom:5px}
+.vts-gauge__body > h3{display:block;font-family:var(--vts-font-display);font-weight:700;
+  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head);color:var(--vts-text);margin:0 0 5px}
 .vts-gauge__meta{display:block;font-family:var(--vts-font-mono);
   font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);text-transform:uppercase;
   color:var(--vts-accent);margin-bottom:9px}
@@ -724,15 +748,60 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
   .vts-band__note{position:static;display:block;margin-top:8px}
 }
 
+/* Duże zdjęcie 4:3 w kolumnie obok tekstu — ten sam podpis co pas, inny kadr.
+ * Bez górnego odstępu: stoi w drugiej kolumnie układu dwudzielnego, na równi
+ * z nagłówkiem sekcji. */
+.vts-photo{position:relative;margin:0;overflow:hidden;
+  border:1px solid var(--vts-line);border-radius:var(--vts-radius);background:var(--vts-surface)}
+.vts-photo img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+.vts-photo figcaption{position:absolute;inset:auto 0 0;
+  padding:var(--vts-gap-l) var(--vts-gap-m) calc(var(--vts-gap-m) + 17px);
+  background:linear-gradient(180deg,rgba(8,9,12,0) 0%,rgba(8,9,12,.72) 42%,rgba(8,9,12,.97) 100%)}
+.vts-photo b{display:block;color:var(--vts-text);font-family:var(--vts-font-display);font-weight:700;
+  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head);max-width:34ch;text-wrap:balance;
+  text-shadow:0 2px 18px rgba(0,0,0,.8)}
+.vts-photo--chart img{aspect-ratio:16/10;object-fit:contain;background:#fff}
+.vts-photo--chart a{display:block}
+.vts-photo--chart figcaption{padding-bottom:var(--vts-gap-m)}
+.vts-photo--svg svg{display:block;width:100%;height:auto;aspect-ratio:16/10;padding:8px 8px 96px;
+  box-sizing:border-box}
+.vts-photo--svg figcaption{position:static;background:none;padding:0 var(--vts-gap-m) var(--vts-gap-m);
+  margin-top:calc(-1 * var(--vts-gap-l))}
+.vts-dchart__grid line{stroke:var(--vts-line-soft);stroke-width:1}
+.vts-dchart__axis{fill:none;stroke:var(--vts-line);stroke-width:1.5}
+.vts-dchart__hp,.vts-dchart__nm{fill:none;stroke:#6A7280;stroke-width:2.2;stroke-linecap:round}
+.vts-dchart__nm{stroke-dasharray:7 5}
+.vts-dchart__hp.is-po,.vts-dchart__nm.is-po{stroke:var(--vts-accent);
+  filter:drop-shadow(0 0 4px rgba(244,106,0,.55))}
+.vts-dchart__lbl{font-family:var(--vts-font-mono);font-size:12px;fill:#8A919E;letter-spacing:.06em}
+.vts-dchart__lbl.is-po{fill:var(--vts-accent)}
+.vts-dchart__foot{font-family:var(--vts-font-mono);font-size:11px;fill:#767D88;letter-spacing:.06em}
+@media (max-width:640px){
+  .vts-photo figcaption{padding-bottom:var(--vts-gap-m)}
+}
+
 /* lista z ikonami — zamiast wypunktowania na stronach, gdzie był sam tekst */
 .vts-ilist{list-style:none;margin:var(--vts-gap-m) 0 0;padding:0;
   border-top:1px solid var(--vts-line-soft)}
 .vts-ilist li{display:flex;gap:15px;align-items:flex-start;padding:15px 0;
   border-bottom:1px solid var(--vts-line-soft)}
-.vts-ilist .vts-i{width:23px;height:23px;color:var(--vts-accent);margin-top:2px}
+.vts-ilist .vts-i{width:50px;height:50px;color:var(--vts-accent);margin-top:-2px;stroke-width:1.2}
 .vts-ilist div{min-width:0}
-.vts-ilist b{display:block;margin-bottom:4px;font-size:var(--vts-step-0)}
+.vts-ilist b,.vts-ilist h4{display:block;margin:0 0 4px;font-size:var(--vts-step-0);
+  font-weight:600;letter-spacing:var(--vts-track-tight);color:var(--vts-text)}
 .vts-ilist span{color:var(--vts-muted);font-size:var(--vts-step--1);line-height:1.55}
+
+/* --- karta kontaktowa --- */
+.vts-contact h3{margin-bottom:var(--vts-gap-s)}
+.vts-contact dl{margin:0;display:grid;gap:4px}
+.vts-contact dt{display:flex;align-items:center;gap:9px;margin-top:var(--vts-gap-s);
+  font-family:var(--vts-font-mono);font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);
+  text-transform:uppercase;color:var(--vts-muted)}
+.vts-contact dt:first-child{margin-top:0}
+.vts-contact dt .vts-i{width:16px;height:16px;color:var(--vts-accent)}
+.vts-contact dd{margin:0;color:var(--vts-text);font-size:var(--vts-step-0);line-height:1.55}
+.vts-contact dd a{color:var(--vts-accent);text-decoration:none;font-weight:600}
+.vts-contact dd a:hover{color:var(--vts-accent-soft)}
 
 /* --- FAQ (natywne <details>, bez wtyczki) --- */
 .vts-faq{border-top:1px solid var(--vts-line)}
@@ -814,6 +883,17 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-cat-tile span{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
   letter-spacing:var(--vts-track-label);text-transform:uppercase;color:var(--vts-muted)}
 
+/* strona wersji silnika: dane fabryczne i lista poziomów programu */
+.vts-cat-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;
+  margin-bottom:var(--vts-gap-m);padding:16px var(--vts-gap-m);background:var(--vts-surface);
+  border:1px solid var(--vts-line);border-radius:var(--vts-radius)}
+@media (max-width:640px){.vts-cat-facts{grid-template-columns:1fr 1fr}
+  .vts-cat-facts .vts-ps__cell:nth-child(3){border-left:0;padding-left:0}}
+.vts-cat-gains{display:grid;gap:1px;background:var(--vts-line);border:1px solid var(--vts-line);
+  border-radius:var(--vts-radius);overflow:hidden;margin-bottom:var(--vts-gap-s)}
+.vts-cat-gains .vts-ps__srv{padding:14px var(--vts-gap-m)}
+.vts-cat-gains h3{margin:0;font-size:var(--vts-step-0)}
+
 .vts-table-wrap{overflow-x:auto;border:1px solid var(--vts-line);border-radius:var(--vts-radius)}
 .vts-table{width:100%;border-collapse:collapse;font-size:var(--vts-step--1);min-width:600px}
 .vts-table th{text-align:left;font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
@@ -848,6 +928,8 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
   .vts-cat-siblings a,
   .vts-table a,
   .vts-crumbs a { display:inline-flex; align-items:center; min-height:44px }
+  /* numery i e-mail w karcie kontaktowej — trzy w pionie, więc 36 px zamiast 44 */
+  .vts-contact dd a { display:inline-flex; align-items:center; min-height:36px }
   /* Znak jest odnośnikiem na stronę główną, a sam wektor ma przy minimalnej
      szerokości ~14 px wysokości — poniżej progu dla palca. Brakującą wysokość
      dokładamy odstępem, nie skalowaniem znaku: księga znaku nie pozwala
@@ -980,7 +1062,8 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
   width:100%;margin-top:7px;padding:11px 13px;
   background:#0F1319;color:var(--vts-text);
   border:1px solid var(--vts-line);border-radius:var(--vts-radius);
-  font-family:var(--vts-font-sans);font-size:var(--vts-step-0);line-height:1.4;
+  /* stopień niżej niż tekst — pola w tej samej skali co listy wyszukiwarki */
+  font-family:var(--vts-font-body);font-size:var(--vts-step--1);line-height:1.4;
   transition:border-color .18s}
 .vts-cf7 textarea{min-height:132px;resize:vertical}
 .vts-cf7 input::placeholder,.vts-cf7 textarea::placeholder{color:#5C6472}

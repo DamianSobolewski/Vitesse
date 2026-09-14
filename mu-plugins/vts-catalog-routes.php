@@ -17,10 +17,8 @@ const VTS_CATALOG_BASE = 'chiptuning';
 /** Slugi zarezerwowane dla realnych podstron — marka nie może ich przejąć. */
 function vts_reserved_slugs(): array
 {
-    return ['chip-tuning', 'powerboxy', 'odblokowywanie-sterownikow', 'oferta-dla-flot',
-            'dodatkowe-uslugi-ecu', 'samochody-osobowe', 'samochody-dostawcze',
-            'ciezarowe-i-autobusy', 'kampery', 'ciagniki-i-maszyny', 'ev-i-hybrydy',
-            'skrzynie-biegow-tcu', 'auta-na-gwarancji-i-w-leasingu', 'katalog'];
+    return ['chip-tuning', 'powerboxy', 'oferta-dla-flot', 'dodatkowe-uslugi-ecu',
+            'kalkulator-oszczednosci', 'katalog'];
 }
 
 add_action('init', function () {
@@ -191,12 +189,12 @@ function vts_render_catalog(array $r): void
 function vts_catalog_title(array $r): string
 {
     return match ($r['level']) {
-        'index'  => 'Katalog osiągów — chip tuning',
+        'index'  => 'Katalog osiągów: chip tuning',
         'make'   => 'Chip tuning ' . $r['make']['name'],
         'model'  => 'Chip tuning ' . $r['make']['name'] . ' ' . $r['model']['name'],
         'gen'    => $r['make']['name'] . ' ' . $r['model']['name'] . ' ' . $r['gen']['name'],
         'engine' => $r['make']['name'] . ' ' . $r['model']['name'] . ' ' . $r['gen']['name']
-                  . ' — ' . $r['engine']['name'],
+                  . ' ' . $r['engine']['name'],
     };
 }
 
@@ -207,8 +205,8 @@ function vts_catalog_intro(array $r): string
         'index'  => "Wyniki dla {$c['engine']} wersji silnikowych z {$c['make']} marek. Wybierz markę, żeby zobaczyć modele.",
         'make'   => 'Modele ' . $r['make']['name'] . ', dla których mamy gotowe rozwiązania. Wybierz swój.',
         'model'  => 'Generacje modelu ' . $r['model']['name'] . '. Wybierz rocznik swojego auta.',
-        'gen'    => 'Wersje silnikowe i przyrosty mocy. Wartości orientacyjne — wiążący jest pomiar na hamowni.',
-        'engine' => 'Dane fabryczne i możliwy przyrost po modyfikacji.',
+        'gen'    => 'Wersje silnikowe i przyrosty mocy. Wartości orientacyjne, wiążący jest pomiar na hamowni.',
+        'engine' => 'Dane fabryczne, przyrost mocy i momentu dla każdego poziomu programu, pomiar na hamowni w cenie.',
     };
 }
 
@@ -266,24 +264,48 @@ function vts_view_gen(array $r): void
 
 function vts_view_engine(array $r): void
 {
-    $e = $r['engine'];
+    $e      = $r['engine'];
+    $wynik  = vts_engine_result((int) $e['id']);
+    $c      = vts_company();
+    $pojazd = $r['make']['name'] . ' ' . $r['model']['name'] . ' ' . $r['gen']['name'] . ' ' . $e['name'];
+    $kontakt = add_query_arg('vehicle', rawurlencode($pojazd), home_url('/kontakt/'));
     ?>
     <div class="vts-split vts-split--wide-left">
       <div>
-        <div class="vts-ps__res" style="margin-bottom:var(--vts-gap-m)">
+        <div class="vts-cat-facts">
           <div class="vts-ps__cell"><span>Moc fabryczna</span><b><?= (int) $e['stock_hp'] ?> KM</b></div>
-          <div class="vts-ps__cell"><span>Moment fabryczny</span><b><?= (int) $e['stock_nm'] ?> Nm</b></div>
-          <div class="vts-ps__cell"><span>Paliwo</span><b style="font-size:var(--vts-step-0)"><?= esc_html($e['fuel']) ?></b></div>
+          <div class="vts-ps__cell<?= (int) $e['stock_nm'] ? '' : ' is-text' ?>"><span>Moment fabryczny</span>
+            <b><?= (int) $e['stock_nm'] ? (int) $e['stock_nm'] . ' Nm' : 'brak danych' ?></b></div>
+          <div class="vts-ps__cell is-text"><span>Paliwo</span><b><?= esc_html($e['fuel']) ?></b></div>
           <div class="vts-ps__cell"><span>Moc [kW]</span><b><?= (int) $e['stock_kw'] ?></b></div>
         </div>
 
-        <h2>Co da się uzyskać</h2>
-        <p>Dla tej wersji mamy przygotowane rozwiązania. Dokładne wartości po modyfikacji
-        i orientacyjną wycenę pokażemy po podaniu adresu e-mail — poniżej, w wyszukiwarce.</p>
-        <p>Wartości są orientacyjne i zależą od stanu technicznego pojazdu. Wiążący jest wynik
-        pomiaru na hamowni, który wykonujemy przed modyfikacją i po niej.</p>
+        <h2>Co zyska ten silnik</h2>
+        <?php if ($wynik && $wynik['results']) : ?>
+          <?php /* Wynik prosto z katalogu, bez bramki — ta sama funkcja, która
+                   obsługuje wyszukiwarkę. Robot indeksujący widzi pełne liczby. */ ?>
+          <div class="vts-cat-gains">
+            <?php foreach ($wynik['results'] as $w) : ?>
+              <div class="vts-ps__srv"><h3><?= esc_html($w['label']) ?></h3>
+                <div class="vts-ps__srv-v">
+                  <span>moc <b>+<?= (int) $w['gain_hp'] ?> KM</b><?= $w['tuned_hp'] ? ' <em>→ ' . (int) $w['tuned_hp'] . ' KM</em>' : '' ?></span>
+                  <?php if ((int) $w['gain_nm'] > 0) : ?>
+                    <span>moment <b>+<?= (int) $w['gain_nm'] ?> Nm</b><?= $w['tuned_nm'] ? ' <em>→ ' . (int) $w['tuned_nm'] . ' Nm</em>' : '' ?></span>
+                  <?php endif; ?>
+                </div></div>
+            <?php endforeach; ?>
+          </div>
+          <p class="vts-note"><?= esc_html($wynik['note']) ?></p>
+        <?php else : ?>
+          <p>Dla tej wersji nie mamy jeszcze wartości w katalogu. Zadzwoń:
+            <a href="<?= esc_attr(vts_phone_href($c['phones']['tuning']['number'])) ?>"><?= esc_html($c['phones']['tuning']['number']) ?></a>,
+            często mamy rozwiązanie spoza katalogu.</p>
+        <?php endif; ?>
+        <p style="margin-top:var(--vts-gap-s)">
+          <a class="vts-btn vts-btn--primary" href="<?= esc_url($kontakt) ?>">Umów pomiar i wycenę</a>
+        </p>
 
-        <h2 style="margin-top:var(--vts-gap-m)">Inne wersje tej generacji</h2>
+        <h2 style="margin-top:var(--vts-gap-l)">Inne wersje tej generacji</h2>
         <ul class="vts-cat-siblings">
           <?php foreach (vts_engines((int) $r['gen']['id']) as $s) :
               if ((int) $s['id'] === (int) $e['id']) { continue; } ?>
@@ -292,7 +314,7 @@ function vts_view_engine(array $r): void
           <?php endforeach; ?>
         </ul>
       </div>
-      <div><?= do_shortcode('[vts_power_search title="Sprawdź przyrost dla tej wersji"]') ?></div>
+      <div><?= do_shortcode('[vts_power_search title="Sprawdź inną wersję"]') ?></div>
     </div>
     <?php
 }

@@ -9,7 +9,7 @@ return [
     'index.php'                                   => '/',
 
     // osobowe
-    'osobowe.php'                                 => '/podnoszenie-mocy/chip-tuning/samochody-osobowe/',
+    'osobowe.php'                                 => '/podnoszenie-mocy/chip-tuning/',
     'osobowe_chiptuning_powerbox.php'             => '/podnoszenie-mocy/powerboxy/',
     'osobowe_ograniczniki.php'                    => '/podnoszenie-mocy/dodatkowe-uslugi-ecu/',
     'osobowe_wylaczanie_fap_dpf_scr.php'          => '/podnoszenie-mocy/dodatkowe-uslugi-ecu/',
@@ -18,7 +18,7 @@ return [
     'osobowe_hamownia.php'                        => '/hamownia/',
 
     // dostawcze
-    'dostawcze.php'                               => '/podnoszenie-mocy/chip-tuning/samochody-dostawcze/',
+    'dostawcze.php'                               => '/podnoszenie-mocy/chip-tuning/',
     'dostawcze_chiptuning_powerbox.php'           => '/podnoszenie-mocy/powerboxy/',
     'dostawcze_ograniczniki.php'                  => '/podnoszenie-mocy/dodatkowe-uslugi-ecu/',
     'dostawcze_wylaczanie_fap_dpf_scr.php'        => '/podnoszenie-mocy/dodatkowe-uslugi-ecu/',
@@ -27,19 +27,19 @@ return [
     'dostawcze_hamownia.php'                      => '/hamownia/',
 
     // ciężarowe i autobusy
-    'ciezarowe.php'                               => '/podnoszenie-mocy/chip-tuning/ciezarowe-i-autobusy/',
-    'ciezarowe_chiptuning.php'                    => '/podnoszenie-mocy/chip-tuning/ciezarowe-i-autobusy/',
-    'ciezarowe_chip_tuning.php'                   => '/podnoszenie-mocy/chip-tuning/ciezarowe-i-autobusy/',
+    'ciezarowe.php'                               => '/podnoszenie-mocy/chip-tuning/',
+    'ciezarowe_chiptuning.php'                    => '/podnoszenie-mocy/chip-tuning/',
+    'ciezarowe_chip_tuning.php'                   => '/podnoszenie-mocy/chip-tuning/',
     'ciezarowe_hamownia_podwoziowa.php'           => '/hamownia/',
     'ciezarowe_hamownia.php'                      => '/hamownia/',
-    'autobusy.php'                                => '/podnoszenie-mocy/chip-tuning/ciezarowe-i-autobusy/',
-    'autobusy_chiptuning.php'                     => '/podnoszenie-mocy/chip-tuning/ciezarowe-i-autobusy/',
+    'autobusy.php'                                => '/podnoszenie-mocy/chip-tuning/',
+    'autobusy_chiptuning.php'                     => '/podnoszenie-mocy/chip-tuning/',
     'autobusy_hamownia_podwoziowa.php'            => '/hamownia/',
     'autobusy_hamownia.php'                       => '/hamownia/',
 
     // pozostałe kategorie
     'chiptuning_ev_box_range_extender_samochody_elektryczne.php' => '/ev-hybryda/',
-    'chip_tuning_traktor_lodz_skuter.php'         => '/podnoszenie-mocy/chip-tuning/ciagniki-i-maszyny/',
+    'chip_tuning_traktor_lodz_skuter.php'         => '/podnoszenie-mocy/chip-tuning/',
     'chip_tuning_czy_power_box.php'               => '/podnoszenie-mocy/powerboxy/',
 
     // cennik, promocje, kalkulator
@@ -56,4 +56,17 @@ return [
 
     // wycofany serwis mechaniczny — 301 na stronę wyjaśniającą, nie 410 i nie na stronę główną
     'serwis_scania_volvo.php'                     => '/informacja/serwis-mechaniczny-pojazdow-ciezarowych/',
+
+    // Podstrony zdjęte we wrześniu 2026 (osobne strony kategorii chip tuningu
+    // i odblokowywania sterowników zostały wchłonięte przez strony nadrzędne).
+    // Ścieżki bez ukośników po bokach — tak je normalizuje vts-redirects.php.
+    'podnoszenie-mocy/chip-tuning/samochody-osobowe'               => '/podnoszenie-mocy/chip-tuning/',
+    'podnoszenie-mocy/chip-tuning/samochody-dostawcze'             => '/podnoszenie-mocy/chip-tuning/',
+    'podnoszenie-mocy/chip-tuning/ciezarowe-i-autobusy'            => '/podnoszenie-mocy/chip-tuning/',
+    'podnoszenie-mocy/chip-tuning/kampery'                         => '/podnoszenie-mocy/chip-tuning/',
+    'podnoszenie-mocy/chip-tuning/ciagniki-i-maszyny'              => '/podnoszenie-mocy/chip-tuning/',
+    'podnoszenie-mocy/chip-tuning/ev-i-hybrydy'                    => '/ev-hybryda/',
+    'podnoszenie-mocy/chip-tuning/skrzynie-biegow-tcu'             => '/podnoszenie-mocy/dodatkowe-uslugi-ecu/',
+    'podnoszenie-mocy/chip-tuning/auta-na-gwarancji-i-w-leasingu'  => '/podnoszenie-mocy/chip-tuning/',
+    'podnoszenie-mocy/odblokowywanie-sterownikow'                  => '/podnoszenie-mocy/dodatkowe-uslugi-ecu/',
 ];

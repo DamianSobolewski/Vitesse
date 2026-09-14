@@ -12,6 +12,7 @@ uploads/*
 # Cache scraperow i lustro starego serwisu - odtwarzalne, archiwizowane osobno.
 tools/scrape/raw/
 tools/scrape/raw-vtech/
+tools/scrape/raw-unsplash/
 tools/scrape/mirror/
 tools/scrape/*.log
 tools/scrape/*.html

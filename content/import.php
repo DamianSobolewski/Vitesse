@@ -256,6 +256,29 @@ foreach ($pages as $slug => $cfg) {
 }
 vts_log('strony: ' . count($ids));
 
+/* Strony, które wypadły z manifestu, idą do kosza. Rozpoznajemy je po fladze
+ * _vts_raw_html, więc dotyczy to wyłącznie stron z importera — strona dodana
+ * ręcznie w edytorze zostaje. Bez tego usunięte podstrony (np. dawne kategorie
+ * chip tuningu) dalej odpowiadałyby 200 i wisiały w mapie witryny. */
+$stare = get_posts([
+    'post_type'      => 'page',
+    'post_status'    => ['publish', 'draft', 'private'],
+    'posts_per_page' => -1,
+    'meta_key'       => '_vts_raw_html',
+    'fields'         => 'ids',
+]);
+$do_kosza = 0;
+foreach ($stare as $pid) {
+    $slug = get_post_field('post_name', $pid);
+    if (!isset($ids[$slug])) {
+        wp_trash_post($pid);
+        $do_kosza++;
+    }
+}
+if ($do_kosza) {
+    vts_log('strony spoza manifestu przeniesione do kosza: ' . $do_kosza);
+}
+
 /* ------------------------------------------------------------------ wpisy
  *
  * Ten sam wzorzec co strony: źródłem jest content/posts/*.html i posts.json,
@@ -398,9 +421,13 @@ foreach ($main as $top) {
 vts_build_menu('vts_main', 'Nawigacja główna', $with_children, $ids);
 
 foreach (['vts_footer' => 'Stopka — usługi', 'vts_client' => 'Stopka — strefa klienta'] as $loc => $label) {
+    // Pozycja to slug albo {slug, label} — stopka ma własne, handlowe etykiety
+    // („PowerBox Volvo VEA"), inne niż tytuły stron.
     $items = [];
-    foreach ($manifest['menus'][$loc] as $slug) {
-        $items[] = ['slug' => $slug, 'label' => $pages[$slug]['title']];
+    foreach ($manifest['menus'][$loc] as $poz) {
+        $slug  = is_array($poz) ? $poz['slug'] : $poz;
+        $label = is_array($poz) && !empty($poz['label']) ? $poz['label'] : $pages[$slug]['title'];
+        $items[] = ['slug' => $slug, 'label' => $label];
     }
     vts_build_menu($loc, $label, $items, $ids);
 }

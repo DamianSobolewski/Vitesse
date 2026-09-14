@@ -126,6 +126,9 @@ function vts_render_header(): void
           ]);
           ?>
         </nav>
+        <?php /* Jedyne wejście do strony Kontakt w górnym pasku — zakładka „Kontakt"
+                 zeszła z menu, bo dublowała ten przycisk (decyzja klienta, IX 2026).
+                 Telefony są w pasku nad nagłówkiem, na telefonie w dolnym pasku. */ ?>
         <a class="vts-btn vts-btn--primary vts-header__cta"
            href="<?= esc_url(home_url('/kontakt/')) ?>">Umów pomiar</a>
       </div>
@@ -158,8 +161,8 @@ function vts_render_footer(): void
           <div>
             <?= vts_render_brand() ?>
             <div class="vts-footer__meta" style="margin-top:18px">
-              <span>Chip tuning, modyfikacje ECU i pomiary na hamowni.<br>
-                Autoryzacja V-tech od 2008 roku.</span>
+              <span>Chip tuning, PowerBoxy, modyfikacje ECU i pomiary na hamowni 4×4
+                w Łodzi.<br>Autoryzacja V-tech od 2008 roku.</span>
               <span><?= esc_html($c['street']) ?><br>
                 <?= esc_html($c['postal_code'] . ' ' . $c['city']) ?></span>
               <?php if ($c['nip']) : ?><span>NIP <?= esc_html($c['nip']) ?></span><?php endif; ?>

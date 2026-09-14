@@ -5,8 +5,9 @@ wtyczkach `mu-plugins/`, a treść stron jest kodem w `content/` — nic istotne
 
 Trzy rzeczy, których nie ma w typowym WordPressie i o które w tym projekcie chodzi:
 
-- **wyszukiwarka mocy** w nagłówku strony głównej — kaskada Marka → Model → Generacja → Silnik po
-  katalogu ~4900 wersji silnikowych, z bramką na adres e-mail przed pokazaniem przyrostów,
+- **wyszukiwarka mocy** pod hero strony głównej — kaskada Marka → Model → Generacja → Silnik po
+  katalogu ~4900 wersji silnikowych, wynik (przyrosty dla każdego poziomu programu) od razu po
+  kliknięciu, bez bramki e-mail,
 - **kalkulator oszczędności** dla flot,
 - **baza wykresów z hamowni** z uproszczonym panelem dla obsługi warsztatu.
 
@@ -54,7 +55,7 @@ echo "VTS_TOKEN_SECRET=$(openssl rand -hex 32)"
 echo "VTS_LEAD_SALT=$(openssl rand -hex 32)"
 ```
 
-> Jeśli zostawisz `VTS_TOKEN_SECRET` pusty, bramka leadowa nadal działa, ale token podpisuje się
+> Jeśli zostawisz `VTS_TOKEN_SECRET` pusty, wyszukiwarka nadal działa, ale token wyniku podpisuje się
 > kluczami WordPressa — ich rotacja unieważni wszystkie wydane tokeny. Na produkcji ustaw własny.
 
 ### 2. Uruchomienie kontenerów
@@ -79,9 +80,9 @@ Co robi każdy krok i jak wygląda poprawny wynik:
 |---|---|---|
 | `bootstrap.sh` | instaluje WordPressa pod podanym adresem | `Gotowe. Adres serwisu: https://…` |
 | `migrate.sh` | tworzy 7 własnych tabel | lista `Created table` albo `bez zmian` |
-| `import.sh` | wgrywa 28 stron, menu i formularz | `strony: 28` |
+| `import.sh` | wgrywa 19 stron, wpisy, menu i formularze | `strony: 19` |
 | `import-catalog.sh` | wypełnia katalog | `OPUBLIKOWANE: 61 marek, … 4853 silników` |
-| `seed-dev.sh` | dodaje 4 przykładowe wykresy | `wykresy demonstracyjne: 4` |
+| `seed-dev.sh` | dodaje 14 wykresów i 3 opinie demonstracyjne | `wykresy demonstracyjne: 14` |
 
 **Adres podany w `bootstrap.sh` zapisuje się do bazy.** Podanie złego oznacza, że serwis będzie
 przekierowywał na niego z każdego innego hosta. Jeśli się pomylisz, uruchom `bootstrap.sh` ponownie
@@ -145,7 +146,7 @@ docker compose --profile cli run --rm wpcli option update blog_public 1
 | Objaw | Przyczyna | Co zrobić |
 |---|---|---|
 | Katalog i `/wp-json/…` zwracają **404** | brak przyjaznych odnośników | `docker compose --profile cli run --rm wpcli rewrite structure '/%postname%/' --hard` |
-| Strony są, ale **kafelki puste albo brak menu** | nie przeszedł `import.sh` | uruchom `./bin/import.sh` i sprawdź, czy kończy się `strony: 28` |
+| Strony są, ale **kafelki puste albo brak menu** | nie przeszedł `import.sh` | uruchom `./bin/import.sh` i sprawdź, czy kończy się `strony: 19` |
 | Wyszukiwarka w nagłówku ma **pustą listę marek** | nie przeszedł `import-catalog.sh` | uruchom go ponownie; sprawdź, że `content/catalog/*.json` istnieją |
 | Panel **nie przyjmuje zdjęć** | złe uprawnienia katalogu | `docker compose exec -u root wordpress chown -R www-data:www-data /var/www/html/wp-content/uploads` |
 | Serwis **przekierowuje na inny adres** | zły adres w bazie | `./bin/bootstrap.sh https://właściwy-adres` |
@@ -160,9 +161,10 @@ Logi: `docker compose logs -f wordpress`
 - **`bin/refresh-catalog.sh`** — pobiera katalog na nowo z serwera V-techa, prawie 5000 zapytań.
   Dane jadą w repozytorium jako pliki JSON, więc na serwerze wystarczy `import-catalog.sh`.
   Skrypt jest do odświeżania danych, i to ze stanowiska deweloperskiego.
-- **`bin/seed-dev.sh` na produkcji** — wgrywa zdjęcia zastępcze przeniesione ze starej strony,
-  bez zgód właścicieli pojazdów na publikację. Na środowisku pokazowym są w porządku i sprawiają,
-  że sekcja „Wykresy i osiągi" nie jest pusta. Przed startem produkcyjnym wymienić na archiwum klienta.
+- **`bin/seed-dev.sh` na produkcji** — wgrywa 14 wykresów demonstracyjnych (wydruki wygenerowane
+  z `content/dyno/seed.json`, pojazdy z katalogu V-tech, ale nie realne pomiary) i trzy opinie.
+  Na środowisku pokazowym pokazują pełną stronę; przed startem produkcyjnym usunąć je z panelu
+  i wgrać archiwum hamowni oraz opinie z profilu Google.
 
 ---
 

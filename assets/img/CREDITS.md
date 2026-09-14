@@ -74,11 +74,14 @@ a zasada z tego pliku wymaga wcześniej zgód właścicieli pojazdów.
 
 Do rozstrzygnięcia z klientem — zapisane w `PYTANIA-DO-KLIENTA.md`.
 
-## Zdjęcia demonstracyjne — DO WYMIANY przed produkcją
+## Wykresy demonstracyjne — DO WYMIANY przed produkcją
 
-`content/dyno/seed/*.webp` — cztery zdjęcia z hamowni przeniesione ze starego serwisu,
-używane wyłącznie przez `bin/seed-dev.sh` jako dane demonstracyjne środowiska deweloperskiego.
-Do zastąpienia realnym archiwum klienta wraz ze zgodami właścicieli pojazdów na publikację.
+`content/dyno/seed/*.webp` — 14 wydruków z hamowni **wygenerowanych** przez
+`tools/make-dyno-charts.py` z wartości w `content/dyno/seed.json`. Własna grafika, bez
+licencji zewnętrznych i bez pojazdów klientów; każdy podpisany drobnym „wydruk demonstracyjny".
+Używane wyłącznie przez `bin/seed-dev.sh`. Do zastąpienia realnym archiwum hamowni wraz ze
+zgodami właścicieli pojazdów. Cztery zdjęcia ze starego serwisu, które tu wcześniej leżały,
+usunięte (widoczne tablice i oklejenia obcych firm).
 
 ## Zdjęcia o nieustalonym lub problematycznym pochodzeniu
 
@@ -98,3 +101,32 @@ Bezspornie własne są zestawy `*_hamownia*` oraz `scania_volvo*` — fotografie
 **Żadne zdjęcie z tej tabeli nie jest obecnie używane w serwisie.** Poprzednie tło hero pochodziło
 z `slide02.jpg` i zostało zastąpione zdjęciem o jasnej licencji. Sprawa pozostałych jest w
 `PYTANIA-DO-KLIENTA.md`.
+
+## Zdjęcia dodane we wrześniu 2026 — „duże zdjęcia" i przewagi
+
+Wszystkie pobrane 13 września 2026 przez `tools/fetch-photos.py` z `images.unsplash.com`
+(nie z płatnego `plus.unsplash.com`, sprawdzone polem `premium`/`plus` w odpowiedzi API),
+licencja **Unsplash License**, użycie komercyjne dozwolone, podanie autora nieobowiązkowe.
+
+| Plik | Autor | Strona zdjęcia | Co przedstawia |
+|---|---|---|---|
+| `foto-kamper.webp`, `foto-kamper-sm.webp` | Miraxh Tereziu | `unsplash.com/photos/white-camper-van-parked-by-a-wooden-fence-eUkjMvbeLug` | biały kamper przy płocie w górach |
+| `foto-dpf.webp`, `foto-dpf-sm.webp` | engin akyurt | `unsplash.com/photos/collection-of-car-exhaust-catalytic-converters-and-parts--ShTRctVXlk` | katalizatory i filtry spalin na ścianie |
+| `foto-wallbox.webp`, `foto-wallbox-sm.webp` | go-e | `unsplash.com/photos/woman-plugging-electric-car-charger-into-wall-Lv-vzrhjybE` | wallbox na drewnianej ścianie (na obudowie mały znak producenta go-e) |
+| `foto-hamownia.webp`, `foto-hamownia-sm.webp`, `usp-hamownia.webp`, `usp-hamownia-sm.webp` | Mario Amé | `unsplash.com/photos/a-red-ducati-motorcycle-is-on-a-dyno-E5uUCbeBTfU` | motocykl na hamowni (widoczne oznaczenia Ducati i producenta hamowni) |
+| `foto-volvo.webp`, `foto-volvo-sm.webp` | ERIK SETH | `unsplash.com/photos/a-white-volvo-car-parked-in-front-of-a-house-COYjMnrXHKM` | Volvo V90 Cross Country bokiem — bez widocznego znaczka, zgodnie z uwagą klienta |
+| `foto-ecu.webp`, `foto-ecu-sm.webp` | Brenton Pearce | `unsplash.com/photos/a-close-up-of-a-car-engine-aJlJAwocqwk` | turbosprężarka i kolektor |
+| `foto-onas.webp`, `foto-onas-sm.webp` | Mehmet Talha Onuk | `unsplash.com/photos/mechanics-working-in-automotive-repair-workshop-8t6tk7LYLrE` | hala warsztatu (to samo zdjęcie co `pas-onas`, inny kadr) |
+| `foto-ev.webp`, `foto-ev-sm.webp` | Precious Madubuike | `unsplash.com/photos/electric-car-charging-on-city-street-N2Td7KpIvYc` | ładowanie auta elektrycznego (to samo co `pas-ev`, kadr 4:3) |
+| `usp-unlock.webp`, `usp-unlock-sm.webp` | Mehmet Talha Onuk | `unsplash.com/photos/a-man-sitting-in-a-car-using-a-laptop-computer-dSosKR6g-W8` | laptop diagnostyczny w aucie |
+| `usp-leasing.webp`, `usp-leasing-sm.webp` | Bence Balla-Schottner | `unsplash.com/photos/black-key-fob-iTHT1gXJuS8` | kluczyk na desce rozdzielczej |
+| `usp-floty.webp`, `usp-floty-sm.webp` | Markus Winkler | `unsplash.com/photos/white-vans-parked-in-mossingen-3vlGNkDep4E` | rząd białych dostawczaków (widoczne znaczki VW) |
+| `usp-kamper.webp`, `usp-kamper-sm.webp` | Rafael Peier | `unsplash.com/photos/an-rv-drives-along-a-scenic-mountain-road-at-sunset-muEU34zZlzs` | kamper na górskiej drodze |
+
+Każdy plik ma wariant `-sm` (połowa szerokości). **Obróbka:** kadr 4:3 (`foto-*`) albo 16:9
+(`usp-*`), nasycenie do 72%, jasność do 90% — zdjęcie ma zostać zdjęciem, ale nie krzyczeć
+na ciemnym tle. Wszystkie podpisane „zdjęcie ilustracyjne" (poza kafelkami przewag, gdzie
+podpis nie ma miejsca — tam zdjęcia nie sugerują hali Vitesse).
+
+**Uwaga do wymiany na zdjęcia własne:** kamper, hamownia i warsztat to miejsca, gdzie własne
+zdjęcie klienta sprzedaje lepiej niż stock. Wystarczy podmienić plik o tej samej nazwie.

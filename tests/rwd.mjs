@@ -1,5 +1,6 @@
 import { chromium } from 'playwright';
-const OUT = '/tmp/claude-1000/-home-damian-Workspace-Vitesse/bdf3180e-44cb-47e5-a8c4-6c4d5405a949/scratchpad';
+import { tmpdir } from 'node:os';
+const OUT = process.env.VTS_OUT || tmpdir();
 const PAGES = ['/', '/podnoszenie-mocy/oferta-dla-flot/', '/kontakt/', '/hamownia/', '/wykresy-i-osiagi/'];
 const b = await chromium.launch();
 let bad = 0;

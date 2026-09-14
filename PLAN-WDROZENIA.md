@@ -62,7 +62,7 @@ i `pages.json`. Zmiany klikane w edytorze zostaną nadpisane przy następnym imp
 | `vts-schema.php` | 7 własnych tabel, `dbDelta`, klucze obce |
 | `vts-catalog.php` | odczyt katalogu, słownik usług, `vts_visibility_sql()` |
 | `vts-catalog-routes.php` | adresy `/chiptuning/{marka}/{model}/{generacja}/{silnik}/` |
-| `vts-power-search.php` | REST kaskady, dekoder VIN, token HMAC, bramka leadowa |
+| `vts-power-search.php` | REST kaskady i wyniku, dekoder VIN (pod flagą), token HMAC, `vts_engine_result()` |
 | `vts-leads.php` | zapis leada, mail, autoresponder, retencja, podgląd w adminie |
 | `vts-fleet-calc.php` | kalkulator oszczędności flotowych |
 | `vts-dyno.php` | CPT wykresów, taksonomie, siatka z filtrem |
@@ -76,10 +76,13 @@ i `pages.json`. Zmiany klikane w edytorze zostaną nadpisane przy następnym imp
 
 ## Trzy zasady, na których stoi reszta
 
-**1. Bramka leadowa jest po stronie serwera.**
-`GET /wp-json/vitesse/v1/catalog/engines` zwraca wyłącznie dane fabryczne.
-Wartości po modyfikacji wychodzą dopiero w odpowiedzi na `POST /lead`.
-Bramkowanie w JavaScripcie da się obejść w narzędziach przeglądarki w kilka sekund.
+**1. Wynik bez bramki, ale z tokenem i limitem.**
+Klient zrezygnował z bramki e-mail (wrzesień 2026): wyszukiwarka ma pokazywać przyrosty od razu,
+tak jak konfigurator V-techa. `GET /catalog/engines` zwraca dane fabryczne i token, a
+`GET /catalog/result?engine&token` — przyrosty dla każdego poziomu programu. Token i limit 120
+zapytań na godzinę z adresu zostają jako hamulec na zgarnianie katalogu skryptem.
+`POST /lead` istnieje nadal (zapis leada z e-mailem), ale nic go dziś nie wywołuje.
+Ta sama funkcja (`vts_engine_result()`) renderuje wynik na stronie wersji w katalogu.
 
 **2. Token HMAC zamiast nonce'a WordPressa.**
 Nonce jest wypalany w HTML i żyje 12–24 h, więc łamie się przy cache'owaniu całych
@@ -113,7 +116,7 @@ aktualne i z pełnym podziałem na poziomy produktu.
 Mechanizm rozpoznaliśmy na podstawie wtyczki *VT Konfigurator* (Signuply), której **nie instalujemy** —
 wzięliśmy z niej wiedzę, nie kod. Powody odrzucenia wtyczki:
 
-* nie ma bramki leadowej — pokazuje przyrosty od razu, co przekreśla główne wymaganie klienta,
+* wrzuca wynik bez żadnego limitu zapytań (my zostawiamy token i limit na adres, choć bramki e-mail też już nie ma),
 * wrzuca **całe drzewo (4,3 MB)** do HTML każdej strony przez `wp_localize_script`,
 * jej parser zbiera wszystkie karty do dwóch worków i zostawia ostatnią, przez co przy czterech
   poziomach produktu pokazuje najwyżej dwa.
@@ -178,23 +181,30 @@ Stan ostatniego przebiegu: wszystkie osiem zestawów przechodzi — RWD bez zast
 - [ ] Skrzynki leadowe w `.env`: `VTS_LEAD_INBOX`, `VTS_LEAD_INBOX_FLEET`
 - [ ] SMTP produkcyjny + SPF/DKIM/DMARC (bez tego leady trafią do spamu)
 - [ ] Zastąpić zdjęcia zastępcze materiałem klienta; usunąć dane z `bin/seed-dev.sh`
-- [ ] **Dowód społeczny** — realne opinie i ocena z profilu Google zamiast danych
-      demonstracyjnych z `bin/seed-dev.sh`:
+- [ ] **Dowód społeczny** — realne opinie i ocena z profilu Google zamiast trzech opinii
+      demonstracyjnych z `content/dyno/seed.json` (wgrywa je `bin/seed-dev.sh`):
       `wp option update vts_google_rating|vts_google_reviews_count|vts_google_reviews_url|vts_reviews`.
-      Dopóki `vts_reviews` jest puste, sekcja „Co mówią klienci" **nie renderuje się wcale** —
-      i tak ma zostać, dopóki nie ma czego pokazać.
+      Dopóki `vts_reviews` jest puste, sekcja „Co mówią klienci" **nie renderuje się wcale**.
+- [ ] **Wykresy demonstracyjne** — 14 wpisów z flagą `_vts_seed` to wygenerowane wydruki
+      (`tools/make-dyno-charts.py`), nie pomiary klientów. Przed startem usunąć z panelu
+      (albo ponownie uruchomić seed z pustą listą) i wgrać archiwum hamowni.
 - [ ] **Certyfikat V-tech** — skan lub zdjęcie do sekcji dowodu społecznego (brak materiału)
-- [ ] Archiwum wykresów z hamowni + zgody właścicieli na publikację
+- [ ] Archiwum wykresów z hamowni + zgody właścicieli na publikację. Pojedynczy wykres ma
+      własny widok (`vts-dyno.php`, filtr `the_content`): wydruk, liczby, etykiety, link do
+      wersji w katalogu (pole „Powiązany silnik z katalogu" w panelu).
 - [ ] **Akceptacja prawna treści DPF / EGR / SCR.** Flaga `vts_feature_emissions_pages`
       jest **włączona** na wyraźną decyzję klienta (mail o strukturze serwisu), a kafle
       tych układów stoją na `/podnoszenie-mocy/dodatkowe-uslugi-ecu/` i w bloku flotowym.
       Wyłączenie z powrotem to `wp option update vts_feature_emissions_pages 0`.
 - [ ] Akceptacja prawna: regulamin, polityka prywatności
-- [ ] **Dekoder VIN** — `vts_feature_vin_decoder` jest włączony i rozpoznaje markę
-      po WMI z własnego katalogu (100 kodów, `vts_vin_wmi_map()`). Do decyzji, czy
-      dokładamy płatne API pełnego dekodowania (model + wersja silnika) — patrz
-      `PYTANIA-DO-KLIENTA.md`. Bez niego użytkownik po rozpoznaniu marki i tak
-      wybiera model i silnik ręcznie.
+- [ ] **Dekoder VIN** — `vts_feature_vin_decoder` jest **wyłączony** (decyzja klienta,
+      IX 2026: rząd VIN wydłużał wyszukiwarkę, a rozpoznaje tylko markę). Kod zostaje;
+      włączenie to `wp option update vts_feature_vin_decoder 1`. Pełne dekodowanie
+      (model + wersja) wymagałoby płatnego API — patrz `PYTANIA-DO-KLIENTA.md`.
+- [ ] Zdjęcia własne zamiast stocku w `foto-*.webp` i `usp-*.webp` (kamper, hamownia,
+      warsztat) — źródła i sposób podmiany w `assets/img/CREDITS.md`
+- [ ] **Liczby na stronie głównej i „O nas"** (10 000+ modyfikacji, 60+ flot) podał klient
+      w uwagach — do potwierdzenia przed startem; lata liczą się same od 2008
 - [ ] Zdjęcia hero dla slajdów 2–4 i dla hero podstron — dziś slajder korzysta
       z pasów `pas-chip`, `pas-floty` i `pas-onas`, czyli materiału ilustracyjnego
 - [ ] GA4 + Consent Mode v2 i baner zgody (jeszcze nie wdrożone)
@@ -215,9 +225,21 @@ słupek w kontenerze 1240 px, z pustą prawą połową. Każdy blok tekstu dosta
 `.vts-split` z kartą, listą ikon, pasem zdjęciowym, wyszukiwarką albo formularzem.
 
 **2. Sekcje wielokrotnego użytku są shortcode'ami, nie kopiowanym HTML-em.**
-`[vts_usps]` (5 przewag), `[vts_proces]` (5 kroków), `[vts_stages]` (Stage 1/2),
-`[vts_social_proof]`, `[vts_map]`, `[vts_gauges]` (5 filarów). Proces stoi na stronie
+`[vts_usps]` (5 przewag ze zdjęciami), `[vts_proces]` (5 kroków), `[vts_pomiar]` (4 kroki
+pomiaru), `[vts_stages]` (Stage 1/2), `[vts_liczby]`, `[vts_social_proof]`, `[vts_map]`,
+`[vts_gauges]` (5 filarów), `[vts_photo img=…]` (duże zdjęcie 4:3 z `assets/img/foto-*.webp`),
+`[vts_dyno_latest]` (ostatni wykres z bazy albo przebieg poglądowy SVG). Proces stoi na stronie
 głównej i na `/podnoszenie-mocy/` — z jednego źródła.
+
+**2a. Układ sekcji z uwag klienta (IX 2026).** Nagłówek H2 zawsze nad tekstem, nie w środku;
+sekcje z formularzem mają dane kontaktowe po lewej, formularz po prawej; ikony w kafelkach
+i listach 50 px; tytuły kafelków to H3 i nie zmieniają koloru na hover; podstrony kategorii
+chip tuningu i odblokowywania sterowników zdjęte (301 na strony nadrzędne, patrz
+`legacy-static.php`); zakładka „Kontakt" zeszła z menu — zostaje przycisk „Umów pomiar".
+
+**2b. Język treści.** Forma „Ty", zdania krótkie, bez myślników i konstrukcji „nie X, tylko Y",
+korzyść i konkret na początku akapitu. Nagłówki: H1 z tytułu strony, H2 sekcje, H3 kafelki,
+H4 pozycje list `.vts-ilist`.
 
 **3. Hero podstrony konfiguruje `vts_page_hero($slug)` w `vts-content.php`.**
 Slug bez wpisu dostaje wariant minimalny (okruszki + H1), więc strony prawne i katalog
@@ -235,7 +257,7 @@ wstawianie przez `[vts_contact_form form="floty"]`. Zapytania flotowe idą na
 
 ```bash
 wp option update vts_feature_jlr_service 1      # linia serwisowa Jaguar / Land Rover
-wp option update vts_feature_vin_decoder 0      # wyłączenie pola VIN w wyszukiwarce
+wp option update vts_feature_vin_decoder 1      # włączenie rzędu VIN w wyszukiwarce (domyślnie wyłączony)
 wp option update vts_feature_ai_agent 1         # asystent AI (etap 2)
 wp option update vts_feature_emissions_pages 0  # ukrycie treści DPF/EGR/SCR (domyślnie włączone)
 wp option update vts_catalog_index_level model  # cofnięcie indeksowania katalogu

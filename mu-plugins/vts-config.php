@@ -31,9 +31,11 @@ function vts_feature(string $flag): bool
     static $defaults = [
         // Serwis aut osobowych (Jaguar / Land Rover) — architektura gotowa, treść niewidoczna.
         'jlr_service'     => false,
-        // Dekoder VIN jako trzecie wejście wyszukiwarki. Rozpoznanie marki po WMI
-        // z własnego katalogu — bez płatnego API. Brak trafienia → wybór ręczny.
-        'vin_decoder'     => true,
+        // Dekoder VIN jako dodatkowy rząd wyszukiwarki. Rozpoznaje tylko markę (po WMI
+        // z własnego katalogu), więc i tak zostawia użytkownika przy wyborze ręcznym.
+        // Wyłączony na decyzję klienta (wrzesień 2026): rząd VIN i „lub" wydłużały
+        // wyszukiwarkę, a nie skracały drogi do wyniku. Kod zostaje pod flagą.
+        'vin_decoder'     => false,
         // Agent AI nad katalogiem (faza 5). Bez niego działa wyszukiwanie pełnotekstowe.
         'ai_agent'        => false,
         // Podstrony DPF/EGR/SCR. Włączone na wyraźną decyzję klienta (mail o strukturze

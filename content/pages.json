@@ -1,5 +1,5 @@
 {
- "_comment": "Manifest stron. Klucz = slug. 'file' wskazuje plik z treścią w content/pages/.",
+ "_comment": "Manifest stron. Klucz = slug. 'file' wskazuje plik z treścią w content/pages/. Strony, których tu nie ma, importer przenosi do kosza.",
  "pages": {
   "strona-glowna": {
    "title": "Strona główna",
@@ -10,8 +10,8 @@
     "order": 1
    },
    "seo": {
-    "title": "Chip tuning Łódź, hamownia 4×4 — Vitesse V-tech",
-    "desc": "Chip tuning, PowerBoxy i modyfikacje sterowników w Łodzi. Każda zmiana potwierdzona pomiarem na hamowni 4×4. Sprawdź swój silnik w katalogu 3200 wersji."
+    "title": "Chip tuning Łódź — hamownia 4×4, PowerBox, eco-tuning flot | Vitesse",
+    "desc": "Chip tuning w Łodzi z pomiarem na hamowni przed i po. Odblokowanie sterowników ECU na miejscu, PowerBoxy dla aut w leasingu, eco-tuning dla flot. Sprawdź przyrost mocy dla swojego silnika."
    }
   },
   "podnoszenie-mocy": {
@@ -22,8 +22,8 @@
     "order": 2
    },
    "seo": {
-    "title": "Podnoszenie mocy — chip tuning i PowerBoxy | Vitesse Łódź",
-    "desc": "Chip tuning, PowerBoxy, odblokowywanie sterowników, eco-tuning dla flot i dodatkowe usługi ECU. Warsztat w Łodzi z autoryzacją V-tech od 2008 roku."
+    "title": "Podnoszenie mocy silnika Łódź — chip tuning, PowerBox, ECU | Vitesse",
+    "desc": "Chip tuning, PowerBoxy, eco-tuning dla flot i modyfikacje sterownika ECU. Warsztat w Łodzi z autoryzacją V-tech od 2008 roku, każda praca z pomiarem na hamowni."
    }
   },
   "chip-tuning": {
@@ -35,106 +35,8 @@
     "order": 1
    },
    "seo": {
-    "title": "Chip tuning Łódź — osobowe, dostawcze, ciężarowe | Vitesse",
-    "desc": "Modyfikacja oprogramowania sterownika dla ośmiu kategorii pojazdów. Pomiar na hamowni przed i po w cenie usługi."
-   }
-  },
-  "samochody-osobowe": {
-   "title": "Chip tuning samochodów osobowych",
-   "parent": "chip-tuning",
-   "file": "ct-osobowe",
-   "seo": {
-    "title": "Chip tuning samochodów osobowych | Vitesse V-tech Łódź",
-    "desc": "Więcej momentu w zakresie, w którym naprawdę się jeździ. Chip tuning aut osobowych z pomiarem na hamowni przed i po."
-   }
-  },
-  "samochody-dostawcze": {
-   "title": "Chip tuning samochodów dostawczych",
-   "parent": "chip-tuning",
-   "file": "ct-dostawcze",
-   "seo": {
-    "title": "Chip tuning samochodów dostawczych | Vitesse V-tech Łódź",
-    "desc": "Niższe spalanie i lepsza praca pod obciążeniem w autach dostawczych. Rozliczenie na fakturę, obsługa flot."
-   }
-  },
-  "ciezarowe-i-autobusy": {
-   "title": "Chip tuning ciężarówek i autobusów",
-   "parent": "chip-tuning",
-   "file": "ct-ciezarowe",
-   "seo": {
-    "title": "Chip tuning ciężarówek i autobusów | Vitesse V-tech Łódź",
-    "desc": "Chip tuning i eco-tuning dla pojazdów ciężarowych oraz autobusów. DAF, Iveco, MAN, Scania, Volvo. Pomiar na hamowni."
-   }
-  },
-  "kampery": {
-   "title": "Chip tuning kamperów",
-   "parent": "chip-tuning",
-   "file": "ct-kampery",
-   "seo": {
-    "title": "Chip tuning kamperów | Vitesse V-tech Łódź",
-    "desc": "Więcej momentu na podjazdach i niższe spalanie w trasie. Hamownia przystosowana do długiego rozstawu osi."
-   }
-  },
-  "ciagniki-i-maszyny": {
-   "title": "Chip tuning ciągników i maszyn",
-   "parent": "chip-tuning",
-   "file": "ct-ciagniki",
-   "seo": {
-    "title": "Chip tuning ciągników i maszyn budowlanych | Vitesse Łódź",
-    "desc": "John Deere, Case, New Holland, Fendt, Claas, Deutz Fahr, Massey Ferguson. Modyfikacja pod pracę ciągłą i wałek odbioru mocy."
-   }
-  },
-  "ev-i-hybrydy": {
-   "title": "Chip tuning EV i hybryd",
-   "parent": "chip-tuning",
-   "file": "ct-ev",
-   "seo": {
-    "title": "Modyfikacje samochodów elektrycznych i hybryd | Vitesse Łódź",
-    "desc": "Zasięg i moc w samochodach elektrycznych oraz hybrydowych. Bez wymiany baterii."
-   }
-  },
-  "skrzynie-biegow-tcu": {
-   "title": "Modyfikacje skrzyń biegów (TCU)",
-   "parent": "chip-tuning",
-   "file": "ct-tcu",
-   "seo": {
-    "title": "Modyfikacja sterownika skrzyni biegów TCU | Vitesse Łódź",
-    "desc": "Progi zmiany biegów, limit momentu na sprzęgłach, blokada konwertera. Konieczna przy większych przyrostach momentu."
-   }
-  },
-  "auta-na-gwarancji-i-w-leasingu": {
-   "title": "Auta na gwarancji i w leasingu",
-   "parent": "chip-tuning",
-   "file": "ct-gwarancja",
-   "seo": {
-    "title": "Chip tuning auta na gwarancji i w leasingu — co warto wiedzieć",
-    "desc": "Uczciwie o ryzyku: co producent może wykryć, co mówi umowa leasingu i kiedy lepszy jest PowerBox."
-   }
-  },
-  "powerboxy": {
-   "title": "PowerBoxy",
-   "parent": "podnoszenie-mocy",
-   "file": "powerboxy",
-   "menu": {
-    "label": "PowerBoxy",
-    "order": 2
-   },
-   "seo": {
-    "title": "PowerBox Plug&Play, także Volvo VEA | Vitesse V-tech Łódź",
-    "desc": "Moduł bez ingerencji w oprogramowanie, zdejmowany w kilkanaście minut. Rozwiązanie dla aut w leasingu i na gwarancji."
-   }
-  },
-  "odblokowywanie-sterownikow": {
-   "title": "Odblokowywanie sterowników",
-   "parent": "podnoszenie-mocy",
-   "file": "odblokowywanie-sterownikow",
-   "menu": {
-    "label": "Odblokowywanie sterowników",
-    "order": 3
-   },
-   "seo": {
-    "title": "Odblokowywanie sterowników ECU na miejscu | Vitesse Łódź",
-    "desc": "Zamknięte sterowniki otwieramy u siebie, bez wysyłki do firmy zewnętrznej. Robota w jeden dzień zamiast w tydzień."
+    "title": "Chip tuning Łódź — osobowe, dostawcze, kampery, auta w leasingu | Vitesse",
+    "desc": "Chip tuning w Łodzi na oprogramowaniu V-tech. Więcej mocy i momentu, niższe spalanie, odblokowanie zamkniętych sterowników na miejscu. Pomiar na hamowni w cenie."
    }
   },
   "oferta-dla-flot": {
@@ -142,12 +44,12 @@
    "parent": "podnoszenie-mocy",
    "file": "oferta-dla-flot",
    "menu": {
-    "label": "Oferta dla flot",
-    "order": 4
+    "label": "Oferta dla flot i eco-tuning",
+    "order": 2
    },
    "seo": {
-    "title": "Eco-tuning dla flot — mniejsze spalanie | Vitesse V-tech Łódź",
-    "desc": "Eco-tuning, limitery prędkości i obrotów, obsługa partiami, faktura VAT. Policz zwrot w kalkulatorze oszczędności."
+    "title": "Eco-tuning dla flot — mniejsze spalanie, limitery prędkości | Vitesse Łódź",
+    "desc": "Obniż koszty paliwa we flocie firmowej o 5–8%. Eco-tuning, limitery prędkości i obrotów, serwis DPF i SCR, obsługa partiami, faktura VAT. Policz oszczędność w kalkulatorze."
    }
   },
   "kalkulator-oszczednosci": {
@@ -156,7 +58,7 @@
    "file": "kalkulator-oszczednosci",
    "seo": {
     "title": "Kalkulator oszczędności paliwa dla floty | Vitesse Łódź",
-    "desc": "Policz, ile flota zaoszczędzi na paliwie po eco-tuningu i po jakim czasie usługa się zwróci."
+    "desc": "Policz, ile Twoja flota zaoszczędzi na paliwie po eco-tuningu i po ilu miesiącach usługa się zwróci."
    }
   },
   "dodatkowe-uslugi-ecu": {
@@ -165,11 +67,24 @@
    "file": "dodatkowe-uslugi-ecu",
    "menu": {
     "label": "Dodatkowe usługi ECU",
-    "order": 5
+    "order": 3
    },
    "seo": {
-    "title": "Limitery, klapy wirowe, ciśnienie oleju | Vitesse V-tech Łódź",
-    "desc": "Dodatkowe prace na sterowniku: limitery obrotów i prędkości, klapy wirowe, ciśnienie oleju, temperatura pracy, czyszczenie dolotów."
+    "title": "DPF, EGR, SCR, limitery, ciśnienie oleju — serwis ECU Łódź | Vitesse",
+    "desc": "Programowe rozwiązywanie problemów z DPF, EGR i SCR/AdBlue, limitery prędkości i obrotów, klapy wirowe, ciśnienie oleju, temperatura pracy, odblokowanie sterowników, TCU."
+   }
+  },
+  "powerboxy": {
+   "title": "PowerBoxy",
+   "parent": "podnoszenie-mocy",
+   "file": "powerboxy",
+   "menu": {
+    "label": "PowerBoxy",
+    "order": 4
+   },
+   "seo": {
+    "title": "PowerBox Plug&Play Łódź, moduły dla Volvo VEA | Vitesse V-tech",
+    "desc": "PowerBox to więcej mocy bez zmiany oprogramowania. Montaż i demontaż w kwadrans, rozwiązanie dla aut w leasingu i na gwarancji. Dedykowane moduły do silników Volvo VEA."
    }
   },
   "ev-hybryda": {
@@ -180,8 +95,8 @@
     "order": 3
    },
    "seo": {
-    "title": "Zasięg, moc i wallboxy dla EV i hybryd | Vitesse Łódź",
-    "desc": "Modyfikacje samochodów elektrycznych i hybrydowych: zasięg, moc, dobór i montaż wallboxów. Bez wymiany baterii."
+    "title": "Zasięg i moc w EV i hybrydach, montaż wallbox Łódź | Vitesse",
+    "desc": "Większy zasięg i moc w samochodach elektrycznych oraz hybrydach bez wymiany baterii. Dobór, sprzedaż i montaż ładowarek wallbox w domu i w firmie. Łódź."
    }
   },
   "hamownia": {
@@ -192,20 +107,8 @@
     "order": 4
    },
    "seo": {
-    "title": "Hamownia podwoziowa 4×4 i motocyklowa Łódź | Vitesse",
-    "desc": "Pomiar mocy i momentu na kołach. Auta 2WD i 4×4, dostawcze, kampery, ciężarowe i motocykle. Także jako samodzielna usługa."
-   }
-  },
-  "wykresy-i-osiagi": {
-   "title": "Wykresy i osiągi",
-   "file": "wykresy-i-osiagi",
-   "menu": {
-    "label": "Wykresy i osiągi",
-    "order": 5
-   },
-   "seo": {
-    "title": "Wykresy z hamowni — nasze realizacje | Vitesse V-tech Łódź",
-    "desc": "Pomiary przed modyfikacją i po niej, wykonane na naszej hamowni. Filtruj po marce, paliwie i rodzaju usługi."
+    "title": "Hamownia Łódź — pomiar mocy 4×4, dostawcze, kampery, motocykle | Vitesse",
+    "desc": "Hamownia obciążeniowa 4×4 i osobne stanowisko motocyklowe w Łodzi. Pomiar mocy i momentu na kołach z wydrukiem wykresu. Auta 2WD i 4×4, dostawcze, kampery, motocykle."
    }
   },
   "o-nas": {
@@ -213,23 +116,31 @@
    "file": "o-nas",
    "menu": {
     "label": "O nas",
+    "order": 5
+   },
+   "seo": {
+    "title": "O nas — Vitesse V-tech Łódź, chip tuning od 2008 roku",
+    "desc": "Warsztat chip tuningu przy ul. Kolumny 267C w Łodzi. Autoryzacja V-tech od 2008 roku, hamownia 4×4, stanowisko motocyklowe, narzędzia do zamkniętych sterowników."
+   }
+  },
+  "wykresy-i-osiagi": {
+   "title": "Wykresy i osiągi",
+   "file": "wykresy-i-osiagi",
+   "menu": {
+    "label": "Wykresy i osiągi",
     "order": 6
    },
    "seo": {
-    "title": "O nas — Vitesse V-tech Łódź, autoryzacja od 2008",
-    "desc": "Warsztat przy ul. Kolumny 267C w Łodzi. Chip tuning, elektronika i pomiary na hamowni. Napraw mechanicznych TIR nie prowadzimy."
+    "title": "Wykresy z hamowni — realne przyrosty mocy | Vitesse V-tech Łódź",
+    "desc": "Wyniki pomiarów przed i po chip tuningu z naszej hamowni w Łodzi. Filtruj po marce, paliwie i rodzaju usługi."
    }
   },
   "kontakt": {
    "title": "Kontakt",
    "file": "kontakt",
-   "menu": {
-    "label": "Kontakt",
-    "order": 7
-   },
    "seo": {
-    "title": "Kontakt — Vitesse V-tech Łódź, ul. Kolumny 267C",
-    "desc": "Telefony do działu tuningu i flot, adres warsztatu w Łodzi, godziny otwarcia i formularz zapytania."
+    "title": "Kontakt — umów pomiar na hamowni | Vitesse V-tech Łódź, ul. Kolumny 267C",
+    "desc": "Zadzwoń: tuning 511 205 980, floty 515 660 210. Warsztat przy ul. Kolumny 267C w Łodzi, pn–pt 8–17, sob 8–14. Formularz zapytania i mapa dojazdu."
    }
   },
   "blog": {
@@ -238,27 +149,27 @@
    "posts_page": true,
    "menu": {
     "label": "Blog",
-    "order": 8
+    "order": 7
    },
    "seo": {
-    "title": "Blog — notatki z warsztatu | Vitesse V-tech Łódź",
-    "desc": "Co wychodzi na hamowni, czego nie widać w tabelach producentów i na co uważać przy modyfikacjach."
+    "title": "Blog — notatki z hamowni | Vitesse V-tech Łódź",
+    "desc": "Co pokazuje hamownia, czego nie ma w tabelach producentów i na co uważać przy chip tuningu."
    }
   },
   "gwarancja": {
-   "title": "Gwarancja satysfakcji",
+   "title": "Gwarancja",
    "file": "gwarancja",
    "seo": {
-    "title": "Gwarancja — pomiar przed i po w cenie | Vitesse Łódź",
-    "desc": "Jeśli wynik nie odpowiada zapowiedzi, poprawiamy albo przywracamy oryginalne oprogramowanie."
+    "title": "2 lata gwarancji na chip tuning, pomiar w cenie | Vitesse Łódź",
+    "desc": "Każda modyfikacja z pomiarem przed i po. Jeśli wynik nie zgadza się z zapowiedzią, poprawiamy albo przywracamy oprogramowanie fabryczne."
    }
   },
   "faq": {
    "title": "Najczęstsze pytania",
    "file": "faq",
    "seo": {
-    "title": "Najczęstsze pytania o chip tuning | Vitesse V-tech Łódź",
-    "desc": "Czy chip tuning szkodzi silnikowi, czy widać go w serwisie, ile trwa i co z gwarancją — odpowiadamy wprost."
+    "title": "Chip tuning — najczęstsze pytania | Vitesse V-tech Łódź",
+    "desc": "Czy chip tuning szkodzi silnikowi, czy widać go w serwisie, ile trwa, co z gwarancją i leasingiem. Odpowiedzi warsztatu z Łodzi."
    }
   },
   "regulamin": {
@@ -274,7 +185,7 @@
    "file": "polityka-prywatnosci",
    "seo": {
     "title": "Polityka prywatności | Vitesse V-tech Łódź",
-    "desc": "Jakie dane zbieramy, po co, jak długo je przechowujemy i jakie macie prawa."
+    "desc": "Jakie dane zbieramy, po co, jak długo je przechowujemy i jakie masz prawa."
    }
   },
   "informacja": {
@@ -298,20 +209,20 @@
  },
  "menus": {
   "vts_footer": [
-   "chip-tuning",
-   "powerboxy",
-   "oferta-dla-flot",
-   "hamownia",
-   "ev-hybryda",
-   "odblokowywanie-sterownikow"
+   {"slug": "chip-tuning",          "label": "Chip tuning osobowe i kampery"},
+   {"slug": "oferta-dla-flot",      "label": "Oferta dla flot B2B"},
+   {"slug": "powerboxy",            "label": "PowerBox Volvo VEA"},
+   {"slug": "dodatkowe-uslugi-ecu", "label": "Usługi DPF / EGR / SCR"},
+   {"slug": "hamownia",             "label": "Hamownia motocyklowa i 4×4"},
+   {"slug": "ev-hybryda",           "label": "Modyfikacje EV i hybryd"}
   ],
   "vts_client": [
-   "wykresy-i-osiagi",
-   "o-nas",
-   "regulamin",
-   "gwarancja",
-   "faq",
-   "polityka-prywatnosci"
+   {"slug": "wykresy-i-osiagi",     "label": "Baza wykresów"},
+   {"slug": "o-nas",                "label": "O nas"},
+   {"slug": "regulamin",            "label": "Regulamin"},
+   {"slug": "gwarancja",            "label": "2 lata gwarancji"},
+   {"slug": "faq",                  "label": "Najczęstsze pytania"},
+   {"slug": "polityka-prywatnosci", "label": "Polityka prywatności"}
   ]
  }
 }

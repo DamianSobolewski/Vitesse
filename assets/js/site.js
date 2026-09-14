@@ -178,13 +178,15 @@
     var miejsc    = (surowa.split('.')[1] || '').length;
     var przecin   = pole.dataset.vtsCount.indexOf(',') >= 0;
     var przed     = wyjsciowy.charAt(0) === '+' ? '+' : '';
+    // Przyrostek („+", „ lat", „ zł") zostaje na swoim miejscu przez całe odliczanie.
+    var po        = wyjsciowy.replace(/^.*\d/, '');
     // Serwer podaje tysiące ze spacją („4 853"). Bez tego licznik kończyłby na
     // „4853" i format zmieniałby się w trakcie animacji.
     var spacja    = /\d[\s\u00a0]\d/.test(wyjsciowy);
     var zapisz    = function (v) {
       var t = v.toFixed(miejsc);
       if (spacja) { t = t.replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0'); }
-      pole.textContent = przed + (przecin ? t.replace('.', ',') : t);
+      pole.textContent = przed + (przecin ? t.replace('.', ',') : t) + po;
     };
 
     var start = null, czas = 900;

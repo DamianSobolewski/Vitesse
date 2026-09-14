@@ -22,8 +22,8 @@ const OUT  = process.env.VTS_OUT || tmpdir();
 // nie widzial.
 const SZEROKOSCI = [1440, 1280, 1100, 1000, 950, 700, 620, 500, 390];
 const STRONY = ['/', '/podnoszenie-mocy/', '/podnoszenie-mocy/chip-tuning/',
-  '/podnoszenie-mocy/powerboxy/', '/podnoszenie-mocy/odblokowywanie-sterownikow/',
-  '/podnoszenie-mocy/oferta-dla-flot/', '/podnoszenie-mocy/dodatkowe-uslugi-ecu/',
+  '/podnoszenie-mocy/powerboxy/', '/podnoszenie-mocy/oferta-dla-flot/',
+  '/podnoszenie-mocy/dodatkowe-uslugi-ecu/',
   '/ev-hybryda/', '/hamownia/', '/o-nas/', '/kontakt/', '/wykresy-i-osiagi/', '/blog/'];
 
 const b = await chromium.launch();
@@ -325,11 +325,12 @@ for (const [jsOn, opis] of [[true, 'z JS'], [false, 'bez JS']]) {
   await p.evaluate(() => document.querySelector('.vts-liczby').scrollIntoView());
   await p.waitForTimeout(2200);
   const l = await p.evaluate(() => [...document.querySelectorAll('.vts-liczba b')]
-    .map((x) => x.textContent.trim()));
-  const silnikow = +(l[0] || '').replace(/\D/g, '');
-  const marek = +(l[1] || '').replace(/\D/g, '');
-  silnikow > 4000 && marek > 50 && l[2] === '2008'
-    ? ok(`pasek liczb konczy na wartosciach z bazy (${l.join(' · ')})`)
+    .map((x) => x.textContent.trim().replace(/\u00a0/g, ' ')));
+  // Liczby podal klient (IX 2026); lata licza sie od autoryzacji V-tech w 2008.
+  // Sprawdzamy, czy odliczanie dobilo do konca i zachowalo przyrostki („+", „lat", „zl").
+  const lata = new Date().getFullYear() - 2008;
+  l[0] === '10 000+' && l[1] === '60+' && l[2] === `${lata} lat` && l[3] === '0 zł'
+    ? ok(`pasek liczb konczy na wartosciach z przyrostkami (${l.join(' · ')})`)
     : zle(`pasek liczb: ${l.join(' · ')}`);
   await p.close();
 }

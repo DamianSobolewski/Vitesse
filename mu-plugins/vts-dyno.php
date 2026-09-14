@@ -197,3 +197,80 @@ function vts_dyno_cards(array $items): string
     }
     return $out;
 }
+
+/* ---------------------------------------------------------- pojedynczy wykres
+ *
+ * Motyw bazowy renderuje wpis CPT jako gołą treść bez tytułu i obrazka.
+ * Doklejamy widok: wydruk na pełną szerokość kolumny, obok karta z liczbami,
+ * datą i etykietami, pod spodem opis i przejście do pomiaru. Nagłówek (okruszki
+ * i H1) dokłada vts-content.php tak jak stronom.
+ */
+add_filter('the_content', function ($content) {
+    if (!is_singular('vts_dyno') || !in_the_loop() || !is_main_query() || is_admin()) {
+        return $content;
+    }
+
+    $id   = get_the_ID();
+    $m    = vts_dyno_meta($id);
+    $img  = get_the_post_thumbnail($id, 'large', ['loading' => 'eager', 'decoding' => 'async']);
+    $full = get_the_post_thumbnail_url($id, 'full');
+    $gain = ($m['_vts_stock_hp'] && $m['_vts_tuned_hp']) ? (int) $m['_vts_tuned_hp'] - (int) $m['_vts_stock_hp'] : null;
+    $gnm  = ($m['_vts_stock_nm'] && $m['_vts_tuned_nm']) ? (int) $m['_vts_tuned_nm'] - (int) $m['_vts_stock_nm'] : null;
+
+    $tagi = [];
+    foreach (['vts_dyno_marka', 'vts_dyno_paliwo', 'vts_dyno_usluga', 'vts_dyno_klasa'] as $tax) {
+        foreach (get_the_terms($id, $tax) ?: [] as $t) {
+            $tagi[] = '<a class="vts-dyno__chip" href="' . esc_url(get_term_link($t)) . '">' . esc_html($t->name) . '</a>';
+        }
+    }
+
+    $engine = (int) $m['_vts_engine_id'];
+    $kat    = $engine && function_exists('vts_engine_path') ? vts_engine_path($engine) : null;
+    $kat_url = $kat ? vts_catalog_url($kat['make_slug'], $kat['model_slug'], $kat['gen_slug'], $kat['engine_slug']) : '';
+
+    ob_start(); ?>
+    <div class="vts-section vts-dyno-single">
+      <div class="vts-wrap vts-split vts-split--wide-left">
+        <div>
+          <?php if ($img) : ?>
+            <figure class="vts-dyno-single__chart">
+              <a href="<?= esc_url($full) ?>" target="_blank" rel="noopener"><?= $img ?></a>
+              <figcaption>Kliknij, żeby otworzyć wydruk w pełnym rozmiarze.</figcaption>
+            </figure>
+          <?php endif; ?>
+          <div class="vts-dyno-single__note"><?= $content ?></div>
+        </div>
+        <div>
+          <div class="vts-card vts-dyno-single__data">
+            <h2>Wynik pomiaru</h2>
+            <dl>
+              <?php if ($m['_vts_stock_hp']) : ?>
+                <dt>Moc seryjna</dt><dd><?= (int) $m['_vts_stock_hp'] ?> KM<?= $m['_vts_stock_nm'] ? ' · ' . (int) $m['_vts_stock_nm'] . ' Nm' : '' ?></dd>
+              <?php endif; ?>
+              <?php if ($m['_vts_tuned_hp']) : ?>
+                <dt>Po modyfikacji</dt><dd class="is-accent"><?= (int) $m['_vts_tuned_hp'] ?> KM<?= $m['_vts_tuned_nm'] ? ' · ' . (int) $m['_vts_tuned_nm'] . ' Nm' : '' ?></dd>
+                <dt>Przyrost</dt><dd class="is-accent">+<?= $gain ?> KM<?= $gnm !== null ? ' · +' . $gnm . ' Nm' : '' ?></dd>
+              <?php endif; ?>
+              <?php if ($m['_vts_date']) : ?>
+                <dt>Data pomiaru</dt><dd><?= esc_html(date_i18n('j F Y', strtotime($m['_vts_date']))) ?></dd>
+              <?php endif; ?>
+            </dl>
+            <?php if ($tagi) : ?>
+              <div class="vts-dyno__filters" style="margin:var(--vts-gap-s) 0 0"><?= implode('', $tagi) ?></div>
+            <?php endif; ?>
+            <div class="vts-dyno-single__cta">
+              <a class="vts-btn vts-btn--primary" href="<?= esc_url(home_url('/hamownia/#rezerwacja')) ?>">Umów pomiar swojego auta</a>
+              <?php if ($kat_url) : ?>
+                <a class="vts-btn vts-btn--ghost" href="<?= esc_url($kat_url) ?>">Ta wersja w katalogu</a>
+              <?php endif; ?>
+            </div>
+          </div>
+          <p class="vts-note" style="margin-top:var(--vts-gap-s)">Wynik dotyczy tego egzemplarza, zmierzonego
+            na naszym stanowisku przed pracą i po niej. Wartości dla innego auta tej samej wersji mogą się różnić.</p>
+        </div>
+      </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}, 98);
+
