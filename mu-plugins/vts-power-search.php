@@ -376,6 +376,12 @@ function vts_engine_result(int $engine_id): ?array
         return null;
     }
 
+    // Przyrosty pochodzą z wtyczki VT Konfigurator. Wersja jeszcze niesprawdzona
+    // albo przeterminowana dociąga się teraz (mu-plugins/vts-vt-bridge.php).
+    if (function_exists('vts_vt_ensure_fresh')) {
+        vts_vt_ensure_fresh($engine_id);
+    }
+
     $services = vts_services();
     $results  = [];
     $stock_hp = (int) $path['stock_hp'];
@@ -392,8 +398,8 @@ function vts_engine_result(int $engine_id): ?array
         $zap_hp = (int) $g['tuned_hp'];
         $zap_nm = (int) $g['tuned_nm'];
 
-        // Dane z konfiguratora V-techa to delty, dane ze starego katalogu Vitesse
-        // to wartości po modyfikacji — obsługujemy oba źródła.
+        // Wtyczka VT Konfigurator podaje delty; wartości po modyfikacji
+        // (jeśli kiedyś wrócą w danych) też obsłużymy.
         $gain_hp = (int) $g['gain_hp'] > 0
             ? (int) $g['gain_hp']
             : max(0, $zap_hp - $stock_hp);

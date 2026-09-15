@@ -116,7 +116,10 @@ for (const [w, h, opis] of [[1440, 1000, 'desktop'], [390, 844, 'telefon']]) {
   przed.cta ? ok('przycisk aktywny po wyborze silnika') : zle('przycisk nieaktywny po wyborze silnika');
 
   await p.click('[data-cta]');
-  await p.waitForTimeout(2000);
+  // Wersja jeszcze nieogrzana dociąga wynik z wtyczki VT Konfigurator (ok. 2 s),
+  // a licznik animuje się 700 ms po odpowiedzi — czekamy na odpowiedź, nie na zegar.
+  await p.waitForResponse(r => r.url().includes('/catalog/result'), { timeout: 20000 }).catch(() => null);
+  await p.waitForTimeout(1200);
 
   if (!odpowiedz) {
     zle('serwer nie zwrocil wyniku (limit zapytan albo blad)');

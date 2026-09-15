@@ -15,7 +15,7 @@ docker compose up -d
 ./bin/bootstrap.sh https://adres-serwisu      # rdzeń WordPressa, motyw, wtyczki, konta
 ./bin/migrate.sh                              # tabele katalogu i leadów
 ./bin/import.sh                               # strony, treść, menu, SEO, formularz
-./bin/import-catalog.sh                       # katalog mocy z content/catalog/*.json
+./bin/import-catalog.sh                       # katalog mocy z wtyczki VT Konfigurator (drzewo V-techa)
 ./bin/seed-dev.sh                             # dane demonstracyjne (TYLKO nieprodukcyjne)
 ```
 
@@ -39,12 +39,12 @@ docker compose --profile cli run --rm wpcli option update blog_public 1
 ```
 assets/          → wp-content/vts-assets (ro)   css, js, fonty woff2, obrazy
 mu-plugins/      → wp-content/mu-plugins (ro)   cała logika serwisu
+plugins/         → wp-content/plugins/… (ro)    wtyczka VT Konfigurator od klienta, bez zmian w kodzie
 content/         → /content w kontenerze wpcli  treść jako kod + importery
   pages.json         manifest stron (slug → tytuł, rodzic, menu, SEO)
   pages/*.html       treść stron
-  catalog/*.json     katalog mocy — źródło prawdy, wynik scrape'u
   redirects/         mapa starych adresów + inwentarz
-tools/scrape/    scraper starego serwisu (Python)
+tools/scrape/    scraper starego serwisu (Python) — treści, nie katalog
 tests/           Playwright: RWD, przekierowania, przepływ wyszukiwarki
 uploads/         → wp-content/uploads (RW, poza gitem)
 ```
@@ -61,6 +61,8 @@ i `pages.json`. Zmiany klikane w edytorze zostaną nadpisane przy następnym imp
 | `vts-config.php` | dane firmy, flagi funkcji `vts_feature()`, sekrety z `getenv()` |
 | `vts-schema.php` | 7 własnych tabel, `dbDelta`, klucze obce |
 | `vts-catalog.php` | odczyt katalogu, słownik usług, `vts_visibility_sql()` |
+| `vts-catalog-import.php` | zapis katalogu do tabel (upsert po `legacy_key`), wygaszanie, liczniki |
+| `vts-vt-bridge.php` | most do wtyczki VT Konfigurator: drzewo → tabele, wyniki → `vts_gain`, cron, `wp vts vt` |
 | `vts-catalog-routes.php` | adresy `/chiptuning/{marka}/{model}/{generacja}/{silnik}/` |
 | `vts-power-search.php` | REST kaskady i wyniku, dekoder VIN (pod flagą), token HMAC, `vts_engine_result()` |
 | `vts-leads.php` | zapis leada, mail, autoresponder, retencja, podgląd w adminie |
@@ -107,54 +109,77 @@ przekierowaniach i sitemapie — i nie da się go przypadkiem pominąć.
 Własne tabele, nie CPT: tysiące wariantów silnikowych × kilka poziomów produktu to zbyt dużo,
 żeby trzymać je w `wp_posts`. Kaskada byłaby wtedy `meta_query` z JOIN-ami po `LONGTEXT`.
 
-### Źródło danych: konfigurator V-techa
+### Źródło danych: wtyczka VT Konfigurator
 
 Dane pochodzą z **konfiguratora PowerChip V-techa** (`sklep.vtech.pl`), czyli od producenta,
-którego autoryzację Vitesse ma od 2008 roku. To lepsze źródło niż stary serwis klienta: zawsze
-aktualne i z pełnym podziałem na poziomy produktu.
+którego autoryzację Vitesse ma od 2008 roku. Pobiera je wtyczka **VT Konfigurator** (Signuply),
+którą przysłał klient i której wdrożenia zażądał (IX 2026). Leży w `plugins/vt-konfigurator/`,
+kod dostawcy bez zmian, aktywowana w `bootstrap.sh`; cała jej funkcjonalność (panel, REST
+`/wp-json/vt/v1/result`, shortcode) zostaje włączona.
 
-Mechanizm rozpoznaliśmy na podstawie wtyczki *VT Konfigurator* (Signuply), której **nie instalujemy** —
-wzięliśmy z niej wiedzę, nie kod. Powody odrzucenia wtyczki:
+Wtyczka jest źródłem, ale nie warstwą prezentacji. Serwis pracuje na własnych tabelach,
+a most `vts-vt-bridge.php` przepisuje do nich dane wtyczki:
 
-* wrzuca wynik bez żadnego limitu zapytań (my zostawiamy token i limit na adres, choć bramki e-mail też już nie ma),
-* wrzuca **całe drzewo (4,3 MB)** do HTML każdej strony przez `wp_localize_script`,
-* jej parser zbiera wszystkie karty do dwóch worków i zostawia ostatnią, przez co przy czterech
-  poziomach produktu pokazuje najwyżej dwa.
+* **drzewo pojazdów** (`wp_option vt_vehicle_tree`, ok. 4,5 MB, 60 marek, 33 tys. kombinacji
+  rocznik×silnik) → marki, modele, generacje, silniki. Tymi samymi regułami slugów co dawny
+  scraper, z tożsamością po `legacy_key` — id silników się nie przesuwają, więc hamownia,
+  leady, przykłady na stronie głównej i mapa przekierowań zostają ważne;
+* **wynik dla wersji** (`VT_Fetcher::fetch_result`, żywy request do sklepu V-techa) → wiersze
+  `vts_gain`. Klucz cache jest ten sam co w REST wtyczki, więc oba wejścia dzielą jeden cache
+  i jedno „Wyczyść cache wyników" w panelu.
 
-Nasz scraper zapisuje **każdy poziom osobno**: PowerChip One, PowerChip Premium,
-PowerChip Premium + AI oraz Chip Tuning.
+Dlaczego tabele zostają: shortcode wtyczki wrzuca całe drzewo do HTML każdej strony, jej REST
+nie ma tokenu ani naszego limitu, a strony `/chiptuning/…`, wyszukiwanie FULLTEXT i przekierowania
+potrzebują id i slugów w bazie.
+
+**Rocznik.** Wtyczka wymaga rocznika, nasza kaskada ma cztery pola. Serwer bierze najnowszy
+rocznik, w którym dana generacja+silnik występuje w drzewie (`vts_engine.vt_year`).
+
+**Dwie pozycje wyniku.** Parser wtyczki zbiera karty ze sklepu do dwóch worków i zostawia ostatnią
+z każdego, więc wynik to „PowerChip" (w praktyce najwyższy poziom, Premium + AI) i „Chip Tuning".
+Decyzja biznesowa: pokazujemy dokładnie to, co wtyczka. Słownik `vts_services()` ma więc dwa kody:
+`powerchip` i `chip`.
+
+**Kiedy dane trafiają do tabel.** Import drzewa jest natychmiastowy. Wyniki dociągają się trzema
+drogami: cron co godzinę (paczka `vts_vt_batch`, domyślnie 150 silników, ok. 2 s każdy, bo strona
+wyniku V-techa waży 4,66 MB), `wp vts vt sync` od ręki, oraz przy pierwszym wyświetleniu wersji
+jeszcze niesprawdzonej (`vts_vt_ensure_fresh()` w `vts_engine_result()`). Wersja, dla której
+wtyczka potwierdzi brak danych, schodzi z widoku (`vt_checked_at` ustawione, brak wierszy `vts_gain`);
+niesprawdzona zostaje widoczna. Nieudane pobranie nie jest ponawiane przez 10 minut.
 
 ### Marki spoza konfiguratora
 
-Konfigurator V-techa obejmuje pojazdy drogowe. Nie ma w nim **MAN-a** ani maszyn rolniczych
-(Fendt, Case), a „Chip tuning ciągników i maszyn" jest w ofercie Vitesse. Te marki dokładamy
-z katalogu starego serwisu — `tools/scrape/merge-catalog.py`. Marek występujących w obu źródłach
-nie scalamy, żeby uniknąć sprzecznych wartości; V-tech jest zawsze nadrzędny.
+Nie ma ich. Katalog to wyłącznie drzewo V-techa (decyzja IX 2026); MAN, Fendt, Case i Great Wall
+ze starego serwisu zostały wygaszone (`visibility = 0`, wiersze zostają dla przekierowań, które
+prowadzą na przodka).
 
 ### Przyrosty, nie wartości bezwzględne
 
-V-tech podaje **delty** (+KM / +Nm), stary katalog Vitesse podawał wartości po modyfikacji.
-Tabela `vts_gain` trzyma oba pola: `gain_hp`/`gain_nm` oraz `tuned_hp`/`tuned_nm`, a warstwa
-REST uzupełnia to, co da się policzyć. Moment fabryczny bywa nieznany — V-tech go nie podaje —
-i wtedy kolumna `stock_nm` ma 0, co kod traktuje jako brak danych, nie jako zero.
+Wtyczka podaje **delty** (+KM / +Nm). Tabela `vts_gain` trzyma `gain_hp`/`gain_nm`, a
+`vts_engine_result()` liczy z mocy fabrycznej wartość po modyfikacji. Moment fabryczny jest nieznany —
+V-tech go nie podaje — i wtedy kolumna `stock_nm` ma 0, co kod traktuje jako brak danych, nie jako
+zero. Adres wykresu z V-techa zapisujemy w `chart_url`, ale go nie pokazujemy (pytanie o zgodę
+w `PYTANIA-DO-KLIENTA.md`).
 
 ### Przekierowania po podmianie katalogu
 
 Nowe rekordy nie mają kluczy `?auto=` ze starego serwisu, więc wyszukiwanie po `legacy_key`
-przestało wystarczać. `tools/scrape/map-legacy.py` dopasowuje stare klucze do nowych ścieżek
-(silniki po sygnaturze pojemność/rodzina/kW) i zapisuje mapę do `content/redirects/legacy-catalog.json`.
-Klucze bez dopasowania trafiają na przodka, nigdy na 404.
+przestało wystarczać. Mapa `content/redirects/legacy-catalog.json` (kopia w `mu-plugins/vts-data/`)
+powstała jednorazowo przez dopasowanie starych kluczy do nowych ścieżek (silniki po sygnaturze
+pojemność/rodzina/kW) i jest statyczna — slugi katalogu biorą się z drzewa V-techa tymi samymi
+regułami, więc pozostaje ważna. Klucze bez dopasowania trafiają na przodka, nigdy na 404.
 
 ### Odświeżenie katalogu
 
 ```bash
-./bin/refresh-catalog.sh            # drzewo + wyniki + scalenie + mapa + import
-./bin/refresh-catalog.sh --tree     # samo drzewo, bez pobierania wyników
+./bin/import-catalog.sh                                     # drzewo → wtyczka → tabele + 200 wersji
+docker compose --profile cli run --rm wpcli vts vt sync     # reszta wersji od ręki
+docker compose --profile cli run --rm wpcli vts vt tree     # samo drzewo (jak przycisk w panelu wtyczki)
+docker compose --profile cli run --rm wpcli vts vt import   # drzewo z wtyczki → tabele
 ```
 
-Pobieranie wyników jest wznawialne (cache w `tools/scrape/raw-vtech/`). Scraper prosi o kompresję
-i zapisuje w cache tylko fragment z kartami produktów — pełna strona wyniku waży **4,66 MB**,
-bo V-tech osadza w niej całe drzewo pojazdów.
+Bezpieczniki: drzewo z mniej niż 80 % poprzednich kombinacji nie zapisuje się (regułą wtyczki),
+import ze spadkiem marek albo silników powyżej 10 % przerywa się; oba obchodzi `--force`.
 
 ## Weryfikacja
 

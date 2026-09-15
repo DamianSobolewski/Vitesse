@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('VTS_DB_VERSION', '1.1.0');
+define('VTS_DB_VERSION', '1.2.0');
 
 /** Pełne nazwy tabel (z prefiksem instalacji). */
 function vts_table(string $name): string
@@ -111,6 +111,8 @@ function vts_schema_definitions(): array
   stock_nm smallint(5) unsigned DEFAULT NULL,
   legacy_key varchar(190) DEFAULT NULL,
   search_blob varchar(255) NOT NULL DEFAULT '',
+  vt_year varchar(4) DEFAULT NULL,
+  vt_checked_at datetime DEFAULT NULL,
   visibility tinyint(3) unsigned NOT NULL DEFAULT 1,
   sort smallint(5) unsigned NOT NULL DEFAULT 0,
   updated_at datetime NOT NULL,
@@ -136,6 +138,7 @@ function vts_schema_definitions(): array
   price_is_from tinyint(1) NOT NULL DEFAULT 1,
   duration_h decimal(3,1) DEFAULT NULL,
   note varchar(255) DEFAULT NULL,
+  chart_url varchar(255) DEFAULT NULL,
   visibility tinyint(3) unsigned NOT NULL DEFAULT 1,
   updated_at datetime NOT NULL,
   PRIMARY KEY  (id),

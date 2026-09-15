@@ -29,6 +29,3 @@ playwright-report/
 # Makiety budowane przez design/build.py — zrodlem sa .tpl.html + .js
 design/kierunki-wizualne.html
 design/kierunki-artifact.html
-
-# Plik posredni scrapera — odtwarzany przez vtech-tree.py w kilka sekund.
-content/catalog/_combos.json

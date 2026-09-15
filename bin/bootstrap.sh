@@ -61,6 +61,9 @@ WPC option update date_format 'j F Y' >/dev/null
 echo "==> 4/7  motyw i wtyczki"
 WPC theme install hello-elementor --activate >/dev/null 2>&1 || WPC theme activate hello-elementor >/dev/null
 WPC plugin install elementor contact-form-7 seo-by-rank-math webp-converter-for-media --activate >/dev/null 2>&1 || true
+# VT Konfigurator (wtyczka od klienta) leży w repo w plugins/ i jest zamontowana w kontenerze —
+# tylko aktywacja. Katalog mocy bierze z niej drzewo pojazdów i wyniki (mu-plugins/vts-vt-bridge.php).
+WPC plugin activate vt-konfigurator >/dev/null 2>&1 || echo "    UWAGA: nie udało się aktywować vt-konfigurator — sprawdź mount plugins/ w docker-compose.yml"
 
 echo "==> 5/7  sprzątanie i odnośniki"
 WPC post delete 1 2 3 --force >/dev/null 2>&1 || true
@@ -96,5 +99,5 @@ echo
 echo "Dalej po kolei:"
 echo "  ./bin/migrate.sh          # tabele katalogu i leadów"
 echo "  ./bin/import.sh           # strony, menu, SEO, formularz"
-echo "  ./bin/import-catalog.sh   # katalog mocy z plików w repozytorium"
+echo "  ./bin/import-catalog.sh   # katalog mocy: drzewo z konfiguratora V-techa przez wtyczkę VT Konfigurator"
 echo "  ./bin/seed-dev.sh         # przykładowe wykresy (tylko środowiska nieprodukcyjne)"

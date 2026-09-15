@@ -76,8 +76,10 @@ add_action('template_redirect', function () {
  * Mapa starych kluczy ?auto= na nowe ścieżki katalogu.
  *
  * Po przejściu na dane V-techa rekordy nie mają już kluczy ze starego serwisu,
- * więc wyszukiwanie po legacy_key przestało wystarczać. Mapę generuje
- * tools/scrape/map-legacy.py przez dopasowanie slugów i sygnatur silników.
+ * więc wyszukiwanie po legacy_key przestało wystarczać. Mapa powstała jednorazowo
+ * przez dopasowanie slugów i sygnatur silników i jest statyczna: slugi katalogu
+ * biorą się z drzewa V-techa tymi samymi regułami (vts-vt-bridge.php), więc
+ * ścieżki po prawej stronie mapy pozostają aktualne.
  */
 function vts_legacy_catalog_map(): array
 {

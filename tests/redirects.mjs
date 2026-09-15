@@ -3,7 +3,7 @@ const BASE = 'http://localhost:8090';
 
 // Stare adresy .php z lustra + próbka kluczy ?auto= ze starego serwisu.
 // Po przejściu na dane V-techa klucze nie są już w katalogu — źródłem prawdy
-// jest mapa wygenerowana przez tools/scrape/map-legacy.py.
+// jest statyczna mapa content/redirects/legacy-catalog.json (patrz vts-redirects.php).
 const files = fs.readFileSync('content/redirects/legacy-urls.txt', 'utf8').trim().split('\n');
 const map = JSON.parse(fs.readFileSync('content/redirects/legacy-catalog.json', 'utf8'));
 const keys = Object.keys(map);

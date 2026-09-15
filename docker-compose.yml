@@ -56,6 +56,8 @@ services:
       - ./config/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
       - ./assets:/var/www/html/wp-content/vts-assets:ro
       - ./mu-plugins:/var/www/html/wp-content/mu-plugins:ro
+      # Wtyczka VT Konfigurator od klienta — źródło danych katalogu mocy, wersjonowana w repo.
+      - ./plugins/vt-konfigurator:/var/www/html/wp-content/plugins/vt-konfigurator:ro
       # Jedyny mount RW: Krzysiek wgrywa wykresy, uploady musza byc na hoscie (backup, przenaszalnosc)
       - ./uploads:/var/www/html/wp-content/uploads
 
@@ -97,6 +99,7 @@ services:
       - wp_data:/var/www/html
       - ./content:/content:ro
       - ./mu-plugins:/var/www/html/wp-content/mu-plugins:ro
+      - ./plugins/vt-konfigurator:/var/www/html/wp-content/plugins/vt-konfigurator:ro
       - ./assets:/var/www/html/wp-content/vts-assets:ro
       - ./uploads:/var/www/html/wp-content/uploads
 

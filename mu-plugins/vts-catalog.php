@@ -32,38 +32,20 @@ function vts_visibility_sql(string $alias, ?string $feature = null): string
 function vts_services(): array
 {
     return [
-        // Poziomy PowerChip wg aktualnej oferty V-techa. Kolejność decyduje
-        // o kolejności wyświetlania — od najtańszego do najmocniejszego.
-        'powerchip-one' => [
-            'label'      => 'PowerChip One',
-            'short'      => 'One',
-            'desc'       => 'Podstawowy moduł Plug&Play. Montaż bez ingerencji w oprogramowanie, zdejmowany w kilkanaście minut.',
-            'show_price' => true,
-        ],
-        'powerchip-premium' => [
-            'label'      => 'PowerChip Premium',
-            'short'      => 'Premium',
-            'desc'       => 'Mocniejszy wariant modułu, z szerszym zakresem korekt.',
-            'show_price' => true,
-        ],
-        'powerchip-premium-ai' => [
-            'label'      => 'PowerChip Premium + AI',
-            'short'      => 'Premium + AI',
-            'desc'       => 'Najwyższy poziom modułu, z adaptacją do stylu jazdy.',
+        // Dwie pozycje — dokładnie tyle zwraca wtyczka VT Konfigurator, z której
+        // pochodzą przyrosty (vts-vt-bridge.php). „PowerChip" to ostatnia karta
+        // PowerChip ze sklepu V-techa, czyli najwyższy dostępny poziom modułu.
+        // Kolejność decyduje o kolejności wyświetlania.
+        'powerchip' => [
+            'label'      => 'PowerChip',
+            'short'      => 'PowerChip',
+            'desc'       => 'Moduł Plug&Play montowany bez ingerencji w oprogramowanie, zdejmowany w kilkanaście minut.',
             'show_price' => true,
         ],
         'chip' => [
             'label'      => 'Chip tuning',
             'short'      => 'Chip',
             'desc'       => 'Modyfikacja oprogramowania sterownika. Pełny zakres zmian, wynik potwierdzony pomiarem.',
-            'show_price' => true,
-        ],
-        // Zostaje dla pojazdów spoza konfiguratora V-techa (MAN, maszyny rolnicze),
-        // gdzie dane pochodzą z katalogu Vitesse.
-        'powerbox' => [
-            'label'      => 'PowerBox',
-            'short'      => 'Box',
-            'desc'       => 'Moduł montowany bez ingerencji w oprogramowanie. Odwracalny w kilkanaście minut.',
             'show_price' => true,
         ],
     ];

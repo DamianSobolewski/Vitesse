@@ -6,8 +6,8 @@ wtyczkach `mu-plugins/`, a treść stron jest kodem w `content/` — nic istotne
 Trzy rzeczy, których nie ma w typowym WordPressie i o które w tym projekcie chodzi:
 
 - **wyszukiwarka mocy** pod hero strony głównej — kaskada Marka → Model → Generacja → Silnik po
-  katalogu ~4900 wersji silnikowych, wynik (przyrosty dla każdego poziomu programu) od razu po
-  kliknięciu, bez bramki e-mail,
+  katalogu ~4700 wersji silnikowych, wynik (PowerChip i Chip Tuning) od razu po kliknięciu,
+  bez bramki e-mail; dane pochodzą z wtyczki **VT Konfigurator** od klienta,
 - **kalkulator oszczędności** dla flot,
 - **baza wykresów z hamowni** z uproszczonym panelem dla obsługi warsztatu.
 
@@ -67,10 +67,10 @@ docker compose up -d
 ### 3. Instalacja — pięć kroków, **kolejność obowiązkowa**
 
 ```bash
-./bin/bootstrap.sh https://twoja-domena.pl   # rdzeń WordPressa, motyw, wtyczki, konta
+./bin/bootstrap.sh https://twoja-domena.pl   # rdzeń WordPressa, motyw, wtyczki (w tym VT Konfigurator), konta
 ./bin/migrate.sh                             # tabele katalogu mocy i leadów
 ./bin/import.sh                              # strony, treść, menu, SEO, formularz kontaktowy
-./bin/import-catalog.sh                      # katalog mocy z plików w repozytorium
+./bin/import-catalog.sh                      # katalog mocy: drzewo pojazdów z konfiguratora V-techa przez wtyczkę
 ./bin/seed-dev.sh                            # przykładowe wykresy z hamowni (patrz ostrzeżenie niżej)
 ```
 
@@ -81,8 +81,14 @@ Co robi każdy krok i jak wygląda poprawny wynik:
 | `bootstrap.sh` | instaluje WordPressa pod podanym adresem | `Gotowe. Adres serwisu: https://…` |
 | `migrate.sh` | tworzy 7 własnych tabel | lista `Created table` albo `bez zmian` |
 | `import.sh` | wgrywa 19 stron, wpisy, menu i formularze | `strony: 19` |
-| `import-catalog.sh` | wypełnia katalog | `OPUBLIKOWANE: 61 marek, … 4853 silników` |
+| `import-catalog.sh` | pobiera drzewo ze sklepu V-techa do wtyczki, buduje katalog i ogrzewa pierwsze 200 wersji | `Drzewo zapisane: 60 marek…`, `OPUBLIKOWANE: 60 marek, … 4720 silników` |
 | `seed-dev.sh` | dodaje 14 wykresów i 3 opinie demonstracyjne | `wykresy demonstracyjne: 14` |
+
+`import-catalog.sh` potrzebuje dostępu z serwera do `sklep.vtech.pl` (wychodzące HTTPS).
+Przyrosty dla pozostałych wersji dociąga cron WordPressa co godzinę (paczka 150 silników,
+ok. 2 s każdy) albo od ręki `docker compose --profile cli run --rm wpcli vts vt sync`.
+Wersja jeszcze nieogrzana dociąga wynik przy pierwszym wyświetleniu, więc wyszukiwarka
+działa od razu po imporcie.
 
 **Adres podany w `bootstrap.sh` zapisuje się do bazy.** Podanie złego oznacza, że serwis będzie
 przekierowywał na niego z każdego innego hosta. Jeśli się pomylisz, uruchom `bootstrap.sh` ponownie
@@ -116,7 +122,7 @@ Przy `WP_BIND=127.0.0.1` (domyślnie) kontener nie jest dostępny z sieci wprost
 # strona główna odpowiada pod właściwym adresem, bez przekierowania gdzie indziej
 curl -sI https://twoja-domena.pl/ | head -3
 
-# katalog mocy jest wypełniony — oczekiwane ok. 61 marek
+# katalog mocy jest wypełniony — oczekiwane 60 marek
 curl -s https://twoja-domena.pl/wp-json/vitesse/v1/catalog/makes | head -c 200
 
 # strona wewnątrz katalogu odpowiada 200
@@ -147,7 +153,8 @@ docker compose --profile cli run --rm wpcli option update blog_public 1
 |---|---|---|
 | Katalog i `/wp-json/…` zwracają **404** | brak przyjaznych odnośników | `docker compose --profile cli run --rm wpcli rewrite structure '/%postname%/' --hard` |
 | Strony są, ale **kafelki puste albo brak menu** | nie przeszedł `import.sh` | uruchom `./bin/import.sh` i sprawdź, czy kończy się `strony: 19` |
-| Wyszukiwarka w nagłówku ma **pustą listę marek** | nie przeszedł `import-catalog.sh` | uruchom go ponownie; sprawdź, że `content/catalog/*.json` istnieją |
+| Wyszukiwarka w nagłówku ma **pustą listę marek** | nie przeszedł `import-catalog.sh` | uruchom go ponownie; w `wp-admin` sprawdź, że wtyczka VT Konfigurator jest aktywna i w Ustawienia → VT Konfigurator widać stan drzewa |
+| Wynik wyszukiwarki: **„Nie udało się pobrać”** albo długo się ładuje | serwer nie dosięga `sklep.vtech.pl` | sprawdź wychodzący ruch HTTPS z kontenera; log błędów w Ustawienia → VT Konfigurator |
 | Panel **nie przyjmuje zdjęć** | złe uprawnienia katalogu | `docker compose exec -u root wordpress chown -R www-data:www-data /var/www/html/wp-content/uploads` |
 | Serwis **przekierowuje na inny adres** | zły adres w bazie | `./bin/bootstrap.sh https://właściwy-adres` |
 | Pętla przekierowań za proxy | brak nagłówka `X-Forwarded-Proto` | patrz sekcja *Reverse proxy* |
@@ -158,9 +165,8 @@ Logi: `docker compose logs -f wordpress`
 
 ## Czego NIE uruchamiać
 
-- **`bin/refresh-catalog.sh`** — pobiera katalog na nowo z serwera V-techa, prawie 5000 zapytań.
-  Dane jadą w repozytorium jako pliki JSON, więc na serwerze wystarczy `import-catalog.sh`.
-  Skrypt jest do odświeżania danych, i to ze stanowiska deweloperskiego.
+- **`bin/import-catalog.sh --all`** w godzinach pracy — ściąga wyniki dla wszystkich ~4700 wersji
+  naraz (ok. 3 godziny zapytań do sklepu V-techa). Domyślny tryb ogrzewa 200 wersji, resztę robi cron.
 - **`bin/seed-dev.sh` na produkcji** — wgrywa 14 wykresów demonstracyjnych (wydruki wygenerowane
   z `content/dyno/seed.json`, pojazdy z katalogu V-tech, ale nie realne pomiary) i trzy opinie.
   Na środowisku pokazowym pokazują pełną stronę; przed startem produkcyjnym usunąć je z panelu
@@ -189,12 +195,18 @@ Panel administracyjny: `https://twoja-domena.pl/wp-admin`
 
 ## Odświeżenie katalogu mocy
 
-Tylko ze stanowiska deweloperskiego, nie z serwera:
+Źródłem jest wtyczka **VT Konfigurator** (`plugins/vt-konfigurator/`, kod od dostawcy bez zmian).
+Trzyma drzewo pojazdów z konfiguratora V-techa i pobiera wyniki dla wersji; most
+`mu-plugins/vts-vt-bridge.php` przepisuje to do tabel katalogu, na których pracuje serwis.
+
+Bezpośrednio na serwerze, kiedy V-tech dołoży nowe pojazdy:
 
 ```bash
-./bin/refresh-catalog.sh          # drzewo + wyniki + scalenie + mapa przekierowań + import
-./bin/refresh-catalog.sh --tree   # samo drzewo, bez pobierania wyników
+./bin/import-catalog.sh                                       # drzewo + tabele + 200 wersji
+docker compose --profile cli run --rm wpcli vts vt sync       # reszta wersji od ręki (albo poczekaj na cron)
 ```
 
-Pobieranie jest wznawialne. Po odświeżeniu zacommituj zmienione `content/catalog/*.json`
-i `content/redirects/legacy-catalog.json` — serwer bierze dane właśnie stamtąd.
+To samo klikiem: Ustawienia → VT Konfigurator → **Odśwież dane pojazdów** odświeża drzewo w wtyczce,
+potem `docker compose --profile cli run --rm wpcli vts vt import` przenosi je do katalogu.
+Wyniki starsze niż „Czas życia cache" z ustawień wtyczki (domyślnie 7 dni) cron odświeża sam.
+Wielkość paczki cronu: `wp option update vts_vt_batch 300`.

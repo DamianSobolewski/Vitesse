@@ -7,13 +7,12 @@ Krótka lista. Pierwsze cztery pozycje blokują konkretne etapy, reszta jest do 
 ## 1. Zgoda V-techa na pobieranie danych z konfiguratora — **pilne**
 
 Katalog osiągów na nowej stronie budujemy na danych z **konfiguratora PowerChip V-techa**
-(`sklep.vtech.pl`). To lepsze źródło niż stary serwis: dane pochodzą wprost od producenta,
-są zawsze aktualne i zawierają pełny podział na poziomy produktu — PowerChip One, Premium,
-Premium + AI oraz Chip Tuning.
+(`sklep.vtech.pl`). Zgodnie z Państwa decyzją pobiera je przysłana przez Państwa wtyczka
+**VT Konfigurator** (Signuply), którą wdrożyliśmy bez zmian w kodzie. Wynik pokazuje dwie
+pozycje, tak jak wtyczka: PowerChip i Chip Tuning.
 
-Technicznie odczytujemy je z publicznie dostępnej strony konfiguratora, tak samo jak robi to
-wtyczka, którą Państwo przysłali. **Ale to nadal są dane handlowe V-techa**, a Vitesse jest
-ich autoryzowanym partnerem, nie właścicielem.
+Technicznie wtyczka odczytuje dane z publicznie dostępnej strony konfiguratora.
+**To nadal są dane handlowe V-techa**, a Vitesse jest ich autoryzowanym partnerem, nie właścicielem.
 
 Prosimy o wyjaśnienie z V-techem:
 
@@ -25,12 +24,12 @@ Prosimy o wyjaśnienie z V-techem:
 To pytanie blokuje publikację katalogu. Do czasu odpowiedzi wszystko działa lokalnie i nie jest
 widoczne dla klientów.
 
-## 1a. Skąd pochodzi baza w starym serwisie?
+## 1a. Marki spoza konfiguratora V-techa
 
-Osobno: katalog na obecnej stronie zawiera marki, których u V-techa nie ma — **MAN** oraz maszyny
-rolnicze (Fendt, Case). Te dane przenosimy ze starego serwisu, bo „chip tuning ciągników i maszyn"
-jest w Państwa ofercie. Skąd pochodziły pierwotnie? Czy to Państwa własne pomiary, czy również
-materiał od dostawcy oprogramowania?
+Stary serwis zawierał marki, których u V-techa nie ma — **MAN** oraz maszyny rolnicze (Fendt, Case).
+Zgodnie z decyzją, że katalog ma pochodzić wyłącznie z wtyczki, tych marek na nowej stronie nie ma.
+Strona „Chip tuning ciągników i maszyn" zostaje jako oferta bez wyszukiwarki dla tych pojazdów.
+Jeśli mają wrócić, potrzebujemy źródła tych danych (własne pomiary czy materiał dostawcy?).
 
 ## 2. Dostępy — **blokuje przekierowania i pomiar**
 
@@ -150,7 +149,11 @@ To siatka bezpieczeństwa na wypadek, gdyby coś w przekierowaniach wymagało po
 - Dekoder VIN: rząd VIN jest dziś wyłączony (rozpoznawał tylko markę i wydłużał wyszukiwarkę).
   Czy wracamy do tematu z płatnym API pełnego dekodowania (europejskie bazy są odpłatne)?
 - Wyszukiwarka pokazuje wynik bez podawania e-maila (jak we wtyczce Artura). Wtyczka ma też pole
-  „rocznik" — u nas rolę rocznika pełni generacja (lata w nazwie). Czy to wystarcza?
+  „rocznik" — u nas rolę rocznika pełni generacja (lata w nazwie), a do zapytania bierzemy
+  najnowszy rocznik danej wersji. Czy to wystarcza, czy dokładamy piąte pole?
+- Wtyczka zwraca dwie pozycje wyniku (PowerChip = najwyższy poziom modułu, Chip Tuning). Jeśli
+  mają być widoczne wszystkie poziomy PowerChip (One, Premium, Premium + AI), potrzebna jest
+  poprawka wtyczki po stronie Signuply.
 - Liczby „10 000+ modyfikacji" i „60+ flot" wpisaliśmy z Państwa uwag — prosimy potwierdzić.
 - Asystent AI w wyszukiwarce: budżet miesięczny i zgoda na dopisanie dostawcy
   do polityki prywatności jako podmiotu przetwarzającego.
