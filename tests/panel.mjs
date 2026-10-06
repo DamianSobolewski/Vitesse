@@ -1,3 +1,4 @@
+import os from 'node:os';
 import { chromium } from 'playwright';
 const b = await chromium.launch();
 const p = await b.newPage({ viewport: { width: 1400, height: 950 } });
@@ -14,6 +15,6 @@ for (const t of ['/wp-admin/plugins.php','/wp-admin/themes.php','/wp-admin/optio
 await p.goto('http://localhost:8090/wp-admin/post-new.php?post_type=vts_dyno');
 await p.waitForLoadState('domcontentloaded');
 await p.waitForTimeout(1200);
-await p.screenshot({ path: '/tmp/claude-1000/-home-damian-Workspace-Vitesse/bdf3180e-44cb-47e5-a8c4-6c4d5405a949/scratchpad/f-panel.png', fullPage: true });
+await p.screenshot({ path: `${process.env.VTS_OUT || os.tmpdir()}/f-panel.png`, fullPage: true });
 console.log('formularz pomiaru:', await p.locator('.vts-mb__f').count(), 'pol +', await p.locator('.vts-mb__consent').count(), 'zgoda');
 await b.close();

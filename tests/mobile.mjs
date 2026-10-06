@@ -1,3 +1,4 @@
+import os from 'node:os';
 /* Strażnik widoku mobilnego.
  *
  * Powstał po zgłoszeniu „na mobilce menu praktycznie nie da się wybrać innych
@@ -9,7 +10,7 @@
 import { chromium } from 'playwright';
 
 const BASE = process.env.VTS_BASE || 'http://localhost:8090';
-const OUT  = '/tmp/claude-1000/-home-damian-Workspace-Vitesse/bdf3180e-44cb-47e5-a8c4-6c4d5405a949/scratchpad';
+const OUT  = process.env.VTS_OUT || os.tmpdir();
 const VIEWPORTS = [{ w: 390, h: 844, nazwa: 'iPhone 14' }, { w: 360, h: 640, nazwa: 'Android maly' }];
 const STRONY = ['/', '/podnoszenie-mocy/', '/chiptuning/audi/', '/kontakt/'];
 

@@ -252,7 +252,8 @@ słupek w kontenerze 1240 px, z pustą prawą połową. Każdy blok tekstu dosta
 **2. Sekcje wielokrotnego użytku są shortcode'ami, nie kopiowanym HTML-em.**
 `[vts_usps]` (5 przewag ze zdjęciami), `[vts_proces]` (5 kroków), `[vts_pomiar]` (4 kroki
 pomiaru), `[vts_stages]` (Stage 1/2), `[vts_liczby]`, `[vts_social_proof]`, `[vts_map]`,
-`[vts_gauges]` (5 filarów), `[vts_photo img=…]` (duże zdjęcie 4:3 z `assets/img/foto-*.webp`),
+`[vts_gauges]` (5 filarów), `[vts_photo img=… alt=…]` (duże zdjęcie 4:3 z `assets/img/foto-*.webp`, bez podpisu),
+`[vts_jumpnav]` (kotwice sekcji z `pages.json → anchors`, te same co 3. poziom menu),
 `[vts_dyno_latest]` (ostatni wykres z bazy albo przebieg poglądowy SVG). Proces stoi na stronie
 głównej i na `/podnoszenie-mocy/` — z jednego źródła.
 

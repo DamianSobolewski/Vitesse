@@ -144,6 +144,16 @@ Gdzie ma stanąć nowy serwis? Potrzebny dostęp SSH i do panelu DNS.
 Osobne pytanie: **czy stary serwer może działać jeszcze ~30 dni po przełączeniu domeny?**
 To siatka bezpieczeństwa na wypadek, gdyby coś w przekierowaniach wymagało poprawki.
 
+## 10a. Treści czterech nowych usług ECU (X 2026)
+
+Na stronie „Dodatkowe usługi ECU" doszły opisy: **Start@Stop, druga sonda lambda, korekta dawki
+rozruchowej, pompa powietrza SAI (Subaru)**. Napisaliśmy je na podstawie wiedzy branżowej, bo
+zajawki tekstów z Państwa maila do nas nie dotarły. Prosimy o przeczytanie i poprawki, zwłaszcza
+kodów błędów (P0420/P0430, P0410–P2444) i zakresu prac, który faktycznie wykonujecie.
+
+Zdjęcia do tych sekcji (Start@Stop, ciśnienie oleju, temperatura, dolot, skrzynia) pochodzą
+z Państwa przesyłki — przyjmujemy, że macie do nich prawa; wpis w `assets/img/CREDITS.md`.
+
 ## 11. Later — do decyzji, nie blokuje
 
 - Dekoder VIN: rząd VIN jest dziś wyłączony (rozpoznawał tylko markę i wydłużał wyszukiwarkę).

@@ -1,5 +1,5 @@
 {
- "_comment": "Manifest stron. Klucz = slug. 'file' wskazuje plik z treścią w content/pages/. Strony, których tu nie ma, importer przenosi do kosza.",
+ "_comment": "Manifest stron. Klucz = slug. 'file' wskazuje plik z treścią w content/pages/. Strony, których tu nie ma, importer przenosi do kosza. Klucz 'anchors' strony = kotwice do sekcji: trzeci poziom menu głównego i pasek [vts_jumpnav].",
  "pages": {
   "strona-glowna": {
    "title": "Strona główna",
@@ -70,9 +70,23 @@
     "order": 3
    },
    "seo": {
-    "title": "DPF, EGR, SCR, limitery, ciśnienie oleju — serwis ECU Łódź | Vitesse",
-    "desc": "Programowe rozwiązywanie problemów z DPF, EGR i SCR/AdBlue, limitery prędkości i obrotów, klapy wirowe, ciśnienie oleju, temperatura pracy, odblokowanie sterowników, TCU."
-   }
+    "title": "DPF, EGR, SCR, Start@Stop, sonda lambda, TCU — serwis ECU Łódź | Vitesse",
+    "desc": "Programowe rozwiązywanie problemów fabrycznych: DPF, EGR, SCR/AdBlue, Start@Stop, ciśnienie oleju, temperatura pracy, limitery, klapy wirowe, druga sonda lambda, dawka rozruchowa, pompa SAI w Subaru, czyszczenie dolotów, skrzynie TCU, odblokowanie sterowników."
+   },
+   "anchors": [
+    {"id": "dpf", "label": "DPF, EGR, SCR (AdBlue)"},
+    {"id": "start-stop", "label": "Start@Stop"},
+    {"id": "cisnienie-oleju", "label": "Ciśnienie oleju"},
+    {"id": "temperatura", "label": "Temperatura pracy silnika"},
+    {"id": "klapy-wirowe", "label": "Klapy wirowe"},
+    {"id": "limitery", "label": "Limitery prędkości i obrotów"},
+    {"id": "sonda-lambda", "label": "Druga sonda lambda"},
+    {"id": "dawka-rozruchowa", "label": "Dawka rozruchowa"},
+    {"id": "pompa-powietrza", "label": "Pompa SAI (Subaru)"},
+    {"id": "dolot", "label": "Czyszczenie dolotów"},
+    {"id": "skrzynie", "label": "Skrzynie biegów (TCU)"},
+    {"id": "odblokowanie", "label": "Odblokowanie sterowników"}
+   ]
   },
   "powerboxy": {
    "title": "PowerBoxy",
@@ -209,19 +223,19 @@
  },
  "menus": {
   "vts_footer": [
-   {"slug": "chip-tuning",          "label": "Chip tuning osobowe i kampery"},
-   {"slug": "oferta-dla-flot",      "label": "Oferta dla flot B2B"},
-   {"slug": "powerboxy",            "label": "PowerBox Volvo VEA"},
+   {"slug": "chip-tuning", "label": "Chip tuning osobowe i kampery"},
+   {"slug": "oferta-dla-flot", "label": "Oferta dla flot B2B"},
+   {"slug": "powerboxy", "label": "PowerBox Volvo VEA"},
    {"slug": "dodatkowe-uslugi-ecu", "label": "Usługi DPF / EGR / SCR"},
-   {"slug": "hamownia",             "label": "Hamownia motocyklowa i 4×4"},
-   {"slug": "ev-hybryda",           "label": "Modyfikacje EV i hybryd"}
+   {"slug": "hamownia", "label": "Hamownia motocyklowa i 4×4"},
+   {"slug": "ev-hybryda", "label": "Modyfikacje EV i hybryd"}
   ],
   "vts_client": [
-   {"slug": "wykresy-i-osiagi",     "label": "Baza wykresów"},
-   {"slug": "o-nas",                "label": "O nas"},
-   {"slug": "regulamin",            "label": "Regulamin"},
-   {"slug": "gwarancja",            "label": "2 lata gwarancji"},
-   {"slug": "faq",                  "label": "Najczęstsze pytania"},
+   {"slug": "wykresy-i-osiagi", "label": "Baza wykresów"},
+   {"slug": "o-nas", "label": "O nas"},
+   {"slug": "regulamin", "label": "Regulamin"},
+   {"slug": "gwarancja", "label": "2 lata gwarancji"},
+   {"slug": "faq", "label": "Najczęstsze pytania"},
    {"slug": "polityka-prywatnosci", "label": "Polityka prywatności"}
   ]
  }

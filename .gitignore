@@ -13,6 +13,8 @@ uploads/*
 tools/scrape/raw/
 tools/scrape/raw-vtech/
 tools/scrape/raw-unsplash/
+# Oryginaly zdjec od klienta (do 35 MB sztuka) - zrodlo dla fetch-photos.py, nie do repo.
+tools/scrape/raw-client/
 tools/scrape/mirror/
 tools/scrape/*.log
 tools/scrape/*.html

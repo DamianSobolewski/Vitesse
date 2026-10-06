@@ -32,10 +32,9 @@ Wszystkie zdjęcia użyte w serwisie muszą mieć tu wpis. Bez wpisu — nie wch
   Warianty 1800 px i 900 px, konwersja do WebP.
 * **Uwaga:** brak widocznych znaczków producenta i tablicy rejestracyjnej.
 
-### `pas-*.webp` — pasy rozdzielające sekcje
+### `pas-*.webp` — tła nagłówków podstron
 
-Cztery zdjęcia wstawione jako ciemne pasy pod tekstem na podstronach, które wcześniej były
-samym tekstem. Wszystkie pobrane 25 sierpnia 2026 z `images.unsplash.com` (nie z płatnego
+Cztery zdjęcia wstawione jako przygaszone tło pod nagłówkiem podstrony (`vts_page_hero`). Wszystkie pobrane 25 sierpnia 2026 z `images.unsplash.com` (nie z płatnego
 `plus.unsplash.com` — sprawdzone na stronie każdego zdjęcia), licencja **Unsplash License**,
 użycie komercyjne dozwolone, podanie autora nieobowiązkowe.
 
@@ -50,9 +49,8 @@ Każdy wiersz obejmuje oba warianty: 1800 px i mniejszy `-sm` dla wąskich ekran
 
 **Obróbka:** kadr 16:6, nasycenie do 28%, przyciemnienie, zmieszanie z kolorem tła strony —
 zdjęcie ma być teksturą pod tekstem, a nie fotografią poglądową. Warianty 1800 px i 900 px, WebP.
-
-**Każdy pas jest podpisany „zdjęcie ilustracyjne".** To materiał stockowy, więc nie może
-sugerować, że przedstawia halę Vitesse.
+Podpisy „zdjęcie ilustracyjne" zeszły ze zdjęć w X 2026 na życzenie klienta; teksty alt
+opisują kadr neutralnie i żaden nie sugeruje, że to hala Vitesse.
 
 **Odrzucone w trakcie doboru** — zapisane, żeby nie wróciły przy kolejnym podejściu:
 * `unsplash.com/photos/a-car-is-parked-inside-of-a-garage-QIeJeacWug8` (Chi Xiang) — w kadrze
@@ -61,10 +59,10 @@ sugerować, że przedstawia halę Vitesse.
 * Materiał z Openverse (CC0) — dostępne zdjęcia to fotografia dokumentalna bez związku
   z tematem, nie nadaje się na stronę komercyjną.
 
-### `/hamownia/` — świadomie bez zdjęcia
+### `/hamownia/` — na razie zdjęcie stockowe
 
-Nie ma sensownego zdjęcia stockowego przedstawiającego hamownię podwoziową, a to jedyna
-podstrona, na której zdjęcie naprawdę coś by wnosiło.
+Na podstronie hamowni stoi `foto-hamownia.webp` (motocykl na hamowni, niżej). Własne zdjęcie
+sprzedawałoby lepiej:
 
 **W `tools/scrape/mirror/vitesse.auto.pl/images/` leży osiem własnych fotografii stanowiska**
 (`*_hamownia*.jpg`) — realna hala z widocznymi rolkami, dmuchawą i pojazdami na stanowisku.
@@ -122,11 +120,31 @@ licencja **Unsplash License**, użycie komercyjne dozwolone, podanie autora nieo
 | `usp-leasing.webp`, `usp-leasing-sm.webp` | Bence Balla-Schottner | `unsplash.com/photos/black-key-fob-iTHT1gXJuS8` | kluczyk na desce rozdzielczej |
 | `usp-floty.webp`, `usp-floty-sm.webp` | Markus Winkler | `unsplash.com/photos/white-vans-parked-in-mossingen-3vlGNkDep4E` | rząd białych dostawczaków (widoczne znaczki VW) |
 | `usp-kamper.webp`, `usp-kamper-sm.webp` | Rafael Peier | `unsplash.com/photos/an-rv-drives-along-a-scenic-mountain-road-at-sunset-muEU34zZlzs` | kamper na górskiej drodze |
+| `foto-leasing.webp`, `foto-leasing-sm.webp` | Bence Balla-Schottner | jak `usp-leasing` (kadr 4:3, X 2026) | kluczyk na desce rozdzielczej |
+| `foto-floty.webp`, `foto-floty-sm.webp` | Markus Winkler | jak `usp-floty` (kadr 4:3, X 2026) | rząd białych dostawczaków |
+| `foto-unlock.webp`, `foto-unlock-sm.webp` | Mehmet Talha Onuk | jak `usp-unlock` (kadr 4:3, X 2026) | laptop diagnostyczny w aucie |
 
-Każdy plik ma wariant `-sm` (połowa szerokości). **Obróbka:** kadr 4:3 (`foto-*`) albo 16:9
-(`usp-*`), nasycenie do 72%, jasność do 90% — zdjęcie ma zostać zdjęciem, ale nie krzyczeć
-na ciemnym tle. Wszystkie podpisane „zdjęcie ilustracyjne" (poza kafelkami przewag, gdzie
-podpis nie ma miejsca — tam zdjęcia nie sugerują hali Vitesse).
+Każdy plik ma wariant `-sm` (połowa szerokości). **Obróbka (od X 2026):** kadr 4:3 (`foto-*`)
+albo 16:9 (`usp-*`), bez korekty nasycenia i jasności, WebP q80 — klient prosił o wyraźne
+zdjęcia, a z jasnymi sekcjami pełne kolory siedzą dobrze. Bez podpisów na zdjęciach; teksty alt
+opisują kadr neutralnie i żaden nie sugeruje, że to hala Vitesse.
 
 **Uwaga do wymiany na zdjęcia własne:** kamper, hamownia i warsztat to miejsca, gdzie własne
 zdjęcie klienta sprzedaje lepiej niż stock. Wystarczy podmienić plik o tej samej nazwie.
+
+## Zdjęcia dostarczone przez klienta (październik 2026)
+
+Pliki przekazane przez Vitesse razem z wytycznymi do strony usług ECU (mail „Założenia Vitesse",
+3 X 2026). **Właściciel: Vitesse** — klient odpowiada za prawa do użycia tych zdjęć w serwisie.
+Oryginały leżą w `tools/scrape/raw-client/` (poza repozytorium), warianty robi `tools/fetch-photos.py`.
+
+| Plik | Oryginał | Co przedstawia |
+|---|---|---|
+| `foto-startstop.webp`, `foto-startstop-sm.webp` | `Start@Stop.jpg` 4722×3148 | palec na przycisku Engine Start Stop |
+| `foto-olej.webp`, `foto-olej-sm.webp` | `ciśnienie oleju-2.webp` 1536×1024 | zapalona kontrolka ciśnienia oleju między zegarami |
+| `foto-temperatura.webp`, `foto-temperatura-sm.webp` | `Temperatura pracy silnika.jpg` 5957×3831 | wskaźnik temperatury i kontrolka check engine |
+| `foto-dolot.webp`, `foto-dolot-sm.webp` | `Czyszczenie układów dolotowych.jpg` 7008×4672 | głowica i kolektor pokryte nagarem, na stole |
+| `foto-skrzynia.webp`, `foto-skrzynia-sm.webp` | `Programowanie skrzyń biegów.jpg` 3324×4654 (pion) | lewarek automatu; kadr 4:3 ze środka |
+
+Niewykorzystane warianty z tej samej przesyłki: `Start@Stop-2.jpg` (podświetlony przycisk,
+pion), `ciśnienie oleju.webp` (1024 px, za mało na wariant 1200 px).

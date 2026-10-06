@@ -361,8 +361,9 @@ function vts_page_hero(string $slug): array
         ],
         'dodatkowe-uslugi-ecu' => [
             'eyebrow' => 'Serwis ECU',
-            'lead'    => 'Programowe rozwiązanie znanych problemów fabrycznych: DPF, EGR, SCR, '
-                       . 'ciśnienie oleju, limitery, klapy wirowe, skrzynie biegów.',
+            'lead'    => 'Dwanaście prac na sterowniku poza samą mocą: od DPF, EGR i SCR, przez '
+                       . 'Start@Stop i ciśnienie oleju, po sondę lambda i skrzynie biegów. '
+                       . 'Każdą poprzedza odczyt błędów.',
         ],
         'ev-hybryda' => [
             'eyebrow' => 'Strefa EV i hybryd',
@@ -596,12 +597,12 @@ add_shortcode('vts_gauges', function () {
         ],
         [
             'href'  => home_url('/podnoszenie-mocy/dodatkowe-uslugi-ecu/'),
-            'val'   => '7', 'unit' => 'prac',
-            'frac'  => 7 / 10,                            // skala 0–10 pozycji
+            'val'   => '12', 'unit' => 'prac',
+            'frac'  => 12 / 14,                           // skala 0–14 pozycji
             'title' => 'Modyfikacje i serwis ECU',
             'meta'  => 'poza samą mocą',
-            'desc'  => 'DPF, EGR i SCR, ciśnienie oleju, temperatura pracy, limitery, '
-                     . 'klapy wirowe, odblokowanie sterowników, skrzynie TCU.',
+            'desc'  => 'DPF, EGR i SCR, Start@Stop, ciśnienie oleju, temperatura pracy, limitery, '
+                     . 'klapy wirowe, sonda lambda, dawka rozruchowa, SAI, dolot, skrzynie TCU.',
         ],
         [
             'href'  => home_url('/ev-hybryda/'),
@@ -1080,66 +1081,16 @@ add_shortcode('vts_map', function () {
          . ' rel="noopener" target="_blank">Otwórz w Mapach Google i wyznacz trasę</a></p>';
 });
 
-/* ----------------------------------------------------------- pas ze zdjęciem
- *
- * Rozdziela sekcje na podstronach, które były samym tekstem. Zdjęcia są
- * stockowe i stonowane do palety, więc muszą być podpisane jako ilustracyjne —
- * inaczej sugerowałyby, że to hala Vitesse, a nie jest.
- */
-add_shortcode('vts_band', function ($atts) {
-    $a = shortcode_atts([
-        'img'     => '',
-        'alt'     => '',
-        'eyebrow' => '',
-        'title'   => '',
-    ], $atts);
-
-    $nazwa = preg_replace('/[^a-z0-9-]/', '', (string) $a['img']);
-    $plik  = "img/pas-{$nazwa}.webp";
-    $maly  = "img/pas-{$nazwa}-sm.webp";
-
-    if ($nazwa === '' || !file_exists(VTS_ASSETS_DIR . '/' . $plik)) {
-        return '';
-    }
-
-    $duzy_url = VTS_ASSETS_URL . '/' . $plik . '?v=' . vts_asset_ver($plik);
-    $maly_url = VTS_ASSETS_URL . '/' . $maly . '?v=' . vts_asset_ver($maly);
-
-    ob_start(); ?>
-    <figure class="vts-band">
-      <img src="<?= esc_url($duzy_url) ?>"
-           srcset="<?= esc_url($maly_url) ?> 900w, <?= esc_url($duzy_url) ?> 1800w"
-           <?php /* Pas nigdy nie idzie przez całą szerokość strony — siedzi
-                    w węższej kolumnie układu dwudzielnego. Zadeklarowane
-                    wcześniej 1240 px kazało przeglądarce brać plik 1800 px
-                    nawet na zwykłym ekranie, gdzie wystarczał wariant 900 px.
-                    Wartości zmierzone w przeglądarce: ~92vw do 900 px,
-                    ~40vw do 1240 px, wyżej stałe 509 px. */ ?>
-           sizes="(max-width:900px) 92vw, (max-width:1240px) 40vw, 509px"
-           width="1800" height="675" loading="lazy" decoding="async"
-           alt="<?= esc_attr($a['alt']) ?>">
-      <figcaption>
-        <?php if ($a['eyebrow'] !== '') : ?>
-          <span class="vts-band__e"><?= esc_html($a['eyebrow']) ?></span>
-        <?php endif; ?>
-        <?php if ($a['title'] !== '') : ?>
-          <b><?= esc_html($a['title']) ?></b>
-        <?php endif; ?>
-        <span class="vts-band__note">zdjęcie ilustracyjne</span>
-      </figcaption>
-    </figure>
-    <?php
-    return ob_get_clean();
-});
-
 /* ----------------------------------------------------------- duże zdjęcie
  *
- * Kadr 4:3 w kolumnie obok tekstu — „duże zdjęcie" z uwag klienta. Materiał
- * jest stockowy, więc nosi podpis „zdjęcie ilustracyjne"; pliki foto-*.webp
- * i ich licencje opisuje assets/img/CREDITS.md.
+ * Kadr 4:3 w połowie układu dwudzielnego, obok tekstu. Bez podpisu: nadtytuł,
+ * tytuł i nota „zdjęcie ilustracyjne" zeszły ze zdjęć na życzenie klienta
+ * (X 2026) — opis niesie alt, a źródła i licencje plików foto-*.webp
+ * opisuje assets/img/CREDITS.md. Nieznane atrybuty z dawnych wywołań
+ * (eyebrow, title) shortcode_atts pomija.
  */
 add_shortcode('vts_photo', function ($atts) {
-    $a = shortcode_atts(['img' => '', 'alt' => '', 'eyebrow' => '', 'title' => ''], $atts);
+    $a = shortcode_atts(['img' => '', 'alt' => ''], $atts);
 
     $img = vts_img_tag('foto-' . $a['img'], (string) $a['alt'], 1200, 900,
         '(max-width:900px) 92vw, (max-width:1240px) 44vw, 560px');
@@ -1147,21 +1098,32 @@ add_shortcode('vts_photo', function ($atts) {
         return '';
     }
 
-    ob_start(); ?>
-    <figure class="vts-photo">
-      <?= $img ?>
-      <figcaption>
-        <?php if ($a['eyebrow'] !== '') : ?>
-          <span class="vts-band__e"><?= esc_html($a['eyebrow']) ?></span>
-        <?php endif; ?>
-        <?php if ($a['title'] !== '') : ?>
-          <b><?= esc_html($a['title']) ?></b>
-        <?php endif; ?>
-        <span class="vts-band__note">zdjęcie ilustracyjne</span>
-      </figcaption>
-    </figure>
-    <?php
-    return ob_get_clean();
+    return '<figure class="vts-photo">' . $img . '</figure>';
+});
+
+/* ------------------------------------------------------ nawigacja skokowa
+ *
+ * Lista kotwic do sekcji na bieżącej stronie. Źródłem jest klucz "anchors"
+ * strony w content/pages.json — importer zapisuje go w meta _vts_anchors
+ * i z tej samej listy buduje trzeci poziom menu głównego. Jedno źródło,
+ * żeby menu i pasek pod wstępem nigdy się nie rozjechały.
+ */
+add_shortcode('vts_jumpnav', function () {
+    $anchors = get_post_meta(get_the_ID(), '_vts_anchors', true);
+    if (!is_array($anchors) || $anchors === []) {
+        return '';
+    }
+
+    $li = '';
+    foreach ($anchors as $a) {
+        if (empty($a['id']) || empty($a['label'])) {
+            continue;
+        }
+        $li .= '<li><a class="vts-chip" href="#' . esc_attr(sanitize_title($a['id'])) . '">' . esc_html($a['label']) . '</a></li>';
+    }
+
+    return '<nav class="vts-jump" aria-label="Usługi na tej stronie">'
+         . '<p>Przejdź do usługi</p><ul>' . $li . '</ul></nav>';
 });
 
 /* ------------------------------------------------------- przebieg pomiaru
@@ -1209,7 +1171,7 @@ add_shortcode('vts_dyno_latest', function () {
         $img = get_the_post_thumbnail($p, 'large', ['loading' => 'lazy', 'decoding' => 'async']);
         if ($img) {
             return '<figure class="vts-photo vts-photo--chart"><a href="' . esc_url(get_permalink($p)) . '">'
-                 . $img . '</a><figcaption><span class="vts-band__e">Z naszej hamowni</span>'
+                 . $img . '</a><figcaption><span class="vts-photo__e">Z naszej hamowni</span>'
                  . '<b>' . esc_html(get_the_title($p)) . '</b></figcaption></figure>';
         }
     }
@@ -1241,7 +1203,7 @@ add_shortcode('vts_dyno_latest', function () {
         <text class="vts-dchart__lbl" x="236" y="170">moment przed</text>
         <text class="vts-dchart__foot" x="56" y="392">przebieg poglądowy · ciągła: moc · przerywana: moment</text>
       </svg>
-      <figcaption><span class="vts-band__e">Jak czytać wykres</span>
+      <figcaption><span class="vts-photo__e">Jak czytać wykres</span>
         <b>Szeroki, płaski moment liczy się bardziej niż szczyt mocy</b></figcaption>
     </figure>
     <?php
@@ -1350,8 +1312,13 @@ add_shortcode('vts_contact_form', function ($atts) {
         return do_shortcode('[contact-form-7 id="' . $form->ID . '"]');
     }
 
-    return '<p style="color:var(--vts-muted)">Formularz nie został jeszcze zaimportowany —
-            uruchom <code>./bin/import.sh</code>.</p>';
+    // Brak formularza (np. wtyczka wyłączona) nie może zostawić gościa bez
+    // drogi kontaktu — pokazujemy telefon i e-mail z konfiguracji.
+    $c = vts_company();
+    $t = $c['phones']['tuning'];
+    return '<p class="vts-note">Napisz na <a href="mailto:' . esc_attr($c['email']) . '">'
+         . esc_html($c['email']) . '</a> albo zadzwoń: <a href="' . esc_attr(vts_phone_href($t['number'])) . '">'
+         . esc_html($t['number']) . '</a>.</p>';
 });
 
 /* ------------------------------------------------------------- JSON-LD */

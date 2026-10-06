@@ -31,6 +31,18 @@
   --vts-silver:      #B7B8BA;  /* księga znaku: szary/srebrny — litery znaku */
   --vts-graphite:    #494A4E;  /* księga znaku: grafit — znak na jasnym tle */
 
+  /* --- role, które zmieniają się między ciemnym a jasnym tłem ---
+   * Pomarańcz #F46A00 na jasnym tle ma kontrast ~2.9:1 — za mało na tekst.
+   * Dlatego TEKST w barwie marki idzie przez --vts-accent-ink, a nie wprost
+   * przez --vts-accent: w ciemnej sekcji to ten sam pomarańcz, w jasnej
+   * (.vts-section--light) ciemnieje do odcienia, który czyta się na #F3F4F6.
+   * Tła przycisków i pasków zostają na --vts-accent — tam tekst jest ciemny. */
+  --vts-accent-ink:  #F46A00;
+  --vts-lead:        #C7CCD4;  /* akapit wprowadzający */
+  --vts-field-bg:    #0F1319;  /* pola formularzy */
+  --vts-line-strong: #3C4451;  /* obramowanie pola na :hover */
+  --vts-danger-text: #FF8A80;  /* komunikaty błędów formularza */
+
   /* --- semantyka --- */
   --vts-ok:      #3DBE8B;
   --vts-warn:    #E5A83C;

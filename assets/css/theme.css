@@ -64,10 +64,10 @@ p:last-child{margin-bottom:0}
 .vts-split--wide-left{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}
 @media (max-width:900px){.vts-split,.vts-split--wide-left{grid-template-columns:minmax(0,1fr)}}
 .vts-eyebrow{font-family:var(--vts-font-mono);font-size:var(--vts-step--2);letter-spacing:var(--vts-track-eyebrow);
-  text-transform:uppercase;color:var(--vts-accent);margin:0 0 var(--vts-gap-s);
+  text-transform:uppercase;color:var(--vts-accent-ink);margin:0 0 var(--vts-gap-s);
   display:flex;align-items:center;gap:10px}
 .vts-eyebrow::after{content:'';height:1px;flex:0 0 56px;background:currentColor;opacity:.45}
-.vts-lead{font-size:var(--vts-step-1);color:#C7CCD4;line-height:1.5;max-width:50ch}
+.vts-lead{font-size:var(--vts-step-1);color:var(--vts-lead);line-height:1.5;max-width:50ch}
 /* Przypis — zastrzeżenia i noty prawne. Wcześniej pisany stylem w atrybucie,
    przez co nie dało się go odróżnić od zwykłego akapitu przy przeglądzie
    spójności. Teraz to nazwana rola z własnym stopniem skali. */
@@ -77,6 +77,34 @@ p:last-child{margin-bottom:0}
 /* nagłówek strony ma własny odstęp dolny — pierwsza sekcja nie dokłada drugiego */
 .vts-hero + .vts-section{padding-top:var(--vts-gap-m)}
 
+/* --- jasna sekcja ---------------------------------------------------------
+ * Przełamanie ciemnego motywu (uwaga klienta, X 2026). Modyfikator przepina
+ * tokeny lokalnie, więc karty, listy ikon, formularze i wykresy przechodzą
+ * na jasną paletę bez własnych reguł — pod warunkiem, że nie mają kolorów
+ * wpisanych na sztywno. Paleta zestrojona ze stalą nagłówka.
+ *
+ * Zasada rytmu: pierwsza sekcja po hero zostaje ciemna (ciągłość z hero),
+ * jasne są co drugie sekcje treści; zegary, wykres wyników, wyszukiwarka
+ * mocy, kalkulator i formularze kontaktowe zawsze ciemne (własne poświaty
+ * i color-scheme). */
+.vts-section--light{
+  --vts-bg:#F3F4F6; --vts-surface:#FFF; --vts-surface-2:#E9EBEF;
+  --vts-line:#D9DCE1; --vts-line-soft:#E4E7EC; --vts-line-strong:#B8BEC8;
+  --vts-text:#15171C; --vts-muted:#5A6270; --vts-dim:#7A828F;
+  --vts-lead:#3A404A; --vts-field-bg:#FFF;
+  --vts-accent-ink:#A84700; --vts-accent-dim:#FDEBDD; --vts-danger-text:#B3261E;
+  background:var(--vts-bg);color:var(--vts-text)}
+/* krawędź między sekcjami daje zmiana tła, nie linia */
+.vts-section--light,.vts-section--light + .vts-section{border-top:0}
+.vts-section--light :focus-visible{outline-color:var(--vts-accent-ink)}
+.vts-section--light .vts-cf7 input[type=date]::-webkit-calendar-picker-indicator{filter:none}
+/* Przycisk główny trzyma pomarańcz marki z ciemnym tekstem (6.3:1) niezależnie od tła. */
+.vts-section--light .vts-btn--primary{background:#F46A00;color:#0F1116}
+.vts-section--light .vts-btn--primary:hover{background:#D95E00}
+
+/* kotwice (menu, nawigacja skokowa) lądują pod przyklejonym nagłówkiem */
+.vts-section[id]{scroll-margin-top:calc(var(--vts-chrome-h,64px) + 12px)}
+
 /* --- przyciski --- */
 .vts-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
   font-family:var(--vts-font-body);font-weight:700;font-size:var(--vts-step--1);line-height:1;
@@ -85,15 +113,19 @@ p:last-child{margin-bottom:0}
 .vts-btn--primary{background:var(--vts-accent);color:var(--vts-on-accent)}
 .vts-btn--primary:hover{background:var(--vts-accent-soft)}
 .vts-btn--ghost{background:transparent;color:var(--vts-text);border-color:var(--vts-line)}
-.vts-btn--ghost:hover{border-color:var(--vts-accent);color:var(--vts-accent)}
+.vts-btn--ghost:hover{border-color:var(--vts-accent);color:var(--vts-accent-ink)}
 
-/* --- pasek informacyjny --- */
-.vts-topbar{background:#0B0D11;border-bottom:1px solid var(--vts-line-soft);
-  font-size:var(--vts-step--2);color:var(--vts-muted)}
+/* --- pasek informacyjny ---
+ * Pasek i nagłówek tworzą jeden „stalowy" blok nad ciemnym hero (życzenie
+ * klienta: nagłówek jak na jego dotychczasowej stronie). Pasek jest ciemniejszym
+ * srebrem, nagłówek jaśniejszym gradientem — stal ma mieć głębię, nie być
+ * jedną płaską plamą. Tekst grafitowy: 7:1 na tym tle. */
+.vts-topbar{background:#B7B8BA;border-bottom:1px solid #9C9EA2;
+  font-size:var(--vts-step--2);color:#2B2D31}
 .vts-topbar .vts-wrap{display:flex;justify-content:space-between;gap:16px;
   flex-wrap:wrap;padding-block:9px}
-.vts-topbar a{color:var(--vts-text);font-weight:600;text-decoration:none}
-.vts-topbar a:hover{color:var(--vts-accent)}
+.vts-topbar a{color:#1A1C20;font-weight:600;text-decoration:none}
+.vts-topbar a:hover{color:#A84700}
 .vts-topbar__phones{display:flex;gap:20px;flex-wrap:wrap}
 /* Adres z godzinami łamie się na telefonie na dwie linie i zjada ~50 px na
  * każdej podstronie. Zostaje w stopce, na stronie Kontakt i w danych
@@ -111,10 +143,14 @@ p:last-child{margin-bottom:0}
   .vts-topbar .vts-wrap{padding-block:2px}
 }
 
-/* --- nagłówek --- */
-.vts-header{position:sticky;top:0;z-index:50;background:rgba(15,17,22,.94);
-  backdrop-filter:blur(10px);border-bottom:1px solid var(--vts-line)}
-.vts-header .vts-wrap{display:flex;align-items:center;gap:var(--vts-gap-m);padding-block:14px}
+/* --- nagłówek ---
+ * Stal: gradient zmierzony na dotychczasowej stronie klienta (vitesse.auto.pl),
+ * wysokość ~56 px jak tam. Tło jest kryjące, więc nie ma już rozmycia
+ * (backdrop-filter) ani wyjątku dla telefonu, który je wyłączał. */
+.vts-header{position:sticky;top:0;z-index:50;color:var(--vts-graphite);
+  background:linear-gradient(#C1C2C3 10%,#FAFAFA 70%,#FFF 85%,#C1C2C3);
+  border-bottom:1px solid #8E9094}
+.vts-header .vts-wrap{display:flex;align-items:center;gap:var(--vts-gap-m);padding-block:7px;min-height:56px}
 /* Znak firmowy — wektor z księgi znaku, wstawiany w kod przez vts_render_brand().
  * Wcześniej stał tu napis „VITESSE" złożony Archivo z pomarańczową literą V:
  * przybliżenie znaku, a nie znak. Teraz to ten sam plik, co na aucie i kurtce.
@@ -126,8 +162,11 @@ p:last-child{margin-bottom:0}
  * Szerokość nigdy nie schodzi poniżej 160 px — to minimum czytelności podane
  * w księdze; niżej rozjeżdżają się poziome podziały wewnątrz liter. */
 .vts-brand{display:block;flex:none;text-decoration:none;line-height:1;
-  color:var(--vts-silver);transition:color .18s}
-.vts-brand:hover{color:var(--vts-text)}
+  color:var(--vts-graphite);transition:color .18s}
+.vts-brand:hover{color:#1A1C20}
+/* W stopce tło zostaje ciemne — tam znak wraca do srebra z księgi. */
+.vts-footer .vts-brand{color:var(--vts-silver)}
+.vts-footer .vts-brand:hover{color:var(--vts-text)}
 /* color:inherit jest tu konieczne: plik SVG niesie własny atrybut color
  * (żeby wstawiony jako <img> też był srebrny), a atrybut prezentacyjny
  * wygrywa z dziedziczeniem. Bez tej linii :hover nic by nie zmieniał. */
@@ -139,16 +178,33 @@ p:last-child{margin-bottom:0}
 .vts-nav ul{list-style:none;display:flex;gap:22px;margin:0;padding:0}
 .vts-nav li{position:relative}
 .vts-nav a{font-size:var(--vts-step--1);font-weight:600;text-decoration:none;padding-block:10px;
-  display:inline-block;white-space:nowrap}
-.vts-nav a:hover,.vts-nav .current-menu-item > a,.vts-nav .current-page-ancestor > a{color:var(--vts-accent)}
+  display:inline-block;white-space:nowrap;color:var(--vts-graphite)}
+/* Stan bieżący i :hover: tekst niemal czarny plus pomarańczowa kreska pod spodem.
+ * Sam pomarańcz jako tekst na stali miałby kontrast ~2.9:1. */
+.vts-nav a:hover,.vts-nav .current-menu-item > a,.vts-nav .current-page-ancestor > a,
+.vts-nav .current-menu-ancestor > a{color:#1A1C20;box-shadow:inset 0 -2px 0 var(--vts-accent)}
 /* rozwijane — bez JS, na :hover i :focus-within */
 .vts-nav .sub-menu{position:absolute;left:-14px;top:100%;min-width:250px;margin:0;padding:8px 0;
-  background:var(--vts-surface);border:1px solid var(--vts-line);border-radius:var(--vts-radius);
+  background:#FFF;border:1px solid #D9DCE1;border-radius:var(--vts-radius);
   display:grid;gap:1px;opacity:0;visibility:hidden;transform:translateY(-5px);
-  transition:opacity .16s,transform .16s,visibility .16s;box-shadow:0 22px 44px -20px #000}
+  transition:opacity .16s,transform .16s,visibility .16s;box-shadow:0 22px 44px -20px rgba(15,17,22,.35)}
 .vts-nav li:hover > .sub-menu,.vts-nav li:focus-within > .sub-menu{opacity:1;visibility:visible;transform:none}
-.vts-nav .sub-menu a{display:block;padding:9px 16px;font-weight:500;font-size:var(--vts-step--1);white-space:normal}
-.vts-nav .sub-menu a:hover{background:var(--vts-surface-2)}
+.vts-nav .sub-menu a{display:block;padding:9px 16px;font-weight:500;font-size:var(--vts-step--1);white-space:normal;
+  box-shadow:none}
+.vts-nav .sub-menu a:hover,.vts-nav .sub-menu .current-menu-item > a{background:#F3F4F6;color:#1A1C20;box-shadow:none}
+/* Trzeci poziom: kotwice na stronie „Dodatkowe usługi ECU" — panel wysuwany
+ * w prawo od pozycji rodzica, w dwóch kolumnach (12 pozycji w jednej byłoby
+ * wyższe niż ekran laptopa). Reguła siedzi w zapytaniu o szerokość, bo
+ * `left:100%` (0,3,0) przebiłoby na telefonie `position:static` (0,2,0). */
+@media (min-width:1081px){
+  .vts-nav .sub-menu .sub-menu{left:100%;top:-9px;margin-left:1px;min-width:520px;
+    grid-template-columns:1fr 1fr;padding:8px}
+  .vts-nav .sub-menu > .menu-item-has-children > a{display:flex;justify-content:space-between;gap:12px}
+  .vts-nav .sub-menu > .menu-item-has-children > a::after{content:'›';opacity:.55}
+}
+@media (min-width:1081px) and (max-width:1240px){
+  .vts-nav .sub-menu .sub-menu{min-width:260px;grid-template-columns:1fr}
+}
 .vts-header__cta{flex:none}
 
 /* przełącznik menu na wąskich ekranach */
@@ -173,8 +229,11 @@ p:last-child{margin-bottom:0}
 :is(.vts-hero,.vts-ps,.vts-cf7,.vts-dyno,.vts-fleet) button:not(.vts-btn):not(.vts-ps__toy):is(:hover,:focus,:active){
   color:inherit;border-color:inherit}
 
-.vts-burger:hover,.vts-burger:focus,.vts-burger:active{
-  background:transparent;border-color:var(--vts-accent);color:var(--vts-accent)}
+/* Na stali przycisk jest grafitowy. Selektor z nagłówkiem (0,2,0) wygrywa
+ * z ogólną regułą powyżej (0,1,0). */
+.vts-header .vts-burger{color:var(--vts-graphite);border-color:#8E9094;background:transparent}
+.vts-header .vts-burger:is(:hover,:focus,:active){
+  background:transparent;border-color:var(--vts-accent);color:#1A1C20}
 
 /* Przyciski z wlasna paleta — jedna deklaracja na wszystkie stany, zeby motyw
  * bazowy nie mial gdzie sie wstrzelic. */
@@ -182,7 +241,7 @@ p:last-child{margin-bottom:0}
 .vts-btn--primary,.vts-btn--primary:hover,.vts-btn--primary:focus,.vts-btn--primary:active{
   color:var(--vts-on-accent);border-color:transparent}
 .vts-btn--ghost,.vts-btn--ghost:focus,.vts-btn--ghost:active{color:var(--vts-text)}
-.vts-btn--ghost:hover{color:var(--vts-accent);border-color:var(--vts-accent)}
+.vts-btn--ghost:hover{color:var(--vts-accent-ink);border-color:var(--vts-accent)}
 
 /* Przycisk „Umów pomiar" znika z paska wcześniej niż menu.
  * Znak firmowy ma z księgi znaku minimum 160 px szerokości i zabiera w pasku
@@ -199,13 +258,9 @@ p:last-child{margin-bottom:0}
 @media (max-width:1080px){
   .vts-burger{display:block}
 
-  /* backdrop-filter czyni element BLOKIEM ZAWIERAJĄCYM dla potomków
-   * position:fixed — dokładnie tak jak transform czy filter. Menu zamiast
-   * rozciągnąć się na ekran zamykało się w 69-pikselowym prostokącie nagłówka
-   * i widoczna była z niego jedna pozycja. Na telefonie rozmycie i tak jest
-   * niewidoczne, a kosztowne, więc nagłówek dostaje w zamian pełne tło.
-   */
-  .vts-header{backdrop-filter:none;background:var(--vts-bg)}
+  /* Uwaga na przyszłość: backdrop-filter albo transform na nagłówku zrobiłyby
+   * z niego blok zawierający dla menu position:fixed i nakładka zamknęłaby się
+   * w prostokącie nagłówka. Stalowe tło jest kryjące, więc ich tu nie ma. */
   /* na telefonie pasek kontaktowy i naglowek zjadaly razem 20% ekranu na
    * kazdej podstronie — odstep pionowy naglowka schodzi do wysokosci
    * przycisku menu, ktory i tak wyznacza tu miare */
@@ -219,18 +274,20 @@ p:last-child{margin-bottom:0}
    * otwarciu) — nagłówek jest przyklejony, a pasek kontaktowy odjeżdża przy
    * przewijaniu, więc sztywna wartość byłaby błędna przy części pozycji strony.
    */
-  .vts-nav{position:fixed;inset:0;margin:0;z-index:45;background:var(--vts-bg);
+  .vts-nav{position:fixed;inset:0;margin:0;z-index:45;background:#F3F4F6;color:#15171C;
     overflow-y:auto;overscroll-behavior:contain;
     padding:calc(var(--vts-chrome-h,64px) + var(--vts-gap-s)) 0 var(--vts-gap-l);
     display:none}
   .vts-nav.is-open{display:block}
   .vts-nav ul{flex-direction:column;gap:0;padding-inline:clamp(16px,4vw,30px)}
-  .vts-nav > ul > li{border-bottom:1px solid var(--vts-line-soft)}
+  .vts-nav > ul > li{border-bottom:1px solid #D9DCE1}
   .vts-nav a{display:flex;align-items:center;min-height:48px;padding-block:12px;font-size:var(--vts-step-0)}
   .vts-nav .sub-menu{position:static;opacity:1;visibility:visible;transform:none;
     border:0;background:transparent;box-shadow:none;padding:0 0 10px 14px;
-    border-left:1px solid var(--vts-line)}
+    border-left:1px solid #D9DCE1}
   .vts-nav .sub-menu a{min-height:46px;padding:8px 16px}
+  .vts-nav .sub-menu .sub-menu{padding:0 0 6px 14px}
+  .vts-nav .sub-menu .sub-menu a{min-height:40px;padding:6px 14px;font-size:var(--vts-step--1)}
   /* ponad nakładką — inaczej nie ma czym zamknąć menu */
   .vts-brand,.vts-burger{position:relative;z-index:46}
 
@@ -460,7 +517,7 @@ a.vts-card:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
 .vts-card h4{font-size:var(--vts-step-0);margin:0 0 6px}
 .vts-card p{color:var(--vts-muted);font-size:var(--vts-step--1);margin:0}
 .vts-card__n{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);
-  color:var(--vts-accent);display:block;margin-bottom:12px}
+  color:var(--vts-accent-ink);display:block;margin-bottom:12px}
 
 /* --- ikony ---------------------------------------------------------------
  * Domyślnie ikona ma rozmiar tekstu, w którym siedzi. Kafelek i lista nadają
@@ -590,14 +647,14 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
   font-size:var(--vts-step-2);letter-spacing:var(--vts-track-head);color:var(--vts-text);
   font-variant-numeric:tabular-nums;text-shadow:0 0 18px rgba(255,138,30,.35)}
 .vts-gauge__val i{font-style:normal;font-family:var(--vts-font-mono);
-  font-size:var(--vts-step--2);color:var(--vts-accent)}
+  font-size:var(--vts-step--2);color:var(--vts-accent-ink)}
 
 .vts-gauge__body{display:block;max-width:30ch}
 .vts-gauge__body > h3{display:block;font-family:var(--vts-font-display);font-weight:700;
   font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head);color:var(--vts-text);margin:0 0 5px}
 .vts-gauge__meta{display:block;font-family:var(--vts-font-mono);
   font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);text-transform:uppercase;
-  color:var(--vts-accent);margin-bottom:9px}
+  color:var(--vts-accent-ink);margin-bottom:9px}
 .vts-gauge__desc{display:block;font-size:var(--vts-step--1);color:var(--vts-muted);
   line-height:1.55}
 
@@ -632,14 +689,14 @@ body.blog .site-main article.post:hover{border-color:var(--vts-accent);transform
 body.blog .site-main article.post .entry-title{font-size:var(--vts-step-1);margin:0 0 10px;
   letter-spacing:var(--vts-track-head)}
 body.blog .site-main article.post .entry-title a{text-decoration:none;color:var(--vts-text)}
-body.blog .site-main article.post:hover .entry-title a{color:var(--vts-accent)}
+body.blog .site-main article.post:hover .entry-title a{color:var(--vts-accent-ink)}
 body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
   font-size:var(--vts-step--1);line-height:1.6}
 .vts-post__meta{display:flex;align-items:center;gap:9px;margin-bottom:10px}
 .vts-post__meta .vts-i{width:20px;height:20px;color:var(--vts-accent)}
 .vts-post__data{font-family:var(--vts-font-mono);
   font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);text-transform:uppercase;
-  color:var(--vts-accent)}
+  color:var(--vts-accent-ink)}
 
 /* --- przykładowe wyniki --------------------------------------------------
  * Kafelki wiszą na .vts-grid, żeby odziedziczyć reguły przeciw sierotom —
@@ -655,17 +712,17 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-wynik__auto b{display:block;font-family:var(--vts-font-display);font-weight:700;
   font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head);color:var(--vts-text);margin-bottom:4px}
 .vts-wynik__auto > span{display:block;font-family:var(--vts-font-mono);
-  font-size:var(--vts-step--3);letter-spacing:var(--vts-track-caps);text-transform:uppercase;color:#8A919E}
+  font-size:var(--vts-step--3);letter-spacing:var(--vts-track-caps);text-transform:uppercase;color:var(--vts-muted)}
 
 .vts-wynik__liczby{display:flex;gap:26px;padding-inline:6px;flex-wrap:wrap}
 .vts-wynik__liczby > span{display:block}
 .vts-wynik__liczby em{display:block;font-style:normal;font-family:var(--vts-font-mono);
   font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);text-transform:uppercase;
-  color:#8A919E;margin-bottom:4px}
+  color:var(--vts-muted);margin-bottom:4px}
 .vts-wynik__liczby b{font-family:var(--vts-font-mono);font-weight:500;
-  font-size:var(--vts-step-1);color:var(--vts-accent);font-variant-numeric:tabular-nums}
+  font-size:var(--vts-step-1);color:var(--vts-accent-ink);font-variant-numeric:tabular-nums}
 .vts-wynik__liczby i{font-style:normal;font-family:var(--vts-font-mono);
-  font-size:var(--vts-step--2);color:#8A919E;margin-left:5px}
+  font-size:var(--vts-step--2);color:var(--vts-muted);margin-left:5px}
 
 /* --- wykres mocy ---------------------------------------------------------
  * Realne dane to WYŁĄCZNIE dwa punkty szczytowe — one są zaznaczone kropkami
@@ -675,14 +732,14 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-chart{display:block}
 .vts-chart svg{display:block;width:100%;height:auto}
 .vts-chart__os{stroke:var(--vts-line);stroke-width:1}
-.vts-chart__linia{stroke:#5A626D;stroke-width:2;stroke-dasharray:5 4;stroke-linecap:round}
+.vts-chart__linia{stroke:var(--vts-dim);stroke-width:2;stroke-dasharray:5 4;stroke-linecap:round}
 .vts-chart__linia.is-po{stroke:var(--vts-accent);stroke-width:2.4}
-.vts-chart__pkt{fill:#8A919E}
+.vts-chart__pkt{fill:var(--vts-muted)}
 .vts-chart__pkt.is-po{fill:var(--vts-accent);filter:drop-shadow(0 0 5px rgba(255,122,0,.8))}
-.vts-chart__opis{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);fill:#8A919E}
-.vts-chart__opis.is-po{fill:var(--vts-accent)}
+.vts-chart__opis{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);fill:var(--vts-muted)}
+.vts-chart__opis.is-po{fill:var(--vts-accent-ink)}
 .vts-chart__stopka{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
-  fill:#767D88;letter-spacing:var(--vts-track-caps)}
+  fill:var(--vts-dim);letter-spacing:var(--vts-track-caps)}
 
 /* odsłanianie od lewej — krzywa jest przerywana, więc animowanie dashoffset
    walczyłoby ze wzorem kreskowania; zamiast tego przycinamy rysunek maską */
@@ -714,71 +771,42 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
   font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);text-transform:uppercase;
   color:var(--vts-muted);line-height:1.5}
 
-/* --- pas ze zdjęciem ------------------------------------------------------
- * Zdjęcie jest teksturą rozdzielającą sekcje, nie ilustracją poglądową: siedzi
- * pod ciemnym gradientem, z podpisem na dole. Adnotacja „ilustracyjne" jest
- * elementem uczciwości, nie ozdobą — materiał jest stockowy.
- */
-.vts-band{position:relative;margin:var(--vts-gap-l) 0 0;overflow:hidden;
-  border:1px solid var(--vts-line);border-radius:var(--vts-radius)}
-.vts-band img{display:block;width:100%;height:auto;aspect-ratio:16/6;object-fit:cover}
-/* Nota „zdjęcie ilustracyjne" siedzi w prawym dolnym rogu jako element
-   pozycjonowany, więc nie odsuwa podpisu — przy dłuższym podpisie ostatni wiersz
-   wchodził jej pod spód i oba napisy nakładały się na siebie (widoczne na
-   /hamownia/, /o-nas/ i /oferta-dla-flot/ powyżej ~1000 px). Rezerwujemy na notę
-   wiersz u dołu podpisu; poniżej 640 px nota wraca do zwykłego przepływu i
-   dodatkowe światło nie jest już potrzebne. */
-.vts-band figcaption{position:absolute;inset:auto 0 0;
-  padding:var(--vts-gap-l) var(--vts-gap-m) calc(var(--vts-gap-m) + 17px);
-  background:linear-gradient(180deg,rgba(8,9,12,0) 0%,rgba(8,9,12,.72) 42%,rgba(8,9,12,.97) 100%)}
-.vts-band__e{display:block;font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
-  letter-spacing:var(--vts-track-eyebrow);text-transform:uppercase;color:var(--vts-accent);margin-bottom:7px}
-/* kolor jawnie — figcaption dziedziczy przygaszoną barwę z motywu bazowego
-   i podpis robi się nieczytelny na zdjęciu */
-.vts-band b{display:block;color:var(--vts-text);
-  font-family:var(--vts-font-display);font-weight:700;
-  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head);max-width:34ch;text-wrap:balance;
-  text-shadow:0 2px 18px rgba(0,0,0,.8)}
-.vts-band__note{position:absolute;right:var(--vts-gap-m);bottom:var(--vts-gap-m);
-  font-family:var(--vts-font-mono);font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);
-  text-transform:uppercase;color:#6B7482}
-@media (max-width:640px){
-  .vts-band img{aspect-ratio:16/9}
-  .vts-band figcaption{padding-bottom:var(--vts-gap-m)}
-  .vts-band__note{position:static;display:block;margin-top:8px}
-}
-
-/* Duże zdjęcie 4:3 w kolumnie obok tekstu — ten sam podpis co pas, inny kadr.
- * Bez górnego odstępu: stoi w drugiej kolumnie układu dwudzielnego, na równi
- * z nagłówkiem sekcji. */
+/* --- duże zdjęcie 4:3 w kolumnie obok tekstu ----------------------------
+ * Bez podpisu: nadtytuł, tytuł i nota „zdjęcie ilustracyjne" zeszły ze zdjęć
+ * na życzenie klienta (X 2026). Zdjęcie stoi w połowie układu dwudzielnego,
+ * na równi z nagłówkiem sekcji. */
 .vts-photo{position:relative;margin:0;overflow:hidden;
   border:1px solid var(--vts-line);border-radius:var(--vts-radius);background:var(--vts-surface)}
 .vts-photo img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
-.vts-photo figcaption{position:absolute;inset:auto 0 0;
-  padding:var(--vts-gap-l) var(--vts-gap-m) calc(var(--vts-gap-m) + 17px);
-  background:linear-gradient(180deg,rgba(8,9,12,0) 0%,rgba(8,9,12,.72) 42%,rgba(8,9,12,.97) 100%)}
-.vts-photo b{display:block;color:var(--vts-text);font-family:var(--vts-font-display);font-weight:700;
-  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head);max-width:34ch;text-wrap:balance;
-  text-shadow:0 2px 18px rgba(0,0,0,.8)}
+/* Etykieta nad tytułem wykresu z hamowni — jedyny podpis, jaki został przy
+ * obrazkach, bo opisuje realny wykres, a nie zdjęcie stockowe. */
+.vts-photo__e{display:block;font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
+  letter-spacing:var(--vts-track-eyebrow);text-transform:uppercase;color:var(--vts-accent-ink);margin-bottom:7px}
+/* Wykres z hamowni: podpis leży na białym wydruku, więc kolory ma literalne. */
 .vts-photo--chart img{aspect-ratio:16/10;object-fit:contain;background:#fff}
 .vts-photo--chart a{display:block}
-.vts-photo--chart figcaption{padding-bottom:var(--vts-gap-m)}
+.vts-photo--chart figcaption{position:absolute;inset:auto 0 0;
+  padding:var(--vts-gap-l) var(--vts-gap-m) var(--vts-gap-m);
+  background:linear-gradient(180deg,rgba(8,9,12,0) 0%,rgba(8,9,12,.72) 42%,rgba(8,9,12,.97) 100%)}
+.vts-photo--chart b{display:block;color:#F1F2F4;font-family:var(--vts-font-display);font-weight:700;
+  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head);max-width:34ch;text-wrap:balance;
+  text-shadow:0 2px 18px rgba(0,0,0,.8)}
+.vts-photo--chart .vts-photo__e{color:var(--vts-accent)}
 .vts-photo--svg svg{display:block;width:100%;height:auto;aspect-ratio:16/10;padding:8px 8px 96px;
   box-sizing:border-box}
 .vts-photo--svg figcaption{position:static;background:none;padding:0 var(--vts-gap-m) var(--vts-gap-m);
   margin-top:calc(-1 * var(--vts-gap-l))}
+.vts-photo--svg b{display:block;color:var(--vts-text);font-family:var(--vts-font-display);font-weight:700;
+  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head);max-width:34ch;text-wrap:balance}
 .vts-dchart__grid line{stroke:var(--vts-line-soft);stroke-width:1}
 .vts-dchart__axis{fill:none;stroke:var(--vts-line);stroke-width:1.5}
-.vts-dchart__hp,.vts-dchart__nm{fill:none;stroke:#6A7280;stroke-width:2.2;stroke-linecap:round}
+.vts-dchart__hp,.vts-dchart__nm{fill:none;stroke:var(--vts-dim);stroke-width:2.2;stroke-linecap:round}
 .vts-dchart__nm{stroke-dasharray:7 5}
 .vts-dchart__hp.is-po,.vts-dchart__nm.is-po{stroke:var(--vts-accent);
   filter:drop-shadow(0 0 4px rgba(244,106,0,.55))}
-.vts-dchart__lbl{font-family:var(--vts-font-mono);font-size:12px;fill:#8A919E;letter-spacing:.06em}
-.vts-dchart__lbl.is-po{fill:var(--vts-accent)}
-.vts-dchart__foot{font-family:var(--vts-font-mono);font-size:11px;fill:#767D88;letter-spacing:.06em}
-@media (max-width:640px){
-  .vts-photo figcaption{padding-bottom:var(--vts-gap-m)}
-}
+.vts-dchart__lbl{font-family:var(--vts-font-mono);font-size:12px;fill:var(--vts-muted);letter-spacing:.06em}
+.vts-dchart__lbl.is-po{fill:var(--vts-accent-ink)}
+.vts-dchart__foot{font-family:var(--vts-font-mono);font-size:11px;fill:var(--vts-dim);letter-spacing:.06em}
 
 /* lista z ikonami — zamiast wypunktowania na stronach, gdzie był sam tekst */
 .vts-ilist{list-style:none;margin:var(--vts-gap-m) 0 0;padding:0;
@@ -790,6 +818,13 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-ilist b,.vts-ilist h4{display:block;margin:0 0 4px;font-size:var(--vts-step-0);
   font-weight:600;letter-spacing:var(--vts-track-tight);color:var(--vts-text)}
 .vts-ilist span{color:var(--vts-muted);font-size:var(--vts-step--1);line-height:1.55}
+/* Trzy pozycje w rzędzie pod układem dwudzielnym — gdy kolumnę obok tekstu
+ * zajęło zdjęcie, a lista ma zostać na stronie. */
+.vts-ilist--row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--vts-gap-m);
+  margin-top:0;border-top:1px solid var(--vts-line-soft)}
+.vts-ilist--row li{border-bottom:0;padding:var(--vts-gap-m) 0 0}
+@media (max-width:900px){.vts-ilist--row{grid-template-columns:minmax(0,1fr);gap:0}
+  .vts-ilist--row li{padding:15px 0;border-bottom:1px solid var(--vts-line-soft)}}
 
 /* --- karta kontaktowa --- */
 .vts-contact h3{margin-bottom:var(--vts-gap-s)}
@@ -800,8 +835,38 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-contact dt:first-child{margin-top:0}
 .vts-contact dt .vts-i{width:16px;height:16px;color:var(--vts-accent)}
 .vts-contact dd{margin:0;color:var(--vts-text);font-size:var(--vts-step-0);line-height:1.55}
-.vts-contact dd a{color:var(--vts-accent);text-decoration:none;font-weight:600}
+.vts-contact dd a{color:var(--vts-accent-ink);text-decoration:none;font-weight:600}
 .vts-contact dd a:hover{color:var(--vts-accent-soft)}
+
+/* --- sekcje usług ECU ------------------------------------------------------
+ * Dwanaście prac na sterowniku, każda we własnej sekcji z kotwicą (menu i
+ * nawigacja skokowa). Zdjęcie raz po prawej, raz po lewej; usługi bez zdjęcia
+ * dostają kafelek z dużą ikoną albo listę trzech ikon — żeby strona nie była
+ * jednym powielonym szablonem (uwaga agencji). */
+.vts-svc--flip .vts-svc__media{order:-1}
+/* na telefonie zawsze tekst, potem obraz — kolejność czytania */
+@media (max-width:900px){.vts-svc--flip .vts-svc__media{order:0}}
+.vts-svc__sub{font-size:var(--vts-step-0);margin:var(--vts-gap-m) 0 8px}
+.vts-svc__list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.vts-svc__list li{position:relative;padding-left:20px;color:var(--vts-muted);font-size:var(--vts-step--1)}
+.vts-svc__list li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;
+  border-radius:2px;background:var(--vts-accent)}
+.vts-svc__icon{aspect-ratio:4/3;display:grid;place-content:center;justify-items:center;gap:16px;
+  background:var(--vts-surface);border:1px solid var(--vts-line);border-radius:var(--vts-radius)}
+.vts-svc__icon .vts-i{width:clamp(96px,30%,140px);height:clamp(96px,30%,140px);color:var(--vts-accent);stroke-width:1}
+.vts-svc__icon span{font-family:var(--vts-font-mono);font-size:var(--vts-step--2);letter-spacing:var(--vts-track-label);
+  text-transform:uppercase;color:var(--vts-muted)}
+@media (max-width:900px){.vts-svc__icon{aspect-ratio:16/7}}
+
+/* --- nawigacja skokowa pod wstępem (shortcode [vts_jumpnav]) --------------- */
+.vts-jump{margin-top:var(--vts-gap-l);padding-top:var(--vts-gap-m);border-top:1px solid var(--vts-line-soft)}
+.vts-jump p{font-family:var(--vts-font-mono);font-size:var(--vts-step--2);letter-spacing:var(--vts-track-label);
+  text-transform:uppercase;color:var(--vts-muted);margin-bottom:10px}
+.vts-jump ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.vts-jump a{display:inline-flex;align-items:center;min-height:36px;padding:6px 13px;border:1px solid var(--vts-line);
+  border-radius:100px;background:var(--vts-surface);text-decoration:none;font-size:var(--vts-step--1);font-weight:600;
+  color:var(--vts-text);transition:border-color .18s,color .18s}
+.vts-jump a:hover{border-color:var(--vts-accent);color:var(--vts-accent-ink)}
 
 /* --- FAQ (natywne <details>, bez wtyczki) --- */
 .vts-faq{border-top:1px solid var(--vts-line)}
@@ -810,7 +875,7 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
   font-family:var(--vts-font-display);font-weight:600;font-size:var(--vts-step-0);position:relative}
 .vts-faq summary::-webkit-details-marker{display:none}
 .vts-faq summary::after{content:'+';position:absolute;right:6px;top:50%;translate:0 -50%;
-  color:var(--vts-accent);font-size:var(--vts-step-1);font-weight:400}
+  color:var(--vts-accent-ink);font-size:var(--vts-step-1);font-weight:400}
 .vts-faq details[open] summary::after{content:'–'}
 .vts-faq details > div{padding:0 0 var(--vts-gap-s);color:var(--vts-muted);max-width:72ch}
 
@@ -904,8 +969,8 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-table tr:last-child td{border-bottom:0}
 .vts-table tbody tr:hover{background:var(--vts-surface)}
 .vts-table a{color:var(--vts-text);text-decoration:none;font-weight:600}
-.vts-table a:hover{color:var(--vts-accent)}
-.vts-table__go{font-size:var(--vts-step--1);color:var(--vts-accent)!important;white-space:nowrap}
+.vts-table a:hover{color:var(--vts-accent-ink)}
+.vts-table__go{font-size:var(--vts-step--1);color:var(--vts-accent-ink)!important;white-space:nowrap}
 
 .vts-cat-siblings{list-style:none;padding:0;margin:0;display:grid;gap:1px;
   background:var(--vts-line);border:1px solid var(--vts-line);border-radius:var(--vts-radius);
@@ -913,7 +978,7 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-cat-siblings li{background:var(--vts-surface);padding:10px 14px;display:flex;
   justify-content:space-between;gap:12px;font-size:var(--vts-step--1)}
 .vts-cat-siblings a{text-decoration:none}
-.vts-cat-siblings a:hover{color:var(--vts-accent)}
+.vts-cat-siblings a:hover{color:var(--vts-accent-ink)}
 .vts-cat-siblings span{font-family:var(--vts-font-mono);font-size:var(--vts-step--2);color:var(--vts-muted);
   font-variant-numeric:tabular-nums}
 
@@ -1026,12 +1091,12 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-proof__score span{display:flex;align-items:center;gap:7px;color:var(--vts-muted);
   font-size:var(--vts-step--1)}
 .vts-proof__score .vts-i{width:19px;height:19px;color:var(--vts-accent);fill:currentColor}
-.vts-proof__score a{margin-left:auto;color:var(--vts-accent);font-size:var(--vts-step--1)}
+.vts-proof__score a{margin-left:auto;color:var(--vts-accent-ink);font-size:var(--vts-step--1)}
 .vts-proof__list{margin-top:var(--vts-gap-s)}
 .vts-proof__list blockquote{margin:0;color:var(--vts-muted);font-size:var(--vts-step--1)}
 .vts-proof__list figcaption{margin-top:11px;font-size:var(--vts-step--2);
   font-family:var(--vts-font-mono);letter-spacing:var(--vts-track-label);text-transform:uppercase;
-  color:var(--vts-accent)}
+  color:var(--vts-accent-ink)}
 
 /* -------------------------------------------------------------------- mapa */
 .vts-map{margin-top:var(--vts-gap-m);border:1px solid var(--vts-line);
@@ -1060,14 +1125,14 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-cf7 input[type=number],.vts-cf7 input[type=date],.vts-cf7 input[type=url],
 .vts-cf7 textarea,.vts-cf7 select{
   width:100%;margin-top:7px;padding:11px 13px;
-  background:#0F1319;color:var(--vts-text);
+  background:var(--vts-field-bg);color:var(--vts-text);
   border:1px solid var(--vts-line);border-radius:var(--vts-radius);
   /* stopień niżej niż tekst — pola w tej samej skali co listy wyszukiwarki */
   font-family:var(--vts-font-body);font-size:var(--vts-step--1);line-height:1.4;
   transition:border-color .18s}
 .vts-cf7 textarea{min-height:132px;resize:vertical}
-.vts-cf7 input::placeholder,.vts-cf7 textarea::placeholder{color:#5C6472}
-.vts-cf7 :is(input,textarea,select):hover{border-color:#3C4451}
+.vts-cf7 input::placeholder,.vts-cf7 textarea::placeholder{color:var(--vts-dim)}
+.vts-cf7 :is(input,textarea,select):hover{border-color:var(--vts-line-strong)}
 .vts-cf7 :is(input,textarea,select):focus-visible{outline:2px solid var(--vts-accent);outline-offset:2px}
 /* Pole daty w Chrome ma jasną ikonę kalendarza — na ciemnym tle znika. */
 .vts-cf7 input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.6)}
@@ -1095,14 +1160,14 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 
 /* Komunikaty walidacji. Bez tego czerwony tekst CF7 siada na ciemnym tle
    poniżej progu kontrastu 4,5:1. */
-.vts-cf7 .wpcf7-not-valid-tip{color:#FF8A80;font-size:var(--vts-step--2);margin-top:6px}
-.vts-cf7 :is(input,textarea,select).wpcf7-not-valid{border-color:#FF8A80}
+.vts-cf7 .wpcf7-not-valid-tip{color:var(--vts-danger-text);font-size:var(--vts-step--2);margin-top:6px}
+.vts-cf7 :is(input,textarea,select).wpcf7-not-valid{border-color:var(--vts-danger-text)}
 .vts-cf7 .wpcf7-response-output{margin:var(--vts-gap-s) 0 0;padding:12px 14px;
   border:1px solid var(--vts-line);border-radius:var(--vts-radius);
   font-size:var(--vts-step--1);color:var(--vts-text)}
 .vts-cf7 form.sent .wpcf7-response-output{border-color:var(--vts-accent)}
 .vts-cf7 form.invalid .wpcf7-response-output,
-.vts-cf7 form.failed .wpcf7-response-output{border-color:#FF8A80}
+.vts-cf7 form.failed .wpcf7-response-output{border-color:var(--vts-danger-text)}
 
 /* ------------------------------------------------------- odnosniki w tresci
  *
@@ -1115,11 +1180,11 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
  * rozpoznac bez rozrozniania barw. Wykluczamy miejsca, ktore niosa wlasny
  * sygnal — karty, nawigacje, stopke, przyciski i chipy.
  */
-.vts-section :is(p,li,dd,blockquote) a:not(.vts-btn):not(.vts-card):not(.vts-dyno__chip),
+.vts-section :is(p,li,dd,blockquote) a:not(.vts-btn):not(.vts-card):not(.vts-dyno__chip):not(.vts-chip),
 .vts-ilist span a{
-  color:var(--vts-accent);text-decoration:underline;
+  color:var(--vts-accent-ink);text-decoration:underline;
   text-decoration-thickness:1px;text-underline-offset:3px;
-  text-decoration-color:color-mix(in srgb,var(--vts-accent) 45%,transparent);
+  text-decoration-color:color-mix(in srgb,var(--vts-accent-ink) 45%,transparent);
   transition:text-decoration-color .18s}
 .vts-section :is(p,li,dd,blockquote) a:not(.vts-btn):not(.vts-card):hover,
 .vts-ilist span a:hover{text-decoration-color:var(--vts-accent)}

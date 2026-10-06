@@ -121,7 +121,7 @@ function vts_render_header(): void
           wp_nav_menu([
               'theme_location' => 'vts_main',
               'container'      => false,
-              'depth'          => 2,
+              'depth'          => 3,   // 3. poziom: kotwice usług ECU (pages.json → anchors)
               'fallback_cb'    => '__return_empty_string',
           ]);
           ?>
@@ -135,6 +135,27 @@ function vts_render_header(): void
     </header>
     <?php
 }
+
+/* Kotwice w menu (pozycje 'custom' z #fragmentem). WordPress przed porównaniem
+ * adresu pozycji z bieżącym URL odcina fragment, więc na stronie usług ECU
+ * wszystkie dwanaście kotwic dostawałoby current-menu-item i aria-current.
+ * Bieżąca jest strona, nie kotwica — zdejmujemy oba sygnały. */
+function vts_menu_item_is_anchor($item): bool
+{
+    return isset($item->type, $item->url) && $item->type === 'custom' && str_contains((string) $item->url, '#');
+}
+add_filter('nav_menu_css_class', function ($classes, $item) {
+    if (vts_menu_item_is_anchor($item)) {
+        $classes = array_values(array_diff($classes, ['current-menu-item', 'current_page_item']));
+    }
+    return $classes;
+}, 10, 2);
+add_filter('nav_menu_link_attributes', function ($atts, $item) {
+    if (vts_menu_item_is_anchor($item)) {
+        unset($atts['aria-current']);
+    }
+    return $atts;
+}, 10, 2);
 
 add_action('after_setup_theme', function () {
     register_nav_menus([
@@ -188,12 +209,17 @@ function vts_render_footer(): void
                 'depth'          => 1,
                 'fallback_cb'    => '__return_empty_string',
             ]); ?>
+            <?php /* Wejście do panelu obsługi hamowni — narzędzie wewnętrzne,
+                     więc tylko dla zalogowanych; gość nie ma po co widzieć
+                     odnośnika do logowania. */ ?>
+            <?php if (is_user_logged_in()) : ?>
             <ul style="margin-top:9px">
               <li class="vts-footer__panel">
                 <a rel="nofollow noopener"
-                   href="<?= esc_url(wp_login_url(admin_url('edit.php?post_type=vts_dyno'))) ?>">Panel wykresów</a>
+                   href="<?= esc_url(admin_url('edit.php?post_type=vts_dyno')) ?>">Panel wykresów</a>
               </li>
             </ul>
+            <?php endif; ?>
           </div>
 
           <div>
@@ -240,5 +266,6 @@ add_filter('body_class', function ($classes) {
 });
 
 add_action('wp_head', function () {
-    echo '<meta name="theme-color" content="#0F1116">' . "\n";
+    // kolor paska przeglądarki = stal nagłówka, nie tło hero
+    echo '<meta name="theme-color" content="#C1C2C3">' . "\n";
 });

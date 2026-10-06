@@ -247,6 +247,13 @@ foreach ($pages as $slug => $cfg) {
     // dla nich wpautop — patrz vts-content.php. Bez tego filtr wstawia znaczniki
     // akapitów w środek kotwic i przeglądarka klonuje je na puste kafelki.
     update_post_meta($id, '_vts_raw_html', 1);
+
+    // Kotwice do sekcji strony: czyta je [vts_jumpnav] i trzeci poziom menu.
+    if (!empty($cfg['anchors'])) {
+        update_post_meta($id, '_vts_anchors', $cfg['anchors']);
+    } else {
+        delete_post_meta($id, '_vts_anchors');
+    }
 }
 
 foreach ($pages as $slug => $cfg) {
@@ -388,6 +395,23 @@ function vts_build_menu(string $location, string $name, array $items, array $ids
             'menu-item-title'     => $item['label'],
             'menu-item-parent-id' => $parent && isset($created[$parent]) ? $created[$parent] : 0,
         ]);
+
+        // Kotwice do sekcji strony jako pozycje 'custom' pod pozycją strony.
+        // Adres składamy z get_page_uri, nie get_permalink: struktura odnośników
+        // jest ustawiana dopiero niżej (update_option 'permalink_structure'),
+        // więc przy pierwszym imporcie get_permalink zwróciłby ?page_id=.
+        foreach ($item['anchors'] ?? [] as $a) {
+            if (empty($a['id']) || empty($a['label']) || (isset($a['menu']) && $a['menu'] === false)) {
+                continue;
+            }
+            wp_update_nav_menu_item($menu_id, 0, [
+                'menu-item-type'      => 'custom',
+                'menu-item-url'       => home_url('/' . get_page_uri($ids[$slug]) . '/#' . sanitize_title($a['id'])),
+                'menu-item-title'     => $a['label'],
+                'menu-item-status'    => 'publish',
+                'menu-item-parent-id' => $created[$slug],
+            ]);
+        }
     }
 
     $locations = get_theme_mod('nav_menu_locations', []);
@@ -401,7 +425,8 @@ foreach ($pages as $slug => $cfg) {
     if (empty($cfg['menu']) || !empty($cfg['parent'])) {
         continue;
     }
-    $main[] = ['slug' => $slug, 'label' => $cfg['menu']['label'], 'order' => $cfg['menu']['order']];
+    $main[] = ['slug' => $slug, 'label' => $cfg['menu']['label'], 'order' => $cfg['menu']['order'],
+               'anchors' => $cfg['anchors'] ?? []];
 }
 usort($main, fn($a, $b) => $a['order'] <=> $b['order']);
 
@@ -412,7 +437,8 @@ foreach ($main as $top) {
     foreach ($pages as $slug => $cfg) {
         if (($cfg['parent'] ?? null) === $top['slug'] && !empty($cfg['menu'])) {
             $kids[] = ['slug' => $slug, 'label' => $cfg['menu']['label'],
-                       'order' => $cfg['menu']['order'], 'parent' => $top['slug']];
+                       'order' => $cfg['menu']['order'], 'parent' => $top['slug'],
+                       'anchors' => $cfg['anchors'] ?? []];
         }
     }
     usort($kids, fn($a, $b) => $a['order'] <=> $b['order']);
