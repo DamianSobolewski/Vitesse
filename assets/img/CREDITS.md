@@ -145,6 +145,9 @@ Oryginały leżą w `tools/scrape/raw-client/` (poza repozytorium), warianty rob
 | `foto-temperatura.webp`, `foto-temperatura-sm.webp` | `Temperatura pracy silnika.jpg` 5957×3831 | wskaźnik temperatury i kontrolka check engine |
 | `foto-dolot.webp`, `foto-dolot-sm.webp` | `Czyszczenie układów dolotowych.jpg` 7008×4672 | głowica i kolektor pokryte nagarem, na stole |
 | `foto-skrzynia.webp`, `foto-skrzynia-sm.webp` | `Programowanie skrzyń biegów.jpg` 3324×4654 (pion) | lewarek automatu; kadr 4:3 ze środka |
+| `foto-klapy.webp`, `foto-klapy-sm.webp` | `Klapy wirowe.jpg` 5000×3335 | przepustnica z klapą w rękach mechanika |
+| `foto-sonda.webp`, `foto-sonda-sm.webp` | `Druga sonda Lambda i pompa powietrza dodatkowego (Subaru, SAI).jpg` 5472×3648 | żółta kontrolka check engine na zegarze |
+| `foto-sai.webp`, `foto-sai-sm.webp` | `Pompa powietrza dodatkowego SAI.jpeg` 5000×3346 | kontrolka check engine na czerwonym obrotomierzu |
 
 Niewykorzystane warianty z tej samej przesyłki: `Start@Stop-2.jpg` (podświetlony przycisk,
 pion), `ciśnienie oleju.webp` (1024 px, za mało na wariant 1200 px).

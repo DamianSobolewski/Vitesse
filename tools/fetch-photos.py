@@ -52,6 +52,9 @@ JOBS = [
     ('temperatura',  'client:Temperatura pracy silnika.jpg',      'foto', .5),
     ('dolot',        'client:Czyszczenie układów dolotowych.jpg', 'foto', .45),
     ('skrzynia',     'client:Programowanie skrzyń biegów.jpg',    'foto', .55),
+    ('klapy',        'client:Klapy wirowe.jpg',                   'foto', .5),
+    ('sonda',        'client:Druga sonda Lambda i pompa powietrza dodatkowego (Subaru, SAI).jpg', 'foto', .5),
+    ('sai',          'client:Pompa powietrza dodatkowego SAI.jpeg', 'foto', .5),
 ]
 KINDS = {'foto': ((4, 3), 1200, 600), 'usp': ((16, 9), 900, 450)}
 force = '--force' in sys.argv
