@@ -1,12 +1,12 @@
 {
   "powerbox-czy-zapis-w-sterowniku": {
     "file": "powerbox-czy-zapis",
-    "title": "PowerBox czy zapis w sterowniku: kiedy który ma sens",
+    "title": "PowerChip czy zapis w sterowniku: kiedy który ma sens",
     "date": "2026-08-04",
     "excerpt": "Moduł dopina się do instalacji i schodzi w kwadrans. Zapis wchodzi do pamięci sterownika i zostaje. Oba dają moc, ale odpowiadają na inne sytuacje.",
     "seo": {
-      "title": "PowerBox czy chip tuning? Kiedy który ma sens | Vitesse V-tech Łódź",
-      "desc": "Różnice między modułem PowerBox a zapisem w sterowniku: odwracalność, zakres zmian, leasing i gwarancja. Konkrety z warsztatu w Łodzi."
+      "title": "PowerChip czy chip tuning? Kiedy który ma sens | Vitesse V-tech Łódź",
+      "desc": "Różnice między modułem PowerChip a zapisem w sterowniku: odwracalność, zakres zmian, leasing i gwarancja. Konkrety z warsztatu w Łodzi."
     },
     "icon": "plug"
   },

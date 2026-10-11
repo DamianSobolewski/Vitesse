@@ -1,9 +1,12 @@
-/* Wyszukiwarka mocy — jeden, spokojny panel.
+/* Wyszukiwarka mocy — jeden panel, wyraźnie odcięty od tła.
  *
- * Kolejność bloków od góry: nagłówek, cztery listy kaskady, przycisk, wynik
- * (pokazuje się po kliknięciu), podpis z telefonem. Nie ma już rzędu VIN
- * ani pustych komórek odczytu nad listami: klient uznał, że wydłużały panel
- * i odsuwały listy od nagłówka. Kod rzędu VIN zostaje pod flagą funkcji.
+ * Kolejność bloków od góry: nagłówek, cztery listy kaskady, wynik (pokazuje
+ * się sam po wyborze silnika — przycisk zszedł w X 2026), podpis z telefonem.
+ * Nie ma rzędu VIN ani pustych komórek odczytu nad listami: klient uznał, że
+ * wydłużały panel i odsuwały listy od nagłówka. Kod rzędu VIN zostaje pod flagą.
+ *
+ * Panel był „za mało widoczny" (uwaga klienta, X 2026): dostał pomarańczową
+ * poświatę ramki i jaśniejsze etykiety. Kolor akcentu bez zmian.
  *
  * Rozmiary tekstu wyłącznie ze skali z tokens.css. Kontrast każdego napisu
  * pilnuje tests/console.mjs (minimum 4,5:1).
@@ -16,10 +19,12 @@
      układzie decyduje zapytanie kontenerowe, a nie szerokość okna. */
   container-type:inline-size;
   background:var(--vts-surface);
-  border:1px solid var(--vts-line);
+  border:1px solid rgba(255,122,0,.42);
   border-top:2px solid var(--vts-accent);
   border-radius:var(--vts-radius);
-  box-shadow:0 26px 60px -30px rgba(0,0,0,.9);
+  box-shadow:0 0 0 1px rgba(255,122,0,.16),
+             0 0 34px rgba(255,122,0,.22),
+             0 26px 60px -30px rgba(0,0,0,.9);
 }
 /* W kolumnie obok tekstu panel dostaje odstęp od nagłówka sekcji. Pod hero
    (wariant szeroki) odstęp daje sekcja, w której stoi. */
@@ -29,7 +34,7 @@
 .vts-ps__head{display:flex;justify-content:space-between;align-items:center;gap:14px;
   flex-wrap:wrap;padding:15px var(--vts-ps-pad);border-bottom:1px solid var(--vts-line)}
 .vts-ps__title{font-family:var(--vts-font-display);font-weight:700;
-  font-size:var(--vts-step-0);letter-spacing:var(--vts-track-tight)}
+  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-tight)}
 .vts-ps__count{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
   letter-spacing:var(--vts-track-label);text-transform:uppercase;color:var(--vts-accent);
   border:1px solid rgba(255,122,0,.34);border-radius:2px;padding:4px 8px;white-space:nowrap}
@@ -46,7 +51,7 @@
 .vts-ps__slot{display:block;min-width:0}
 .vts-ps__slot > span{display:block;font-family:var(--vts-font-mono);
   font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);text-transform:uppercase;
-  color:#A3ABB8;margin-bottom:7px}
+  color:#C3CAD4;margin-bottom:7px}
 .vts-ps select{
   width:100%;font-family:inherit;font-size:var(--vts-step--1);color:#F2F5F9;
   /* Rozwiniętą listę maluje system. Bez color-scheme dziedziczyła jasne tło
@@ -62,11 +67,13 @@
   transition:border-color .16s}
 .vts-ps select option{background-color:#171C23;color:#EDF1F6}
 .vts-ps select:hover:not(:disabled){border-color:#3C4451}
-.vts-ps select:disabled{color:#98A1AD;cursor:not-allowed;background-color:#0B0E13}
+.vts-ps select:disabled{color:#AEB6C2;cursor:not-allowed;background-color:#0B0E13}
 .vts-ps select:focus-visible{outline:2px solid var(--vts-accent);outline-offset:2px}
 
-/* Przycisk trzyma to samo wcięcie co nagłówek i listy. Szerokość liczymy
-   jawnie: przycisk z width:auto kurczy się do treści niezależnie od display. */
+/* Listy zamykają panel od dołu, gdy wyniku jeszcze nie ma. */
+.vts-ps__slots{padding-bottom:18px}
+/* Przycisk [data-cta] nie jest już w znaczniku; reguła zostaje dla wariantu
+   z przyciskiem, gdyby wrócił. */
 .vts-ps__cta{width:calc(100% - var(--vts-ps-pad) * 2);margin:var(--vts-gap-s) var(--vts-ps-pad) 18px}
 .vts-ps__cta[disabled]{opacity:.45;cursor:not-allowed}
 
@@ -76,11 +83,12 @@
  */
 .vts-ps__out{border-top:1px solid var(--vts-line);background:var(--vts-bg)}
 .vts-ps__out[hidden]{display:none}
+/* Nazwa wersji większa (uwaga klienta, X 2026) — to tytuł wyniku, nie podpis. */
 .vts-ps__veh{margin:0;padding:16px var(--vts-ps-pad) 14px;font-family:var(--vts-font-mono);
-  font-size:var(--vts-step--2);letter-spacing:var(--vts-track-caps);text-transform:uppercase;
-  color:#DCE2EA;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  font-size:var(--vts-step-0);letter-spacing:var(--vts-track-caps);text-transform:uppercase;
+  color:#EDF1F6;line-height:1.35}
 
-.vts-ps__cells{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+.vts-ps__cells{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
   padding:0 var(--vts-ps-pad) 16px}
 .vts-ps__cell{border-left:1px solid var(--vts-line);padding-left:14px;min-width:0}
 .vts-ps__cell:first-child{border-left:0;padding-left:0}
@@ -94,12 +102,12 @@
 /* wartość słowna zamiast liczby — mniejszy krój, żeby nie wychodziła z kolumny */
 .vts-ps__cell.is-text b{font-size:var(--vts-step--1);color:#79828F;
   white-space:normal;line-height:1.5}
-/* Cztery odczyty obok siebie mają sens, dopóki mieści się etykieta
-   („PO MODYFIKACJI" to ok. 105 px plus kreska i wcięcie). Poniżej 560 px
-   treści panelu rozkład 2×2 daje im dwa razy więcej miejsca. */
-@container (max-width:559px){
+/* Trzy odczyty obok siebie mają sens, dopóki mieści się etykieta
+   („PO MODYFIKACJI" to ok. 105 px plus kreska i wcięcie). Poniżej 420 px
+   treści panelu dwa pierwsze idą w parze, trzeci na całą szerokość. */
+@container (max-width:419px){
   .vts-ps__cells{grid-template-columns:1fr 1fr}
-  .vts-ps__cell:nth-child(3){border-left:0;padding-left:0}
+  .vts-ps__cell:nth-child(3){grid-column:1/-1;border-left:0;padding-left:0}
 }
 
 /* --- pełna lista wariantów -------------------------------------------------- */
@@ -121,7 +129,7 @@
 .vts-ps__err[hidden]{display:none}
 
 .vts-ps__hint{margin:0;padding:14px var(--vts-ps-pad);border-top:1px solid var(--vts-line);
-  font-size:var(--vts-step--2);color:var(--vts-muted)}
+  font-size:var(--vts-step--2);color:#AEB6C2}
 .vts-ps__hint a{color:var(--vts-accent);text-decoration:none;font-weight:600}
 
 @media (max-width:520px){

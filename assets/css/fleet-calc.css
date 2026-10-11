@@ -37,14 +37,6 @@
   font-variant-numeric:tabular-nums}
 .vts-calc__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));
   gap:14px;margin-top:18px;padding-top:16px;border-top:1px solid var(--vts-line)}
-/* Trzy wyniki w dwóch kolumnach zostawiają trzeci sam przy lewej krawędzi.
-   Sam rząd wyników potrzebuje na trzy kolumny 418 px (3×130 + 2×14), ale stoi
-   w bloku wyniku wciętym o 44 px względem panelu — próg liczymy więc od treści
-   panelu: 462 px. Poniżej ostatni wynik bierze cały rząd, tak samo jak sierota
-   w kafelkach. */
-@container (max-width:461px){
-  .vts-calc__grid > :last-child{grid-column:1/-1}
-}
 .vts-calc__grid span{display:block;font-size:var(--vts-step--2);color:var(--vts-muted);margin-bottom:3px}
 .vts-calc__grid b{font-family:var(--vts-font-display);font-weight:700;font-size:var(--vts-step-0);
   font-variant-numeric:tabular-nums}

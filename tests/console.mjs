@@ -1,7 +1,7 @@
 /* Strażnik wyszukiwarki mocy.
  *
- * Panel stoi pod hero strony głównej, bez bramki e-mail (od IX 2026 wynik
- * pokazuje się po kliknięciu przycisku). Test pilnuje tego, co pod spodem
+ * Panel stoi pod hero strony głównej, bez bramki e-mail i bez przycisku
+ * (od X 2026 wynik pokazuje się sam po wyborze silnika). Test pilnuje tego, co pod spodem
  * działa: kaskady, wyniku z serwera, kontrastu i dostępności.
  */
 import { chromium } from 'playwright';
@@ -105,17 +105,15 @@ for (const [w, h, opis] of [[1440, 1000, 'desktop'], [390, 844, 'telefon']]) {
   await p.waitForTimeout(500);
   await p.selectOption('[data-sel=gen]', { index: 1 });
   await p.waitForTimeout(500);
-  await p.selectOption('[data-sel=eng]', { index: 1 });
-  await p.waitForTimeout(300);
-
+  // Wynik ma byc ukryty do czasu wyboru silnika i pokazac sie bez klikania.
   const przed = await p.evaluate(() => ({
     ukryty: document.querySelector('[data-out]').hidden,
-    cta: !document.querySelector('[data-cta]').disabled,
+    cta: !!document.querySelector('[data-cta]'),
   }));
-  przed.ukryty ? ok('wynik ukryty do czasu klikniecia') : zle('wynik widoczny przed kliknieciem');
-  przed.cta ? ok('przycisk aktywny po wyborze silnika') : zle('przycisk nieaktywny po wyborze silnika');
+  przed.ukryty ? ok('wynik ukryty przed wyborem silnika') : zle('wynik widoczny przed wyborem silnika');
+  !przed.cta ? ok('brak osobnego przycisku — wynik po wyborze silnika') : zle('w panelu wciaz stoi przycisk [data-cta]');
 
-  await p.click('[data-cta]');
+  await p.selectOption('[data-sel=eng]', { index: 1 });
   // Wersja jeszcze nieogrzana dociąga wynik z wtyczki VT Konfigurator (ok. 2 s),
   // a licznik animuje się 700 ms po odpowiedzi — czekamy na odpowiedź, nie na zegar.
   await p.waitForResponse(r => r.url().includes('/catalog/result'), { timeout: 20000 }).catch(() => null);
@@ -175,8 +173,9 @@ for (const [w, h, opis] of [[1440, 1000, 'desktop'], [390, 844, 'telefon']]) {
   await p.selectOption('[data-sel=make]', { label: 'BMW' }); await p.waitForTimeout(500);
   await p.selectOption('[data-sel=model]', { index: 3 });    await p.waitForTimeout(500);
   await p.selectOption('[data-sel=gen]', { index: 1 });      await p.waitForTimeout(500);
-  await p.selectOption('[data-sel=eng]', { index: 1 });      await p.waitForTimeout(120);
-  await p.click('[data-cta]');                                await p.waitForTimeout(1200);
+  await p.selectOption('[data-sel=eng]', { index: 1 });
+  await p.waitForResponse(r => r.url().includes('/catalog/result'), { timeout: 20000 }).catch(() => null);
+  await p.waitForTimeout(1200);
   const v = await p.evaluate(() => document.querySelector('[data-f=shp]').textContent.trim());
   /^\d+ KM$/.test(v) ? ok(`reduced-motion: liczba od razu koncowa (${v})`)
                      : zle(`reduced-motion: "${v}" zamiast wartosci koncowej`);
@@ -200,7 +199,7 @@ for (const [w, h, opis] of [[1440, 1000, 'desktop'], [390, 844, 'telefon']]) {
   const widoczna = await p.locator('[data-sel=make]').isVisible();
   const marek = await p.locator('[data-sel=make] option').count();
   const zegarow = await p.locator('.vts-gauge').count();
-  widoczna && marek > 50 && zegarow === 5
+  widoczna && marek > 50 && zegarow === 6
     ? ok(`bez JS: kaskada widoczna (${marek} marek), ${zegarow} zegarow narysowanych`)
     : zle(`bez JS: kaskada=${widoczna}, marek=${marek}, zegarow=${zegarow}`);
   await c.close();

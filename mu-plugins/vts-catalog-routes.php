@@ -274,8 +274,8 @@ function vts_view_engine(array $r): void
       <div>
         <div class="vts-cat-facts">
           <div class="vts-ps__cell"><span>Moc fabryczna</span><b><?= (int) $e['stock_hp'] ?> KM</b></div>
-          <div class="vts-ps__cell<?= (int) $e['stock_nm'] ? '' : ' is-text' ?>"><span>Moment fabryczny</span>
-            <b><?= (int) $e['stock_nm'] ? (int) $e['stock_nm'] . ' Nm' : 'brak danych' ?></b></div>
+          <?php /* Momentu fabrycznego nie pokazujemy — dla większości wersji V-tech
+                   go nie podaje i komórka świeciła „brak danych". */ ?>
           <div class="vts-ps__cell is-text"><span>Paliwo</span><b><?= esc_html($e['fuel']) ?></b></div>
           <div class="vts-ps__cell"><span>Moc [kW]</span><b><?= (int) $e['stock_kw'] ?></b></div>
         </div>
@@ -295,14 +295,15 @@ function vts_view_engine(array $r): void
                 </div></div>
             <?php endforeach; ?>
           </div>
-          <p class="vts-note"><?= esc_html($wynik['note']) ?></p>
+          <p class="vts-note"><?= esc_html($wynik['note']) ?>
+            Jeśli chcesz zobaczyć wykres z hamowni, skontaktuj się z nami.</p>
         <?php else : ?>
           <p>Dla tej wersji nie mamy jeszcze wartości w katalogu. Zadzwoń:
             <a href="<?= esc_attr(vts_phone_href($c['phones']['tuning']['number'])) ?>"><?= esc_html($c['phones']['tuning']['number']) ?></a>,
             często mamy rozwiązanie spoza katalogu.</p>
         <?php endif; ?>
         <p style="margin-top:var(--vts-gap-s)">
-          <a class="vts-btn vts-btn--primary" href="<?= esc_url($kontakt) ?>">Umów pomiar i wycenę</a>
+          <a class="vts-btn vts-btn--primary" href="<?= esc_url($kontakt) ?>">Umów wizytę</a>
         </p>
 
         <h2 style="margin-top:var(--vts-gap-l)">Inne wersje tej generacji</h2>

@@ -44,8 +44,8 @@ function vts_form_defs(): array
                           'Zakres' => 'scope'],
         ],
         'powerbox' => [
-            'title'   => 'Zapytanie o PowerBox',
-            'subject' => 'PowerBox: [vehicle]',
+            'title'   => 'Zapytanie o PowerChip',
+            'subject' => 'PowerChip: [vehicle]',
             'inbox'   => 'retail',
             'fields'  => ['Imię' => 'your-name', 'E-mail' => 'your-email',
                           'Telefon' => 'your-phone', 'Pojazd' => 'vehicle',
@@ -382,6 +382,17 @@ function vts_build_menu(string $location, string $name, array $items, array $ids
 
     $created = [];
     foreach ($items as $item) {
+        // Pozycja z 'url' to zwykły odnośnik najwyższego poziomu (katalog przyrostów
+        // nie jest stroną WordPressa, tylko własną trasą).
+        if (!empty($item['url'])) {
+            wp_update_nav_menu_item($menu_id, 0, [
+                'menu-item-type'   => 'custom',
+                'menu-item-url'    => home_url($item['url']),
+                'menu-item-title'  => $item['label'],
+                'menu-item-status' => 'publish',
+            ]);
+            continue;
+        }
         $slug   = $item['slug'];
         $parent = $item['parent'] ?? null;
         if (!isset($ids[$slug])) {
@@ -428,6 +439,9 @@ foreach ($pages as $slug => $cfg) {
     $main[] = ['slug' => $slug, 'label' => $cfg['menu']['label'], 'order' => $cfg['menu']['order'],
                'anchors' => $cfg['anchors'] ?? []];
 }
+foreach ($manifest['menu_links'] ?? [] as $link) {
+    $main[] = ['slug' => '', 'label' => $link['label'], 'url' => $link['url'], 'order' => $link['order']];
+}
 usort($main, fn($a, $b) => $a['order'] <=> $b['order']);
 
 $with_children = [];
@@ -448,7 +462,7 @@ vts_build_menu('vts_main', 'Nawigacja główna', $with_children, $ids);
 
 foreach (['vts_footer' => 'Stopka — usługi', 'vts_client' => 'Stopka — strefa klienta'] as $loc => $label) {
     // Pozycja to slug albo {slug, label} — stopka ma własne, handlowe etykiety
-    // („PowerBox Volvo VEA"), inne niż tytuły stron.
+    // („PowerChip Volvo VEA"), inne niż tytuły stron.
     $items = [];
     foreach ($manifest['menus'][$loc] as $poz) {
         $slug  = is_array($poz) ? $poz['slug'] : $poz;

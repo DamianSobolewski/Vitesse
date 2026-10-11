@@ -20,11 +20,9 @@ await p.waitForTimeout(700);
 await p.selectOption('[data-sel="gen"]', { index: 1 });
 await p.waitForTimeout(700);
 const engines = await p.locator('[data-sel="eng"] option').count();
-await p.selectOption('[data-sel="eng"]', { index: 2 });
-await p.waitForTimeout(400);
-console.log('modeli Ford:', models - 1, '| silnikow w generacji:', engines - 1);
-await p.click('[data-cta]');
+await p.selectOption('[data-sel="eng"]', { index: 2 });   // wynik pobiera sie sam
 await p.waitForTimeout(2500);
+console.log('modeli Ford:', models - 1, '| silnikow w generacji:', engines - 1);
 console.log('pojazd:', await p.locator('[data-f="veh"]').textContent());
 console.log('moc fabryczna:', await p.locator('[data-f="shp"]').textContent());
 console.log('moc po:', await p.locator('[data-f="thp"]').textContent());

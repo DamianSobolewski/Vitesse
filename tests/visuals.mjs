@@ -318,20 +318,12 @@ for (const [jsOn, opis] of [[true, 'z JS'], [false, 'bez JS']]) {
   await p.close();
 }
 
-/* --- 2e. pasek liczb ------------------------------------------------------ */
+/* --- 2e. pasek liczb: zdjety w X 2026 (klient nie potwierdza wartosci) ----- */
 {
   const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
   await p.goto(BASE + '/', { waitUntil: 'networkidle' });
-  await p.evaluate(() => document.querySelector('.vts-liczby').scrollIntoView());
-  await p.waitForTimeout(2200);
-  const l = await p.evaluate(() => [...document.querySelectorAll('.vts-liczba b')]
-    .map((x) => x.textContent.trim().replace(/\u00a0/g, ' ')));
-  // Liczby podal klient (IX 2026); lata licza sie od autoryzacji V-tech w 2008.
-  // Sprawdzamy, czy odliczanie dobilo do konca i zachowalo przyrostki („+", „lat", „zl").
-  const lata = new Date().getFullYear() - 2008;
-  l[0] === '10 000+' && l[1] === '60+' && l[2] === `${lata} lat` && l[3] === '0 zł'
-    ? ok(`pasek liczb konczy na wartosciach z przyrostkami (${l.join(' · ')})`)
-    : zle(`pasek liczb: ${l.join(' · ')}`);
+  const jest = await p.evaluate(() => !!document.querySelector('.vts-liczby'));
+  jest ? zle('pasek liczb wrocil na strone glowna') : ok('paska liczb nie ma na stronie glownej');
   await p.close();
 }
 

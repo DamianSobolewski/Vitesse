@@ -527,25 +527,22 @@ add_shortcode('vts_power_search', function ($atts) {
         <?php endforeach; ?>
       </div>
 
-      <button type="button" class="vts-btn vts-btn--primary vts-ps__cta" data-cta disabled>
-        Sprawdź potencjał i pobierz wycenę
-      </button>
-
-      <?php /* Wynik. Do czasu wyboru silnika blok jest ukryty — nie ma sensu pokazywać
-               kresek, skoro nic nie czeka na odsłonięcie. Wartości wpisuje skrypt
-               z odpowiedzi /catalog/result. */ ?>
+      <?php /* Wynik. Pokazuje się sam po wyborze silnika — osobny przycisk
+               „Sprawdź potencjał" zszedł na życzenie klienta (X 2026). Do tego
+               czasu blok jest ukryty. Wartości wpisuje skrypt z /catalog/result. */ ?>
       <div class="vts-ps__out" data-out hidden>
         <p class="vts-ps__veh" data-f="veh"></p>
         <div class="vts-ps__cells">
+          <?php /* Bez „momentu fabrycznego": V-tech nie podaje go dla większości
+                   wersji i komórka pokazywała głównie „brak danych". */ ?>
           <div class="vts-ps__cell"><span>Moc fabryczna</span><b data-f="shp">– – –</b></div>
-          <div class="vts-ps__cell"><span>Moment fabr.</span><b data-f="snm">– – –</b></div>
           <div class="vts-ps__cell is-gain"><span>Po modyfikacji</span><b data-f="thp">– – –</b></div>
           <div class="vts-ps__cell is-gain"><span>Przyrost mocy</span><b data-f="ghp">– – –</b></div>
         </div>
         <div class="vts-ps__full" data-full></div>
         <p class="vts-ps__note" data-note></p>
         <div class="vts-ps__actions">
-          <a class="vts-btn vts-btn--primary" data-go-contact href="<?= esc_url(home_url('/kontakt/')) ?>">Umów pomiar i wycenę</a>
+          <a class="vts-btn vts-btn--primary" data-go-contact href="<?= esc_url(home_url('/kontakt/')) ?>">Umów wizytę</a>
           <a class="vts-btn vts-btn--ghost" data-go-catalog href="<?= esc_url(vts_catalog_url()) ?>">Zobacz wersję w katalogu</a>
         </div>
         <p class="vts-ps__err" data-err hidden></p>

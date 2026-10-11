@@ -11,15 +11,18 @@ if (!defined('ABSPATH')) {
 /**
  * Współczynniki trzymamy w opcjach, żeby klient mógł zmienić cenę paliwa
  * bez wdrożenia: wp option update vts_fuel_price 8.10
+ *
+ * Oszczędność w % jest suwakiem (domyślnie 10, zakres 5–15) — życzenie klienta,
+ * X 2026. Kosztu usługi i czasu zwrotu nie liczymy: zbyt wiele wariantów cenowych,
+ * żeby jedna liczba miała sens.
  */
 function vts_fleet_config(): array
 {
     return [
         'fuel_price'   => (float) get_option('vts_fuel_price', 7.50),
-        'saving_pct'   => (float) get_option('vts_eco_saving_pct', 6.5),
+        'saving_pct'   => (float) get_option('vts_eco_saving_pct', 10),
         'saving_min'   => (float) get_option('vts_eco_saving_min', 5),
-        'saving_max'   => (float) get_option('vts_eco_saving_max', 8),
-        'price_per_car'=> (float) get_option('vts_service_price_per_vehicle', 1500),
+        'saving_max'   => (float) get_option('vts_eco_saving_max', 15),
         'co2_per_l'    => (float) get_option('vts_co2_kg_per_litre', 2.68),
     ];
 }
@@ -34,7 +37,7 @@ add_shortcode('vts_fleet_calc', function ($atts) {
     <div class="vts-calc" data-vts-calc data-cfg="<?= esc_attr(wp_json_encode($c)) ?>">
       <div class="vts-calc__head">
         <h3>Ile zaoszczędzi Twoja flota?</h3>
-        <p>Przesuń suwaki albo wpisz własne wartości.</p>
+        <p>Przesuń suwaki lub wpisz własne wartości.</p>
       </div>
 
       <?php
@@ -43,6 +46,7 @@ add_shortcode('vts_fleet_calc', function ($atts) {
           ['km',  'Roczny przebieg na pojazd',  'km',       120000, 5000, 300000, 5000],
           ['fu',  'Średnie spalanie',           'l/100 km', 30,     4,   60,    0.5],
           ['pr',  'Cena paliwa',                'zł/l',     $c['fuel_price'], 3, 15, 0.1],
+          ['sv',  'Oczekiwana oszczędność paliwa', '%',     $c['saving_pct'], $c['saving_min'], $c['saving_max'], 0.5],
       ];
       foreach ($fields as [$k, $label, $unit, $val, $min, $max, $step]) : ?>
         <div class="vts-calc__fld">
@@ -75,15 +79,11 @@ add_shortcode('vts_fleet_calc', function ($atts) {
         <div class="vts-calc__grid">
           <div><span>Mniej paliwa rocznie</span><b data-c="litres">—</b></div>
           <div><span>Mniej CO₂ rocznie</span><b data-c="co2">—</b></div>
-          <div><span>Zwrot kosztu usługi</span><b data-c="payback">—</b></div>
         </div>
       </div>
 
       <p class="vts-calc__disclaim">
-        Wyliczenie szacunkowe: zakładamy oszczędność <?= esc_html(number_format_i18n($c['saving_pct'], 1)) ?>%
-        (spotykany zakres <?= esc_html($c['saving_min']) ?>–<?= esc_html($c['saving_max']) ?>%)
-        oraz koszt usługi <?= esc_html(number_format_i18n($c['price_per_car'])) ?> zł netto za pojazd.
-        Obie wartości ustalamy indywidualnie. Rzeczywisty wynik zależy od stanu technicznego pojazdów,
+        Wyliczenie szacunkowe. Rzeczywisty wynik zależy od stanu technicznego pojazdów,
         tras i stylu jazdy. Nie stanowi oferty w rozumieniu Kodeksu cywilnego.
       </p>
 

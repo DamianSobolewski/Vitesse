@@ -99,7 +99,8 @@ function vts_render_header(): void
     ?>
     <div class="vts-topbar">
       <div class="vts-wrap">
-        <span class="vts-topbar__where"><?= esc_html("{$c['street']}, {$c['postal_code']} {$c['city']}") ?> ·
+        <?php /* Bez kodu pocztowego — pasek ma być krótki (uwaga klienta, X 2026). */ ?>
+        <span class="vts-topbar__where"><?= esc_html("{$c['city']}, {$c['street']}") ?> ·
           <?= esc_html($c['hours']['weekdays']['label']) ?>
           <?= esc_html($c['hours']['weekdays']['open'] . '–' . $c['hours']['weekdays']['close']) ?></span>
         <span class="vts-topbar__phones">
@@ -130,7 +131,7 @@ function vts_render_header(): void
                  zeszła z menu, bo dublowała ten przycisk (decyzja klienta, IX 2026).
                  Telefony są w pasku nad nagłówkiem, na telefonie w dolnym pasku. */ ?>
         <a class="vts-btn vts-btn--primary vts-header__cta"
-           href="<?= esc_url(home_url('/kontakt/')) ?>">Umów pomiar</a>
+           href="<?= esc_url(home_url('/kontakt/')) ?>">Umów wizytę</a>
       </div>
     </header>
     <?php
@@ -182,7 +183,7 @@ function vts_render_footer(): void
           <div>
             <?= vts_render_brand() ?>
             <div class="vts-footer__meta" style="margin-top:18px">
-              <span>Chip tuning, PowerBoxy, modyfikacje ECU i pomiary na hamowni 4×4
+              <span>Chip tuning, PowerChipy, modyfikacje ECU i pomiary na hamowni 4×4
                 w Łodzi.<br>Autoryzacja V-tech od 2008 roku.</span>
               <span><?= esc_html($c['street']) ?><br>
                 <?= esc_html($c['postal_code'] . ' ' . $c['city']) ?></span>
@@ -209,17 +210,9 @@ function vts_render_footer(): void
                 'depth'          => 1,
                 'fallback_cb'    => '__return_empty_string',
             ]); ?>
-            <?php /* Wejście do panelu obsługi hamowni — narzędzie wewnętrzne,
-                     więc tylko dla zalogowanych; gość nie ma po co widzieć
-                     odnośnika do logowania. */ ?>
-            <?php if (is_user_logged_in()) : ?>
-            <ul style="margin-top:9px">
-              <li class="vts-footer__panel">
-                <a rel="nofollow noopener"
-                   href="<?= esc_url(admin_url('edit.php?post_type=vts_dyno')) ?>">Panel wykresów</a>
-              </li>
-            </ul>
-            <?php endif; ?>
+            <?php /* Odnośnika do panelu wykresów tu nie ma: obsługa wchodzi przez
+                     kokpit WordPressa, a klient ma dostawać przyrosty, nie wykresy
+                     (ustalenie klienta, X 2026). */ ?>
           </div>
 
           <div>
@@ -238,21 +231,22 @@ function vts_render_footer(): void
               </span>
             </div>
             <a class="vts-btn vts-btn--primary" style="margin-top:16px"
-               href="<?= esc_url(home_url('/kontakt/')) ?>">Umów pomiar</a>
+               href="<?= esc_url(home_url('/kontakt/')) ?>">Umów wizytę</a>
           </div>
 
         </div>
 
         <div class="vts-footer__bottom">
+          <?php /* Bez dopisku o pomiarze w cenie: nie każda usługa (np. EGR) go
+                   obejmuje, a klient egzekwowałby obietnicę ze stopki. */ ?>
           <span>© <?= esc_html(date('Y')) ?> <?= esc_html($c['legal_name'] ?: $c['name']) ?></span>
-          <span>Ceny zawierają pomiar na hamowni przed i po modyfikacji.</span>
         </div>
       </div>
     </footer>
 
     <div class="vts-fab">
       <a href="<?= esc_attr(vts_phone_href($c['phones']['tuning']['number'])) ?>">Zadzwoń</a>
-      <a class="is-accent" href="<?= esc_url(home_url('/kontakt/')) ?>">Umów pomiar</a>
+      <a class="is-accent" href="<?= esc_url(home_url('/kontakt/')) ?>">Umów wizytę</a>
     </div>
     <?php
 }

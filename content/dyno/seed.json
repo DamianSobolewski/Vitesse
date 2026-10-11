@@ -7,7 +7,7 @@
     "items": [
       {"author": "Marcin K.", "text": "Golf 2.0 TDI, chip tuning. Pomiar przed i po na miejscu, wydruk dostałem do ręki. Auto na trasie idzie zupełnie inaczej, a spalanie spadło o pół litra. Termin dotrzymany co do godziny."},
       {"author": "Tomasz W., flota 11 aut", "text": "Zaczęliśmy od jednego Sprintera na próbę, po sześciu tygodniach tankowania potwierdziły oszczędność i zrobiliśmy resztę partiami. Faktura, harmonogram, zero przestojów."},
-      {"author": "Agnieszka R.", "text": "Volvo w leasingu, więc PowerBox. Montaż zajął kwadrans, przed przeglądem sama zdejmuję moduł w pięć minut. Uczciwie wytłumaczone, co można, a czego nie."}
+      {"author": "Agnieszka R.", "text": "Volvo w leasingu, więc PowerChip. Montaż zajął kwadrans, przed przeglądem sama zdejmuję moduł w pięć minut. Uczciwie wytłumaczone, co można, a czego nie."}
     ]
   },
   "entries": [
@@ -32,7 +32,7 @@
     {"key": "ducato-kamper", "title": "Fiat Ducato 2.3 MultiJet 140 KM, kamper", "make": "Fiat", "fuel": "diesel", "service": "Chip tuning", "class": "kampery",
      "stock_hp": 140, "stock_nm": 350, "tuned_hp": 172, "tuned_nm": 420, "date": "2026-07-24", "engine": null, "rpm": [1200, 4200],
      "note": "Zabudowa 3,5 t, pomiar z pełnym zbiornikiem wody. Cel: mniej redukcji biegów na podjazdach i spokojniejsza praca silnika przy długiej jeździe z obciążeniem."},
-    {"key": "xc60-powerbox", "title": "Volvo XC60 D4 181 KM, PowerBox VEA", "make": "Volvo", "fuel": "diesel", "service": "PowerBox", "class": "osobowe",
+    {"key": "xc60-powerbox", "title": "Volvo XC60 D4 181 KM, PowerChip VEA", "make": "Volvo", "fuel": "diesel", "service": "PowerChip", "class": "osobowe",
      "stock_hp": 181, "stock_nm": 400, "tuned_hp": 214, "tuned_nm": 462, "date": "2026-07-17", "engine": 11220, "rpm": [1200, 4800],
      "note": "Auto w leasingu, dlatego moduł zamiast zapisu w sterowniku. Moduł dedykowany do architektury VEA, montaż w kwadrans, bez błędów sterownika po pomiarze."},
     {"key": "golf-gti", "title": "Volkswagen Golf VII GTI 2.0 TSI 245 KM", "make": "Volkswagen", "fuel": "benzyna", "service": "Chip tuning", "class": "osobowe",

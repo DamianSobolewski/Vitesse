@@ -25,7 +25,6 @@ for (const [path, name] of shots) {
 // kalkulator flotowy
 await p.goto(B + '/podnoszenie-mocy/oferta-dla-flot/', { waitUntil: 'networkidle' });
 console.log('kalkulator rocznie:', await p.locator('[data-c="year"]').textContent(),
-            '| zwrot:', await p.locator('[data-c="payback"]').textContent(),
             '| CO2:', await p.locator('[data-c="co2"]').textContent());
 
 // wykresy

@@ -1,9 +1,10 @@
 /* Wyszukiwarka mocy — kaskada Marka → Model → Generacja → Silnik i wynik.
  *
- * Wynik przychodzi z /catalog/result po kliknięciu przycisku. Bramki e-mail
- * już nie ma (decyzja klienta, wrzesień 2026): wartości po modyfikacji pokazują
- * się od razu, tak jak w konfiguratorze V-techa. Token z listy silników i limit
- * zapytań po stronie serwera zostają jako hamulec na skrypty, nie na ludzi.
+ * Wynik przychodzi z /catalog/result od razu po wyborze silnika — bez przycisku
+ * (decyzja klienta, X 2026) i bez bramki e-mail (IX 2026), tak jak w konfiguratorze
+ * V-techa. Token z listy silników i limit zapytań po stronie serwera zostają
+ * jako hamulec na skrypty, nie na ludzi. Przycisk [data-cta] jest opcjonalny:
+ * gdy jest w DOM, też wywołuje pobranie.
  */
 (function () {
   'use strict';
@@ -110,7 +111,8 @@
       engine  = row.id;
       token   = row.token;
       stockHp = row.stock_hp || 0;
-      if (cta) { cta.disabled = false; cta.focus({ preventScroll: true }); }
+      if (cta) { cta.disabled = false; }
+      pobierz();
     });
 
     /* Górny rząd: VIN (tylko przy włączonej fladze). Endpoint zwraca markę i rok —
@@ -163,20 +165,19 @@
       out.hidden = false;
     }
 
-    /* Przycisk: pobiera wynik i rozkłada go na ekranie. */
-    if (cta) {
-      cta.addEventListener('click', function () {
-        if (!engine || !token) { return; }
-        cta.disabled = true;
-        var etykieta = cta.textContent;
-        cta.textContent = 'Sprawdzam…';
+    /* Pobiera wynik i rozkłada go na ekranie. Odpowiedź dla silnika, którego
+       użytkownik już nie ma wybranego (zdążył zmienić listę), idzie do kosza. */
+    function pobierz() {
+      if (!engine || !token) { return; }
+      var moj = engine;
+      if (cta) { cta.disabled = true; }
 
-        get('/catalog/result', { engine: engine, token: token })
-          .then(pokaz)
-          .catch(function (err) { fail(err.message); })
-          .finally(function () { cta.disabled = false; cta.textContent = etykieta; });
-      });
+      get('/catalog/result', { engine: engine, token: token })
+        .then(function (data) { if (moj === engine) { pokaz(data); } })
+        .catch(function (err) { if (moj === engine) { fail(err.message); } })
+        .finally(function () { if (cta) { cta.disabled = false; } });
     }
+    if (cta) { cta.addEventListener('click', pobierz); }
 
     function pokaz(data) {
       errBox.hidden = true;
@@ -186,14 +187,6 @@
 
       if (data.stock_hp) { licz(field('shp'), 0, data.stock_hp, ' KM'); }
       else { field('shp').textContent = PUSTE; }
-
-      // V-tech nie podaje momentu fabrycznego dla każdej wersji. Wartość słowna
-      // w miejscu liczby dostaje własny, mniejszy krój — inaczej napis wychodzi
-      // na sąsiednią kolumnę.
-      var kom = field('snm').parentElement;
-      kom.classList.toggle('is-text', !data.stock_nm);
-      if (data.stock_nm) { licz(field('snm'), 0, data.stock_nm, ' Nm'); }
-      else { field('snm').textContent = 'brak danych'; }
 
       var warianty = data.results || [];
       var naj = warianty.filter(function (r) {

@@ -10,24 +10,24 @@
     "order": 1
    },
    "seo": {
-    "title": "Chip tuning Łódź — hamownia 4×4, PowerBox, eco-tuning flot | Vitesse",
-    "desc": "Chip tuning w Łodzi z pomiarem na hamowni przed i po. Odblokowanie sterowników ECU na miejscu, PowerBoxy dla aut w leasingu, eco-tuning dla flot. Sprawdź przyrost mocy dla swojego silnika."
+    "title": "Chip tuning Łódź — hamownia 4×4, PowerChip, eco-tuning flot | Vitesse",
+    "desc": "Chip tuning w Łodzi z pomiarem na hamowni przed i po. Odblokowanie sterowników ECU na miejscu, PowerChipy dla aut w leasingu, eco-tuning dla flot. Sprawdź przyrost mocy dla swojego silnika."
    }
   },
   "podnoszenie-mocy": {
    "title": "Podnoszenie mocy",
    "file": "podnoszenie-mocy",
    "menu": {
-    "label": "Podnoszenie mocy",
+    "label": "Oferta",
     "order": 2
    },
    "seo": {
-    "title": "Podnoszenie mocy silnika Łódź — chip tuning, PowerBox, ECU | Vitesse",
-    "desc": "Chip tuning, PowerBoxy, eco-tuning dla flot i modyfikacje sterownika ECU. Warsztat w Łodzi z autoryzacją V-tech od 2008 roku, każda praca z pomiarem na hamowni."
+    "title": "Podnoszenie mocy silnika Łódź — chip tuning, PowerChip, ECU | Vitesse",
+    "desc": "Chip tuning, PowerChipy, eco-tuning dla flot i modyfikacje sterownika ECU. Warsztat w Łodzi z autoryzacją V-tech od 2008 roku, każda praca z pomiarem na hamowni."
    }
   },
   "chip-tuning": {
-   "title": "Chip tuning",
+   "title": "Chip tuning / PowerChipy",
    "parent": "podnoszenie-mocy",
    "file": "chip-tuning",
    "menu": {
@@ -49,7 +49,7 @@
    },
    "seo": {
     "title": "Eco-tuning dla flot — mniejsze spalanie, limitery prędkości | Vitesse Łódź",
-    "desc": "Obniż koszty paliwa we flocie firmowej o 5–8%. Eco-tuning, limitery prędkości i obrotów, serwis DPF i SCR, obsługa partiami, faktura VAT. Policz oszczędność w kalkulatorze."
+    "desc": "Obniż koszty paliwa we flocie firmowej nawet o 10%. Eco-tuning, limitery prędkości i obrotów, serwis DPF i SCR, obsługa partiami, faktura VAT. Policz oszczędność w kalkulatorze."
    }
   },
   "kalkulator-oszczednosci": {
@@ -89,16 +89,16 @@
    ]
   },
   "powerboxy": {
-   "title": "PowerBoxy",
+   "title": "PowerChipy",
    "parent": "podnoszenie-mocy",
    "file": "powerboxy",
    "menu": {
-    "label": "PowerBoxy",
+    "label": "PowerChipy",
     "order": 4
    },
    "seo": {
-    "title": "PowerBox Plug&Play Łódź, moduły dla Volvo VEA | Vitesse V-tech",
-    "desc": "PowerBox to więcej mocy bez zmiany oprogramowania. Montaż i demontaż w kwadrans, rozwiązanie dla aut w leasingu i na gwarancji. Dedykowane moduły do silników Volvo VEA."
+    "title": "PowerChip Plug&Play Łódź, moduły dla Volvo VEA | Vitesse V-tech",
+    "desc": "PowerChip to więcej mocy bez zmiany oprogramowania. Montaż i demontaż w kwadrans, rozwiązanie dla aut w leasingu i na gwarancji. Dedykowane moduły do silników Volvo VEA."
    }
   },
   "ev-hybryda": {
@@ -140,10 +140,6 @@
   "wykresy-i-osiagi": {
    "title": "Wykresy i osiągi",
    "file": "wykresy-i-osiagi",
-   "menu": {
-    "label": "Wykresy i osiągi",
-    "order": 6
-   },
    "seo": {
     "title": "Wykresy z hamowni — realne przyrosty mocy | Vitesse V-tech Łódź",
     "desc": "Wyniki pomiarów przed i po chip tuningu z naszej hamowni w Łodzi. Filtruj po marce, paliwie i rodzaju usługi."
@@ -221,17 +217,19 @@
    }
   }
  },
+ "menu_links": [
+  {"label": "Katalog przyrostów", "url": "/chiptuning/", "order": 6}
+ ],
  "menus": {
   "vts_footer": [
    {"slug": "chip-tuning", "label": "Chip tuning osobowe i kampery"},
    {"slug": "oferta-dla-flot", "label": "Oferta dla flot B2B"},
-   {"slug": "powerboxy", "label": "PowerBox Volvo VEA"},
+   {"slug": "powerboxy", "label": "PowerChip Volvo VEA"},
    {"slug": "dodatkowe-uslugi-ecu", "label": "Usługi DPF / EGR / SCR"},
    {"slug": "hamownia", "label": "Hamownia motocyklowa i 4×4"},
    {"slug": "ev-hybryda", "label": "Modyfikacje EV i hybryd"}
   ],
   "vts_client": [
-   {"slug": "wykresy-i-osiagi", "label": "Baza wykresów"},
    {"slug": "o-nas", "label": "O nas"},
    {"slug": "regulamin", "label": "Regulamin"},
    {"slug": "gwarancja", "label": "2 lata gwarancji"},
