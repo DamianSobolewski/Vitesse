@@ -39,7 +39,20 @@ for (const [w, h, opis] of [[1440, 1000, 'desktop'], [390, 844, 'telefon']]) {
 
   await p.goto(BASE + '/', { waitUntil: 'networkidle' });
 
-  /* --- panel stoi pod hero, nie w nim ------------------------------------ */
+  /* --- slajdy hero z kokpitu (CPT vts_slajd, seed z importu) --------------- */
+  const hero = await p.evaluate(() => ({
+    kropek: document.querySelectorAll('.vts-hero [data-slide-dot]').length,
+    h1: (document.querySelector('.vts-hero [data-slide="0"] h1') || {}).textContent || '',
+    h1ow: document.querySelectorAll('.vts-hero h1').length,
+    tla: [...document.querySelectorAll('.vts-hero [data-slide-bg]')].filter(e => /url\(/.test(e.style.cssText)).length,
+  }));
+  hero.kropek >= 2 && hero.tla === hero.kropek
+    ? ok(`hero: ${hero.kropek} slajdy z kokpitu, kazdy z tlem`)
+    : zle(`hero: kropek=${hero.kropek}, tel=${hero.tla} (brak slajdow? uruchom ./bin/import.sh)`);
+  hero.h1ow === 1 && hero.h1.length > 10
+    ? ok('hero: jeden <h1>, na pierwszym slajdzie')
+    : zle(`hero: h1 na stronie=${hero.h1ow}, tresc="${hero.h1}"`);
+
   const wHero = await p.evaluate(() => !!document.querySelector('.vts-hero .vts-ps'));
   const podHero = await p.evaluate(() => {
     const h = document.querySelector('.vts-hero'); const ps = document.querySelector('.vts-ps');

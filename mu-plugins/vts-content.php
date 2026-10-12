@@ -194,23 +194,23 @@ function vts_render_hero_light(): void
 }
 
 /**
- * Slajdy hero strony głównej.
+ * Fabryczne slajdy hero strony głównej.
  *
- * Nagłówek nosi tylko pierwszy slajd — to jedyny <h1> na stronie i nie może się
- * mnożyć razem z karuzelą. Pozostałe dostają <p> w tej samej skali; dla czytnika
- * ekranu i tak liczy się wyłącznie slajd aktywny, bo nieaktywne są `hidden`.
+ * Od X 2026 slajdy żyją w kokpicie jako typ treści „Slajdy hero" (vts-hero-slides.php),
+ * a ta tablica jest ich źródłem przy pierwszym imporcie (content/import.php) oraz
+ * zapasem, gdy klient wyłączy wszystkie: wtedy strona dostaje sam slajd 0, statycznie.
  *
- * Warstwa świetlna („zapłon") jest przypisana do geometrii hero.webp — reflektory
- * mają w niej stałe współrzędne — więc jedzie wyłącznie ze slajdem 0.
+ * `title` zapisany jak w kokpicie: fragment w *gwiazdkach* dostaje kolor akcentu.
+ * `img` to nazwa pliku z assets/img (bez rozszerzenia); wariant -sm dobiera się sam.
  */
-function vts_hero_slides(): array
+function vts_hero_slides_default(): array
 {
     return [
         [
             'img'     => 'hero',
             'light'   => true,
             'eyebrow' => 'Chip tuning · Łódź',
-            'title'   => 'Odblokowywanie sterowników ECU <span style="color:var(--vts-accent)">na miejscu</span>, od ręki.',
+            'title'   => 'Odblokowywanie sterowników ECU *na miejscu*, od ręki.',
             'lead'    => 'Najnowsze modele bez wysyłki sterownika za granicę. Otwieramy go u siebie, '
                        . 'więc Twoje auto wraca tego samego dnia z pomiarem na hamowni.',
         ],
@@ -238,6 +238,34 @@ function vts_hero_slides(): array
     ];
 }
 
+/**
+ * Slajdy do narysowania: opublikowane wpisy „Slajdy hero", a gdy nie ma żadnego,
+ * fabryczny slajd 0. Każdy element ma img_url, img_sm_url, eyebrow, title (HTML),
+ * lead i light.
+ *
+ * Nagłówek nosi tylko pierwszy slajd — to jedyny <h1> na stronie i nie może się
+ * mnożyć razem z karuzelą. Pozostałe dostają <p> w tej samej skali; dla czytnika
+ * ekranu i tak liczy się wyłącznie slajd aktywny, bo nieaktywne są `hidden`.
+ */
+function vts_hero_slides(): array
+{
+    $slides = function_exists('vts_hero_slides_from_posts') ? vts_hero_slides_from_posts() : [];
+    if ($slides) {
+        return $slides;
+    }
+
+    $s   = vts_hero_slides_default()[0];
+    $img = vts_hero_slide_img($s['img']);
+    return [[
+        'img_url'    => $img,
+        'img_sm_url' => vts_hero_slide_img($s['img'], 'sm') ?: $img,
+        'eyebrow'    => $s['eyebrow'],
+        'title'      => vts_slide_title_html($s['title']),
+        'lead'       => $s['lead'],
+        'light'      => !empty($s['light']),
+    ]];
+}
+
 /** Adres obrazu slajdu; `hero` respektuje podmianę z opcji `vts_hero_image`. */
 function vts_hero_slide_img(string $name, string $size = ''): string
 {
@@ -253,24 +281,15 @@ function vts_hero_slide_img(string $name, string $size = ''): string
 
 function vts_render_home_hero(): void
 {
-    $slides = array_values(array_filter(vts_hero_slides(), function ($s) {
-        return vts_hero_slide_img($s['img']) !== '';
-    }));
-
-    if (!$slides) {
-        $slides = [vts_hero_slides()[0]];
-    }
+    $slides = array_values(array_filter(vts_hero_slides(), fn($s) => $s['img_url'] !== ''));
 
     $multi = count($slides) > 1;
     ?>
     <section class="vts-hero vts-hero--slider" data-active="0"
              <?= $multi ? 'data-vts-hero-slider' : '' ?>>
       <?php foreach ($slides as $i => $s) :
-          $img = vts_hero_slide_img($s['img']);
-          if (!$img) {
-              continue;
-          }
-          $sm = vts_hero_slide_img($s['img'], 'sm') ?: $img;
+          $img = $s['img_url'];
+          $sm  = $s['img_sm_url'] ?: $img;
           ?>
         <?php /* Obraz przypisujemy dopiero klasie .is-active (theme.css) — dzięki temu
                  przeglądarka pobiera tło slajdu 0 od razu, a pozostałe dopiero przy

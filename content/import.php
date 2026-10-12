@@ -354,6 +354,47 @@ foreach ($wpisy as $slug => $cfg) {
 }
 vts_log('wpisy: ' . $ile_wpisow);
 
+/* ------------------------------------------------------------ slajdy hero */
+
+/*
+ * Karuzelę strony głównej klient prowadzi w kokpicie („Slajdy hero", CPT vts_slajd).
+ * Import zakłada fabryczne slajdy z vts_hero_slides_default() tylko wtedy, gdy w bazie
+ * nie ma ŻADNEGO slajdu (także szkicu czy kosza) — inaczej nadpisywałby zmiany klienta.
+ * Zdjęcia nie są kopiowane do biblioteki mediów: slajd bez obrazka wyróżniającego
+ * czyta fabryczny plik z assets/img po nazwie z meta _vts_img.
+ */
+$sa_slajdy = get_posts([
+    'post_type'      => 'vts_slajd',
+    'post_status'    => 'any',
+    'posts_per_page' => 1,
+    'fields'         => 'ids',
+    'no_found_rows'  => true,
+]);
+if ($sa_slajdy || !function_exists('vts_hero_slides_default')) {
+    vts_log('slajdy hero: bez zmian' . ($sa_slajdy ? '' : ' (brak vts-hero-slides.php)'));
+} else {
+    $ile_slajdow = 0;
+    foreach (vts_hero_slides_default() as $i => $s) {
+        $id = wp_insert_post([
+            'post_type'   => 'vts_slajd',
+            'post_status' => 'publish',
+            'post_title'  => $s['title'],
+            'post_name'   => 'slajd-' . ($i + 1),
+            'menu_order'  => $i + 1,
+        ], true);
+        if (is_wp_error($id)) {
+            vts_log('BŁĄD slajdu ' . ($i + 1) . ': ' . $id->get_error_message());
+            continue;
+        }
+        update_post_meta($id, '_vts_img', $s['img']);
+        update_post_meta($id, '_vts_eyebrow', $s['eyebrow']);
+        update_post_meta($id, '_vts_lead', $s['lead']);
+        update_post_meta($id, '_vts_seed', 1);
+        $ile_slajdow++;
+    }
+    vts_log('slajdy hero: ' . $ile_slajdow . ' założone');
+}
+
 /* ----------------------------------------------- strona główna i wpisy */
 
 foreach ($pages as $slug => $cfg) {

@@ -72,6 +72,7 @@ i `pages.json`. Zmiany klikane w edytorze zostaną nadpisane przy następnym imp
 | `vts-redirects.php` | matryca 301 ze starego serwisu |
 | `vts-site.php` | zasoby, nagłówek, stopka 4-kolumnowa, FAB |
 | `vts-content.php` | hero (slajder + hero podstron), przewagi, proces, etapy, FAQ, kontakt, mapa, JSON-LD |
+| `vts-hero-slides.php` | CPT `vts_slajd` „Slajdy hero": karuzela strony głównej prowadzona z kokpitu |
 | `vts-dev-mail.php` | poczta → Mailpit, samowyłączenie poza localhostem |
 
 ---
@@ -231,7 +232,10 @@ Stan ostatniego przebiegu: wszystkie osiem zestawów przechodzi — RWD bez zast
 - [ ] **Liczby na stronie głównej i „O nas"** (10 000+ modyfikacji, 60+ flot) podał klient
       w uwagach — do potwierdzenia przed startem; lata liczą się same od 2008
 - [ ] Zdjęcia hero dla slajdów 2–4 i dla hero podstron — dziś slajder korzysta
-      z pasów `pas-chip`, `pas-floty` i `pas-onas`, czyli materiału ilustracyjnego
+      z pasów `pas-chip`, `pas-floty` i `pas-onas`, czyli materiału ilustracyjnego.
+      Slajdy strony głównej klient podmienia sam: kokpit → „Slajdy hero" → obrazek
+      wyróżniający (poziomy kadr ok. 1800×1200, ciemniejszy po lewej). Hero podstron
+      nadal z `vts_page_hero()`.
 - [ ] GA4 + Consent Mode v2 i baner zgody (jeszcze nie wdrożone)
 - [ ] Google Search Console, sitemapa katalogu (provider jeszcze nie wdrożony)
 - [ ] Przełączenie DNS; stary serwer zostawić działający ~30 dni jako siatka bezpieczeństwa
@@ -269,8 +273,16 @@ H4 pozycje list `.vts-ilist`.
 
 **3. Hero podstrony konfiguruje `vts_page_hero($slug)` w `vts-content.php`.**
 Slug bez wpisu dostaje wariant minimalny (okruszki + H1), więc strony prawne i katalog
-nie wymagają niczego. Slajder strony głównej: `vts_hero_slides()` — nagłówek `<h1>` nosi
-wyłącznie slajd 0, bo na stronie jest jeden nagłówek pierwszego poziomu.
+nie wymagają niczego. Slajder strony głównej czyta opublikowane wpisy typu `vts_slajd`
+(`vts-hero-slides.php`, w kokpicie „Slajdy hero"): publikacja = slajd widoczny, szkic =
+wyłączony, pole „Kolejność" ustala porządek, obrazek wyróżniający podmienia tło (bez niego
+slajd używa fabrycznego pliku z `assets/img` zapisanego w meta `_vts_img`). Fragment hasła
+w `*gwiazdkach*` dostaje kolor akcentu. Nagłówek `<h1>` nosi wyłącznie pierwszy slajd, bo na
+stronie jest jeden nagłówek pierwszego poziomu; efekt reflektorów działa tylko na fabrycznym
+`hero.webp` na pozycji 0. Fabryczne cztery slajdy (`vts_hero_slides_default()`) zakłada
+`./bin/import.sh`, ale wyłącznie gdy w bazie nie ma żadnego slajdu. Gdy klient wyłączy
+wszystkie, strona pokazuje statycznie slajd 0. Losowa kolejność slajdów 2+:
+`wp option update vts_hero_shuffle 1`.
 
 **4. Formularze: osobny CF7 na podstronę.**
 Definicje w `vts_form_defs()` (`content/import.php`), szablony pól w `content/forms/*.html`,

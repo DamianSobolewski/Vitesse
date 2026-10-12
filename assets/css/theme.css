@@ -356,6 +356,8 @@ p:last-child{margin-bottom:0}
 .vts-hero--slider .vts-hero__in{max-width:880px}
 .vts-hero--slider h1,.vts-hero--slider .vts-hero__title{max-width:18ch}
 .vts-hero--slider .vts-lead{max-width:56ch}
+/* Fragment hasła w *gwiazdkach* z kokpitu („Slajdy hero") */
+.vts-hero__accent{color:var(--vts-accent)}
 
 /* Snopy świateł. Domyślnie ZAPALONE — jeśli JavaScript nie działa, użytkownik
    widzi kompletny kadr, tylko bez sekwencji. */

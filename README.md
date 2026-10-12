@@ -11,6 +11,9 @@ Trzy rzeczy, których nie ma w typowym WordPressie i o które w tym projekcie ch
 - **kalkulator oszczędności** dla flot,
 - **baza wykresów z hamowni** z uproszczonym panelem dla obsługi warsztatu.
 
+Karuzelę hero na stronie głównej klient prowadzi sam w kokpicie („Slajdy hero": zdjęcie,
+teksty, kolejność, włącz/wyłącz przez publikację). Reszta treści jest kodem.
+
 Szczegóły architektury: **[PLAN-WDROZENIA.md](PLAN-WDROZENIA.md)**.
 
 ---
