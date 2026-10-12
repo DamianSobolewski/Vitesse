@@ -182,7 +182,8 @@ p:last-child{margin-bottom:0}
 .vts-nav{margin-left:auto}
 .vts-nav ul{list-style:none;display:flex;gap:22px;margin:0;padding:0}
 .vts-nav li{position:relative}
-.vts-nav a{font-size:var(--vts-step--1);font-weight:600;text-decoration:none;padding-block:10px;
+/* 16 px jak w pasku kontaktowym (uwaga klienta, X 2026) */
+.vts-nav a{font-size:16px;font-weight:600;text-decoration:none;padding-block:10px;
   display:inline-block;white-space:nowrap;color:var(--vts-graphite)}
 /* Stan bieżący i :hover: tekst niemal czarny plus pomarańczowa kreska pod spodem.
  * Sam pomarańcz jako tekst na stali miałby kontrast ~2.9:1. */
@@ -210,7 +211,7 @@ p:last-child{margin-bottom:0}
 @media (min-width:1081px) and (max-width:1240px){
   .vts-nav .sub-menu .sub-menu{min-width:260px;grid-template-columns:1fr}
 }
-.vts-header__cta{flex:none}
+.vts-header__cta{flex:none;font-size:16px}
 
 /* przełącznik menu na wąskich ekranach */
 .vts-burger{display:none;margin-left:auto;background:transparent;border:1px solid var(--vts-line);

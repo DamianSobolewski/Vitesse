@@ -143,6 +143,8 @@ for (const w of [1440, 1280, 1100]) {
         if (!ma) return;
         const cs = getComputedStyle(el);
         if (cs.display === 'none' || cs.visibility === 'hidden') return;
+        // Menu i przycisk w naglowku maja 16 px na zyczenie klienta (X 2026), poza skala.
+        if (el.closest('.vts-nav, .vts-header__cta')) return;
         const fs = parseFloat(cs.fontSize);
         if (!skala.some((v) => Math.abs(v - fs) < 0.6)) {
           poza.push(fs + 'px @ ' + (el.className || el.tagName).toString().slice(0, 30));
