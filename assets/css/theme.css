@@ -1039,6 +1039,10 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
   transition:width .2s}
 .vts-hero__dots button::before{content:"";position:absolute;left:4px;right:4px;top:20px;
   height:4px;border-radius:100px;background:var(--vts-line);transition:background .2s}
+/* Reset Hello Elementor maluje `button:hover/:focus` na różowo (#c36) — po kliknięciu
+   kropki zostawał różowy prostokąt pola trafienia. Tło przycisku ma zostać przezroczyste,
+   reaguje tylko kreska. */
+.vts-hero__dots button:is(:hover,:focus,:active){background:transparent}
 .vts-hero__dots button:hover::before,.vts-hero__dots button:focus::before{background:var(--vts-muted)}
 .vts-hero__dots button.is-active{width:52px}
 .vts-hero__dots button.is-active::before,
