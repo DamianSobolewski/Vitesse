@@ -25,7 +25,7 @@ for (const u of urls) {
   if (!res || res.status() !== 200) { console.log(`POMINIETO ${u} (status ${res?.status()})`); continue; }
   checked++;
   const r = await p.evaluate(() => {
-    const all = [...document.querySelectorAll('.vts-card, .vts-cat-tile, .vts-dyno__card')];
+    const all = [...document.querySelectorAll('.vts-card, .vts-cat-tile')];
     const empty = all.filter(el => el.textContent.trim() === '');
     return {
       total: all.length,

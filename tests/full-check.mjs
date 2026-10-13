@@ -13,7 +13,6 @@ const shots = [
   ['/podnoszenie-mocy/oferta-dla-flot/', 'f-flota'],
   ['/chiptuning/', 'f-katalog'],
   ['/chiptuning/ford/focus/iii/', 'f-generacja'],
-  ['/wykresy-i-osiagi/', 'f-wykresy'],
   ['/kontakt/', 'f-kontakt'],
 ];
 for (const [path, name] of shots) {
@@ -26,10 +25,6 @@ for (const [path, name] of shots) {
 await p.goto(B + '/podnoszenie-mocy/oferta-dla-flot/', { waitUntil: 'networkidle' });
 console.log('kalkulator rocznie:', await p.locator('[data-c="year"]').textContent(),
             '| CO2:', await p.locator('[data-c="co2"]').textContent());
-
-// wykresy
-await p.goto(B + '/wykresy-i-osiagi/', { waitUntil: 'networkidle' });
-console.log('kafelkow z wykresami:', await p.locator('.vts-dyno__card').count());
 
 // wydajnosc strony glownej
 await p.goto(B + '/', { waitUntil: 'networkidle' });

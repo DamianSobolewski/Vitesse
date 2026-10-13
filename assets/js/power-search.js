@@ -12,6 +12,67 @@
   var motionOK = !matchMedia('(prefers-reduced-motion: reduce)').matches;
   var PUSTE = '– – –';
 
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ------------------------------------------------------- wykres mocy V-techa
+   * Jeden overlay na stronę, dla każdego [data-vts-chart] — w wyszukiwarce i na
+   * stronie silnika w katalogu. Obraz ładuje się dopiero po kliknięciu, wprost
+   * z vtechtuning.pl. Zamknięcie: ×, tło, Escape; fokus wraca na przycisk.
+   */
+  var overlay = null, overlayImg = null, overlayClose = null, opener = null;
+
+  function chartOverlay() {
+    if (overlay) { return overlay; }
+    overlay = document.createElement('div');
+    overlay.className = 'vts-chart-overlay';
+    overlay.hidden = true;
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Wykres mocy');
+    overlay.innerHTML =
+      '<div class="vts-chart-overlay__box">' +
+        '<button type="button" class="vts-chart-overlay__close" aria-label="Zamknij wykres">&times;</button>' +
+        '<img class="vts-chart-overlay__img" alt="" decoding="async">' +
+        '<p class="vts-chart-overlay__src">Wykres ze sklepu V-tech. Przebieg orientacyjny dla tej wersji silnika.</p>' +
+      '</div>';
+    document.body.appendChild(overlay);
+    overlayImg   = overlay.querySelector('img');
+    overlayClose = overlay.querySelector('.vts-chart-overlay__close');
+
+    overlayClose.addEventListener('click', closeChart);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) { closeChart(); } });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !overlay.hidden) { closeChart(); }
+    });
+    return overlay;
+  }
+
+  function openChart(btn) {
+    chartOverlay();
+    opener = btn;
+    overlayImg.src = btn.dataset.vtsChart;
+    overlayImg.alt = btn.dataset.vtsChartAlt || 'Wykres mocy';
+    overlay.hidden = false;
+    document.body.classList.add('has-vts-overlay');
+    overlayClose.focus();
+  }
+
+  function closeChart() {
+    overlay.hidden = true;
+    overlayImg.removeAttribute('src');
+    document.body.classList.remove('has-vts-overlay');
+    if (opener) { opener.focus(); opener = null; }
+  }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('[data-vts-chart]') : null;
+    if (btn) { e.preventDefault(); openChart(btn); }
+  });
+
   /* Odliczanie liczby na ekranie. Przy wyłączonym ruchu wpisujemy od razu
      wartość końcową — nigdy przypadkową klatkę. */
   function licz(el, od, doo, sufiks, prefiks) {
@@ -206,8 +267,14 @@
         var moc = '<span>moc <b>+' + r.gain_hp + ' KM</b>' +
                   (r.tuned_hp ? ' <em>→ ' + r.tuned_hp + '</em>' : '') + '</span>';
         var mom = r.gain_nm ? '<span>moment <b>+' + r.gain_nm + ' Nm</b></span>' : '';
+        // Wykres mocy ze sklepu V-techa — adres przychodzi z wtyczki VT Konfigurator.
+        var wyk = r.chart_url
+          ? '<button type="button" class="vts-ps__chart" data-vts-chart="' + esc(r.chart_url) + '"' +
+            ' data-vts-chart-alt="' + esc('Wykres mocy V-tech: ' + data.vehicle.replace(' · ', ' ') + ' — ' + r.label) + '">' +
+            'Zobacz wykres mocy</button>'
+          : '';
         return '<div class="vts-ps__srv"><h4>' + r.label + '</h4>' +
-               '<div class="vts-ps__srv-v">' + moc + mom + '</div></div>';
+               '<div class="vts-ps__srv-v">' + moc + mom + '</div>' + wyk + '</div>';
       }).join('');
 
       note.textContent = data.note || '';

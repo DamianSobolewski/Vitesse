@@ -58,7 +58,7 @@ services:
       - ./mu-plugins:/var/www/html/wp-content/mu-plugins:ro
       # Wtyczka VT Konfigurator od klienta — źródło danych katalogu mocy, wersjonowana w repo.
       - ./plugins/vt-konfigurator:/var/www/html/wp-content/plugins/vt-konfigurator:ro
-      # Jedyny mount RW: Krzysiek wgrywa wykresy, uploady musza byc na hoscie (backup, przenaszalnosc)
+      # Jedyny mount RW: uploady (slajdy hero, media) musza byc na hoscie (backup, przenaszalnosc)
       - ./uploads:/var/www/html/wp-content/uploads
 
   phpmyadmin:

@@ -19,7 +19,8 @@ Prosimy o wyjaśnienie z V-techem:
 - Czy jako autoryzowany partner mogą Państwo prezentować te dane na własnej stronie?
 - Czy V-tech udostępnia do tego **oficjalne API albo plik**? To byłoby znacznie lepsze niż
   odczytywanie danych ze strony — nie psuje się przy każdej zmianie wyglądu ich sklepu.
-- Czy jest zgoda na pokazywanie **wykresów mocy** z ich serwera?
+- Czy jest zgoda na pokazywanie **wykresów mocy** z ich serwera? *(Decyzja klienta, X 2026:
+  pokazujemy je przy wyniku wyszukiwarki; wyjaśnienie z V-techem po stronie Vitesse.)*
 
 To pytanie blokuje publikację katalogu. Do czasu odpowiedzi wszystko działa lokalnie i nie jest
 widoczne dla klientów.
@@ -79,13 +80,11 @@ Katalog na starej stronie nie pokazuje cen — są na osobnej podstronie.
 Czy możemy dostać **cennik lub reguły cenowe** (np. widełki per klasa pojazdu)?
 Wyszukiwarka w nagłówku ma pokazywać orientacyjną wycenę i bez tego traci sens.
 
-## 7. Wykresy z hamowni
+## 7. Wykresy z hamowni — ~~do ustalenia~~ rozstrzygnięte (X 2026)
 
-- Ile jest archiwalnych wykresów i w jakiej formie (pliki, wydruki, zdjęcia)?
-- Czy klienci wyrazili **zgodę na publikację**? Widoczne tablice rejestracyjne czynią
-  pojazd i właściciela identyfikowalnymi, więc zgoda jest wymagana.
-- Kto ma wgrywać nowe wykresy — potwierdzamy, że Krzysiek?
-  Publikuje od razu, czy wpisy mają czekać na akceptację?
+Ręczna baza wydruków z hamowni i panel dla obsługi wycofane na decyzję klienta.
+Wykresy mocy dla wersji silnika pochodzą ze sklepu V-techa (wtyczka VT Konfigurator)
+i stoją przy wyniku wyszukiwarki oraz na stronie wersji w katalogu.
 
 ## 8. Zdjęcia producentów — sprawa do wyjaśnienia
 
@@ -136,7 +135,6 @@ cokolwiek kupionego. Żeby ich użyć, potrzebujemy rozstrzygnąć:
 3. Najlepsze wyjście: **kilka nowych zdjęć pustego stanowiska** albo z autem, na które zgodę
    macie. Wtedy nie ma tematu i zdjęcia są w pełni Wasze.
 
-To samo dotyczy czterech zdjęć demonstracyjnych w bazie wykresów (`content/dyno/seed/`).
 
 ## 10. Hosting docelowy
 

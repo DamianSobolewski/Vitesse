@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 import { tmpdir } from 'node:os';
 const OUT = process.env.VTS_OUT || tmpdir();
-const PAGES = ['/', '/podnoszenie-mocy/oferta-dla-flot/', '/kontakt/', '/hamownia/', '/wykresy-i-osiagi/'];
+const PAGES = ['/', '/podnoszenie-mocy/oferta-dla-flot/', '/kontakt/', '/hamownia/'];
 const b = await chromium.launch();
 let bad = 0;
 for (const w of [1440, 768, 390]) {

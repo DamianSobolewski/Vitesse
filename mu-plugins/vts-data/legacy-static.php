@@ -69,4 +69,7 @@ return [
     'podnoszenie-mocy/chip-tuning/skrzynie-biegow-tcu'             => '/podnoszenie-mocy/dodatkowe-uslugi-ecu/',
     'podnoszenie-mocy/chip-tuning/auta-na-gwarancji-i-w-leasingu'  => '/podnoszenie-mocy/chip-tuning/',
     'podnoszenie-mocy/odblokowywanie-sterownikow'                  => '/podnoszenie-mocy/dodatkowe-uslugi-ecu/',
+
+    // Baza wykresów z hamowni wycofana w X 2026 (wykresy mocy stoją przy wyniku wyszukiwarki).
+    'wykresy-i-osiagi'                                             => '/hamownia/',
 ];

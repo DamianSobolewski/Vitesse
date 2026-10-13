@@ -284,6 +284,7 @@ function vts_view_engine(array $r): void
         <?php if ($wynik && $wynik['results']) : ?>
           <?php /* Wynik prosto z katalogu, bez bramki — ta sama funkcja, która
                    obsługuje wyszukiwarkę. Robot indeksujący widzi pełne liczby. */ ?>
+          <?php $ma_wykres = (bool) array_filter(array_column($wynik['results'], 'chart_url')); ?>
           <div class="vts-cat-gains">
             <?php foreach ($wynik['results'] as $w) : ?>
               <div class="vts-ps__srv"><h3><?= esc_html($w['label']) ?></h3>
@@ -292,11 +293,17 @@ function vts_view_engine(array $r): void
                   <?php if ((int) $w['gain_nm'] > 0) : ?>
                     <span>moment <b>+<?= (int) $w['gain_nm'] ?> Nm</b><?= $w['tuned_nm'] ? ' <em>→ ' . (int) $w['tuned_nm'] . ' Nm</em>' : '' ?></span>
                   <?php endif; ?>
-                </div></div>
+                </div>
+                <?php /* Wykres mocy ze sklepu V-techa (wtyczka VT Konfigurator); overlay dopina power-search.js. */ ?>
+                <?php if (!empty($w['chart_url'])) : ?>
+                  <button type="button" class="vts-ps__chart" data-vts-chart="<?= esc_url($w['chart_url']) ?>"
+                          data-vts-chart-alt="<?= esc_attr('Wykres mocy V-tech: ' . $pojazd . ' — ' . $w['label']) ?>">Zobacz wykres mocy</button>
+                <?php endif; ?>
+              </div>
             <?php endforeach; ?>
           </div>
           <p class="vts-note"><?= esc_html($wynik['note']) ?>
-            Jeśli chcesz zobaczyć wykres z hamowni, skontaktuj się z nami.</p>
+            <?= $ma_wykres ? '' : 'Jeśli chcesz zobaczyć wykres z hamowni, skontaktuj się z nami.' ?></p>
         <?php else : ?>
           <p>Dla tej wersji nie mamy jeszcze wartości w katalogu. Zadzwoń:
             <a href="<?= esc_attr(vts_phone_href($c['phones']['tuning']['number'])) ?>"><?= esc_html($c['phones']['tuning']['number']) ?></a>,

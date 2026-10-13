@@ -9,7 +9,8 @@ Trzy rzeczy, których nie ma w typowym WordPressie i o które w tym projekcie ch
   katalogu ~4700 wersji silnikowych, wynik (PowerChip i Chip Tuning) od razu po kliknięciu,
   bez bramki e-mail; dane pochodzą z wtyczki **VT Konfigurator** od klienta,
 - **kalkulator oszczędności** dla flot,
-- **baza wykresów z hamowni** z uproszczonym panelem dla obsługi warsztatu.
+- **wykresy mocy V-techa** przy wyniku wyszukiwarki i na stronie wersji w katalogu
+  (adres wykresu pobiera ta sama wtyczka, obraz ładuje się ze sklepu V-techa).
 
 Karuzelę hero na stronie głównej klient prowadzi sam w kokpicie („Slajdy hero": zdjęcie,
 teksty, kolejność, włącz/wyłącz przez publikację). Reszta treści jest kodem.
@@ -44,9 +45,8 @@ Otwórz `.env` i uzupełnij. **Puste pola sekretów to nie jest opcja** — poni
 | Pole | Co wpisać |
 |---|---|
 | `DB_PASSWORD`, `DB_ROOT_PASSWORD` | dowolne mocne hasła, np. `openssl rand -hex 16` |
-| `VTS_TOKEN_SECRET`, `VTS_LEAD_SALT` | `openssl rand -hex 32` — osobno dla każdego |
+| `VTS_TOKEN_SECRET`, `VTS_LEAD_SALT` | `openssl rand -hex 32` — osobno dla każdego (sól do hashowania adresów IP w limitach zapytań) |
 | `WP_ADMIN_PASSWORD` | hasło administratora WordPressa |
-| `VTS_OPERATOR_PASSWORD` | hasło konta obsługi hamowni |
 | `WP_PORT` | port wolny na tej maszynie (domyślnie `8090`) |
 | `WP_BIND` | `127.0.0.1` gdy używasz reverse proxy, `0.0.0.0` gdy wystawiasz wprost |
 | `VTS_LEAD_INBOX` | adres, na który mają trafiać zapytania z formularzy |
@@ -71,10 +71,10 @@ docker compose up -d
 
 ```bash
 ./bin/bootstrap.sh https://twoja-domena.pl   # rdzeń WordPressa, motyw, wtyczki (w tym VT Konfigurator), konta
-./bin/migrate.sh                             # tabele katalogu mocy i leadów
+./bin/migrate.sh                             # tabele katalogu mocy
 ./bin/import.sh                              # strony, treść, menu, SEO, formularz kontaktowy
 ./bin/import-catalog.sh                      # katalog mocy: drzewo pojazdów z konfiguratora V-techa przez wtyczkę
-./bin/seed-dev.sh                            # przykładowe wykresy z hamowni (patrz ostrzeżenie niżej)
+./bin/seed-dev.sh                            # przykładowe opinie (patrz ostrzeżenie niżej)
 ```
 
 Co robi każdy krok i jak wygląda poprawny wynik:
@@ -82,10 +82,10 @@ Co robi każdy krok i jak wygląda poprawny wynik:
 | Krok | Efekt | Poprawny wynik |
 |---|---|---|
 | `bootstrap.sh` | instaluje WordPressa pod podanym adresem | `Gotowe. Adres serwisu: https://…` |
-| `migrate.sh` | tworzy 7 własnych tabel | lista `Created table` albo `bez zmian` |
-| `import.sh` | wgrywa 19 stron, wpisy, menu i formularze | `strony: 19` |
+| `migrate.sh` | tworzy 6 własnych tabel i sprząta po wycofanych funkcjach | lista `Created table` albo `bez zmian` |
+| `import.sh` | wgrywa 18 stron, wpisy, menu i formularze | `strony: 18` |
 | `import-catalog.sh` | pobiera drzewo ze sklepu V-techa do wtyczki, buduje katalog i ogrzewa pierwsze 200 wersji | `Drzewo zapisane: 60 marek…`, `OPUBLIKOWANE: 60 marek, … 4720 silników` |
-| `seed-dev.sh` | dodaje 14 wykresów i 3 opinie demonstracyjne | `wykresy demonstracyjne: 14` |
+| `seed-dev.sh` | dodaje 3 opinie demonstracyjne | `dowód społeczny: dane demonstracyjne` |
 
 `import-catalog.sh` potrzebuje dostępu z serwera do `sklep.vtech.pl` (wychodzące HTTPS).
 Przyrosty dla pozostałych wersji dociąga cron WordPressa co godzinę (paczka 150 silników,
@@ -170,10 +170,9 @@ Logi: `docker compose logs -f wordpress`
 
 - **`bin/import-catalog.sh --all`** w godzinach pracy — ściąga wyniki dla wszystkich ~4700 wersji
   naraz (ok. 3 godziny zapytań do sklepu V-techa). Domyślny tryb ogrzewa 200 wersji, resztę robi cron.
-- **`bin/seed-dev.sh` na produkcji** — wgrywa 14 wykresów demonstracyjnych (wydruki wygenerowane
-  z `content/dyno/seed.json`, pojazdy z katalogu V-tech, ale nie realne pomiary) i trzy opinie.
-  Na środowisku pokazowym pokazują pełną stronę; przed startem produkcyjnym usunąć je z panelu
-  i wgrać archiwum hamowni oraz opinie z profilu Google.
+- **`bin/seed-dev.sh` na produkcji** — wgrywa trzy opinie demonstracyjne (`content/seed.json`),
+  które nie są prawdziwe. Na środowisku pokazowym pokazują pełną stronę; przed startem
+  produkcyjnym podmienić na opinie z profilu Google.
 
 ---
 
@@ -190,9 +189,12 @@ nie jest potrzebne do uruchomienia.
 | Konto | Rola | Gdzie hasło |
 |---|---|---|
 | `WP_ADMIN_USER` | administrator | `.env` → `WP_ADMIN_PASSWORD` |
-| `VTS_OPERATOR_USER` | obsługa hamowni — widzi wyłącznie panel wykresów | `.env` → `VTS_OPERATOR_PASSWORD` |
 
 Panel administracyjny: `https://twoja-domena.pl/wp-admin`
+
+Konto obsługi hamowni (`vts_dyno_operator`) zostało wycofane w X 2026 razem z ręcznym panelem
+wykresów. `migrate.sh` usuwa rolę i wpisy; samo konto użytkownika, jeśli istnieje, usuń ręcznie:
+`docker compose --profile cli run --rm wpcli user delete <login> --reassign=<id administratora>`.
 
 ---
 

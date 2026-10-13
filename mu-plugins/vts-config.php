@@ -41,6 +41,10 @@ function vts_feature(string $flag): bool
         // Podstrony DPF/EGR/SCR. Włączone na wyraźną decyzję klienta (mail o strukturze
         // serwisu). Akceptacja prawna treści pozostaje pozycją na liście przed startem.
         'emissions_pages' => true,
+        // Wykres mocy V-techa przy wyniku (przycisk „Zobacz wykres mocy"). Adres
+        // pobiera wtyczka VT Konfigurator, obraz ładuje się wprost z vtechtuning.pl.
+        // Włączone na decyzję klienta (X 2026); wyłącznik na wypadek sprzeciwu V-techa.
+        'vt_charts'       => true,
     ];
 
     if (!array_key_exists($flag, $defaults)) {
@@ -87,7 +91,42 @@ function vts_secret(string $name, string $fallback = ''): string
     return (string) $value;
 }
 
-/** Skrzynka, na którą lecą leady. Rozdzielona na detal i floty. */
+/* -------------------------------------------------------------------------
+ * Limit zapytań na adres IP
+ *
+ * Adres nie trafia do bazy ani do transientów w postaci jawnej — tylko jako
+ * hash z solą ze środowiska (VTS_LEAD_SALT).
+ * ---------------------------------------------------------------------- */
+
+function vts_hash_ip(string $ip): string
+{
+    return hash('sha256', $ip . '|' . vts_secret('VTS_LEAD_SALT', 'vts-dev-salt'));
+}
+
+function vts_client_ip(): string
+{
+    return (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+}
+
+/**
+ * Hamulec na masowe zgarnianie katalogu skryptem. Okno i próg dobiera
+ * wywołujący (kaskada, wynik, VIN).
+ */
+function vts_rate_limited(string $bucket, int $max = 5, int $window = HOUR_IN_SECONDS): bool
+{
+    $key  = 'vts_rl_' . $bucket . '_' . substr(vts_hash_ip(vts_client_ip()), 0, 20);
+    $hits = (int) get_transient($key);
+
+    if ($hits >= $max) {
+        return true;
+    }
+
+    set_transient($key, $hits + 1, $window);
+
+    return false;
+}
+
+/** Skrzynka, na którą trafiają zapytania z formularzy. Rozdzielona na detal i floty. */
 function vts_lead_inbox(string $kind = 'retail'): string
 {
     $fallback = get_option('admin_email');

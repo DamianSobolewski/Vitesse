@@ -31,14 +31,14 @@ done
 
 WPC() { docker compose --profile cli run --rm wpcli "$@"; }
 
-echo "==> 1/7  czekam na bazę"
+echo "==> 1/6  czekam na bazę"
 for i in $(seq 1 30); do
   WPC db check >/dev/null 2>&1 && break
   [ "$i" = 30 ] && { echo "BŁĄD: baza nie odpowiada. Czy 'docker compose up -d' wystartowało?"; exit 1; }
   sleep 2
 done
 
-echo "==> 2/7  rdzeń WordPressa ($SITE_URL)"
+echo "==> 2/6  rdzeń WordPressa ($SITE_URL)"
 if WPC core is-installed >/dev/null 2>&1; then
   echo "    już zainstalowany — aktualizuję tylko adres"
   WPC option update home "$SITE_URL" >/dev/null
@@ -53,19 +53,19 @@ else
     --skip-email
 fi
 
-echo "==> 3/7  język polski"
+echo "==> 3/6  język polski"
 WPC language core install pl_PL --activate >/dev/null 2>&1 || true
 WPC option update timezone_string 'Europe/Warsaw' >/dev/null
 WPC option update date_format 'j F Y' >/dev/null
 
-echo "==> 4/7  motyw i wtyczki"
+echo "==> 4/6  motyw i wtyczki"
 WPC theme install hello-elementor --activate >/dev/null 2>&1 || WPC theme activate hello-elementor >/dev/null
 WPC plugin install elementor contact-form-7 seo-by-rank-math webp-converter-for-media --activate >/dev/null 2>&1 || true
 # VT Konfigurator (wtyczka od klienta) leży w repo w plugins/ i jest zamontowana w kontenerze —
 # tylko aktywacja. Katalog mocy bierze z niej drzewo pojazdów i wyniki (mu-plugins/vts-vt-bridge.php).
 WPC plugin activate vt-konfigurator >/dev/null 2>&1 || echo "    UWAGA: nie udało się aktywować vt-konfigurator — sprawdź mount plugins/ w docker-compose.yml"
 
-echo "==> 5/7  sprzątanie i odnośniki"
+echo "==> 5/6  sprzątanie i odnośniki"
 WPC post delete 1 2 3 --force >/dev/null 2>&1 || true
 WPC plugin delete akismet hello >/dev/null 2>&1 || true
 WPC theme delete twentytwentythree twentytwentyfour twentytwentyfive >/dev/null 2>&1 || true
@@ -73,20 +73,7 @@ WPC theme delete twentytwentythree twentytwentyfour twentytwentyfive >/dev/null 
 WPC rewrite structure '/%postname%/' --hard >/dev/null 2>&1 || true
 WPC rewrite flush --hard >/dev/null 2>&1 || true
 
-echo "==> 6/7  konto obsługi hamowni"
-if [ -n "${VTS_OPERATOR_USER:-}" ] && [ -n "${VTS_OPERATOR_PASSWORD:-}" ]; then
-  if WPC user get "$VTS_OPERATOR_USER" >/dev/null 2>&1; then
-    echo "    konto '$VTS_OPERATOR_USER' już istnieje — pomijam"
-  else
-    WPC user create "$VTS_OPERATOR_USER" "${VTS_OPERATOR_USER}@vitesse.local" \
-      --role=vts_dyno_operator --display_name="Obsługa hamowni" \
-      --user_pass="$VTS_OPERATOR_PASSWORD" >/dev/null
-  fi
-else
-  echo "    pominięto — brak VTS_OPERATOR_USER / VTS_OPERATOR_PASSWORD w .env"
-fi
-
-echo "==> 7/7  uprawnienia i blokada indeksowania"
+echo "==> 6/6  uprawnienia i blokada indeksowania"
 docker compose exec -u root -T wordpress chown -R www-data:www-data /var/www/html/wp-content/uploads 2>/dev/null || true
 # Podgląd dla klienta nie ma trafić do wyszukiwarek. Zdjąć dopiero przed startem:
 #   docker compose --profile cli run --rm wpcli option update blog_public 1

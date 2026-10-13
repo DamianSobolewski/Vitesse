@@ -45,7 +45,7 @@ add_filter('the_content', function ($content) {
     // Wpisy dostają ten sam nagłówek co strony — okruszki i H1 z tytułu. Dzięki
     // temu żaden wpis nie musi sam dostarczać nagłówka, a te dwa typy treści
     // wyglądają spójnie.
-    if (is_page() || is_singular('post') || is_singular('vts_dyno')) {
+    if (is_page() || is_singular('post')) {
         return vts_capture('vts_render_page_header') . $content;
     }
 
@@ -337,7 +337,7 @@ function vts_render_home_hero(): void
              nagłówka, wydłużała sekcję do dwóch ekranów i zasłaniała auto na
              zdjęciu; tu ma cztery listy w jednym rzędzie i jest pierwszą rzeczą
              pod hasłem. */ ?>
-    <section class="vts-ps-band">
+    <section class="vts-ps-band" id="wyszukiwarka">
       <div class="vts-wrap">
         <?= do_shortcode('[vts_power_search layout="wide"]') ?>
       </div>
@@ -403,11 +403,6 @@ function vts_page_hero(string $slug): array
                        . 'Elektronika silnika i pomiary na hamowni.',
             'img'     => 'pas-onas',
         ],
-        'wykresy-i-osiagi' => [
-            'eyebrow' => 'Baza realizacji',
-            'lead'    => 'Wykresy z naszej hamowni przed modyfikacją i po niej. '
-                       . 'Publikujemy je za zgodą właścicieli pojazdów.',
-        ],
         'kontakt' => [
             'eyebrow' => 'Łódź, ul. Kolumny 267C',
             'lead'    => 'Zadzwoń albo napisz. Odpowiadamy w godzinach pracy warsztatu, '
@@ -421,9 +416,6 @@ function vts_page_hero(string $slug): array
 function vts_render_page_header(): void
 {
     $hero = is_page() ? vts_page_hero((string) get_post_field('post_name', get_the_ID())) : [];
-    if (is_singular('vts_dyno')) {
-        $hero = ['eyebrow' => 'Wykres z hamowni', 'lead' => ''];
-    }
     $img  = !empty($hero['img']) ? vts_hero_slide_img($hero['img']) : '';
     $pad  = $img ? '' : ' style="padding-block:var(--vts-gap-l) var(--vts-gap-m)"';
     ?>
@@ -471,12 +463,6 @@ function vts_breadcrumbs(): string
     if (is_singular('post') && ($blog = (int) get_option('page_for_posts'))) {
         $crumbs[] = '<a href="' . esc_url(get_permalink($blog)) . '">'
                   . esc_html(get_the_title($blog)) . '</a>';
-    }
-
-    // Wykres z hamowni wisi pod bazą realizacji.
-    if (is_singular('vts_dyno') && ($baza = get_page_by_path('wykresy-i-osiagi'))) {
-        $crumbs[] = '<a href="' . esc_url(get_permalink($baza)) . '">'
-                  . esc_html(get_the_title($baza)) . '</a>';
     }
 
     $crumbs[] = '<span style="color:var(--vts-text);opacity:1;margin:0">'
@@ -1168,32 +1154,14 @@ add_shortcode('vts_pomiar', function () {
     return $out . '</div>';
 });
 
-/* -------------------------------------------------------- wykres z hamowni
+/* -------------------------------------------------- wykres poglądowy
  *
- * Ostatni opublikowany wykres z bazy realizacji — realny wydruk, który wgrywa
- * obsługa hamowni. Dopóki bazy nie ma, rysujemy przebieg poglądowy: dwie
- * krzywe mocy i momentu przed i po, podpisane jako poglądowe.
+ * Rysunek na stronie hamowni: dwie krzywe mocy i momentu przed i po, podpisane
+ * jako poglądowe. Realne wykresy mocy dla wersji silnika pochodzą z V-techa
+ * i stoją przy wyniku wyszukiwarki (przycisk „Zobacz wykres mocy").
  */
-add_shortcode('vts_dyno_latest', function () {
-    $q = new WP_Query([
-        'post_type'      => 'vts_dyno',
-        'post_status'    => 'publish',
-        'posts_per_page' => 1,
-        'meta_key'       => '_thumbnail_id',
-        'no_found_rows'  => true,
-    ]);
-
-    if ($q->have_posts()) {
-        $p   = $q->posts[0];
-        $img = get_the_post_thumbnail($p, 'large', ['loading' => 'lazy', 'decoding' => 'async']);
-        if ($img) {
-            return '<figure class="vts-photo vts-photo--chart"><a href="' . esc_url(get_permalink($p)) . '">'
-                 . $img . '</a><figcaption><span class="vts-photo__e">Z naszej hamowni</span>'
-                 . '<b>' . esc_html(get_the_title($p)) . '</b></figcaption></figure>';
-        }
-    }
-
-    // Poglądowy wykres: moc (ciągła) i moment (przerywana), przed (szare) i po (pomarańcz).
+add_shortcode('vts_wykres_pogladowy', function () {
+    // Moc (ciągła) i moment (przerywana), przed (szare) i po (pomarańcz).
     ob_start(); ?>
     <figure class="vts-photo vts-photo--chart vts-photo--svg">
       <svg viewBox="0 0 640 400" role="img"

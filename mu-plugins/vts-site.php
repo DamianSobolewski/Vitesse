@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 add_action('wp_enqueue_scripts', function () {
     $deps = [];
 
-    foreach (['fonts', 'tokens', 'theme', 'power-search', 'fleet-calc', 'dyno'] as $handle) {
+    foreach (['fonts', 'tokens', 'theme', 'power-search', 'fleet-calc'] as $handle) {
         $rel = "css/{$handle}.css";
         if (!file_exists(VTS_ASSETS_DIR . '/' . $rel)) {
             continue;
@@ -27,7 +27,7 @@ add_action('wp_enqueue_scripts', function () {
 
     wp_enqueue_script('vts-site', VTS_ASSETS_URL . '/js/site.js', [], vts_asset_ver('js/site.js'), true);
 
-    foreach (['power-search', 'fleet-calc', 'dyno'] as $handle) {
+    foreach (['power-search', 'fleet-calc'] as $handle) {
         $rel = "js/{$handle}.js";
         if (file_exists(VTS_ASSETS_DIR . '/' . $rel)) {
             wp_enqueue_script("vts-{$handle}", VTS_ASSETS_URL . '/' . $rel, [], vts_asset_ver($rel), true);
@@ -210,9 +210,8 @@ function vts_render_footer(): void
                 'depth'          => 1,
                 'fallback_cb'    => '__return_empty_string',
             ]); ?>
-            <?php /* Odnośnika do panelu wykresów tu nie ma: obsługa wchodzi przez
-                     kokpit WordPressa, a klient ma dostawać przyrosty, nie wykresy
-                     (ustalenie klienta, X 2026). */ ?>
+            <?php /* Panelu wykresów nie ma (decyzja klienta, X 2026): wykres mocy
+                     dla wersji pokazujemy przy wyniku wyszukiwarki, prosto z V-techa. */ ?>
           </div>
 
           <div>

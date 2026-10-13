@@ -97,7 +97,7 @@ add_action('rest_api_init', function () {
 
     /**
      * Warianty silnikowe — WYŁĄCZNIE dane fabryczne.
-     * Wartości po tuningu i cena wychodzą dopiero z POST /lead.
+     * Przyrosty wychodzą dopiero z GET /catalog/result z tokenem.
      */
     register_rest_route(VTS_NS, '/catalog/engines', [
         'methods'  => 'GET',
@@ -123,7 +123,7 @@ add_action('rest_api_init', function () {
      * mapujemy je na markę z własnego katalogu, a z dziesiątego znaku czytamy rok
      * modelowy. To wystarcza, żeby ustawić pierwszy krok kaskady — reszta zostaje
      * po stronie użytkownika. Endpoint NIE zwraca wartości po modyfikacji;
-     * bramka leadowa pozostaje wyłącznie w POST /lead.
+     * przyrosty wydaje wyłącznie GET /catalog/result z tokenem.
      */
     register_rest_route(VTS_NS, '/catalog/vin', [
         'methods'  => 'GET',
@@ -170,12 +170,6 @@ add_action('rest_api_init', function () {
             $wynik = vts_engine_result($engine_id);
             return $wynik ?: new WP_Error('vts_engine', 'Nie znaleziono wersji silnika.', ['status' => 404]);
         },
-    ]);
-
-    register_rest_route(VTS_NS, '/lead', [
-        'methods'  => 'POST',
-        'permission_callback' => $open,
-        'callback' => 'vts_rest_lead',
     ]);
 });
 
@@ -313,59 +307,8 @@ function vts_vin_decode(string $vin): array
     ];
 }
 
-function vts_rest_lead(WP_REST_Request $r)
-{
-    $engine_id = (int) $r->get_param('engine_id');
-    $token     = (string) $r->get_param('token');
-
-    // Honeypot — pole ukryte w formularzu, człowiek go nie wypełni.
-    if ($r->get_param('company') !== null && $r->get_param('company') !== '') {
-        return new WP_Error('vts_spam', 'Nie udało się wysłać.', ['status' => 400]);
-    }
-
-    if (!$engine_id || !vts_gate_verify($token, $engine_id)) {
-        return new WP_Error('vts_token', 'Sesja wygasła. Wybierz silnik ponownie.', ['status' => 403]);
-    }
-
-    if (!$r->get_param('consent')) {
-        return new WP_Error('vts_consent', 'Zaznacz zgodę na kontakt.', ['status' => 400]);
-    }
-
-    if (vts_rate_limited('lead', 5)) {
-        return new WP_Error('vts_rate', 'Zbyt wiele zapytań z tego adresu. Zadzwoń do nas.', ['status' => 429]);
-    }
-
-    $path = vts_engine_path($engine_id);
-    if (!$path) {
-        return new WP_Error('vts_engine', 'Nie znaleziono wersji silnika.', ['status' => 404]);
-    }
-
-    // VIN jest opcjonalny — pole w wyszukiwarce bywa puste, a wybór ręczny go pomija.
-    // Zapisujemy go, bo dla warsztatu jest cenniejszy niż sama nazwa wersji.
-    $vin = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string) $r->get_param('vin')));
-    if (strlen($vin) !== 17 || preg_match('/[IOQ]/', $vin)) {
-        $vin = '';
-    }
-
-    $id = vts_lead_store([
-        'source'    => 'hero-cascade',
-        'email'     => (string) $r->get_param('email'),
-        'phone'     => (string) $r->get_param('phone'),
-        'engine_id' => $engine_id,
-        'vin'       => $vin,
-        'payload'   => ['pojazd' => "{$path['make']} {$path['model']} {$path['generation']} {$path['engine']}"],
-    ]);
-
-    if (is_wp_error($id)) {
-        return new WP_Error('vts_save', $id->get_error_message(), ['status' => 400]);
-    }
-
-    return vts_engine_result($engine_id);
-}
-
 /**
- * Przyrosty dla wersji silnika — jeden wynik dla wyszukiwarki, strony katalogu
- * i (gdyby wrócił) formularza leadowego.
+ * Przyrosty dla wersji silnika — jeden wynik dla wyszukiwarki i strony katalogu.
  *
  * @return array|null null, gdy wersji nie ma
  */
@@ -418,6 +361,8 @@ function vts_engine_result(int $engine_id): ?array
             'tuned_hp' => $tuned_hp,
             'tuned_nm' => $tuned_nm,
             'price'    => $g['price_net'] !== null ? (float) $g['price_net'] : null,
+            // Wykres mocy ze sklepu V-techa (wtyczka VT Konfigurator → vts_gain.chart_url).
+            'chart_url' => vts_feature('vt_charts') && !empty($g['chart_url']) ? (string) $g['chart_url'] : null,
         ];
     }
 
@@ -449,11 +394,9 @@ function vts_engine_result(int $engine_id): ?array
     ];
 }
 
-/** Bramka nie może być cache'owana. */
+/** Odpowiedzi katalogu mogą żyć w cache; token i tak ma własny termin ważności. */
 add_filter('rest_post_dispatch', function ($response, $server, $request) {
-    if (strpos($request->get_route(), '/vitesse/v1/lead') !== false) {
-        $response->header('Cache-Control', 'no-store, max-age=0');
-    } elseif (strpos($request->get_route(), '/vitesse/v1/catalog') !== false) {
+    if (strpos($request->get_route(), '/vitesse/v1/catalog') !== false) {
         $response->header('Cache-Control', 'public, max-age=300, s-maxage=3600');
     }
     return $response;

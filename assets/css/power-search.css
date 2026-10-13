@@ -121,6 +121,39 @@
 .vts-ps__srv-v b{color:var(--vts-accent);font-weight:500}
 .vts-ps__srv-v em{font-style:normal;color:#8992A0}
 
+/* przycisk wykresu V-techa — w wyszukiwarce i na stronie silnika w katalogu */
+.vts-ps__chart{appearance:none;background:transparent;cursor:pointer;
+  border:1px solid var(--vts-line-strong);border-radius:var(--vts-radius);
+  padding:7px 12px 7px 32px;position:relative;color:var(--vts-text);
+  font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
+  letter-spacing:var(--vts-track-label);text-transform:uppercase;
+  transition:border-color .18s,color .18s}
+.vts-ps__chart::before{content:"";position:absolute;left:11px;top:50%;width:13px;height:9px;
+  transform:translateY(-50%);border-left:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+  background:linear-gradient(to top right,transparent 44%,currentColor 44% 56%,transparent 56%) no-repeat}
+/* reset Hello Elementor maluje button:hover/:focus na różowo — tło zadajemy wprost */
+.vts-ps__chart:is(:hover,:focus,:active){background:transparent;color:var(--vts-accent);border-color:var(--vts-accent)}
+.vts-ps__chart:focus-visible{outline:2px solid var(--vts-accent);outline-offset:2px}
+.vts-ps__srv .vts-ps__chart{flex-basis:100%}
+@media (min-width:521px){.vts-ps__srv .vts-ps__chart{flex-basis:auto}}
+
+/* --- overlay z wykresem (jeden na stronę, dopina go power-search.js) ---------- */
+.vts-chart-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;
+  justify-content:center;padding:16px;background:rgba(9,11,15,.94)}
+.vts-chart-overlay[hidden]{display:none}
+.vts-chart-overlay__box{position:relative;max-width:min(1100px,96vw);max-height:92vh;
+  display:flex;flex-direction:column;gap:10px}
+.vts-chart-overlay__img{display:block;max-width:100%;max-height:82vh;object-fit:contain;
+  background:#fff;border-radius:var(--vts-radius)}
+.vts-chart-overlay__src{margin:0;font-size:var(--vts-step--2);color:var(--vts-muted);text-align:center}
+.vts-chart-overlay__close{position:absolute;top:-14px;right:-14px;width:40px;height:40px;
+  border-radius:50%;border:1px solid var(--vts-line-strong);background:var(--vts-surface);
+  color:var(--vts-text);font-size:26px;line-height:1;cursor:pointer}
+.vts-chart-overlay__close:is(:hover,:focus,:active){
+  background:var(--vts-surface);color:var(--vts-accent);border-color:var(--vts-accent)}
+.vts-chart-overlay__close:focus-visible{outline:2px solid var(--vts-accent);outline-offset:2px}
+body.has-vts-overlay{overflow:hidden}
+
 .vts-ps__note{margin:0;padding:14px var(--vts-ps-pad) 0;font-size:var(--vts-step--2);
   color:var(--vts-muted);line-height:1.55}
 .vts-ps__note:empty{display:none}

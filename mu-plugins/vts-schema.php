@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Vitesse — schemat bazy
- * Description: Własne tabele katalogu mocy i leadów. Aplikowane przez bin/migrate.sh, nie przy każdym żądaniu.
+ * Description: Własne tabele katalogu mocy. Aplikowane przez bin/migrate.sh, nie przy każdym żądaniu.
  *
  * Dlaczego własne tabele, a nie CPT: ~17 tys. wariantów silnikowych × ~2,5 usługi
  * to ~60 tys. wpisów w wp_posts i ~600 tys. w wp_postmeta. Kaskada w Hero byłaby
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('VTS_DB_VERSION', '1.2.0');
+define('VTS_DB_VERSION', '1.3.0');
 
 /** Pełne nazwy tabel (z prefiksem instalacji). */
 function vts_table(string $name): string
@@ -159,33 +159,6 @@ function vts_schema_definitions(): array
   KEY idx_slug_entity (entity,entity_id)
 ) $charset;";
 
-    // Lead nie może żyć wyłącznie w mailu — świeży hosting bez reputacji trafia
-    // do spamu, a awaria SMTP oznaczałaby cichą utratę pieniędzy klienta.
-    $sql['lead'] = "CREATE TABLE " . vts_table('lead') . " (
-  id int(10) unsigned NOT NULL AUTO_INCREMENT,
-  created_at datetime NOT NULL,
-  source varchar(32) NOT NULL,
-  email varchar(190) NOT NULL,
-  phone varchar(32) DEFAULT NULL,
-  name varchar(96) DEFAULT NULL,
-  engine_id int(10) unsigned DEFAULT NULL,
-  service_code varchar(32) DEFAULT NULL,
-  vin varchar(17) DEFAULT NULL,
-  query_text varchar(255) DEFAULT NULL,
-  payload_json longtext DEFAULT NULL,
-  consent_contact tinyint(1) NOT NULL DEFAULT 0,
-  consent_marketing tinyint(1) NOT NULL DEFAULT 0,
-  consent_text_hash char(64) NOT NULL DEFAULT '',
-  ip_hash char(64) DEFAULT NULL,
-  user_agent varchar(255) DEFAULT NULL,
-  status varchar(16) NOT NULL DEFAULT 'new',
-  mail_sent_at datetime DEFAULT NULL,
-  PRIMARY KEY  (id),
-  KEY idx_lead_created (created_at),
-  KEY idx_lead_status (status),
-  KEY idx_lead_email (email)
-) $charset;";
-
     return $sql;
 }
 
@@ -232,6 +205,52 @@ function vts_schema_apply_foreign_keys(): array
     return $added;
 }
 
+/**
+ * Pozostałości po funkcjach wycofanych w X 2026 (decyzja klienta):
+ * - tabela leadów z bramki e-mail w wyszukiwarce (bramki nie ma od IX 2026),
+ * - ręczny panel wykresów z hamowni (CPT vts_dyno, rola obsługi) — wykresy
+ *   pochodzą teraz z wtyczki VT Konfigurator (chart_url w vts_gain).
+ *
+ * Konta użytkowników z dawną rolą zostają — usunięcie konta to decyzja
+ * administratora (`wp user delete <login> --reassign=<id admina>`).
+ */
+function vts_schema_drop_obsolete(): array
+{
+    global $wpdb;
+
+    $done = [];
+
+    $lead = vts_table('lead');
+    if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $lead)) === $lead) {
+        $wpdb->query("DROP TABLE `{$lead}`");
+        $done[] = 'tabela leadów usunięta';
+    }
+    wp_clear_scheduled_hook('vts_purge_leads');
+    delete_option('vts_lead_retention_months');
+
+    // Wprost z tabeli: get_posts() pomija kosz i auto-drafty, a typ nie jest już zarejestrowany.
+    $ids = $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_type = %s", 'vts_dyno'));
+    foreach ($ids as $id) {
+        wp_delete_post((int) $id, true);
+    }
+    if ($ids) {
+        $done[] = count($ids) . ' wpisów wykresów usuniętych';
+    }
+    foreach (['vts_dyno_marka', 'vts_dyno_paliwo', 'vts_dyno_usluga', 'vts_dyno_klasa'] as $tax) {
+        $wpdb->query($wpdb->prepare(
+            "DELETE tt, t FROM {$wpdb->term_taxonomy} tt JOIN {$wpdb->terms} t ON t.term_id = tt.term_id WHERE tt.taxonomy = %s",
+            $tax
+        ));
+    }
+    if (get_role('vts_dyno_operator')) {
+        remove_role('vts_dyno_operator');
+        $done[] = 'rola obsługi hamowni usunięta';
+    }
+    delete_option('vts_role_version');
+
+    return $done;
+}
+
 /** Uruchamiane z bin/migrate.sh. Idempotentne. */
 function vts_schema_migrate(): array
 {
@@ -244,6 +263,7 @@ function vts_schema_migrate(): array
     }
 
     $result['foreign_keys'] = vts_schema_apply_foreign_keys();
+    $result['porzadki']     = vts_schema_drop_obsolete();
 
     update_option('vts_db_version', VTS_DB_VERSION, false);
 

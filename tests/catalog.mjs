@@ -33,19 +33,15 @@ check('kaskada nie zdradza przyrostow',
 check('kaskada podaje moc fabryczna', keys.includes('stock_hp'));
 check('kaskada wydaje token bramki', keys.includes('token'));
 
-// pełny wynik dopiero po przejściu bramki. Wersja może nie mieć oferty u V-techa
+// pełny wynik dopiero z tokenem. Wersja może nie mieć oferty u V-techa
 // (wtyczka zwraca oba pola puste i silnik schodzi z widoku), więc próbujemy po kolei.
 let res, body, eng;
 for (eng of engines) {
-  res = await fetch(B + '/lead', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ engine_id: eng.id, token: eng.token, email: 'test@example.com', consent: true }),
-  });
+  res = await fetch(B + '/catalog/result?engine=' + eng.id + '&token=' + encodeURIComponent(eng.token));
   body = await res.json();
   if (res.ok && body.results && body.results.length) break;
 }
-check('bramka zwraca wynik', res.ok, `HTTP ${res.status} (${eng.name})`);
+check('wynik z tokenem', res.ok, `HTTP ${res.status} (${eng.name})`);
 if (res.ok) {
   check('warianty uslug obecne', body.results.length > 0,
     body.results.map(r => `${r.code} +${r.gain_hp}KM`).join(' | '));
@@ -53,7 +49,14 @@ if (res.ok) {
   check('pozycje jak we wtyczce (powerchip, chip)',
     body.results.every(r => ['powerchip', 'chip'].includes(r.code)),
     body.results.map(r => r.code).join(','));
+  check('wariant niesie adres wykresu V-techa (chart_url)',
+    body.results.every(r => 'chart_url' in r),
+    body.results.map(r => r.chart_url ? 'jest' : 'brak').join(','));
 }
+const bad = await fetch(B + '/catalog/result?engine=' + eng.id + '&token=zly');
+check('wynik bez poprawnego tokenu odrzucony', bad.status === 403, `HTTP ${bad.status}`);
+const lead = await fetch(B + '/lead', { method: 'POST' });
+check('POST /lead nie istnieje', lead.status === 404, `HTTP ${lead.status}`);
 
 // dane z wtyczki i z naszego REST-u muszą byc te same (wspólny cache wyników)
 const [brand, model, gen, engine] = String(body.url || '').replace(/\/$/, '').split('/').slice(-4);

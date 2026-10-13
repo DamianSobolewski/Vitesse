@@ -147,7 +147,7 @@ function vts_engine_gains(int $engine_id): array
     $order = "'" . implode("','", array_map('esc_sql', vts_service_order())) . "'";
 
     return $wpdb->get_results($wpdb->prepare(
-        "SELECT service_code, label, tuned_hp, tuned_nm, gain_hp, gain_nm, price_net, price_is_from
+        "SELECT service_code, label, tuned_hp, tuned_nm, gain_hp, gain_nm, price_net, price_is_from, chart_url
            FROM {$t} g
           WHERE g.engine_id = %d" . vts_visibility_sql('g') . "
           ORDER BY FIELD(g.service_code, {$order}), g.service_code",

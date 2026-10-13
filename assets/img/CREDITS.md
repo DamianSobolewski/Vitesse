@@ -72,14 +72,11 @@ a zasada z tego pliku wymaga wcześniej zgód właścicieli pojazdów.
 
 Do rozstrzygnięcia z klientem — zapisane w `PYTANIA-DO-KLIENTA.md`.
 
-## Wykresy demonstracyjne — DO WYMIANY przed produkcją
+## Wykresy mocy
 
-`content/dyno/seed/*.webp` — 14 wydruków z hamowni **wygenerowanych** przez
-`tools/make-dyno-charts.py` z wartości w `content/dyno/seed.json`. Własna grafika, bez
-licencji zewnętrznych i bez pojazdów klientów; każdy podpisany drobnym „wydruk demonstracyjny".
-Używane wyłącznie przez `bin/seed-dev.sh`. Do zastąpienia realnym archiwum hamowni wraz ze
-zgodami właścicieli pojazdów. Cztery zdjęcia ze starego serwisu, które tu wcześniej leżały,
-usunięte (widoczne tablice i oklejenia obcych firm).
+Wykresy przy wyniku wyszukiwarki ładują się wprost ze sklepu V-tech (`vtechtuning.pl`,
+adres pobiera wtyczka VT Konfigurator). Nie trzymamy ich w repozytorium. Wykresy
+demonstracyjne z dawnej bazy realizacji usunięte w X 2026 razem z panelem.
 
 ## Zdjęcia o nieustalonym lub problematycznym pochodzeniu
 

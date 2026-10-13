@@ -209,7 +209,7 @@
    */
   if (motionOK && 'IntersectionObserver' in window) {
     var items = document.querySelectorAll(
-      '.vts-card, .vts-cat-tile, .vts-dyno__card, .vts-gauge, .vts-wynik, .vts-liczba'
+      '.vts-card, .vts-cat-tile, .vts-gauge, .vts-wynik, .vts-liczba'
     );
 
     if (items.length) {

@@ -229,10 +229,10 @@ p:last-child{margin-bottom:0}
  * Wylaczamy z niej przyciski, ktore maja wlasna palete. Bez `:not()` selektor
  * `.vts-ps button` (0,1,1) bil `.vts-btn--primary` (0,1,0) i pomaranczowy przycisk
  * dostawal jasny tekst — kontrast 2,33:1 zamiast wymaganych 4,5:1. */
-:is(.vts-hero,.vts-ps,.vts-cf7,.vts-dyno,.vts-fleet) button:not(.vts-btn):not(.vts-ps__toy),
+:is(.vts-hero,.vts-ps,.vts-cf7,.vts-fleet) button:not(.vts-btn):not(.vts-ps__toy):not(.vts-ps__chart),
 .vts-burger{
   color:var(--vts-text);border-color:var(--vts-line)}
-:is(.vts-hero,.vts-ps,.vts-cf7,.vts-dyno,.vts-fleet) button:not(.vts-btn):not(.vts-ps__toy):is(:hover,:focus,:active){
+:is(.vts-hero,.vts-ps,.vts-cf7,.vts-fleet) button:not(.vts-btn):not(.vts-ps__toy):not(.vts-ps__chart):is(:hover,:focus,:active){
   color:inherit;border-color:inherit}
 
 /* Na stali przycisk jest grafitowy. Selektor z nagłówkiem (0,2,0) wygrywa
@@ -1172,7 +1172,7 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
  * rozpoznac bez rozrozniania barw. Wykluczamy miejsca, ktore niosa wlasny
  * sygnal — karty, nawigacje, stopke, przyciski i chipy.
  */
-.vts-section :is(p,li,dd,blockquote) a:not(.vts-btn):not(.vts-card):not(.vts-dyno__chip):not(.vts-chip),
+.vts-section :is(p,li,dd,blockquote) a:not(.vts-btn):not(.vts-card):not(.vts-chip),
 .vts-ilist span a{
   color:var(--vts-accent-ink);text-decoration:underline;
   text-decoration-thickness:1px;text-underline-offset:3px;

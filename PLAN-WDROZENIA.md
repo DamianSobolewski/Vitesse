@@ -13,7 +13,7 @@ W skrócie, na czystym środowisku:
 cp .env.example .env                          # uzupełnij hasła i sekrety
 docker compose up -d
 ./bin/bootstrap.sh https://adres-serwisu      # rdzeń WordPressa, motyw, wtyczki, konta
-./bin/migrate.sh                              # tabele katalogu i leadów
+./bin/migrate.sh                              # tabele katalogu, porządki po wycofanych funkcjach
 ./bin/import.sh                               # strony, treść, menu, SEO, formularz
 ./bin/import-catalog.sh                       # katalog mocy z wtyczki VT Konfigurator (drzewo V-techa)
 ./bin/seed-dev.sh                             # dane demonstracyjne (TYLKO nieprodukcyjne)
@@ -24,7 +24,6 @@ zapisuje go do bazy — serwis postawiony pod złym adresem będzie na niego prz
 innego hosta. Skrypt jest idempotentny.
 
 Logowanie: `/wp-admin`, dane w `.env` (`WP_ADMIN_USER`, `WP_ADMIN_PASSWORD`).
-Konto obsługi hamowni: `VTS_OPERATOR_USER` / `VTS_OPERATOR_PASSWORD`.
 
 `bootstrap.sh` włącza blokadę indeksowania (`blog_public = 0`). Obejmuje ona także strony
 wirtualne katalogu — WordPress sam by ich nie objął, a jest ich blisko pięć tysięcy.
@@ -59,16 +58,13 @@ i `pages.json`. Zmiany klikane w edytorze zostaną nadpisane przy następnym imp
 | Plik | Odpowiada za |
 |---|---|
 | `vts-config.php` | dane firmy, flagi funkcji `vts_feature()`, sekrety z `getenv()` |
-| `vts-schema.php` | 7 własnych tabel, `dbDelta`, klucze obce |
+| `vts-schema.php` | 6 własnych tabel, `dbDelta`, klucze obce, porządki po wycofanych funkcjach |
 | `vts-catalog.php` | odczyt katalogu, słownik usług, `vts_visibility_sql()` |
 | `vts-catalog-import.php` | zapis katalogu do tabel (upsert po `legacy_key`), wygaszanie, liczniki |
 | `vts-vt-bridge.php` | most do wtyczki VT Konfigurator: drzewo → tabele, wyniki → `vts_gain`, cron, `wp vts vt` |
 | `vts-catalog-routes.php` | adresy `/chiptuning/{marka}/{model}/{generacja}/{silnik}/` |
 | `vts-power-search.php` | REST kaskady i wyniku, dekoder VIN (pod flagą), token HMAC, `vts_engine_result()` |
-| `vts-leads.php` | zapis leada, mail, autoresponder, retencja, podgląd w adminie |
 | `vts-fleet-calc.php` | kalkulator oszczędności flotowych |
-| `vts-dyno.php` | CPT wykresów, taksonomie, siatka z filtrem |
-| `vts-dyno-panel.php` | rola `vts_dyno_operator`, okrojony wp-admin |
 | `vts-redirects.php` | matryca 301 ze starego serwisu |
 | `vts-site.php` | zasoby, nagłówek, stopka 4-kolumnowa, FAB |
 | `vts-content.php` | hero (slajder + hero podstron), przewagi, proces, etapy, FAQ, kontakt, mapa, JSON-LD |
@@ -84,8 +80,9 @@ Klient zrezygnował z bramki e-mail (wrzesień 2026): wyszukiwarka ma pokazywać
 tak jak konfigurator V-techa. `GET /catalog/engines` zwraca dane fabryczne i token, a
 `GET /catalog/result?engine&token` — przyrosty dla każdego poziomu programu. Token i limit 120
 zapytań na godzinę z adresu zostają jako hamulec na zgarnianie katalogu skryptem.
-`POST /lead` istnieje nadal (zapis leada z e-mailem), ale nic go dziś nie wywołuje.
-Ta sama funkcja (`vts_engine_result()`) renderuje wynik na stronie wersji w katalogu.
+Dawny `POST /lead` i tabela leadów zostały usunięte (X 2026) — zapytania z formularzy CF7
+idą wyłącznie mailem. Ta sama funkcja (`vts_engine_result()`) renderuje wynik na stronie
+wersji w katalogu.
 
 **2. Token HMAC zamiast nonce'a WordPressa.**
 Nonce jest wypalany w HTML i żyje 12–24 h, więc łamie się przy cache'owaniu całych
@@ -159,8 +156,11 @@ prowadzą na przodka).
 Wtyczka podaje **delty** (+KM / +Nm). Tabela `vts_gain` trzyma `gain_hp`/`gain_nm`, a
 `vts_engine_result()` liczy z mocy fabrycznej wartość po modyfikacji. Moment fabryczny jest nieznany —
 V-tech go nie podaje — i wtedy kolumna `stock_nm` ma 0, co kod traktuje jako brak danych, nie jako
-zero. Adres wykresu z V-techa zapisujemy w `chart_url`, ale go nie pokazujemy (pytanie o zgodę
-w `PYTANIA-DO-KLIENTA.md`).
+zero. Adres wykresu z V-techa trafia do `chart_url` i wraca w `results[].chart_url`
+(`vts_engine_result()`), a przycisk „Zobacz wykres mocy" w wyszukiwarce i na stronie wersji
+otwiera go w nakładce (`power-search.js`). Obraz ładuje się wprost z `vtechtuning.pl`, nie
+kopiujemy go. Flaga `vt_charts` (domyślnie włączona, decyzja klienta X 2026) wyłącza przycisk,
+gdyby V-tech się sprzeciwił.
 
 ### Przekierowania po podmianie katalogu
 
@@ -204,20 +204,18 @@ Stan ostatniego przebiegu: wszystkie osiem zestawów przechodzi — RWD bez zast
 
 - [ ] Dane rejestrowe: `wp option update vts_legal_name|vts_nip|vts_regon`
 - [ ] Potwierdzić przypisanie telefonów do działów (`vts-config.php`)
-- [ ] Skrzynki leadowe w `.env`: `VTS_LEAD_INBOX`, `VTS_LEAD_INBOX_FLEET`
-- [ ] SMTP produkcyjny + SPF/DKIM/DMARC (bez tego leady trafią do spamu)
+- [ ] Skrzynki na zapytania w `.env`: `VTS_LEAD_INBOX`, `VTS_LEAD_INBOX_FLEET`
+- [ ] SMTP produkcyjny + SPF/DKIM/DMARC (bez tego zapytania z formularzy trafią do spamu;
+      formularze CF7 nie zapisują kopii w bazie)
 - [ ] Zastąpić zdjęcia zastępcze materiałem klienta; usunąć dane z `bin/seed-dev.sh`
 - [ ] **Dowód społeczny** — realne opinie i ocena z profilu Google zamiast trzech opinii
-      demonstracyjnych z `content/dyno/seed.json` (wgrywa je `bin/seed-dev.sh`):
+      demonstracyjnych z `content/seed.json` (wgrywa je `bin/seed-dev.sh`):
       `wp option update vts_google_rating|vts_google_reviews_count|vts_google_reviews_url|vts_reviews`.
       Dopóki `vts_reviews` jest puste, sekcja „Co mówią klienci" **nie renderuje się wcale**.
-- [ ] **Wykresy demonstracyjne** — 14 wpisów z flagą `_vts_seed` to wygenerowane wydruki
-      (`tools/make-dyno-charts.py`), nie pomiary klientów. Przed startem usunąć z panelu
-      (albo ponownie uruchomić seed z pustą listą) i wgrać archiwum hamowni.
 - [ ] **Certyfikat V-tech** — skan lub zdjęcie do sekcji dowodu społecznego (brak materiału)
-- [ ] Archiwum wykresów z hamowni + zgody właścicieli na publikację. Pojedynczy wykres ma
-      własny widok (`vts-dyno.php`, filtr `the_content`): wydruk, liczby, etykiety, link do
-      wersji w katalogu (pole „Powiązany silnik z katalogu" w panelu).
+- [ ] **Wykresy mocy V-techa** — przycisk przy wyniku jest włączony (flaga `vt_charts`).
+      Jeśli V-tech nie zgodzi się na pokazywanie wykresów ze swojego serwera:
+      `wp option update vts_feature_vt_charts 0`.
 - [ ] **Akceptacja prawna treści DPF / EGR / SCR.** Flaga `vts_feature_emissions_pages`
       jest **włączona** na wyraźną decyzję klienta (mail o strukturze serwisu), a kafle
       tych układów stoją na `/podnoszenie-mocy/dodatkowe-uslugi-ecu/` i w bloku flotowym.
@@ -258,7 +256,7 @@ słupek w kontenerze 1240 px, z pustą prawą połową. Każdy blok tekstu dosta
 pomiaru), `[vts_stages]` (Stage 1/2), `[vts_liczby]`, `[vts_social_proof]`, `[vts_map]`,
 `[vts_gauges]` (5 filarów), `[vts_photo img=… alt=…]` (duże zdjęcie 4:3 z `assets/img/foto-*.webp`, bez podpisu),
 `[vts_jumpnav]` (kotwice sekcji z `pages.json → anchors`, te same co 3. poziom menu),
-`[vts_dyno_latest]` (ostatni wykres z bazy albo przebieg poglądowy SVG). Proces stoi na stronie
+`[vts_wykres_pogladowy]` (przebieg poglądowy SVG na stronie hamowni). Proces stoi na stronie
 głównej i na `/podnoszenie-mocy/` — z jednego źródła.
 
 **2a. Układ sekcji z uwag klienta (IX 2026).** Nagłówek H2 zawsze nad tekstem, nie w środku;

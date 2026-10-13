@@ -1,0 +1,22 @@
+{
+  "_comment": "Dane demonstracyjne DEV — opinie nie są prawdziwe. Wgrywa bin/seed-dev.sh. Przed startem podmienić na opinie z profilu Google (wp option update vts_reviews ...).",
+  "reviews": {
+    "rating": 4.9,
+    "count": 87,
+    "url": "",
+    "items": [
+      {
+        "author": "Marcin K.",
+        "text": "Golf 2.0 TDI, chip tuning. Pomiar przed i po na miejscu, wydruk dostałem do ręki. Auto na trasie idzie zupełnie inaczej, a spalanie spadło o pół litra. Termin dotrzymany co do godziny."
+      },
+      {
+        "author": "Tomasz W., flota 11 aut",
+        "text": "Zaczęliśmy od jednego Sprintera na próbę, po sześciu tygodniach tankowania potwierdziły oszczędność i zrobiliśmy resztę partiami. Faktura, harmonogram, zero przestojów."
+      },
+      {
+        "author": "Agnieszka R.",
+        "text": "Volvo w leasingu, więc PowerChip. Montaż zajął kwadrans, przed przeglądem sama zdejmuję moduł w pięć minut. Uczciwie wytłumaczone, co można, a czego nie."
+      }
+    ]
+  }
+}

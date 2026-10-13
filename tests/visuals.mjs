@@ -24,7 +24,7 @@ const SZEROKOSCI = [1440, 1280, 1100, 1000, 950, 700, 620, 500, 390];
 const STRONY = ['/', '/podnoszenie-mocy/', '/podnoszenie-mocy/chip-tuning/',
   '/podnoszenie-mocy/powerboxy/', '/podnoszenie-mocy/oferta-dla-flot/',
   '/podnoszenie-mocy/dodatkowe-uslugi-ecu/',
-  '/ev-hybryda/', '/hamownia/', '/o-nas/', '/kontakt/', '/wykresy-i-osiagi/', '/blog/'];
+  '/ev-hybryda/', '/hamownia/', '/o-nas/', '/kontakt/', '/blog/'];
 
 const b = await chromium.launch();
 let bledy = 0;
