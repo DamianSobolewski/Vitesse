@@ -5,7 +5,7 @@
     "date": "2026-08-04",
     "excerpt": "Moduł dopina się do instalacji i schodzi w kwadrans. Zapis wchodzi do pamięci sterownika i zostaje. Oba dają moc, ale odpowiadają na inne sytuacje.",
     "seo": {
-      "title": "PowerChip czy chip tuning? Kiedy który ma sens | Vitesse V-tech Łódź",
+      "title": "PowerChip czy chip tuning? Kiedy który ma sens | VITESSE V-tech Łódź",
       "desc": "Różnice między modułem PowerChip a zapisem w sterowniku: odwracalność, zakres zmian, leasing i gwarancja. Konkrety z warsztatu w Łodzi."
     },
     "icon": "plug"
@@ -16,7 +16,7 @@
     "date": "2026-08-11",
     "excerpt": "Bez pomiaru wyjściowego nie ma od czego liczyć przyrostu. Wynik staje się wtedy deklaracją warsztatu, a nie liczbą, którą da się sprawdzić.",
     "seo": {
-      "title": "Po co pomiar na hamowni przed i po modyfikacji | Vitesse V-tech Łódź",
+      "title": "Po co pomiar na hamowni przed i po modyfikacji | VITESSE V-tech Łódź",
       "desc": "Dlaczego przyrost mocy bez pomiaru wyjściowego jest niesprawdzalny i co realnie zmienia hamownia podwoziowa w procesie modyfikacji."
     },
     "icon": "dyno"
@@ -27,7 +27,7 @@
     "date": "2026-08-18",
     "excerpt": "Silnik nie spala mniej na tej samej pracy. Kierowca rzadziej wchodzi w zakres obrotów, w którym paliwo idzie w ciepło zamiast w napęd.",
     "seo": {
-      "title": "Eco-tuning floty — skąd bierze się oszczędność paliwa | Vitesse V-tech",
+      "title": "Eco-tuning floty - skąd bierze się oszczędność paliwa | VITESSE V-tech",
       "desc": "Mechanizm oszczędności w eco-tuningu, realny zakres 5–8 procent i sposób liczenia zwrotu przy flocie ciągników siodłowych."
     },
     "icon": "fuel"
@@ -38,7 +38,7 @@
     "date": "2026-08-25",
     "excerpt": "Producenci zabezpieczają moduły przed odczytem i zapisem. To nie jest awaria ani wada, tylko zamek, który trzeba umieć otworzyć.",
     "seo": {
-      "title": "Zamknięty sterownik — co to znaczy i co z tego wynika | Vitesse V-tech",
+      "title": "Zamknięty sterownik - co to znaczy i co z tego wynika | VITESSE V-tech",
       "desc": "Dlaczego część sterowników wymaga otwarcia przed modyfikacją, co to zmienia w czasie realizacji i na co uważać przy wysyłce modułu."
     },
     "icon": "unlock"

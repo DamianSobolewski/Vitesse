@@ -1,8 +1,8 @@
 <?php
 /**
- * Dane demonstracyjne dowodu społecznego — DEV.
+ * Dane demonstracyjne dowodu społecznego - DEV.
  *
- * Źródło: content/seed.json. Trzy opinie i ocena nie są prawdziwe — przed startem
+ * Źródło: content/seed.json. Trzy opinie i ocena nie są prawdziwe - przed startem
  * produkcyjnym podmienić na opinie z profilu Google (PLAN-WDROZENIA.md, „Do produkcji").
  * Skrypt jest idempotentny: nadpisuje opcje przy każdym uruchomieniu.
  */

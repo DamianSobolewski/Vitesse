@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Vitesse — przekierowania 301
+ * Plugin Name: Vitesse - przekierowania 301
  * Description: Matryca ze starego serwisu .php na nową strukturę adresów.
  *
  * Dlaczego mu-plugin, a nie .htaccess: katalog WordPressa leży w wolumenie
@@ -8,7 +8,7 @@
  * `git reset --hard` go nie dotknie. Poza tym reguła katalogowa musi sięgnąć
  * do bazy po legacy_key, czego .htaccess nie potrafi.
  *
- * Wszystkie przekierowania muszą działać na NOWYM serwerze — po przełączeniu
+ * Wszystkie przekierowania muszą działać na NOWYM serwerze - po przełączeniu
  * DNS stary Apache nie zobaczy już żadnego żądania.
  */
 
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Mapa leży w podkatalogu — WordPress automatycznie ładuje tylko pliki .php
+ * Mapa leży w podkatalogu - WordPress automatycznie ładuje tylko pliki .php
  * bezpośrednio w mu-plugins, więc podkatalog nie jest wykonywany jako wtyczka.
  */
 function vts_static_redirects(): array
@@ -31,7 +31,7 @@ function vts_static_redirects(): array
 }
 
 /**
- * Przechwytujemy tylko na ścieżce 404 — na zwykłym ruchu koszt jest zerowy.
+ * Przechwytujemy tylko na ścieżce 404 - na zwykłym ruchu koszt jest zerowy.
  */
 add_action('template_redirect', function () {
     if (!is_404()) {
@@ -59,14 +59,14 @@ add_action('template_redirect', function () {
         vts_go(home_url($map[$path]));
     }
 
-    // 3) wariant bez polskich znaków — stary serwis miał oba
+    // 3) wariant bez polskich znaków - stary serwis miał oba
     $ascii = strtr($path, ['ę' => 'e', 'ó' => 'o', 'ą' => 'a', 'ś' => 's', 'ł' => 'l',
                            'ż' => 'z', 'ź' => 'z', 'ć' => 'c', 'ń' => 'n']);
     if ($ascii !== $path && isset($map[$ascii])) {
         vts_go(home_url($map[$ascii]));
     }
 
-    // 4) historia slugów katalogu — po ponownym imporcie slug mógł się zmienić
+    // 4) historia slugów katalogu - po ponownym imporcie slug mógł się zmienić
     if ($moved = vts_slug_history_target($path)) {
         vts_go($moved);
     }
@@ -126,7 +126,7 @@ function vts_resolve_legacy_catalog(string $auto): ?string
 
 /**
  * Buduje adres ze ścieżki "marka/model/generacja/silnik", ucinając poziomy,
- * których nie ma albo które są ukryte — dzięki temu nigdy nie kierujemy na 404.
+ * których nie ma albo które są ukryte - dzięki temu nigdy nie kierujemy na 404.
  */
 function vts_catalog_path_url(string $path): ?string
 {
@@ -219,7 +219,7 @@ function vts_slug_history_target(string $path): ?string
     return $row ? home_url('/') : null;
 }
 
-/** Zawsze jeden skok na finalny, absolutny adres — bez łańcuchów przekierowań. */
+/** Zawsze jeden skok na finalny, absolutny adres - bez łańcuchów przekierowań. */
 function vts_go(string $url): void
 {
     wp_redirect($url, 301);

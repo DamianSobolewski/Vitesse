@@ -6,12 +6,13 @@
       <p>Poza mocą sterownik decyduje o pracy filtra cząstek stałych, dawkowaniu AdBlue,
       ciśnieniu oleju, temperaturze silnika i limitach prędkości. Część tych nastaw da się
       dostroić do tego, jak naprawdę używasz pojazdu. Część prac rozwiązuje znane problemy
-      fabryczne konkretnych rodzin silników, część wynika z polityki floty albo warunków
-      ubezpieczenia.</p>
+      fabryczne konkretnych rodzin silników, część może być konieczna z uwagi na zużycie
+      niektórych podzespołów i starzenie się pojazdu.</p>
       <p>Każdą modyfikację poprzedza odczyt błędów i parametrów bieżących. Jeśli problem leży
       w mechanice, powiemy Ci to przed wyceną zamiast sprzedawać usługę, która nie pomoże.</p>
     </div>
     <div>
+      <!-- TODO asset (#177): zdjęcie sterownika silnika (np. Bosch MD1) w dłoniach mechanika; obecne pokazuje turbosprężarkę -->
       [vts_photo img="ecu" alt="Zbliżenie turbosprężarki i kolektora w komorze silnika"]
     </div>
   </div>
@@ -35,9 +36,9 @@
       to od nas przed wyceną.</p>
       <h3 class="vts-svc__sub">Kiedy warto</h3>
       <ul class="vts-svc__list">
-        <li>Kontrolka DPF zapala się co kilkaset kilometrów, a auto jeździ głównie po mieście.</li>
-        <li>Komunikat o AdBlue odlicza kilometry do zablokowania rozruchu.</li>
-        <li>Flota dostawcza traci dni na postoje i wypalanie filtra w serwisie.</li>
+        <li>Auto z silnikiem diesla eksploatowane jest głównie na krótkich dystansach</li>
+        <li>Awarie układów oczyszczania spalin nasilają się, a koszty napraw rosną</li>
+        <li>Gdy serwis, mimo wymiany wielu części, nie potrafi zlokalizować usterki</li>
       </ul>
     </div>
     <div class="vts-svc__media">
@@ -50,22 +51,24 @@
   <div class="vts-wrap vts-split">
     <div>
       <p class="vts-eyebrow">Komfort i trwałość</p>
-      <h2>Wyłączenie systemu Start@Stop</h2>
+      <h2>Wyłączanie systemu Start&Stop</h2>
       <p>System start-stop gasi silnik na każdych światłach i uruchamia go, gdy puszczasz
       hamulec. W mieście to kilkadziesiąt rozruchów dziennie, a każdy obciąża rozrusznik,
       akumulator i koło dwumasowe. Przycisk na konsoli wyłącza system tylko do następnego
       uruchomienia auta, więc naciskasz go przy każdym starcie.</p>
       <p>Wyłączamy start-stop programowo, w sterowniku silnika. Auto zapamiętuje ten stan na stałe:
-      nie dotykasz niczego po odpaleniu, a pozostałe funkcje działają jak dotąd. Ustawienie
-      fabryczne przywracamy na życzenie, w jednej wizycie.</p>
+      nie dotykasz niczego po odpaleniu, a pozostałe funkcje działają jak dotąd. Możemy także
+      odwrócić działanie przycisku.</p>
       <h3 class="vts-svc__sub">Kiedy warto</h3>
       <ul class="vts-svc__list">
         <li>Jeździsz głównie po mieście i silnik gaśnie kilkadziesiąt razy dziennie.</li>
         <li>Wymieniałeś akumulator albo rozrusznik wcześniej, niż zakłada serwis.</li>
         <li>Masz dość wyłączania systemu przyciskiem po każdym uruchomieniu.</li>
+        <li>Lubisz jeździć dynamicznie a system wyłącza silnik zaraz po ostrym przyspieszaniu</li>
       </ul>
     </div>
     <div class="vts-svc__media">
+      <!-- TODO asset (#146): przycisk Start&Stop, a nie przycisk uruchamiania silnika -->
       [vts_photo img="startstop" alt="Palec naciskający przycisk Engine Start Stop na desce rozdzielczej"]
     </div>
   </div>
@@ -79,15 +82,16 @@
       <p>W wielu nowoczesnych silnikach pompa oleju ma regulowaną wydajność, a sterownik
       ustawia ją możliwie nisko, żeby oszczędzać paliwo. Na papierze to wystarcza. W praktyce,
       przy gorącym silniku, zużytym oleju i dużym obciążeniu, ciśnienie spada do granicy,
-      za którą zaczyna się przyspieszone zużycie panewek i łańcucha rozrządu.</p>
+      za którą zaczyna się przyspieszone zużycie panewek wałka i łańcucha rozrządu.</p>
       <p>Korygujemy mapę sterowania pompą tak, by ciśnienie w całym zakresie obrotów trzymało
-      bezpieczny zapas. To zabezpieczenie przed zatarciem, nie kosmetyka: różnicę widać na
-      wskazaniach podczas jazdy z przyczepą i na długich podjazdach.</p>
+      bezpieczny zapas. Koszt tej modyfikacji jest symboliczny w porównaniu do kosztu związanego z remontem lub
+      wymianą silnika.</p>
       <h3 class="vts-svc__sub">Kiedy warto</h3>
       <ul class="vts-svc__list">
         <li>Silnik z rodziny znanej z problemów z łańcuchem rozrządu albo panewkami.</li>
         <li>Auto pracuje pod obciążeniem: przyczepa, kamper, dostawczak z ładunkiem.</li>
         <li>Po chip tuningu, gdy wyższy moment wymaga lepszego smarowania.</li>
+        <li>Jeśli lubisz autem poszaleć lub używasz go czasem na torze.</li>
       </ul>
     </div>
     <div class="vts-svc__media">
@@ -99,15 +103,14 @@
 <div class="vts-section vts-svc--flip" id="temperatura">
   <div class="vts-wrap vts-split">
     <div>
-      <p class="vts-eyebrow">Praca pod obciążeniem</p>
+      <p class="vts-eyebrow">Ochrona silnika</p>
       <h2>Obniżanie temperatury pracy silnika</h2>
       <p>Producenci podnoszą temperaturę pracy silnika, bo gorętszy silnik to niższe spalanie
       w teście homologacyjnym. Dla silnika pracującego pod obciążeniem to kłopot: mniejszy
       zapas do przegrzania, gęstszy nagar, szybciej starzejący się olej i uszczelki.</p>
       <p>Zmieniamy progi termostatu sterowanego elektronicznie i charakterystykę pracy
-      wentylatorów, żeby silnik utrzymywał niższą, stabilną temperaturę. Z tą zmianą łączymy
-      często korektę ciśnienia oleju. Efekt sprawdzasz sam na wskaźniku po pierwszym dłuższym
-      podjeździe z przyczepą.</p>
+      wentylatorów, żeby silnik utrzymywał niższą, stabilną temperaturę. Przedłuży to żywotność wielu
+      elementów, zapewni też większe rezerwy bezpieczeństwa.</p>
       <h3 class="vts-svc__sub">Kiedy warto</h3>
       <ul class="vts-svc__list">
         <li>Jeździsz z przyczepą, kamperem albo z pełnym ładunkiem w upały.</li>
@@ -116,6 +119,7 @@
       </ul>
     </div>
     <div class="vts-svc__media">
+      <!-- TODO asset (#153): wskaźnik temperatury bez kontrolek, wskazówka powyżej środka zakresu -->
       [vts_photo img="temperatura" alt="Wskaźnik temperatury silnika i kontrolka check engine na desce rozdzielczej"]
     </div>
   </div>
@@ -130,9 +134,9 @@
       W kilku popularnych rodzinach silników to typowy punkt awaryjny: zacierają się od nagaru,
       pękają osie i dźwignie, a urwany element potrafi trafić do cylindra. Sterownik widzi
       niezgodność położenia i zapala kontrolkę, czasem z trybem awaryjnym.</p>
-      <p>Najpierw sprawdzamy, co dokładnie się zepsuło. Jeśli naprawa mechaniczna nie ma sensu,
-      wyłączamy klapy programowo i dostosowujemy sterowanie tak, by silnik pracował równo
-      w całym zakresie, bez błędów i bez ryzyka, że luźna część wpadnie do dolotu.</p>
+      <p>Jeśli naprawa mechaniczna nie ma sensu, można klapy zablokować lub zdemontować
+      (ewentualnie wymienić kolektor na wersję bez klap) oraz wyłączyć je programowo. Bez
+      błędów i bez ryzyka, że luźna część wpadnie do dolotu.</p>
       <h3 class="vts-svc__sub">Kiedy warto</h3>
       <ul class="vts-svc__list">
         <li>Błąd położenia klap wraca po skasowaniu albo po wymianie siłownika.</li>
@@ -141,6 +145,7 @@
       </ul>
     </div>
     <div class="vts-svc__media">
+      <!-- TODO asset (#156): zdjęcie klap wirowych; obecne pokazuje przepustnicę -->
       [vts_photo img="klapy" alt="Mechanik w rękawicach trzyma przepustnicę z klapą w komorze silnika"]
     </div>
   </div>
@@ -151,10 +156,10 @@
     <div>
       <p class="vts-eyebrow">Floty i tor</p>
       <h2>Limitery prędkości i obrotów</h2>
-      <p>Ogranicznik prędkości to narzędzie, nie kara. We flocie wynika z polityki firmy albo
-      z warunków ubezpieczenia i realnie obniża spalanie oraz liczbę szkód. W aucie sportowym
-      fabryczny limiter przeszkadza na torze, a limit obrotów ustawiony pod seryjny silnik nie
-      pasuje do zmodyfikowanego.</p>
+      <p>Jeśli limiter prędkości przeszkadza Ci na autostradzie - możemy go przesunąć lub zdjąć.</p>
+      <p>Ale limitery to także świetne narzędzie w kontroli kosztów we flotach pojazdów. Ich
+      założenie pozwala obniżyć zarówno zużycie paliwa jak i całego układu napędowego, co
+      przekłada się na niższe koszty utrzymania floty.</p>
       <p>Zakładamy, przesuwamy albo zdejmujemy ograniczenia prędkości i obrotów w sterowniku.
       Wartość ustalasz Ty: jedną dla całej floty albo inną dla każdego pojazdu. Zmianę
       dokumentujemy, więc przy kontroli ubezpieczyciela masz czarno na białym, co i kiedy
@@ -166,10 +171,10 @@
         <li>[vts_icon name="limiter"]<div><h4>Limit prędkości pod politykę floty</h4>
           <span>Jedna wartość dla wszystkich aut, na przykład 120 km/h, albo osobna dla
           dostawczych i osobowych.</span></div></li>
-        <li>[vts_icon name="shield"]<div><h4>Zgodność z ubezpieczeniem</h4>
-          <span>Część polis premiuje ogranicznik niższą składką. Dostajesz potwierdzenie
-          ustawienia do dokumentacji.</span></div></li>
-        <li>[vts_icon name="invoice"]<div><h4>Obsługa partiami, faktura VAT</h4>
+        <li>[vts_icon name="shield"]<div><h4>Limit obrotów dla trwałości silnika</h4>
+          <span>Ustawienie limitera np. na 3000 obr/min pozwala sprawnie się poruszać,
+          ograniczając jednocześnie spalanie i przedwczesne zużycie silnika.</span></div></li>
+        <li>[vts_icon name="invoice"]<div><h4>Obsługa partiami, faktury</h4>
           <span>Flotę programujemy w umówionych turach, żeby auta nie stały w jednym
           tygodniu. <a href="/podnoszenie-mocy/oferta-dla-flot/">Zobacz ofertę dla flot</a>.</span></div></li>
       </ul>
@@ -184,7 +189,7 @@
       <h2>Druga sonda lambda</h2>
       <p>Druga sonda, za katalizatorem, nie steruje składem mieszanki. Sprawdza tylko, czy
       katalizator pracuje. Po jego wymianie na inny niż fabryczny albo przy zużytym wkładzie
-      sterownik widzi odchyłkę i zapala check engine, nieraz razem z trybem awaryjnym.</p>
+      sterownik widzi odchyłkę i zapala check engine, czasem także z trybem awaryjnym.</p>
       <p>Programowo wyłączamy diagnostykę drugiej sondy w sterowniku. Silnik dalej pracuje
       na pierwszej sondzie, więc skład mieszanki i spalanie zostają bez zmian. Znikają kontrolka
       i błędy P0420 oraz P0430. Jeśli katalizator jest sprawny, a błąd bierze się
@@ -193,7 +198,7 @@
       <ul class="vts-svc__list">
         <li>Po wymianie katalizatora na zamiennik, który sterownik uznaje za niesprawny.</li>
         <li>Błąd P0420 lub P0430 wraca po każdym skasowaniu.</li>
-        <li>Zapalona kontrolka zasłania inne usterki, które naprawdę trzeba widzieć.</li>
+        <li>Jazda z kontrolką „check engine” to ryzyko przeoczenia innych usterek</li>
       </ul>
     </div>
     <div class="vts-svc__media">
@@ -207,29 +212,17 @@
     <div>
       <p class="vts-eyebrow">Zimny rozruch</p>
       <h2>Korekta dawki rozruchowej</h2>
-      <p>Dawka paliwa w pierwszych sekundach po przekręceniu kluczyka jest ustawiona pod silnik
-      fabryczny: te same wtryskiwacze, ten sam dolot, paliwo z dystrybutora. Po zmianach
-      mechanicznych, montażu LPG albo przy zużytym silniku ta dawka przestaje pasować.
-      Objawy znasz: długie kręcenie rozrusznikiem na zimno, dym po odpaleniu, nierówne obroty
-      przez pierwszą minutę.</p>
-      <p>Korygujemy dawkę rozruchową i wzbogacenie na zimnym silniku, osobno dla zakresów
-      temperatury. Silnik odpala od razu i nie zalewa świec. Wcześniej sprawdzamy ciśnienie
-      paliwa, czujnik temperatury i wtryskiwacze: jeśli problem leży w częściach, usłyszysz to
-      zamiast poprawki w mapie.</p>
+      <p>Jeśli na zimnym silniku nie ma problemów z rozruchem, ale pojawiają się na rozgrzanym,
+      wtedy najczęściej przyczyną są częściowo zużyte (pompo)wtryskiwacze. Gorące paliwo jest
+      rzadsze i ucieka do powrotów przez drobne nieszczelności, przez co fabryczna dawka paliwa
+      okazuje się zbyt mała do skutecznego rozruchu. Programowa korekta dawki rozruchowej
+      pozwala na uniknięcie większych kosztów związanych z regeneracją lub wymianą
+      wtryskiwaczy.</p>
     </div>
     <div class="vts-svc__media">
-      <h3 class="vts-svc__sub" style="margin-top:0">Co robimy</h3>
-      <ul class="vts-ilist">
-        <li>[vts_icon name="injector"]<div><h4>Dawka pod realny silnik</h4>
-          <span>Po montażu LPG, wymianie wtryskiwaczy albo przebudowie mechanicznej dawka
-          startowa wraca do właściwej wartości.</span></div></li>
-        <li>[vts_icon name="temp"]<div><h4>Osobno dla każdej temperatury</h4>
-          <span>Inne wzbogacenie przy minus dziesięciu, inne przy plus piętnastu. Rozruch
-          jest równy przez cały rok.</span></div></li>
-        <li>[vts_icon name="fuel"]<div><h4>Najpierw części, potem mapa</h4>
-          <span>Sprawdzamy ciśnienie paliwa i czujniki. Nie maskujemy usterki mechanicznej
-          zmianą w oprogramowaniu.</span></div></li>
-      </ul>
+      <!-- TODO asset (#164): zdjęcie kluczyka w stacyjce trzymanego w palcach (rozruch). Wgraj jako assets/img/foto-dawka.webp
+           i podmień kafelek z ikoną na [vts_photo img="dawka" alt="Kluczyk w stacyjce trzymany w palcach"]. -->
+      <div class="vts-svc__icon">[vts_icon name="engine"]<span>Rozruch zimny i ciepły</span></div>
     </div>
   </div>
 </div>
@@ -265,20 +258,20 @@
       <p class="vts-eyebrow">Mechanika i oprogramowanie</p>
       <h2>Czyszczenie układów dolotowych</h2>
       <p>W silnikach z wtryskiem bezpośrednim paliwo nie obmywa zaworów dolotowych, więc nagar
-      z odmy i EGR osiada na nich warstwa po warstwie. Po stu, dwustu tysiącach kilometrów
-      kanały są zwężone o połowę: silnik traci moc, szarpie na niskich obrotach, a spalanie
-      rośnie. Żaden dodatek do paliwa tego nie usunie.</p>
-      <p>Czyścimy kolektor i zawory mechanicznie, a potem łączymy to z optymalizacją sterownika
-      pod odzyskany przepływ powietrza. Efekt sprawdzasz na hamowni: pomiar przed i po pokazuje,
-      ile mocy wróciło.</p>
+      z odmy i EGR osiada na nich warstwa po warstwie. Ten problem może pojawić się już nawet po
+      kilkudziesięciu tysiącach kilometrów. Żaden dodatek do paliwa tego nie usunie.</p>
+      <p>Zaczynamy od kamerki inspekcyjnej, czyścimy kolektor i zawory chemicznie i mechanicznie
+      - łupinkami orzechów pod ciśnieniem. Efekt możemy sprawdzić na hamowni: pomiar przed i po
+      pokazuje, ile mocy wróciło.</p>
       <h3 class="vts-svc__sub">Kiedy warto</h3>
       <ul class="vts-svc__list">
         <li>Silnik z wtryskiem bezpośrednim po stu tysiącach kilometrów bez czyszczenia.</li>
         <li>Nierówna praca na biegu jałowym, szarpanie i gorsze przyspieszenie.</li>
-        <li>Przed chip tuningiem, żeby program pracował na czystym dolocie.</li>
+        <li>Gdy silnik dymi lub szybko wracają problemy z DPFem</li>
       </ul>
     </div>
     <div class="vts-svc__media">
+      <!-- TODO asset (#167): kanały dolotowe w głowicy (wzór: czyszczeniezaworow.pl); obecne pokazuje komory spalania -->
       [vts_photo img="dolot" alt="Zdemontowana głowica i kolektor dolotowy pokryte nagarem na stole warsztatowym"]
     </div>
   </div>
@@ -290,9 +283,9 @@
       <p class="vts-eyebrow">Sterownik skrzyni</p>
       <h2>Programowanie skrzyń biegów (TCU)</h2>
       <p>Skrzynia automatyczna ma własny komputer. To on decyduje, kiedy zmienić bieg, jak
-      szybko to zrobić i ile momentu przepuścić przez sprzęgła. Po chip tuningu silnik oddaje
-      więcej, niż skrzynia ma zapisane w limitach, więc sterownik ścina moment albo zmienia
-      biegi ospale, żeby się chronić.</p>
+      szybko to zrobić i ile momentu przepuścić przez sprzęgła. Po chip tuningu większy moment obrotowy
+      silnika może nie zostać zrealizowany, jeśli limitery zapisane w skrzyni biegów na to nie
+      pozwolą.</p>
       <p>Programujemy TCU pod nowe parametry silnika: szybsza zmiana przełożeń, wyższy limit
       momentu na sprzęgłach, wcześniejsza blokada konwertera, dopasowane punkty zmiany biegów.
       Przy większych przyrostach momentu to nie dodatek, tylko warunek, żeby zestaw pracował
@@ -300,8 +293,8 @@
       <h3 class="vts-svc__sub">Kiedy warto</h3>
       <ul class="vts-svc__list">
         <li>Po chip tuningu auta z automatem, zwłaszcza DSG, ZF 8HP i skrzyniach dwusprzęgłowych.</li>
-        <li>Skrzynia zmienia biegi ospale albo ścina moment przy mocnym przyspieszaniu.</li>
-        <li>Chcesz szybszej reakcji na gaz i trybu sportowego, który naprawdę coś zmienia.</li>
+        <li>Gdy powolny start powoduje dodatkowe emocje przy włączaniu się do ruchu</li>
+        <li>Gdy skrzynia zmienia biegi przy zbyt niskich obrotach silnika</li>
       </ul>
     </div>
     <div class="vts-svc__media">
@@ -315,12 +308,13 @@
     <div>
       <p class="vts-eyebrow">ECU unlock</p>
       <h2>Odblokowywanie sterowników</h2>
-      <p>Producenci zabezpieczają sterowniki przed odczytem i zapisem. W większości warsztatów
-      oznacza to wysyłkę modułu do zewnętrznej firmy i tydzień czekania. U nas zamknięte ECU
-      otwieramy na stole w Łodzi, w kilka godzin, więc cała praca mieści się w jednej wizycie.</p>
-      <p>Pracujemy także dla warsztatów, które same robią modyfikacje, a potrzebują jedynie
-      otwarcia sterownika. Najpierw odczyt, potem wycena: jeśli dla Twojej wersji nie ma
-      dobrego programu, dowiesz się od razu, zanim cokolwiek zapłacisz.</p>
+      <p>Wiele sterowników od połowy 2020 roku jest zablokowana przed odczytem i programowaniem.
+      Przez kilka lat oznaczało to brak jakichkolwiek możliwości modyfikacji oprogramowania -
+      niezależnie czy związanej z podnoszeniem mocy, czy też z innymi usługami opartymi o zmiany
+      w sofcie.</p>
+      <p>Obecnie jest to już możliwe, choć wiele firm korzysta z możliwości odblokowania poprzez
+      wysyłkę modułu za granicę, co oznacza unieruchomienie auta na kilka dni. U nas zablokowane
+      ECU odblokowujemy na miejscu, więc cała operacja odbywa się podczas jednej wizyty.</p>
     </div>
     <div class="vts-svc__media">
       <h3 class="vts-svc__sub" style="margin-top:0">Co robimy</h3>
@@ -331,9 +325,8 @@
         <li>[vts_icon name="clock"]<div><h4>Jeden dzień zamiast tygodnia</h4>
           <span>Odczyt, modyfikacja i zapis tego samego dnia, z pomiarem na hamowni
           przed i po.</span></div></li>
-        <li>[vts_icon name="wrench"]<div><h4>Także dla warsztatów</h4>
-          <span>Otwieramy sterownik i oddajesz auto klientowi z własnym programem.
-          Bez pośredników za granicą.</span></div></li>
+        <li>[vts_icon name="wrench"]<div><h4>Odblokowanie</h4>
+          <span>Umożliwia wprowadzanie modyfikacji także w autach po 2020 roku produkcji.</span></div></li>
       </ul>
     </div>
   </div>

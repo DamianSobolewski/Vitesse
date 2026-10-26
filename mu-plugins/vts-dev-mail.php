@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: Vitesse — Poczta deweloperska
+ * Plugin Name: Vitesse - Poczta deweloperska
  * Description: Na środowisku lokalnym kieruje całą pocztę do Mailpit (host.docker.internal:1025), żeby dało się testować bramkę leadową bez wysyłania maili w świat. Nieaktywne poza localhostem.
  * Version: 1.0
  *
- * Na produkcji ten plik nic nie robi — wysyłką zajmuje się wtedy SMTP serwera.
+ * Na produkcji ten plik nic nie robi - wysyłką zajmuje się wtedy SMTP serwera.
  * Warunek poniżej jest jedynym przełącznikiem.
  */
 

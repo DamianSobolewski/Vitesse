@@ -2,7 +2,7 @@
 /**
  * Plugin Name: VT Konfigurator
  * Description: Konfigurator chip tuningu Vtech — kaskadowe dropdowny Marka/Model/Generacja/Silnik/Rocznik z wynikami PowerChip i Chip Tuning.
- * Version:     1.0.0
+ * Version:     1.1.0
  * Author:      Signuply
  * Author URI:  https://signuply.io
  * Text Domain: vt-konfigurator
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'VT_KONFIGURATOR_VERSION', '1.0.0' );
+define( 'VT_KONFIGURATOR_VERSION', '1.1.0' );
 define( 'VT_KONFIGURATOR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'VT_KONFIGURATOR_URL', plugin_dir_url( __FILE__ ) );
 define( 'VT_TEXT_DOMAIN', 'vt-konfigurator' );
@@ -30,6 +30,7 @@ define( 'VT_STALE_PREFIX', 'vt_stale_' );
 
 require_once VT_KONFIGURATOR_PATH . 'includes/class-vt-storage.php';
 require_once VT_KONFIGURATOR_PATH . 'includes/class-vt-fetcher.php';
+require_once VT_KONFIGURATOR_PATH . 'includes/class-vt-external.php';
 require_once VT_KONFIGURATOR_PATH . 'includes/class-vt-ajax.php';
 require_once VT_KONFIGURATOR_PATH . 'includes/class-vt-shortcode.php';
 

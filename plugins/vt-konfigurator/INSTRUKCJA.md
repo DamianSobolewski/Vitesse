@@ -1,6 +1,6 @@
 # VT Konfigurator — Instrukcja obsługi
 
-**Wersja wtyczki:** 1.0.0  
+**Wersja wtyczki:** 1.1.0  
 **Autor:** Signuply (signuply.io)  
 **Wymagania:** WordPress 6.0+, PHP 8.0+
 
@@ -150,6 +150,8 @@ Na jednej stronie można umieścić dowolną liczbę shortcode'ów — każdy dz
    - Jeśli dana opcja nie jest dostępna dla wybranego pojazdu, karta w ogóle nie jest wyświetlana.
    - Przycisk **„Zobacz wykres mocy"** (gdy włączony atrybut `charts="1"`) otwiera pełnoekranowy wykres z serwisu vtech.
 
+   - W trybie `charts="1"` pod przyciskiem **„Twoje wykresy"** pojawiają się małe kafelki z przyrostami Stage 1 podawanymi przez **ziptuning.nl** i **rica.nl** (z nazwą źródła i dopasowanym silnikiem). Dane ładują się w tle po otwarciu wyników. Dopasowanie pojazdu jest automatyczne (marka, model, rocznik, moc seryjna ±5 KM) — gdy źródło nie ma pasującego silnika, kafelek pokazuje „Brak danych dla tego pojazdu".
+
 4. Zamknięcie okna wyników (przycisk ×, kliknięcie tła lub klawisz Escape) przywraca konfigurator.
 
 ---
@@ -251,6 +253,12 @@ Zmienne są zdefiniowane na elemencie `.vtk-widget` i dziedziczone przez wszystk
 | `.vtk-gain-value` | Duża liczba (+50) |
 | `.vtk-gain-unit` | Jednostka (KM lub Nm) |
 | `.vtk-chart-btn` | Przycisk „Zobacz wykres mocy" (tylko przy `charts="1"`) |
+| `.vtk-ext` | Sekcja przyrostów z ziptuning.nl / rica.nl (tylko przy `charts="1"`) |
+| `.vtk-ext-tiles` | Siatka małych kafelków źródeł |
+| `.vtk-ext-tile` | Kafelek źródła (`.vtk-ext-tile--ziptuning`, `.vtk-ext-tile--rica`, `.vtk-ext-tile--empty`) |
+| `.vtk-ext-source-name` | Nazwa źródła (link do strony) |
+| `.vtk-ext-gain` | Przyrost w kafelku (`.vtk-ext-gain--hp`, `.vtk-ext-gain--nm`) |
+| `.vtk-ext-match` | Nazwa dopasowanego silnika w źródle |
 
 #### Wykres dynamometryczny (pełny ekran)
 

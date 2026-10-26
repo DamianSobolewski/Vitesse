@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Vitesse — katalog mocy
+ * Plugin Name: Vitesse - katalog mocy
  * Description: Dostęp do własnych tabel katalogu, słownik usług, jeden punkt kontroli widoczności.
  */
 
@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
 /**
  * Jedyne miejsce, w którym powstaje warunek widoczności.
  *
- * Żadne zapytanie katalogowe nie buduje go ręcznie — dzięki temu ukrycie marki
+ * Żadne zapytanie katalogowe nie buduje go ręcznie - dzięki temu ukrycie marki
  * (np. przyszłej linii serwisowej) działa wszędzie naraz i nie da się go pominąć.
  * Wartości: 0 = ukryte, 1 = publiczne, 2 = za flagą funkcji.
  */
@@ -27,12 +27,12 @@ function vts_visibility_sql(string $alias, ?string $feature = null): string
 }
 
 /**
- * Słownik usług. Konfiguracja, nie dane — mieszka w kodzie i wersjonuje się w gicie.
+ * Słownik usług. Konfiguracja, nie dane - mieszka w kodzie i wersjonuje się w gicie.
  */
 function vts_services(): array
 {
     return [
-        // Dwie pozycje — dokładnie tyle zwraca wtyczka VT Konfigurator, z której
+        // Dwie pozycje - dokładnie tyle zwraca wtyczka VT Konfigurator, z której
         // pochodzą przyrosty (vts-vt-bridge.php). „PowerChip" to ostatnia karta
         // PowerChip ze sklepu V-techa, czyli najwyższy dostępny poziom modułu.
         // Kolejność decyduje o kolejności wyświetlania.
@@ -108,7 +108,7 @@ function vts_generations(int $model_id): array
  * Warianty silnikowe danej generacji.
  *
  * UWAGA: celowo NIE zwraca wartości po tuningu ani ceny. Te ujawnia dopiero
- * vts_engine_gains() po przejściu bramki leadowej — inaczej wystarczy podejrzeć
+ * vts_engine_gains() po przejściu bramki leadowej - inaczej wystarczy podejrzeć
  * odpowiedź w narzędziach przeglądarki, żeby ją ominąć.
  */
 function vts_engines(int $generation_id): array
@@ -138,7 +138,7 @@ function vts_engine(int $id): ?array
     return $row ?: null;
 }
 
-/** Wartości po modyfikacji — tylko za bramką. */
+/** Wartości po modyfikacji - tylko za bramką. */
 function vts_engine_gains(int $engine_id): array
 {
     global $wpdb;
@@ -155,7 +155,7 @@ function vts_engine_gains(int $engine_id): array
     ), ARRAY_A) ?: [];
 }
 
-/** Pełna ścieżka silnika — marka, model, generacja. Do nagłówków i maili. */
+/** Pełna ścieżka silnika - marka, model, generacja. Do nagłówków i maili. */
 function vts_engine_path(int $engine_id): ?array
 {
     global $wpdb;
@@ -179,7 +179,7 @@ function vts_engine_path(int $engine_id): ?array
     return $row ?: null;
 }
 
-/** Wyszukiwanie pełnotekstowe — w MVP obsługuje trzecie pole wyszukiwarki. */
+/** Wyszukiwanie pełnotekstowe - w MVP obsługuje trzecie pole wyszukiwarki. */
 function vts_search_engines(string $q, int $limit = 10): array
 {
     global $wpdb;

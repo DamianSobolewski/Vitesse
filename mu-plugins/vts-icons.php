@@ -1,13 +1,13 @@
 <?php
 /**
- * Plugin Name: Vitesse — zestaw ikon
+ * Plugin Name: Vitesse - zestaw ikon
  * Description: Wstawiane w kod ikony SVG. Funkcja vts_icon() i skrót [vts_icon name="..."].
  *
  * Bez pliku sprite'a i bez żądań sieciowych: ikona to kilkaset bajtów w HTML,
  * dziedziczy kolor z currentColor i jest ostra w każdej skali.
  *
  * Jeden styl dla całego zestawu: płótno 24×24, obrys 1,5, bez wypełnień. Motywy
- * bierzemy z warsztatu, a nie z ogólnego zestawu „biznesowego" — to jedyny
+ * bierzemy z warsztatu, a nie z ogólnego zestawu „biznesowego" - to jedyny
  * sposób, żeby ikonografia mówiła cokolwiek o tej konkretnej firmie.
  */
 
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-/** Same ścieżki — otoczka jest wspólna, żeby zestaw nie rozjechał się stylistycznie. */
+/** Same ścieżki - otoczka jest wspólna, żeby zestaw nie rozjechał się stylistycznie. */
 function vts_icon_paths(): array
 {
     return [
@@ -45,16 +45,16 @@ function vts_icon_paths(): array
                     . '<path d="M2.8 12.4h13.6a2.8 2.8 0 1 1-2.8 2.8"/><path d="M2.8 16.4h6.4"/>',
         'battery'  => '<rect x="2.5" y="7.5" width="16.5" height="9" rx="2"/><path d="M21.5 11v2"/>'
                     . '<path d="M11.6 9.6l-2.6 3.8h3.4l-0.6 3.2"/>',
-        // kontrolka check engine — sonda lambda, pompa SAI
+        // kontrolka check engine - sonda lambda, pompa SAI
         'engine'   => '<path d="M8.5 10V8h5v2h2.3l1.7 1.7H20v5h-2.5l-1.7 1.7H9.5l-1.7-1.7H5.5V10z"/>'
                     . '<path d="M3 12.5V16"/><path d="M10.5 8V6h3"/>',
-        // wir w kolektorze — klapy wirowe
+        // wir w kolektorze - klapy wirowe
         'swirl'    => '<path d="M12 3.5a8.5 8.5 0 1 0 8.5 8.5"/><path d="M12 7a5 5 0 1 0 5 5"/>'
                     . '<path d="M12 10.5a1.5 1.5 0 1 0 1.5 1.5"/>',
-        // wtryskiwacz — dawka rozruchowa
+        // wtryskiwacz - dawka rozruchowa
         'injector' => '<path d="M10 3h4v5h-4z"/><path d="M9 8h6l-1 3h-4z"/><path d="M10.5 11h3v6h-3z"/>'
                     . '<path d="M12 17v3.5"/><path d="M9.8 21.5l2.2-2.6 2.2 2.6"/>',
-        // strzałka zawinięta w okrąg z literą A — przycisk Start@Stop
+        // strzałka zawinięta w okrąg z literą A - przycisk Start&Stop
         'startstop'=> '<path d="M18.4 8A7.5 7.5 0 1 0 19.5 12"/><path d="M19.6 5.5v2.9h-2.9"/>'
                     . '<path d="M9.6 15.2l2.4-6.4 2.4 6.4M10.5 13h3"/>',
 

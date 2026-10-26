@@ -1,4 +1,4 @@
-/* Kalkulator oszczędności flotowych. Liczy po stronie klienta — suwak musi
+/* Kalkulator oszczędności flotowych. Liczy po stronie klienta - suwak musi
    odpowiadać w tej samej klatce, żaden request tego nie da. */
 (function () {
   'use strict';
@@ -12,12 +12,11 @@
     function recalc() {
       var veh = parseFloat(num('veh').value) || 0;
       var km  = parseFloat(num('km').value)  || 0;
-      var fu  = parseFloat(num('fu').value)  || 0;
       var pr  = parseFloat(num('pr').value)  || 0;
-      // Procent oszczędności to suwak użytkownika; wartość z opcji jest tylko startem.
-      var sv  = num('sv') ? (parseFloat(num('sv').value) || 0) : cfg.saving_pct;
+      // Oszczędność w litrach na 100 km to suwak użytkownika; wartość z opcji jest tylko startem.
+      var sv  = num('sv') ? (parseFloat(num('sv').value) || 0) : cfg.saving_l;
 
-      var litres  = veh * (km / 100) * fu * (sv / 100);
+      var litres  = veh * (km / 100) * sv;
       var year    = litres * pr;
       var month   = year / 12;
 

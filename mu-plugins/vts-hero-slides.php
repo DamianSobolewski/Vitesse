@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Vitesse — slajdy hero
+ * Plugin Name: Vitesse - slajdy hero
  * Description: Typ treści „Slajdy hero”: karuzela strony głównej sterowana z kokpitu.
  *
  * Każdy slajd to wpis: tytuł, nadtytuł, lead, obrazek wyróżniający, kolejność.
@@ -8,7 +8,7 @@
  * używa fabrycznego zdjęcia z assets/img (meta _vts_img), więc po imporcie strona
  * wygląda dokładnie tak jak przed wprowadzeniem tego typu treści.
  *
- * Rysowaniem zajmuje się vts_render_home_hero() w vts-content.php — tu tylko dane.
+ * Rysowaniem zajmuje się vts_render_home_hero() w vts-content.php - tu tylko dane.
  */
 
 if (!defined('ABSPATH')) {
@@ -58,7 +58,7 @@ add_action('init', function () {
         'map_meta_cap'        => true,
     ]);
 
-    // Wariant tła na wąskie ekrany — odpowiednik plików *-sm.webp z assets/img.
+    // Wariant tła na wąskie ekrany - odpowiednik plików *-sm.webp z assets/img.
     add_image_size('vts-hero-sm', 960, 0, false);
 });
 
@@ -172,7 +172,7 @@ add_action('manage_' . VTS_SLIDE_CPT . '_posts_custom_column', function ($col, $
         }
     }
     if ($col === 'vts_eyebrow') {
-        echo esc_html((string) get_post_meta($id, '_vts_eyebrow', true)) ?: '—';
+        echo esc_html((string) get_post_meta($id, '_vts_eyebrow', true)) ?: '-';
     }
     if ($col === 'vts_order') {
         echo (int) get_post_field('menu_order', $id);
@@ -219,7 +219,7 @@ function vts_slide_title_html(string $raw): string
  * img_url, img_sm_url, eyebrow, title (HTML), lead, light.
  *
  * Warstwa świetlna jedzie wyłącznie ze slajdem na pozycji 0 i tylko na fabrycznym
- * hero.webp — reflektory mają stałe współrzędne pod to zdjęcie.
+ * hero.webp - reflektory mają stałe współrzędne pod to zdjęcie.
  */
 function vts_hero_slides_from_posts(): array
 {
@@ -250,7 +250,7 @@ function vts_hero_slides_from_posts(): array
             $sm  = vts_hero_slide_img($name, 'sm') ?: $img;
         }
         if ($img === '') {
-            continue;   // brak pliku i brak załącznika — slajd nie ma na czym stać
+            continue;   // brak pliku i brak załącznika - slajd nie ma na czym stać
         }
 
         $out[] = [

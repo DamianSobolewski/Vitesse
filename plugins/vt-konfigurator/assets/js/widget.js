@@ -173,6 +173,66 @@
 		.catch(function (err) { callback(err, null); });
 	}
 
+	// ── External sources (owner mode) ────────────────────────────────────────
+
+	var EXT_SOURCES = [
+		{ key: 'ziptuning', name: 'ziptuning.nl' },
+		{ key: 'rica',      name: 'rica.nl' }
+	];
+
+	function fetchExternal(state, callback) {
+		var url = cfg.extUrl.replace(/\/$/, '') +
+			'?brand=' + encodeURIComponent(state.brand) +
+			'&model=' + encodeURIComponent(state.model) +
+			'&gen=' + encodeURIComponent(state.gen) +
+			'&engine=' + encodeURIComponent(state.engine) +
+			'&year=' + encodeURIComponent(state.year);
+
+		fetch(url, { headers: { 'X-WP-Nonce': cfg.nonce, 'Accept': 'application/json' } })
+			.then(function (r) {
+				if (!r.ok) throw new Error('HTTP ' + r.status);
+				return r.json();
+			})
+			.then(function (data) { callback(null, data); })
+			.catch(function (err) { callback(err, null); });
+	}
+
+	function renderExtTile(source, data) {
+		var tile = el('div', { class: 'vtk-ext-tile vtk-ext-tile--' + source.key });
+		var head = el('div', { class: 'vtk-ext-source' }, [
+			el('span', { class: 'vtk-ext-source-label', text: i18n.extSource }),
+			data && data.url
+				? el('a', { class: 'vtk-ext-source-name', href: data.url, target: '_blank', rel: 'noopener noreferrer', text: source.name })
+				: el('span', { class: 'vtk-ext-source-name', text: source.name })
+		]);
+		tile.appendChild(head);
+
+		if (!data || (!data.hp && !data.nm)) {
+			tile.classList.add('vtk-ext-tile--empty');
+			tile.appendChild(el('p', { class: 'vtk-ext-empty', text: i18n.extNotFound }));
+			return tile;
+		}
+
+		var gains = el('div', { class: 'vtk-ext-gains' });
+		if (data.hp) {
+			gains.appendChild(el('span', { class: 'vtk-ext-gain vtk-ext-gain--hp' }, [
+				el('strong', { text: '+' + data.hp }),
+				el('span', { text: ' ' + i18n.hp })
+			]));
+		}
+		if (data.nm) {
+			gains.appendChild(el('span', { class: 'vtk-ext-gain vtk-ext-gain--nm' }, [
+				el('strong', { text: '+' + data.nm }),
+				el('span', { text: ' ' + i18n.nm })
+			]));
+		}
+		tile.appendChild(gains);
+		if (data.label) {
+			tile.appendChild(el('p', { class: 'vtk-ext-match', text: data.label }));
+		}
+		return tile;
+	}
+
 	// ── Result card render ───────────────────────────────────────────────────
 
 	function renderGainValue(value, unit) {
@@ -385,6 +445,25 @@
 					text:   i18n.privateCharts
 				});
 				resultBox.appendChild(driveLink);
+			}
+
+			// ── Competitor gains: ziptuning.nl / rica.nl (charts="1" only) ──
+			if (showCharts && cfg.extUrl) {
+				var extWrap = el('div', { class: 'vtk-ext', 'aria-live': 'polite' });
+				var extBody = el('div', { class: 'vtk-ext-loading', text: i18n.extLoading });
+				extWrap.appendChild(extBody);
+				resultBox.appendChild(extWrap);
+
+				fetchExternal(state, function (err, ext) {
+					var tiles;
+					if (err) {
+						tiles = el('p', { class: 'vtk-ext-empty', text: i18n.extError });
+					} else {
+						tiles = el('div', { class: 'vtk-ext-tiles' });
+						EXT_SOURCES.forEach(function (s) { tiles.appendChild(renderExtTile(s, ext[s.key])); });
+					}
+					extWrap.replaceChild(tiles, extBody);
+				});
 			}
 
 			// ── Phone numbers (customer mode only) ───────────────────────

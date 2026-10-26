@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Vitesse — treść i dane strukturalne
+ * Plugin Name: Vitesse - treść i dane strukturalne
  * Description: Hero strony głównej, FAQ z jednego źródła, dane kontaktowe, okruszki, JSON-LD.
  */
 
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  *
  * wpautop służy do zamiany tekstu pisanego w edytorze na akapity. Treść naszych
  * stron to gotowy HTML z jawnymi znacznikami, więc filtr nie ma tu nic do roboty
- * — a szkodzi: wstawia `</p>` w środek `<a class="vts-card">`, przez co parser
+ * - a szkodzi: wstawia `</p>` w środek `<a class="vts-card">`, przez co parser
  * przeglądarki klonuje kotwicę wokół każdego bloku i powstają puste, ale klikalne
  * kafelki. Flagę ustawia importer, więc obejmuje dokładnie strony z content/pages/.
  * Wpisy bloga, pisane w edytorze, zachowują domyślne zachowanie.
@@ -30,7 +30,7 @@ add_action('wp', function () {
 /* ------------------------------------------------------------------ hero */
 
 /**
- * Hero renderujemy przed treścią strony, a nie w niej — dzięki temu obrazek tła
+ * Hero renderujemy przed treścią strony, a nie w niej - dzięki temu obrazek tła
  * i wyszukiwarka są jednym elementem szablonu, którego nikt nie skasuje przy edycji.
  */
 add_filter('the_content', function ($content) {
@@ -42,7 +42,7 @@ add_filter('the_content', function ($content) {
         return vts_capture('vts_render_home_hero') . $content;
     }
 
-    // Wpisy dostają ten sam nagłówek co strony — okruszki i H1 z tytułu. Dzięki
+    // Wpisy dostają ten sam nagłówek co strony - okruszki i H1 z tytułu. Dzięki
     // temu żaden wpis nie musi sam dostarczać nagłówka, a te dwa typy treści
     // wyglądają spójnie.
     if (is_page() || is_singular('post')) {
@@ -51,7 +51,7 @@ add_filter('the_content', function ($content) {
 
     return $content;
     // Priorytet 99, nie 5: wpautop działa na 10 i zamienia puste linie w znaczniki
-    // akapitów — w środku wbudowanego SVG rozbijało to grafikę na kawałki.
+    // akapitów - w środku wbudowanego SVG rozbijało to grafikę na kawałki.
     // Doklejając hero po nim, przepuszczamy przez wpautop tylko treść strony.
 }, 99);
 
@@ -80,10 +80,10 @@ function vts_hero_image_url(string $size = ''): string
 }
 
 /**
- * Warstwy świetlne hero — „zapłon".
+ * Warstwy świetlne hero - „zapłon".
  *
  * Zdjęcie pokazuje auto na wprost w ciemnym garażu. Reflektory na fotografii są
- * zapalone, więc nie da się ich zgasić wprost — zamiast tego kładziemy na nie
+ * zapalone, więc nie da się ich zgasić wprost - zamiast tego kładziemy na nie
  * zasłonę w kolorze tła i ZDEJMUJEMY ją w trakcie sekwencji. Otoczenie jest
  * niemal czarne, więc szew jest niewidoczny.
  *
@@ -97,7 +97,7 @@ function vts_render_hero_light(): void
     $lamps = [['x' => 1069, 'y' => 612], ['x' => 1516, 'y' => 604]];
 
     // Tylne światła są w kadrze pośrednio: nad dachem widać czerwoną łunę odbitą
-    // od ściany. Środek i półosie wyznaczone z samego zdjęcia — piksele, w których
+    // od ściany. Środek i półosie wyznaczone z samego zdjęcia - piksele, w których
     // czerwień wyraźnie przewyższa pozostałe kanały (środek ciężkości 1298/451).
     $tail = ['x' => 1298, 'y' => 451, 'rx' => 172, 'ry' => 48];
     ?>
@@ -115,7 +115,7 @@ function vts_render_hero_light(): void
             <ellipse cx="<?= $l['x'] ?>" cy="<?= $l['y'] + 40 ?>" rx="180" ry="135"/>
           <?php endforeach; ?>
           <!-- bez tej elipsy tylna łuna paliłaby się przez całą sekwencję, gdy
-               przednie lampy są jeszcze zgaszone — i mrugnięcie by nie zagrało -->
+               przednie lampy są jeszcze zgaszone - i mrugnięcie by nie zagrało -->
           <ellipse cx="<?= $tail['x'] ?>" cy="<?= $tail['y'] ?>"
                    rx="<?= $tail['rx'] + 40 ?>" ry="<?= $tail['ry'] + 34 ?>"/>
         </g>
@@ -133,7 +133,7 @@ function vts_render_hero_light(): void
             <stop offset=".64" stop-color="#BFD6FF" stop-opacity=".19"/>
             <stop offset="1"   stop-color="#BFD6FF" stop-opacity="0"/>
           </radialGradient>
-          <!-- rozżarzony rdzeń żarówki — bez niego lampa jest plamą, a nie źródłem -->
+          <!-- rozżarzony rdzeń żarówki - bez niego lampa jest plamą, a nie źródłem -->
           <radialGradient id="vts-core-grad">
             <stop offset="0"   stop-color="#FFFFFF" stop-opacity="1"/>
             <stop offset=".55" stop-color="#F4F9FF" stop-opacity=".72"/>
@@ -169,7 +169,7 @@ function vts_render_hero_light(): void
 
       <span class="vts-hero__glow"></span>
 
-      <?php /* Światła awaryjne — zapala je przycisk na konsoli. Osobna warstwa,
+      <?php /* Światła awaryjne - zapala je przycisk na konsoli. Osobna warstwa,
                więc sekwencja zapłonu jej nie dotyczy: awaryjne działają
                niezależnie od reflektorów, tak jak w aucie. */ ?>
       <svg class="vts-hero__hazard" viewBox="0 0 1800 1240"
@@ -243,7 +243,7 @@ function vts_hero_slides_default(): array
  * fabryczny slajd 0. Każdy element ma img_url, img_sm_url, eyebrow, title (HTML),
  * lead i light.
  *
- * Nagłówek nosi tylko pierwszy slajd — to jedyny <h1> na stronie i nie może się
+ * Nagłówek nosi tylko pierwszy slajd - to jedyny <h1> na stronie i nie może się
  * mnożyć razem z karuzelą. Pozostałe dostają <p> w tej samej skali; dla czytnika
  * ekranu i tak liczy się wyłącznie slajd aktywny, bo nieaktywne są `hidden`.
  */
@@ -291,7 +291,7 @@ function vts_render_home_hero(): void
           $img = $s['img_url'];
           $sm  = $s['img_sm_url'] ?: $img;
           ?>
-        <?php /* Obraz przypisujemy dopiero klasie .is-active (theme.css) — dzięki temu
+        <?php /* Obraz przypisujemy dopiero klasie .is-active (theme.css) - dzięki temu
                  przeglądarka pobiera tło slajdu 0 od razu, a pozostałe dopiero przy
                  przewinięciu. Bez tego cztery zdjęcia konkurowałyby o LCP. */ ?>
         <div class="vts-hero__bg<?= $i === 0 ? ' is-active' : '' ?>" data-slide-bg="<?= $i ?>"
@@ -349,7 +349,7 @@ function vts_render_home_hero(): void
  * Hero podstrony.
  *
  * Do niedawna były to same okruszki i H1, przez co każda podstrona zaczynała się
- * akapitem prozy w kolumnie 680 px — klient słusznie zgłosił, że to wygląda
+ * akapitem prozy w kolumnie 680 px - klient słusznie zgłosił, że to wygląda
  * na niedokończone. Konfiguracja poniżej dokłada nadkreślenie, lead i zdjęcie tła.
  * Strony spoza mapy (prawne, katalog, wpisy) zachowują wariant minimalny.
  */
@@ -358,8 +358,8 @@ function vts_page_hero(string $slug): array
     $map = [
         'podnoszenie-mocy' => [
             'eyebrow' => 'Tuning i performance',
-            'lead'    => 'Chip tuning, PowerChipy, eco-tuning dla flot i prace na sterowniku ECU. '
-                       . 'Każdą zmianę potwierdzamy pomiarem na hamowni.',
+            'lead'    => 'Chip tuning, PowerChipy, eco-tuning dla flot i inne usługi na sterowniku ECU. '
+                       . 'Efekt modyfikacji otrzymasz w postaci wykresów z hamowni.',
         ],
         'chip-tuning' => [
             'eyebrow' => 'Chip tuning Łódź',
@@ -382,30 +382,30 @@ function vts_page_hero(string $slug): array
         ],
         'dodatkowe-uslugi-ecu' => [
             'eyebrow' => 'Serwis ECU',
-            'lead'    => 'Dwanaście prac na sterowniku poza samą mocą: od DPF, EGR i SCR, przez '
-                       . 'Start@Stop i ciśnienie oleju, po sondę lambda i skrzynie biegów. '
-                       . 'Każdą poprzedza odczyt błędów.',
+            'lead'    => 'Kilkanaście różnych usług, które możemy wykonać dzięki modyfikacji oprogramowania '
+                       . '- od podniesienia mocy, przez DPF, EGR, SCR, układ Start&Stop i ciśnienie oleju, '
+                       . 'po sondę Lambda i skrzynię biegów. Zobacz poniżej czy znajdziesz to czego szukasz:',
         ],
         'ev-hybryda' => [
             'eyebrow' => 'Strefa EV i hybryd',
-            'lead'    => 'Większy zasięg, więcej mocy i ładowarka wallbox dobrana do Twojej '
-                       . 'instalacji. Pracujemy na sterownikach, baterii nie ruszamy.',
+            'lead'    => 'EV box zwiększający zasięg, program podnoszący moc i ładowarka wallbox '
+                       . 'z funkcją ochrony baterii.',
             'img'     => 'pas-ev',
         ],
         'hamownia' => [
             'eyebrow' => 'Hamownia Łódź',
-            'lead'    => 'Hamownia obciążeniowa 4×4 i osobne stanowisko motocyklowe. '
-                       . 'Mierzymy moc i moment na kołach i dajemy wydruk wykresu.',
+            'lead'    => 'Hamownia inercyjna i obciążeniowa do pomiaru aut z napędem na dwa lub '
+                       . 'cztery koła, a także motocykli.',
         ],
         'o-nas' => [
             'eyebrow' => 'Kim jesteśmy',
-            'lead'    => 'Warsztat chip tuningu w Łodzi z autoryzacją V-tech od 2008 roku. '
-                       . 'Elektronika silnika i pomiary na hamowni.',
+            'lead'    => 'Firma została założona w 2008 roku i od samego początku pracuje '
+                       . 'z autoryzacją renomowanej firmy V-tech.',
             'img'     => 'pas-onas',
         ],
         'kontakt' => [
             'eyebrow' => 'Łódź, ul. Kolumny 267C',
-            'lead'    => 'Zadzwoń albo napisz. Odpowiadamy w godzinach pracy warsztatu, '
+            'lead'    => 'Zadzwoń lub napisz. Odpowiadamy w godzinach pracy warsztatu, '
                        . 'a termin pomiaru potwierdzamy telefonicznie.',
         ],
     ];
@@ -458,7 +458,7 @@ function vts_breadcrumbs(): string
         }
     }
 
-    // Wpis wisi pod blogiem — bez tego okruszki prowadziłyby prosto ze startu
+    // Wpis wisi pod blogiem - bez tego okruszki prowadziłyby prosto ze startu
     // do tekstu i nie dałoby się wrócić do listy.
     if (is_singular('post') && ($blog = (int) get_option('page_for_posts'))) {
         $crumbs[] = '<a href="' . esc_url(get_permalink($blog)) . '">'
@@ -475,13 +475,13 @@ function vts_breadcrumbs(): string
 /* ------------------------------------------------------- zestaw wskaźników
  *
  * Sekcja „Cztery rzeczy" jako deska z czterema zegarami. Tarcze rysujemy
- * wstawionym SVG — bez obrazów, tak samo jak ikony.
+ * wstawionym SVG - bez obrazów, tak samo jak ikony.
  *
  * Wskazówki stoją na PRAWDZIWYCH wartościach, nie na ładnie wyglądających
  * położeniach. Dwie decyzje wynikające wprost z danych:
  *
  *  - PowerChip nie pokazuje przyrostu mocy. Średnia dla modułu to +36 KM wobec
- *    +28 KM dla chip tuningu, ale liczona z 50 wariantów wobec 4220 — próbka
+ *    +28 KM dla chip tuningu, ale liczona z 50 wariantów wobec 4220 - próbka
  *    jest obciążona dużymi silnikami. Taki zegar sugerowałby, że moduł jest
  *    mocniejszy od zapisu w sterowniku, co nieprawda. Pokazuje więc czas
  *    montażu, który jest realną przewagą PowerChipa.
@@ -489,7 +489,7 @@ function vts_breadcrumbs(): string
  *    trybu napędu, a nie udaje pomiaru.
  */
 
-/** Średni przyrost mocy dla wariantu usługi — liczony z bazy, nie wpisany. */
+/** Średni przyrost mocy dla wariantu usługi - liczony z bazy, nie wpisany. */
 function vts_sredni_przyrost(string $service_code): int
 {
     global $wpdb;
@@ -510,7 +510,7 @@ function vts_sredni_przyrost(string $service_code): int
 }
 
 /**
- * Jedna tarcza. Wartość podajemy jako ułamek zakresu (0–1) — to on ustawia
+ * Jedna tarcza. Wartość podajemy jako ułamek zakresu (0–1) - to on ustawia
  * wskazówkę; podpis w środku jest osobny, bo nie każdy zegar mierzy liczbę.
  */
 function vts_gauge(array $g): string
@@ -523,7 +523,7 @@ function vts_gauge(array $g): string
         return sprintf('%.2f %.2f', 100 + $r * cos($rad), 100 + $r * sin($rad));
     };
 
-    // Kreski do wartości zapalają się na ciepło, reszta zostaje wygaszona —
+    // Kreski do wartości zapalają się na ciepło, reszta zostaje wygaszona -
     // tak jak podziałka pod wskazówką w podświetlonym zegarze.
     $kreski = '';
     for ($i = 0; $i <= 10; $i++) {
@@ -535,7 +535,7 @@ function vts_gauge(array $g): string
                  . '" stroke-width="' . ($du ? 2.4 : 1.2) . '"/>';
     }
 
-    // Liczba do odliczenia — tylko jeśli odczyt jest liczbą. „4×4" nie jest.
+    // Liczba do odliczenia - tylko jeśli odczyt jest liczbą. „4×4" nie jest.
     $liczba = null;
     if (preg_match('/^\+?(\d+(?:[.,]\d+)?)$/u', str_replace(' ', '', (string) $g['val']), $m)) {
         $liczba = $m[1];
@@ -549,7 +549,7 @@ function vts_gauge(array $g): string
         <svg viewBox="0 0 200 200" aria-hidden="true" focusable="false">
           <path class="vts-gauge__arc" d="M <?= $pkt(135, 74) ?> A 74 74 0 1 1 <?= $pkt(405, 74) ?>"
                 fill="none" stroke-width="1.5"/>
-          <?php /* Ten sam łuk drugi raz, na wierzchu — odsłaniany do wartości.
+          <?php /* Ten sam łuk drugi raz, na wierzchu - odsłaniany do wartości.
                    pathLength="100" normalizuje długość, więc kreskowanie liczy
                    się w procentach i nie zależy od promienia. */ ?>
           <path class="vts-gauge__arc-lit" pathLength="100"
@@ -591,8 +591,8 @@ add_shortcode('vts_gauges', function () {
             'frac'  => $chip / 100,                       // skala 0–100 KM
             'title' => 'Chip tuning i PowerChipy',
             'meta'  => 'średni przyrost z katalogu',
-            'desc'  => 'Chip tuning aut osobowych, dostawczych, kamperów i ciągników, '
-                     . 'moduły Plug&Play (także Volvo VEA), programowanie skrzyń biegów.',
+            'desc'  => 'Chip tuning aut osobowych, dostawczych, ciężarowych, autobusów, kamperów '
+                     . 'i ciągników rolniczych, moduły Plug&Play, programowanie skrzyń biegów.',
         ],
         [
             'href'  => home_url('/podnoszenie-mocy/oferta-dla-flot/'),
@@ -605,11 +605,11 @@ add_shortcode('vts_gauges', function () {
         ],
         [
             'href'  => home_url('/podnoszenie-mocy/dodatkowe-uslugi-ecu/'),
-            'val'   => '12', 'unit' => 'prac',
+            'val'   => '12', 'unit' => 'usług',
             'frac'  => 12 / 14,                           // skala 0–14 pozycji
             'title' => 'Modyfikacje oprogramowania',
             'meta'  => 'diagnostyka i modyfikacje',
-            'desc'  => 'DPF, SCR (AdBlue), EGR, Start@Stop, ciśnienie oleju, temperatura pracy '
+            'desc'  => 'DPF, SCR (AdBlue), EGR, Start&Stop, ciśnienie oleju, temperatura pracy '
                      . 'silnika, klapy wirowe, limitery prędkości i obrotów, druga sonda Lambda, '
                      . 'korekta dawki rozruchowej, pompa powietrza dodatkowego (Subaru), '
                      . 'czyszczenie układów dolotowych.',
@@ -640,7 +640,7 @@ add_shortcode('vts_gauges', function () {
             'meta'  => 'odbiór i odstawienie auta',
             'desc'  => 'Jeśli nie masz czasu, odbierzemy Twoje auto w umówionym terminie '
                      . 'i odstawimy na miejsce po wykonanej usłudze. Samochody ciężarowe '
-                     . 'w wielu przypadkach możemy zrobić nawet u Ciebie.',
+                     . 'w wielu przypadkach możemy zrobić także u Ciebie.',
         ],
     ];
 
@@ -648,7 +648,7 @@ add_shortcode('vts_gauges', function () {
 });
 
 /* Komentarze wyłączone. Warsztat nie ma kto moderować, a domyślny formularz
- * WordPressa i tak wychodzi poza nasz system stylów — z malinowym przyciskiem
+ * WordPressa i tak wychodzi poza nasz system stylów - z malinowym przyciskiem
  * z motywu bazowego włącznie. */
 add_filter('comments_open', '__return_false', 20);
 add_filter('pings_open', '__return_false', 20);
@@ -658,7 +658,7 @@ add_filter('pings_open', '__return_false', 20);
  * Szablon motywu renderuje archiwum wpisów jako gołe <article> poza naszym
  * kontenerem, a treść strony ustawionej jako „strona wpisów" pomija zupełnie.
  * Doklejamy jedno i drugie: nagłówek z wstępem przed pętlą i datę do zajawki.
- * Sam wygląd robi CSS — tu tylko dostarczamy brakujące elementy.
+ * Sam wygląd robi CSS - tu tylko dostarczamy brakujące elementy.
  */
 
 /** Nagłówek listy wpisów: okruszki, tytuł i wstęp z content/pages/blog.html. */
@@ -685,7 +685,7 @@ add_action('loop_start', function ($query) {
         <h1 style="max-width:20ch"><?= esc_html(get_the_title($id)) ?></h1>
       </div>
     </section>
-    <?php /* Bez własnego .vts-wrap — treść strony bloga przynosi własną sekcję
+    <?php /* Bez własnego .vts-wrap - treść strony bloga przynosi własną sekcję
              i kontener, a podwójne opakowanie zsuwało wstęp o 250 px w prawo
              i robiło trzecią lewą krawędź na stronie. */ ?>
     <div class="vts-blog-wstep">
@@ -694,7 +694,7 @@ add_action('loop_start', function ($query) {
     <?php
 });
 
-/** Data przed zajawką — w znacznikach motywu nie ma jej wcale. */
+/** Data przed zajawką - w znacznikach motywu nie ma jej wcale. */
 add_filter('the_excerpt', function ($tresc) {
     if (!is_home() || is_front_page() || !in_the_loop()) {
         return $tresc;
@@ -711,12 +711,12 @@ add_filter('the_excerpt', function ($tresc) {
 /* ------------------------------------------------------- przykładowe wyniki
  *
  * Pięć realnych wersji z katalogu. Dane czytamy z bazy przy renderze, a nie
- * wpisujemy w treść — inaczej rozjechałyby się z katalogiem przy najbliższym
+ * wpisujemy w treść - inaczej rozjechałyby się z katalogiem przy najbliższym
  * imporcie. Każdy kafelek linkuje do swojej wersji, więc wynik da się sprawdzić
  * u źródła.
  *
  * Wybór jest listą identyfikatorów w opcji, więc klient może podmienić przykłady
- * bez dotykania kodu. Domyślne pięć dobrane z przedziału 15–30% przyrostu —
+ * bez dotykania kodu. Domyślne pięć dobrane z przedziału 15–30% przyrostu -
  * w katalogu są wartości skrajne (41 wariantów powyżej 60%), ale to artefakty
  * danych, nie oferta, i nie mają czego szukać na stronie głównej.
  */
@@ -724,11 +724,11 @@ function vts_przyklady_id(): array
 {
     // Trzy, a nie pięć: przy pięciu drugi rząd zostaje z dwoma kafelkami i rytm
     // się rwie. Trzy mieszczą się w jednym rzędzie i pokrywają cały przekrój
-    // oferty — diesel osobowy, benzyna i dostawczy.
+    // oferty - diesel osobowy, benzyna i dostawczy.
     return array_map('intval', (array) get_option('vts_przyklady', [
-        10889,  // VW Passat CC 2.0 BlueTDI 143 KM — diesel osobowy
-        10700,  // VW Golf VII GTI 2.0 TSI 220 KM  — benzyna
-        8229,   // Ford Transit VI 2.2 TDCi 110 KM — dostawczy
+        10889,  // VW Passat CC 2.0 BlueTDI 143 KM - diesel osobowy
+        10700,  // VW Golf VII GTI 2.0 TSI 220 KM  - benzyna
+        8229,   // Ford Transit VI 2.2 TDCi 110 KM - dostawczy
     ]));
 }
 
@@ -787,7 +787,7 @@ function vts_przyklady(): array
  * Wykres mocy dla jednego wyniku.
  *
  * UWAGA co do uczciwości: mamy wartości SZCZYTOWE, nie przebieg z hamowni.
- * Dlatego realne dane — moc fabryczna i po modyfikacji — są zaznaczone kropkami
+ * Dlatego realne dane - moc fabryczna i po modyfikacji - są zaznaczone kropkami
  * z liczbami, przebieg między nimi jest przerywany, a podpis „przebieg
  * poglądowy" stoi na samym wykresie, nie w przypisie pod spodem.
  *
@@ -879,9 +879,9 @@ add_shortcode('vts_wyniki', function () {
  * w shortcode'ach, żeby nie rozjechała się między kopiami w plikach HTML.
  */
 
-/** Kluczowe przewagi konkurencyjne — sekcja 3 strony głównej. */
+/** Kluczowe przewagi konkurencyjne - sekcja 3 strony głównej. */
 add_shortcode('vts_usps', function () {
-    // [zdjęcie usp-*, alt, tytuł, treść]. Zdjęcia zamiast ikon — na życzenie
+    // [zdjęcie usp-*, alt, tytuł, treść]. Zdjęcia zamiast ikon - na życzenie
     // klienta; źródła i licencje w assets/img/CREDITS.md.
     $poz = [
         ['unlock', 'Laptop diagnostyczny podłączony do samochodu',
@@ -920,7 +920,7 @@ add_shortcode('vts_usps', function () {
 
 /**
  * Znacznik <img> dla zdjęcia z assets/img z wariantem -sm.
- * Zwraca pusty string, gdy pliku nie ma — sekcja nie może zostać z zepsutym obrazkiem.
+ * Zwraca pusty string, gdy pliku nie ma - sekcja nie może zostać z zepsutym obrazkiem.
  */
 function vts_img_tag(string $nazwa, string $alt, int $w, int $h, string $sizes, string $class = ''): string
 {
@@ -941,7 +941,7 @@ function vts_img_tag(string $nazwa, string $alt, int $w, int $h, string $sizes, 
          . ' alt="' . esc_attr($alt) . '">';
 }
 
-/** Proces bezpiecznego tuningu — pięć kroków, jedno źródło dla wszystkich stron. */
+/** Proces bezpiecznego tuningu - pięć kroków, jedno źródło dla wszystkich stron. */
 add_shortcode('vts_proces', function () {
     $kroki = [
         ['Diagnostyka wstępna', 'Sprawdzamy wersję silnika, odczytujemy błędy i oceniamy stan '
@@ -994,7 +994,6 @@ add_shortcode('vts_stages', function () {
                 'Wymaga sprawnego, zmierzonego wcześniej pojazdu',
                 'Zwykle łączy się z modyfikacją sterownika skrzyni (TCU)',
                 'Zakres ustalamy po pomiarze seryjnym',
-                'Dla części silników Stage 2 nie ma sensu i wtedy tak to opisujemy w wycenie',
             ],
         ],
     ];
@@ -1015,7 +1014,7 @@ add_shortcode('vts_stages', function () {
 /* -------------------------------------------------------- dowód społeczny
  *
  * Opinie i oceny biorą się z opcji, nie z kodu. Dopóki klient nie dostarczy
- * realnych materiałów, sekcja renderuje się jako pusty string — wymyślona
+ * realnych materiałów, sekcja renderuje się jako pusty string - wymyślona
  * opinia w serwisie usługowym to nie placeholder, tylko wprowadzanie w błąd.
  */
 add_shortcode('vts_social_proof', function () {
@@ -1025,7 +1024,7 @@ add_shortcode('vts_social_proof', function () {
     $opinie = get_option('vts_reviews', []);
     $opinie = is_array($opinie) ? $opinie : [];
 
-    // Bez materiałów nie zostaje nawet nagłówek — pusta sekcja „Co mówią klienci"
+    // Bez materiałów nie zostaje nawet nagłówek - pusta sekcja „Co mówią klienci"
     // wyglądałaby jak błąd. Dlatego shortcode oddaje całą sekcję albo nic.
     if (!$ocena && !$opinie) {
         return '';
@@ -1068,7 +1067,7 @@ add_shortcode('vts_social_proof', function () {
 
 /* --------------------------------------------------------------- mapa
  *
- * Osadzamy tryb `q=` bez klucza API — nie wymaga konta Google Cloud i nie
+ * Osadzamy tryb `q=` bez klucza API - nie wymaga konta Google Cloud i nie
  * dokłada skryptu do strony. Ramka jest leniwa, żeby nie konkurowała o LCP.
  */
 add_shortcode('vts_map', function () {
@@ -1079,7 +1078,7 @@ add_shortcode('vts_map', function () {
     return '<div class="vts-map">'
          . '<iframe src="https://maps.google.com/maps?q=' . $q . '&output=embed"'
          . ' loading="lazy" referrerpolicy="no-referrer-when-downgrade"'
-         . ' title="Mapa dojazdu — ' . esc_attr($adres) . '"></iframe>'
+         . ' title="Mapa dojazdu - ' . esc_attr($adres) . '"></iframe>'
          . '</div><p class="vts-note"><a href="https://maps.google.com/?q=' . $q . '"'
          . ' rel="noopener" target="_blank">Otwórz w Mapach Google i wyznacz trasę</a></p>';
 });
@@ -1088,7 +1087,7 @@ add_shortcode('vts_map', function () {
  *
  * Kadr 4:3 w połowie układu dwudzielnego, obok tekstu. Bez podpisu: nadtytuł,
  * tytuł i nota „zdjęcie ilustracyjne" zeszły ze zdjęć na życzenie klienta
- * (X 2026) — opis niesie alt, a źródła i licencje plików foto-*.webp
+ * (X 2026) - opis niesie alt, a źródła i licencje plików foto-*.webp
  * opisuje assets/img/CREDITS.md. Nieznane atrybuty z dawnych wywołań
  * (eyebrow, title) shortcode_atts pomija.
  */
@@ -1107,7 +1106,7 @@ add_shortcode('vts_photo', function ($atts) {
 /* ------------------------------------------------------ nawigacja skokowa
  *
  * Lista kotwic do sekcji na bieżącej stronie. Źródłem jest klucz "anchors"
- * strony w content/pages.json — importer zapisuje go w meta _vts_anchors
+ * strony w content/pages.json - importer zapisuje go w meta _vts_anchors
  * i z tej samej listy buduje trzeci poziom menu głównego. Jedno źródło,
  * żeby menu i pasek pod wstępem nigdy się nie rozjechały.
  */
@@ -1130,19 +1129,19 @@ add_shortcode('vts_jumpnav', function () {
 });
 
 /* ------------------------------------------------------- przebieg pomiaru
- * Cztery kroki pomiaru kontrolnego na hamowni — w tych samych kafelkach co
+ * Cztery kroki pomiaru kontrolnego na hamowni - w tych samych kafelkach co
  * proces tuningu na stronie głównej.
  */
 add_shortcode('vts_pomiar', function () {
     $kroki = [
-        ['Przygotowanie', 'Sprawdzamy ciśnienie i stan opon oraz poziom paliwa. Zużyta opona '
-         . 'potrafi zafałszować wynik bardziej niż niejedna modyfikacja.'],
-        ['Wpięcie i zamocowanie', 'Pojazd wjeżdża na rolki i zostaje przypięty pasami. '
-         . 'Podpinamy sondę spalin i odczyt ze sterownika.'],
-        ['Przejazdy pomiarowe', 'Zwykle trzy, żeby odrzucić przypadkowe odchylenia. Do wyniku '
+        ['Przygotowanie', 'Odczytujemy ewentualne błędy w sterowniku silnika, sprawdzamy '
+         . 'ciśnienie w oponach. W wielu autach trzeba diagnostycznie włączyć tryb hamowni.'],
+        ['Wpięcie i zamocowanie', 'Pojazd ustawiamy na rolkach oraz mocujemy pasami do ramy '
+         . 'hamowni. Podpinamy sondę AFR.'],
+        ['Przejazdy pomiarowe', 'Zwykle dwa-trzy, żeby odrzucić przypadkowe odchylenia. Do wyniku '
          . 'bierzemy przebieg powtarzalny, a nie najlepszy pojedynczy.'],
-        ['Wykres i omówienie', 'Dostajesz wydruk mocy i momentu. Tłumaczymy, co pokazuje krzywa, '
-         . 'także tam, gdzie wyszła gorzej, niż powinna.'],
+        ['Wykres i omówienie', 'Tłumaczymy, co pokazują krzywe, z których często jesteśmy '
+         . 'w stanie wychwycić usterki, których nie pokazuje komputer diagnostyczny.'],
     ];
 
     $out = '<div class="vts-grid vts-steps">';
@@ -1197,44 +1196,44 @@ add_shortcode('vts_wykres_pogladowy', function () {
 
 /* ------------------------------------------------------------------- FAQ */
 
-/** Jedno źródło pytań — używane na stronie głównej, w FAQ i w JSON-LD. */
+/** Jedno źródło pytań - używane na stronie głównej, w FAQ i w JSON-LD. */
 function vts_faq_items(): array
 {
     return [
         ['Czy chip tuning szkodzi silnikowi?',
-         'Prawidłowo wykonany nie szkodzi. Pracujemy na programach V-tech dobranych do konkretnej
-          wersji silnika i trzymamy się zakresu, który wytrzymuje osprzęt: turbosprężarka, sprzęgło,
-          skrzynia. Wynik sprawdzamy na hamowni. Jeśli pomiar wyjściowy pokaże usterkę, najpierw
-          powiemy Ci o niej, a dopiero potem wrócimy do rozmowy o modyfikacji.'],
+         'Prawidłowo wykonany jest całkowicie bezpieczny dla silnika i osprzętu. Ważna jest także
+          szczegółowa diagnostyka, która może wykryć niedomagania lub ukryte usterki. W takiej
+          sytuacji najpierw trzeba je będzie usunąć, zanim przystąpimy do podnoszenia mocy.'],
         ['Czy mogę mieć problem z gwarancją lub leasingiem?',
-         'Producent ma narzędzia do wykrycia zmiany w oprogramowaniu, a umowa leasingu zwykle wymaga
-          zwrotu auta w stanie fabrycznym. Dlatego dla takich aut proponujemy PowerChip, który zdejmuje
-          się przed wizytą w serwisie i przed zdaniem pojazdu. Przy zapisie w sterowniku zawsze
-          zostawiamy kopię oryginału, więc powrót do stanu fabrycznego to jedna wizyta.'],
+         'Niektórzy producenci mają możliwość wykrycia zmian w oprogramowaniu, dlatego dla aut na
+          gwarancji proponujemy PowerChip, który zdejmuje się przed wizytą w serwisie. Leasing nie
+          stanowi problemu - można tutaj bezpiecznie stosować zarówno PowerChip jak i chip tuning.'],
         ['Ile trwa chip tuning?',
-         'Zwykle jeden dzień roboczy razem z pomiarem przed i po. Zamknięte sterowniki otwieramy
-          u siebie, więc nie doliczasz tygodnia na wysyłkę modułu do firmy zewnętrznej.'],
+         'Zwykle kilka godzin razem z pomiarem przed i po - auto możesz zostawić lub zaczekać przy
+          kawie. Zablokowane sterowniki odblokowujemy u siebie, więc auto jest gotowe tego samego
+          dnia, a nie po niemal tygodniu z powodu wysyłki modułu do firmy zewnętrznej.'],
         ['O ile spadnie spalanie?',
-         'Przy tym samym stylu jazdy spalanie spada, bo silnik ma więcej momentu w niskich obrotach
-          i rzadziej trzeba go rozkręcać. We flotach jeżdżących w trasie oszczędności nierzadko
-          przekraczają 10%.
-          Konkretną kwotę dla swojej floty policzysz w kalkulatorze na stronie oferty dla flot.'],
+         'Przy tym samym stylu jazdy spalanie spada z uwagi na wzrost sprawności silnika.
+          Najczęściej można liczyć na oszczędności rzędu 10%. Konkretną kwotę dla swojej floty
+          policzysz w kalkulatorze na stronie oferty dla flot.'],
         ['Czy da się wrócić do stanu fabrycznego?',
-         'Tak. Kopię oryginalnego oprogramowania robimy przed każdą pracą i zostaje ona u nas
-          oraz u Ciebie. Przywrócenie zajmuje jedną wizytę.'],
+         'Tak. Zawsze zaczynamy od zrobienia odczytu programu fabrycznego z Twojego auta, a odczyt
+          ten pozostaje u nas na serwerze. Zawsze można do niego wrócić.'],
         ['Ile kosztuje chip tuning?',
-         'Cena zależy od wersji silnika i poziomu programu. Wybierz auto w wyszukiwarce, a przy
-          wyniku zamów wycenę. W każdej cenie jest pomiar na hamowni przed modyfikacją i po niej.'],
-        ['Czy robicie naprawy mechaniczne ciężarówek?',
-         'Nie. Zajmujemy się elektroniką silnika i pomiarami. Chip tuning i eco-tuning ciężarówek
-          oraz autobusów zostają w ofercie.'],
+         'Cena zależy od pojemności i mocy silnika oraz od roku produkcji auta. Odblokowanie
+          sterownika wymaga dopłaty, także z uwagi na często bardziej skomplikowany soft. Po
+          szczegóły zapraszamy do kontaktu.'],
+        ['Na czym polega usługa Door-2-door?',
+         'Nie zawsze masz możliwość poświęcenia kilku godzin na dojazd i oczekiwanie na wykonanie
+          usługi. W takim przypadku możemy od Ciebie samochód odebrać, a po wykonanej usłudze
+          odprowadzić w umówione miejsce.'],
     ];
 }
 
 add_shortcode('vts_faq', function () {
     // Wspólny atrybut name robi z <details> akordeon z wyłącznością: otwarcie
     // jednej pozycji zamyka poprzednią. Robi to przeglądarka, więc działa też
-    // przy wyłączonym JavaScripcie. Licznik na wypadek dwóch bloków na stronie —
+    // przy wyłączonym JavaScripcie. Licznik na wypadek dwóch bloków na stronie -
     // wtedy każdy ma własną grupę i nie zamykają się nawzajem.
     static $nr = 0;
     $grupa = 'vts-faq-' . (++$nr);
@@ -1253,7 +1252,7 @@ add_shortcode('vts_faq', function () {
 add_shortcode('vts_contact_details', function () {
     $c = vts_company();
     ob_start(); ?>
-    <?php /* Etykiety grup to nie nagłówki treści — czytnik ekranu i robot dostają
+    <?php /* Etykiety grup to nie nagłówki treści - czytnik ekranu i robot dostają
              jeden H3 na kartę, a „Warsztat", „Telefony" są podpisami danych. */ ?>
     <div class="vts-card vts-contact">
       <h3>VITESSE V-tech Łódź</h3>
@@ -1263,17 +1262,14 @@ add_shortcode('vts_contact_details', function () {
         <dt><?= vts_icon('phone') ?>Telefony</dt>
         <dd>
           <?php foreach ($c['phones'] as $p) : ?>
-            <?= esc_html($p['label']) ?>:
-            <a href="<?= esc_attr(vts_phone_href($p['number'])) ?>"><?= esc_html($p['number']) ?></a><br>
+            <?= esc_html($p['label']) ?>: <?= vts_phone_links($p) ?><br>
           <?php endforeach; ?>
         </dd>
         <dt><?= vts_icon('mail') ?>E-mail</dt>
         <dd><a href="mailto:<?= esc_attr($c['email']) ?>"><?= esc_html($c['email']) ?></a></dd>
         <dt><?= vts_icon('clock') ?>Godziny</dt>
-        <dd><?= esc_html($c['hours']['weekdays']['label']) ?>
-          <?= esc_html($c['hours']['weekdays']['open'] . '–' . $c['hours']['weekdays']['close']) ?><br>
-          <?= esc_html($c['hours']['saturday']['label']) ?>
-          <?= esc_html($c['hours']['saturday']['open'] . '–' . $c['hours']['saturday']['close']) ?></dd>
+        <dd><?= esc_html(vts_hours_text('weekdays')) ?>,<br>
+          <?= esc_html(vts_hours_text('saturday')) ?></dd>
       </dl>
     </div>
     <?php
@@ -1299,7 +1295,7 @@ add_shortcode('vts_contact_form', function ($atts) {
     }
 
     // Brak formularza (np. wtyczka wyłączona) nie może zostawić gościa bez
-    // drogi kontaktu — pokazujemy telefon i e-mail z konfiguracji.
+    // drogi kontaktu - pokazujemy telefon i e-mail z konfiguracji.
     $c = vts_company();
     $t = $c['phones']['tuning'];
     return '<p class="vts-note">Napisz na <a href="mailto:' . esc_attr($c['email']) . '">'
@@ -1320,7 +1316,7 @@ add_action('wp_head', function () {
         '@type'    => 'AutoRepair',
         'name'     => $c['name'],
         'url'      => home_url('/'),
-        // Znak firmowy w wersji wektorowej — wyszukiwarka bierze go do wizytówki
+        // Znak firmowy w wersji wektorowej - wyszukiwarka bierze go do wizytówki
         // firmy. Wskazujemy wariant na ciemne tło, bo taki jest w serwisie.
         'logo'     => VTS_ASSETS_URL . '/img/logo-vitesse.svg',
         'email'    => $c['email'],

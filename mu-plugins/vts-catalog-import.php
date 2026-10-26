@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Vitesse — zapis katalogu mocy
+ * Plugin Name: Vitesse - zapis katalogu mocy
  * Description: Wspólny zapis marek, modeli, generacji i silników do własnych tabel (upsert po legacy_key).
  *
  * Zasady:
  *  - kluczem tożsamości jest legacy_key, nie slug (slug jest generowany i bywa zmienny),
- *  - nie kasujemy wierszy — nieobecne w imporcie dostają visibility = 0,
+ *  - nie kasujemy wierszy - nieobecne w imporcie dostają visibility = 0,
  *  - silnik, dla którego wtyczka potwierdziła brak przyrostu, nie jest publikowany;
  *    silnik jeszcze niesprawdzony zostaje widoczny (wynik dociąga się przy pierwszym wyświetleniu),
  *  - spadek liczby wierszy > 10% przerywa import (chroni przed uszkodzonym drzewem).
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-/** Wstawia paczkami — kilka tysięcy pojedynczych INSERT-ów trwałoby minuty. */
+/** Wstawia paczkami - kilka tysięcy pojedynczych INSERT-ów trwałoby minuty. */
 function vts_bulk(string $table, array $cols, array $rows, array $update, int $chunk = 400): int
 {
     global $wpdb;
@@ -46,7 +46,7 @@ function vts_bulk(string $table, array $cols, array $rows, array $update, int $c
 }
 
 /**
- * Zapisuje komplet katalogu (bez przyrostów — te dociąga vts-vt-bridge) i wygasza
+ * Zapisuje komplet katalogu (bez przyrostów - te dociąga vts-vt-bridge) i wygasza
  * wszystko, czego bieżący import nie dotknął.
  *
  * @param array{makes:array,models:array,generations:array,engines:array} $sets
@@ -101,7 +101,7 @@ function vts_catalog_apply(array $sets, array $opts = []): array|WP_Error
             'legacy_key'   => $m['legacy_key'],
             'sort'         => $m['sort'],
             'is_truck'     => !empty($m['is_truck']) ? 1 : 0,
-            // Jaguar i Land Rover mają chip tuning w ofercie — ukryta jest dopiero
+            // Jaguar i Land Rover mają chip tuning w ofercie - ukryta jest dopiero
             // przyszła linia serwisowa, a to osobna rzecz (patrz vts_feature).
             'visibility'   => 1,
             'feature_flag' => null,
@@ -195,7 +195,7 @@ function vts_catalog_apply(array $sets, array $opts = []): array|WP_Error
             'fuel'          => $e['fuel'],
             'stock_kw'      => $e['stock_kw'] ?? 0,
             'stock_hp'      => $e['stock_hp'] ?? 0,
-            // 0 znaczy „nieznany" — konfigurator V-techa nie podaje momentu fabrycznego
+            // 0 znaczy „nieznany" - konfigurator V-techa nie podaje momentu fabrycznego
             'stock_nm'      => $e['stock_nm'] ?? 0,
             'legacy_key'    => $e['legacy_key'],
             'search_blob'   => mb_substr($blob, 0, 255),
@@ -214,7 +214,7 @@ function vts_catalog_apply(array $sets, array $opts = []): array|WP_Error
      *
      * Upsert stemplem `updated_at` dotyka wyłącznie rekordów obecnych w bieżącym
      * imporcie. Wszystko, czego nie dotknął, pochodzi z poprzedniego źródła danych
-     * i przestaje być widoczne. Nie kasujemy — wiersz musi zostać, żeby przekierowania
+     * i przestaje być widoczne. Nie kasujemy - wiersz musi zostać, żeby przekierowania
      * po starym kluczu miały dokąd prowadzić, a ponowny import mógł go przywrócić.
      *
      * Przyrosty nie są częścią importu (dociąga je most do wtyczki), więc wygaszamy
@@ -258,7 +258,7 @@ function vts_catalog_apply(array $sets, array $opts = []): array|WP_Error
 
 /**
  * Bramka jakości i liczniki: silnik, dla którego wtyczka potwierdziła brak danych,
- * nie ma czego pokazać — nie publikujemy go; puste generacje, modele i marki
+ * nie ma czego pokazać - nie publikujemy go; puste generacje, modele i marki
  * schodzą razem z nim i wracają, gdy synchronizacja dociągnie dane. Widoczność 2
  * (za flagą funkcji) zostaje nietknięta. Wywoływane po imporcie i po każdej
  * paczce synchronizacji.

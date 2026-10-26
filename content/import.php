@@ -1,7 +1,7 @@
 <?php
 /**
  * Import struktury serwisu: strony, treść, menu, SEO, ustawienia Elementora.
- * Uruchamiany przez bin/import.sh. Idempotentny — dopasowanie po slugu.
+ * Uruchamiany przez bin/import.sh. Idempotentny - dopasowanie po slugu.
  *
  * To jedyna droga zmiany treści strukturalnych: edycja content/pages/*.html
  * i pages.json, potem ./bin/import.sh. Zmiany klikane w edytorze zostaną nadpisane.
@@ -21,7 +21,7 @@ function vts_log(string $m): void { echo $m . "\n"; }
  * Definicje formularzy. Osobny formularz per podstrona zamiast jednego z ukrytym
  * polem tematu: każda strona pyta o co innego, a leady flotowe idą na inną skrzynkę.
  *
- * `fields` to wiersze treści maila do warsztatu — pola muszą istnieć w szablonie
+ * `fields` to wiersze treści maila do warsztatu - pola muszą istnieć w szablonie
  * z content/forms/{slug}.html, inaczej CF7 wstawi pusty znacznik.
  */
 function vts_form_defs(): array
@@ -68,7 +68,7 @@ function vts_form_defs(): array
                           'Rodzaj' => 'kind', 'Termin' => 'preferred-date'],
         ],
         'ecu' => [
-            'title'   => 'Zgłoszenie — dodatkowe usługi ECU',
+            'title'   => 'Zgłoszenie - dodatkowe usługi ECU',
             'subject' => 'Usługi ECU: [vehicle]',
             'inbox'   => 'retail',
             'fields'  => ['Imię' => 'your-name', 'E-mail' => 'your-email',
@@ -81,7 +81,7 @@ function vts_form_defs(): array
 function vts_import_form(): void
 {
     if (!post_type_exists('wpcf7_contact_form')) {
-        vts_log('Contact Form 7 nieaktywny — pomijam formularze');
+        vts_log('Contact Form 7 nieaktywny - pomijam formularze');
         return;
     }
 
@@ -90,7 +90,7 @@ function vts_import_form(): void
 
     $messages = [
         'mail_sent_ok'     => 'Dziękujemy. Odezwiemy się w godzinach pracy warsztatu.',
-        'mail_sent_ng'     => 'Nie udało się wysłać wiadomości. Zadzwońcie do nas — ' . $c['phones']['tuning']['number'] . '.',
+        'mail_sent_ng'     => 'Nie udało się wysłać wiadomości. Zadzwońcie do nas - ' . $c['phones']['tuning']['number'] . '.',
         'validation_error' => 'Uzupełnijcie zaznaczone pola.',
         'accept_terms'     => 'Zaznaczcie zgodę na kontakt.',
         'invalid_email'    => 'Ten adres e-mail wygląda na niepoprawny.',
@@ -100,7 +100,7 @@ function vts_import_form(): void
     foreach (vts_form_defs() as $slug => $def) {
         $plik = VTS_CONTENT . '/forms/' . $slug . '.html';
         if (!is_readable($plik)) {
-            vts_log('  brak szablonu formularza: ' . $slug . ' — pomijam');
+            vts_log('  brak szablonu formularza: ' . $slug . ' - pomijam');
             continue;
         }
 
@@ -114,7 +114,7 @@ function vts_import_form(): void
             'post_name'   => $slug,
         ]);
 
-        // Wyrównanie etykiet w mailu — Krzysiek czyta to na telefonie, nie w kliencie
+        // Wyrównanie etykiet w mailu - Krzysiek czyta to na telefonie, nie w kliencie
         // z proporcjonalną czcionką, więc kolumna wartości musi trzymać pion.
         $szer  = max(array_map('mb_strlen', array_keys($def['fields']))) + 2;
         $body  = '';
@@ -164,7 +164,7 @@ function vts_configure_kit(): void
         ['_id' => 'text',      'title' => 'Tekst',      'color' => '#F1F2F4'],
         ['_id' => 'accent',    'title' => 'Wyciszony',  'color' => '#8A919E'],
     ];
-    // Jedna rodzina z księgi znaku — nagłówki i tekst różni tylko grubość.
+    // Jedna rodzina z księgi znaku - nagłówki i tekst różni tylko grubość.
     $settings['system_typography'] = [
         ['_id' => 'primary',   'title' => 'Nagłówki',
          'typography_typography' => 'custom', 'typography_font_family' => 'IBM Plex Sans',
@@ -244,7 +244,7 @@ foreach ($pages as $slug => $cfg) {
     delete_post_meta($id, '_elementor_edit_mode');
 
     // Treść tych stron to ręcznie pisany HTML z jawnymi znacznikami. Flaga wyłącza
-    // dla nich wpautop — patrz vts-content.php. Bez tego filtr wstawia znaczniki
+    // dla nich wpautop - patrz vts-content.php. Bez tego filtr wstawia znaczniki
     // akapitów w środek kotwic i przeglądarka klonuje je na puste kafelki.
     update_post_meta($id, '_vts_raw_html', 1);
 
@@ -264,7 +264,7 @@ foreach ($pages as $slug => $cfg) {
 vts_log('strony: ' . count($ids));
 
 /* Strony, które wypadły z manifestu, idą do kosza. Rozpoznajemy je po fladze
- * _vts_raw_html, więc dotyczy to wyłącznie stron z importera — strona dodana
+ * _vts_raw_html, więc dotyczy to wyłącznie stron z importera - strona dodana
  * ręcznie w edytorze zostaje. Bez tego usunięte podstrony (np. dawne kategorie
  * chip tuningu) dalej odpowiadałyby 200 i wisiały w mapie witryny. */
 $stare = get_posts([
@@ -290,7 +290,7 @@ if ($do_kosza) {
  *
  * Ten sam wzorzec co strony: źródłem jest content/posts/*.html i posts.json,
  * dopasowanie po slugu, więc drugi przebieg niczego nie dubluje. Wpisy klikane
- * w edytorze zostaną nadpisane — tak samo jak strony.
+ * w edytorze zostaną nadpisane - tak samo jak strony.
  */
 
 function vts_find_post(string $slug): ?WP_Post
@@ -359,7 +359,7 @@ vts_log('wpisy: ' . $ile_wpisow);
 /*
  * Karuzelę strony głównej klient prowadzi w kokpicie („Slajdy hero", CPT vts_slajd).
  * Import zakłada fabryczne slajdy z vts_hero_slides_default() tylko wtedy, gdy w bazie
- * nie ma ŻADNEGO slajdu (także szkicu czy kosza) — inaczej nadpisywałby zmiany klienta.
+ * nie ma ŻADNEGO slajdu (także szkicu czy kosza) - inaczej nadpisywałby zmiany klienta.
  * Zdjęcia nie są kopiowane do biblioteki mediów: slajd bez obrazka wyróżniającego
  * czyta fabryczny plik z assets/img po nazwie z meta _vts_img.
  */
@@ -501,8 +501,8 @@ foreach ($main as $top) {
 }
 vts_build_menu('vts_main', 'Nawigacja główna', $with_children, $ids);
 
-foreach (['vts_footer' => 'Stopka — usługi', 'vts_client' => 'Stopka — strefa klienta'] as $loc => $label) {
-    // Pozycja to slug albo {slug, label} — stopka ma własne, handlowe etykiety
+foreach (['vts_footer' => 'Stopka - usługi', 'vts_client' => 'Stopka - strefa klienta'] as $loc => $label) {
+    // Pozycja to slug albo {slug, label} - stopka ma własne, handlowe etykiety
     // („PowerChip Volvo VEA"), inne niż tytuły stron.
     $items = [];
     foreach ($manifest['menus'][$loc] as $poz) {

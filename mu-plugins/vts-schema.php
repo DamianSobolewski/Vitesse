@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Vitesse — schemat bazy
+ * Plugin Name: Vitesse - schemat bazy
  * Description: Własne tabele katalogu mocy. Aplikowane przez bin/migrate.sh, nie przy każdym żądaniu.
  *
  * Dlaczego własne tabele, a nie CPT: ~17 tys. wariantów silnikowych × ~2,5 usługi
  * to ~60 tys. wpisów w wp_posts i ~600 tys. w wp_postmeta. Kaskada w Hero byłaby
- * wtedy meta_query z JOIN-ami po LONGTEXT (indeks tylko prefiksowy) — filesort
+ * wtedy meta_query z JOIN-ami po LONGTEXT (indeks tylko prefiksowy) - filesort
  * na dziesiątkach tysięcy wierszy, trzy razy na jedną interakcję. Patrz plan §4.1.
  *
  * Uwaga do dbDelta: nie rozumie kluczy obcych ani kolumn generowanych, dlatego
@@ -164,7 +164,7 @@ function vts_schema_definitions(): array
 
 /**
  * Klucze obce. dbDelta ich nie obsługuje, więc dokładamy je raz, po sprawdzeniu
- * w information_schema — inaczej każdy przebieg migracji próbowałby je dodać ponownie.
+ * w information_schema - inaczej każdy przebieg migracji próbowałby je dodać ponownie.
  */
 function vts_schema_apply_foreign_keys(): array
 {
@@ -208,10 +208,10 @@ function vts_schema_apply_foreign_keys(): array
 /**
  * Pozostałości po funkcjach wycofanych w X 2026 (decyzja klienta):
  * - tabela leadów z bramki e-mail w wyszukiwarce (bramki nie ma od IX 2026),
- * - ręczny panel wykresów z hamowni (CPT vts_dyno, rola obsługi) — wykresy
+ * - ręczny panel wykresów z hamowni (CPT vts_dyno, rola obsługi) - wykresy
  *   pochodzą teraz z wtyczki VT Konfigurator (chart_url w vts_gain).
  *
- * Konta użytkowników z dawną rolą zostają — usunięcie konta to decyzja
+ * Konta użytkowników z dawną rolą zostają - usunięcie konta to decyzja
  * administratora (`wp user delete <login> --reassign=<id admina>`).
  */
 function vts_schema_drop_obsolete(): array

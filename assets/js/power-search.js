@@ -1,6 +1,6 @@
-/* Wyszukiwarka mocy — kaskada Marka → Model → Generacja → Silnik i wynik.
+/* Wyszukiwarka mocy - kaskada Marka → Model → Generacja → Silnik i wynik.
  *
- * Wynik przychodzi z /catalog/result od razu po wyborze silnika — bez przycisku
+ * Wynik przychodzi z /catalog/result od razu po wyborze silnika - bez przycisku
  * (decyzja klienta, X 2026) i bez bramki e-mail (IX 2026), tak jak w konfiguratorze
  * V-techa. Token z listy silników i limit zapytań po stronie serwera zostają
  * jako hamulec na skrypty, nie na ludzi. Przycisk [data-cta] jest opcjonalny:
@@ -19,7 +19,7 @@
   }
 
   /* ------------------------------------------------------- wykres mocy V-techa
-   * Jeden overlay na stronę, dla każdego [data-vts-chart] — w wyszukiwarce i na
+   * Jeden overlay na stronę, dla każdego [data-vts-chart] - w wyszukiwarce i na
    * stronie silnika w katalogu. Obraz ładuje się dopiero po kliknięciu, wprost
    * z vtechtuning.pl. Zamknięcie: ×, tło, Escape; fokus wraca na przycisk.
    */
@@ -74,7 +74,7 @@
   });
 
   /* Odliczanie liczby na ekranie. Przy wyłączonym ruchu wpisujemy od razu
-     wartość końcową — nigdy przypadkową klatkę. */
+     wartość końcową - nigdy przypadkową klatkę. */
   function licz(el, od, doo, sufiks, prefiks) {
     var koniec = (prefiks || '') + doo + (sufiks || '');
     if (!motionOK || od === doo) { el.textContent = koniec; return; }
@@ -129,7 +129,7 @@
       });
     }
 
-    /* Chowa wynik i wyłącza przycisk — po każdej zmianie w kaskadzie. */
+    /* Chowa wynik i wyłącza przycisk - po każdej zmianie w kaskadzie. */
     function zgas() {
       out.hidden = true;
       errBox.hidden = true;
@@ -176,7 +176,7 @@
       pobierz();
     });
 
-    /* Górny rząd: VIN (tylko przy włączonej fladze). Endpoint zwraca markę i rok —
+    /* Górny rząd: VIN (tylko przy włączonej fladze). Endpoint zwraca markę i rok -
        trafienie ustawia pierwszy select i wyzwala tę samą kaskadę co klik. */
     var vinBox = root.querySelector('[data-vin]');
     var vinInput = root.querySelector('[data-vin-input]');
@@ -267,10 +267,10 @@
         var moc = '<span>moc <b>+' + r.gain_hp + ' KM</b>' +
                   (r.tuned_hp ? ' <em>→ ' + r.tuned_hp + '</em>' : '') + '</span>';
         var mom = r.gain_nm ? '<span>moment <b>+' + r.gain_nm + ' Nm</b></span>' : '';
-        // Wykres mocy ze sklepu V-techa — adres przychodzi z wtyczki VT Konfigurator.
+        // Wykres mocy ze sklepu V-techa - adres przychodzi z wtyczki VT Konfigurator.
         var wyk = r.chart_url
           ? '<button type="button" class="vts-ps__chart" data-vts-chart="' + esc(r.chart_url) + '"' +
-            ' data-vts-chart-alt="' + esc('Wykres mocy V-tech: ' + data.vehicle.replace(' · ', ' ') + ' — ' + r.label) + '">' +
+            ' data-vts-chart-alt="' + esc('Wykres mocy V-tech: ' + data.vehicle.replace(' · ', ' ') + ' - ' + r.label) + '">' +
             'Zobacz wykres mocy</button>'
           : '';
         return '<div class="vts-ps__srv"><h4>' + r.label + '</h4>' +

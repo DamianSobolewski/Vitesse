@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Vitesse — most do wtyczki VT Konfigurator
+ * Plugin Name: Vitesse - most do wtyczki VT Konfigurator
  * Description: Drzewo pojazdów i przyrosty mocy z wtyczki VT Konfigurator (Signuply) trafiają do własnych tabel katalogu.
  *
  * Wtyczka jest źródłem prawdy: trzyma drzewo z konfiguratora V-techa (opcja vt_vehicle_tree),
  * pobiera wynik dla kombinacji marka/model/generacja/silnik/rocznik i cache'uje go. My nie
- * czytamy z niej przy każdym żądaniu — front, REST z tokenem, strony /chiptuning/ i przekierowania
+ * czytamy z niej przy każdym żądaniu - front, REST z tokenem, strony /chiptuning/ i przekierowania
  * pracują na tabelach wp_vts_*, które ten plik buduje z danych wtyczki:
  *
  *  - vts_vt_import_tree()   drzewo → marki, modele, generacje, silniki (upsert po legacy_key,
@@ -28,7 +28,7 @@ if (!defined('ABSPATH')) {
 const VTS_VT_CRON   = 'vts_vt_sync_batch';
 const VTS_VT_PLUGIN = 'vt-konfigurator/vt-konfigurator.php';
 
-/** Wtyczka ładuje się po mu-plugins — sprawdzamy dopiero w chwili użycia, nie przy starcie. */
+/** Wtyczka ładuje się po mu-plugins - sprawdzamy dopiero w chwili użycia, nie przy starcie. */
 function vts_vt_available(): bool
 {
     return class_exists('VT_Storage') && class_exists('VT_Fetcher');
@@ -50,7 +50,7 @@ add_action('admin_notices', function () {
 
 /* ----------------------------------------------------------- drzewo → tabele */
 
-/** Te same reguły co w dawnym tools/scrape/vtech-tree.py — slugi muszą zostać identyczne. */
+/** Te same reguły co w dawnym tools/scrape/vtech-tree.py - slugi muszą zostać identyczne. */
 function vts_vt_slugify(string $s): string
 {
     $s = strtr($s, [
@@ -260,7 +260,7 @@ function vts_vt_params(array $engine): ?array
 }
 
 /**
- * Wynik dla kombinacji — z cache wtyczki, a gdy go nie ma, z jej fetchera.
+ * Wynik dla kombinacji - z cache wtyczki, a gdy go nie ma, z jej fetchera.
  * Powtarza logikę VT_Ajax::handle_result (cache → live → stale), żeby oba wejścia
  * zachowywały się tak samo i dzieliły jeden cache.
  */
@@ -301,7 +301,7 @@ function vts_vt_fetch(array $p): array|WP_Error
 /**
  * Wynik wtyczki → wiersze wp_vts_gain dla jednej wersji silnika.
  * Wtyczka zwraca dwie pozycje: „PowerChip" (ostatnia karta PowerChip ze sklepu V-techa)
- * i „Chip Tuning" — takie dwie pokazujemy, decyzja biznesowa z września 2026.
+ * i „Chip Tuning" - takie dwie pokazujemy, decyzja biznesowa z września 2026.
  *
  * @return true|WP_Error true także wtedy, gdy wtyczka potwierdziła brak danych (silnik znika)
  */
@@ -326,7 +326,7 @@ function vts_vt_sync_engine(int $engine_id): bool|WP_Error
 
     $result = vts_vt_fetch($p);
     if (is_wp_error($result)) {
-        // Nie ponawiamy przy każdym wyświetleniu — sklep V-techa bywa chwilowo niedostępny.
+        // Nie ponawiamy przy każdym wyświetleniu - sklep V-techa bywa chwilowo niedostępny.
         set_transient("vts_vt_fail_{$engine_id}", 1, 10 * MINUTE_IN_SECONDS);
         return $result;
     }
@@ -377,7 +377,7 @@ function vts_vt_sync_engine(int $engine_id): bool|WP_Error
     return true;
 }
 
-/** Ile dni wynik jest świeży — to samo ustawienie, którym wtyczka rządzi swoim cache. */
+/** Ile dni wynik jest świeży - to samo ustawienie, którym wtyczka rządzi swoim cache. */
 function vts_vt_ttl_days(): int
 {
     if (!vts_vt_available()) {
@@ -561,7 +561,7 @@ if (defined('WP_CLI') && WP_CLI) {
                 }
                 WP_CLI::log(sprintf('  paczka: %d ok, %d błędów (razem %d)', $r['done'], $r['failed'], $total['done'] + $total['failed']));
                 if ($r['failed'] > 0 && $r['done'] === 0) {
-                    WP_CLI::warning('Sama paczka błędów — sklep V-techa nie odpowiada? Przerywam, log w Ustawienia → VT Konfigurator.');
+                    WP_CLI::warning('Sama paczka błędów - sklep V-techa nie odpowiada? Przerywam, log w Ustawienia → VT Konfigurator.');
                     break;
                 }
             }

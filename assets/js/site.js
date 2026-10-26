@@ -1,4 +1,4 @@
-/* Vitesse — skrypt szkieletu: menu mobilne + wysokość nagłówka. */
+/* Vitesse - skrypt szkieletu: menu mobilne + wysokość nagłówka. */
 (function () {
   'use strict';
 
@@ -15,19 +15,19 @@
 
   /* ---------------------------------------------------------- hero: zapłon
    *
-   * Klasę js-anim dodajemy natychmiast — dopiero ona włącza w CSS stan
+   * Klasę js-anim dodajemy natychmiast - dopiero ona włącza w CSS stan
    * wyjściowy „światła zgaszone". Przy wyłączonym JavaScripcie klasy nie ma,
    * więc kadr jest od razu kompletny.
    *
    * Sekwencję odpalamy po wczytaniu zdjęcia. Bez tego potrafi zagrać na pustym
-   * prostokącie. Samego tła nie dotykamy — jest elementem LCP.
+   * prostokącie. Samego tła nie dotykamy - jest elementem LCP.
    */
   var motionOK = !matchMedia('(prefers-reduced-motion: reduce)').matches;
   var hero = document.querySelector('.vts-hero');
   var bg   = hero && hero.querySelector('.vts-hero__bg');
 
   // Klasa włącza w CSS stany wyjściowe animacji. Dodajemy ją tylko wtedy, gdy
-  // ruch jest dozwolony — inaczej nic nigdy nie zostałoby ukryte ani odsłonięte.
+  // ruch jest dozwolony - inaczej nic nigdy nie zostałoby ukryte ani odsłonięte.
   if (motionOK) {
     document.documentElement.classList.add('js-anim');
   }
@@ -45,7 +45,7 @@
       var probe = new Image();
       probe.onload = probe.onerror = ignite;
       probe.src = src;
-      // gdyby zdjęcie utknęło — nie zostawiamy hero w ciemności
+      // gdyby zdjęcie utknęło - nie zostawiamy hero w ciemności
       setTimeout(ignite, 2500);
     } else {
       ignite();
@@ -55,7 +55,7 @@
   /* --------------------------------------------------- światła awaryjne
    *
    * Trójkąt na konsoli zapala awaryjne w aucie na zdjęciu. Efekt jest w całości
-   * w CSS — skrypt tylko przełącza klasę i stan przycisku, więc przy wyłączonym
+   * w CSS - skrypt tylko przełącza klasę i stan przycisku, więc przy wyłączonym
    * JavaScripcie przycisk po prostu nic nie robi i nic się nie psuje.
    */
   var hazard = document.querySelector('[data-hazard]');
@@ -124,7 +124,7 @@
     });
 
     // Po obrocie na poziomo albo powiększeniu okna nakładka przestaje
-    // obowiązywać — zdejmujemy blokadę, żeby strona nie została zamrożona.
+    // obowiązywać - zdejmujemy blokadę, żeby strona nie została zamrożona.
     addEventListener('resize', function () {
       if (nav.classList.contains('is-open') && innerWidth > 1080) setMenu(false);
     }, { passive: true });
@@ -132,7 +132,7 @@
 
   /* ------------------------------------------------- akordeon z wyłącznością
    *
-   * Wyłączność robi natywny atrybut name na <details> — działa bez skryptu.
+   * Wyłączność robi natywny atrybut name na <details> - działa bez skryptu.
    * Ten blok jest wyłącznie asekuracją dla przeglądarek, które go jeszcze nie
    * znają: bez niego rozwijałyby się tam wszystkie pozycje naraz.
    */
@@ -151,14 +151,14 @@
   /* --------------------------------------------------- odliczanie liczb
    *
    * Ruszamy z opóźnieniem, żeby liczba dobiła do wartości mniej więcej wtedy,
-   * gdy wskazówka kończy powrót z pełnego wychyłu — inaczej odczyt wyprzedza
+   * gdy wskazówka kończy powrót z pełnego wychyłu - inaczej odczyt wyprzedza
    * przyrząd i sekwencja się rozjeżdża.
    *
    * Liczbę bierzemy z atrybutu, a przedrostek i format z tekstu, który wyszedł
-   * z serwera. Dzięki temu „+28", „6,5", „4 853" i „4×4" zachowują się poprawnie —
+   * z serwera. Dzięki temu „+28", „6,5", „4 853" i „4×4" zachowują się poprawnie -
    * to ostatnie nie jest liczbą i nie ma atrybutu, więc nie rusza się wcale.
    *
-   * Ten sam mechanizm obsługuje zegary i pasek liczb — stąd „w środku elementu",
+   * Ten sam mechanizm obsługuje zegary i pasek liczb - stąd „w środku elementu",
    * a nie „w zegarze".
    */
   function odliczWSrodku(el) {
@@ -203,7 +203,7 @@
 
   /* ------------------------------------------------- delikatne wejścia kart
    *
-   * Animujemy wyłącznie kafelki i karty — bloki tekstowe zostawiamy w spokoju,
+   * Animujemy wyłącznie kafelki i karty - bloki tekstowe zostawiamy w spokoju,
    * bo poruszający się akapit utrudnia czytanie, a nie pomaga.
    * Hero jest wykluczone: zawiera element LCP i treść nad linią zgięcia.
    */
@@ -241,7 +241,7 @@
 /* ------------------------------------------------------------ slajder hero
  *
  * Cztery hasła na jednym tle sekcji. Slajd 0 nosi <h1> i warstwę świateł, więc
- * sekcja startuje właśnie od niego — LCP i sekwencja zapłonu zostają nietknięte.
+ * sekcja startuje właśnie od niego - LCP i sekwencja zapłonu zostają nietknięte.
  *
  * Autoprzewijanie zatrzymuje się pod kursorem i przy fokusie klawiatury, a przy
  * `prefers-reduced-motion` nie startuje wcale: kręcąca się karuzela to jeden

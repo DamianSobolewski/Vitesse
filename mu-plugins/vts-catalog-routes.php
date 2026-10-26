@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Vitesse — adresy katalogu
+ * Plugin Name: Vitesse - adresy katalogu
  * Description: Reguły przepisywania i szablony dla /chiptuning/{marka}/{model}/{generacja}/{silnik}/.
  *
- * Strony katalogu są wirtualne — powstają z tabel, nie z wp_posts. Przy 3200
+ * Strony katalogu są wirtualne - powstają z tabel, nie z wp_posts. Przy 3200
  * wariantach silnikowych trzymanie ich jako wpisów oznaczałoby dziesiątki tysięcy
  * wierszy w wp_posts i wp_postmeta oraz nieużywalny wp-admin.
  */
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 
 const VTS_CATALOG_BASE = 'chiptuning';
 
-/** Slugi zarezerwowane dla realnych podstron — marka nie może ich przejąć. */
+/** Slugi zarezerwowane dla realnych podstron - marka nie może ich przejąć. */
 function vts_reserved_slugs(): array
 {
     return ['chip-tuning', 'powerboxy', 'oferta-dla-flot', 'dodatkowe-uslugi-ecu',
@@ -24,7 +24,7 @@ function vts_reserved_slugs(): array
 add_action('init', function () {
     $b = VTS_CATALOG_BASE;
 
-    // 'top' — cała przestrzeń /chiptuning/ należy do katalogu. Strony redakcyjne
+    // 'top' - cała przestrzeń /chiptuning/ należy do katalogu. Strony redakcyjne
     // żyją pod /podnoszenie-mocy/, więc kolizja z regułą pagename jest niemożliwa.
     // Przy 'bottom' reguła pagename przechwytywała adresy jedno- i dwuczłonowe.
     add_rewrite_rule("^{$b}/?$",                              'index.php?vts_level=index', 'top');
@@ -49,7 +49,7 @@ function vts_catalog_url(...$parts): string
 
 /**
  * Zamienia slugi z adresu na rekordy. Zwraca null, jeśli którykolwiek poziom
- * nie istnieje albo jest ukryty — wtedy WordPress pokaże 404.
+ * nie istnieje albo jest ukryty - wtedy WordPress pokaże 404.
  */
 function vts_resolve_route(): ?array
 {
@@ -119,7 +119,7 @@ add_action('template_redirect', function () {
 
     if (!$route) {
         // Adres pasuje do wzorca katalogu, ale rekordu nie ma. Bez jawnego 404
-        // WordPress oddałby pustą stronę ze statusem 200 — przy tej liczbie
+        // WordPress oddałby pustą stronę ze statusem 200 - przy tej liczbie
         // adresów oznaczałoby to masowe soft-404 w wynikach wyszukiwania.
         global $wp_query;
         $wp_query->set_404();
@@ -169,7 +169,7 @@ function vts_render_catalog(array $r): void
 {
     echo '<section class="vts-hero" style="padding-block:var(--vts-gap-m) var(--vts-gap-s)"><div class="vts-wrap">';
     echo vts_catalog_crumbs($r);
-    // Rozmiar bierze się teraz z globalnej reguły dla H1 — bez nadpisywania.
+    // Rozmiar bierze się teraz z globalnej reguły dla H1 - bez nadpisywania.
     echo '<h1 style="font-style:normal;font-weight:700">'
        . esc_html(vts_catalog_title($r)) . '</h1>';
     echo '<p class="vts-lead">' . esc_html(vts_catalog_intro($r)) . '</p>';
@@ -274,7 +274,7 @@ function vts_view_engine(array $r): void
       <div>
         <div class="vts-cat-facts">
           <div class="vts-ps__cell"><span>Moc fabryczna</span><b><?= (int) $e['stock_hp'] ?> KM</b></div>
-          <?php /* Momentu fabrycznego nie pokazujemy — dla większości wersji V-tech
+          <?php /* Momentu fabrycznego nie pokazujemy - dla większości wersji V-tech
                    go nie podaje i komórka świeciła „brak danych". */ ?>
           <div class="vts-ps__cell is-text"><span>Paliwo</span><b><?= esc_html($e['fuel']) ?></b></div>
           <div class="vts-ps__cell"><span>Moc [kW]</span><b><?= (int) $e['stock_kw'] ?></b></div>
@@ -282,7 +282,7 @@ function vts_view_engine(array $r): void
 
         <h2>Co zyska ten silnik</h2>
         <?php if ($wynik && $wynik['results']) : ?>
-          <?php /* Wynik prosto z katalogu, bez bramki — ta sama funkcja, która
+          <?php /* Wynik prosto z katalogu, bez bramki - ta sama funkcja, która
                    obsługuje wyszukiwarkę. Robot indeksujący widzi pełne liczby. */ ?>
           <?php $ma_wykres = (bool) array_filter(array_column($wynik['results'], 'chart_url')); ?>
           <div class="vts-cat-gains">
@@ -297,7 +297,7 @@ function vts_view_engine(array $r): void
                 <?php /* Wykres mocy ze sklepu V-techa (wtyczka VT Konfigurator); overlay dopina power-search.js. */ ?>
                 <?php if (!empty($w['chart_url'])) : ?>
                   <button type="button" class="vts-ps__chart" data-vts-chart="<?= esc_url($w['chart_url']) ?>"
-                          data-vts-chart-alt="<?= esc_attr('Wykres mocy V-tech: ' . $pojazd . ' — ' . $w['label']) ?>">Zobacz wykres mocy</button>
+                          data-vts-chart-alt="<?= esc_attr('Wykres mocy V-tech: ' . $pojazd . ' - ' . $w['label']) ?>">Zobacz wykres mocy</button>
                 <?php endif; ?>
               </div>
             <?php endforeach; ?>
@@ -306,7 +306,7 @@ function vts_view_engine(array $r): void
             <?= $ma_wykres ? '' : 'Jeśli chcesz zobaczyć wykres z hamowni, skontaktuj się z nami.' ?></p>
         <?php else : ?>
           <p>Dla tej wersji nie mamy jeszcze wartości w katalogu. Zadzwoń:
-            <a href="<?= esc_attr(vts_phone_href($c['phones']['tuning']['number'])) ?>"><?= esc_html($c['phones']['tuning']['number']) ?></a>,
+            <?= vts_phone_links($c['phones']['tuning']) ?>,
             często mamy rozwiązanie spoza katalogu.</p>
         <?php endif; ?>
         <p style="margin-top:var(--vts-gap-s)">
@@ -334,7 +334,7 @@ add_filter('pre_get_document_title', function ($title) {
     if (!$vts_route) {
         return $title;
     }
-    return vts_catalog_title($vts_route) . ' | Vitesse V-tech Łódź';
+    return vts_catalog_title($vts_route) . ' | VITESSE V-tech Łódź';
 }, 20);
 
 add_action('wp_head', function () {
@@ -353,7 +353,7 @@ add_action('wp_head', function () {
     echo '<meta name="description" content="' . esc_attr(vts_catalog_intro($r)) . '">' . "\n";
 
     // Strony katalogu są wirtualne, więc ustawienie „proś wyszukiwarki o nieindeksowanie"
-    // ich nie obejmuje — WordPress dokłada swój znacznik tylko do własnych stron.
+    // ich nie obejmuje - WordPress dokłada swój znacznik tylko do własnych stron.
     // Bez tego warunku podgląd dla klienta wystawiłby kilka tysięcy stron do indeksu.
     if (!get_option('blog_public')) {
         echo '<meta name="robots" content="noindex,nofollow">' . "\n";
@@ -369,7 +369,7 @@ add_action('wp_head', function () {
     }
 }, 1);
 
-/** Rank Math nie wie o stronach wirtualnych — wyłączamy jego meta na katalogu. */
+/** Rank Math nie wie o stronach wirtualnych - wyłączamy jego meta na katalogu. */
 add_filter('rank_math/frontend/disable_integration', function ($disable) {
     return get_query_var('vts_level') ? true : $disable;
 });

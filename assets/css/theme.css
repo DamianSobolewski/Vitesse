@@ -76,6 +76,8 @@ p:last-child{margin-bottom:0}
    przez co nie dało się go odróżnić od zwykłego akapitu przy przeglądzie
    spójności. Teraz to nazwana rola z własnym stopniem skali. */
 .vts-note{font-size:var(--vts-step--1);color:var(--vts-muted);line-height:1.6}
+/* Przypis, który ma być czytelny jak treść (np. „Nie ma Twojej wersji?” przy wyszukiwarce). */
+.vts-note--lg{font-size:var(--vts-step-0);color:var(--vts-lead)}
 .vts-section{padding-block:var(--vts-gap-xl)}
 .vts-section + .vts-section{border-top:1px solid var(--vts-line-soft)}
 /* nagłówek strony ma własny odstęp dolny — pierwsza sekcja nie dokłada drugiego */
@@ -120,17 +122,15 @@ p:last-child{margin-bottom:0}
 .vts-btn--ghost:hover{border-color:var(--vts-accent);color:var(--vts-accent-ink)}
 
 /* --- pasek informacyjny ---
- * Pasek i nagłówek tworzą jeden „stalowy" blok nad ciemnym hero (życzenie
- * klienta: nagłówek jak na jego dotychczasowej stronie). Pasek jest ciemniejszym
- * srebrem, nagłówek jaśniejszym gradientem — stal ma mieć głębię, nie być
- * jedną płaską plamą. Tekst grafitowy: 7:1 na tym tle. */
+ * Pasek jest czarny (życzenie klienta, X 2026), nagłówek pod nim zostaje
+ * jasnym stalowym gradientem. Tekst jasny: kontrast powyżej 12:1. */
 /* 16 px zamiast stopnia -2 ze skali — życzenie klienta (X 2026). */
-.vts-topbar{background:#B7B8BA;border-bottom:1px solid #9C9EA2;
-  font-size:16px;color:#2B2D31}
+.vts-topbar{background:#0B0C0F;border-bottom:1px solid #262B35;
+  font-size:16px;color:#C7CCD4}
 .vts-topbar .vts-wrap{display:flex;justify-content:space-between;gap:16px;
   flex-wrap:wrap;padding-block:9px}
-.vts-topbar a{color:#1A1C20;font-weight:600;text-decoration:none}
-.vts-topbar a:hover{color:#A84700}
+.vts-topbar a{color:#F1F2F4;font-weight:600;text-decoration:none}
+.vts-topbar a:hover{color:#FFB067}
 .vts-topbar__phones{display:flex;gap:20px;flex-wrap:wrap}
 /* Adres z godzinami łamie się na telefonie na dwie linie i zjada ~50 px na
  * każdej podstronie. Zostaje w stopce, na stronie Kontakt i w danych

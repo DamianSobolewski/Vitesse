@@ -34,7 +34,7 @@
 .vts-ps__head{display:flex;justify-content:space-between;align-items:center;gap:14px;
   flex-wrap:wrap;padding:15px var(--vts-ps-pad);border-bottom:1px solid var(--vts-line)}
 .vts-ps__title{font-family:var(--vts-font-display);font-weight:700;
-  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-tight)}
+  font-size:var(--vts-step-2);letter-spacing:var(--vts-track-tight)}
 .vts-ps__count{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
   letter-spacing:var(--vts-track-label);text-transform:uppercase;color:var(--vts-accent);
   border:1px solid rgba(255,122,0,.34);border-radius:2px;padding:4px 8px;white-space:nowrap}
@@ -162,7 +162,7 @@ body.has-vts-overlay{overflow:hidden}
 .vts-ps__err[hidden]{display:none}
 
 .vts-ps__hint{margin:0;padding:14px var(--vts-ps-pad);border-top:1px solid var(--vts-line);
-  font-size:var(--vts-step--2);color:#AEB6C2}
+  font-size:var(--vts-step-0);color:#C7CCD4}
 .vts-ps__hint a{color:var(--vts-accent);text-decoration:none;font-weight:600}
 
 @media (max-width:520px){

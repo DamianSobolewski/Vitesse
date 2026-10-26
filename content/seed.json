@@ -1,5 +1,5 @@
 {
-  "_comment": "Dane demonstracyjne DEV — opinie nie są prawdziwe. Wgrywa bin/seed-dev.sh. Przed startem podmienić na opinie z profilu Google (wp option update vts_reviews ...).",
+  "_comment": "Dane demonstracyjne DEV - opinie nie są prawdziwe. Wgrywa bin/seed-dev.sh. Przed startem podmienić na opinie z profilu Google (wp option update vts_reviews ...).",
   "reviews": {
     "rating": 4.9,
     "count": 87,

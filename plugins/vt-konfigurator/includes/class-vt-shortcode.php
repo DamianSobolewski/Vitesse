@@ -97,6 +97,7 @@ class VT_Shortcode {
 			[
 				'tree'     => $tree['tree'],
 				'restUrl'  => esc_url_raw( rest_url( 'vt/v1/result' ) ),
+				'extUrl'   => esc_url_raw( rest_url( 'vt/v1/external' ) ),
 				'nonce'    => wp_create_nonce( 'wp_rest' ),
 				'settings' => [
 					'accentColor'  => sanitize_hex_color( $settings['accent_color'] ) ?: '#e53e3e',
@@ -126,6 +127,10 @@ class VT_Shortcode {
 					'viewChart'        => __( 'Zobacz wykres mocy', 'vt-konfigurator' ),
 					'interestedCall'   => __( 'Zainteresowany? Zadzwoń:', 'vt-konfigurator' ),
 					'privateCharts'    => __( 'Twoje wykresy', 'vt-konfigurator' ),
+					'extLoading'       => __( 'Pobieranie danych ziptuning.nl i rica.nl...', 'vt-konfigurator' ),
+					'extNotFound'      => __( 'Brak danych dla tego pojazdu', 'vt-konfigurator' ),
+					'extError'         => __( 'Nie udało się pobrać danych.', 'vt-konfigurator' ),
+					'extSource'        => __( 'Źródło:', 'vt-konfigurator' ),
 				],
 				'phones'   => [
 					[ 'number' => $settings['phone_1_number'], 'name' => $settings['phone_1_name'] ],

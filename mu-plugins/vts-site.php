@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Vitesse — szkielet serwisu
+ * Plugin Name: Vitesse - szkielet serwisu
  * Description: Zasoby, nagłówek z rozwijaną nawigacją, stopka 4-kolumnowa, pływające CTA.
  *
- * Zastępuje Elementor Pro Theme Builder — nagłówek i stopka są kodem, nie układem
+ * Zastępuje Elementor Pro Theme Builder - nagłówek i stopka są kodem, nie układem
  * klikanym w edytorze. Dzięki temu wersjonują się w gicie i nikt ich przypadkiem nie zepsuje.
  */
 
@@ -44,7 +44,7 @@ add_action('wp_enqueue_scripts', function () {
 /**
  * Wyłączamy nagłówek, stopkę i tytuł strony z hello-elementor.
  * Nagłówek i stopkę rysujemy sami (niżej), a tytuł strony wchodzi razem
- * z okruszkami w vts-content.php — inaczej pojawiałby się dwa razy.
+ * z okruszkami w vts-content.php - inaczej pojawiałby się dwa razy.
  */
 add_filter('hello_elementor_header_footer', '__return_false');
 add_filter('hello_elementor_page_title', '__return_false');
@@ -52,14 +52,14 @@ add_filter('hello_elementor_page_title', '__return_false');
 /* ------------------------------------------------------------- nagłówek */
 
 /**
- * Znak firmowy z księgi znaku — wektor wstawiany prosto w kod strony.
+ * Znak firmowy z księgi znaku - wektor wstawiany prosto w kod strony.
  *
  * Nie <img>, bo wtedy litery nie mogłyby dziedziczyć koloru z motywu
  * (a znak żyje na ciemnym i na jasnym tle) i doszłoby drugie żądanie
  * do serwera w najważniejszym miejscu strony. Dwa kilobajty w HTML są
  * tańsze niż to żądanie, a znak rysuje się ostro w każdej skali.
  *
- * Plik czytamy raz na żądanie — nagłówek i stopka dostają tę samą treść.
+ * Plik czytamy raz na żądanie - nagłówek i stopka dostają tę samą treść.
  */
 function vts_logo_svg(): string
 {
@@ -77,7 +77,7 @@ function vts_logo_svg(): string
  * Znak jako odnośnik do strony głównej.
  *
  * Nazwę dostępną niesie <title> ze środka SVG, więc czytnik ekranu przeczyta
- * „Vitesse" — nie trzeba dokładać ukrytego tekstu. Dopisek „V-TECH ŁÓDŹ" zszedł
+ * „Vitesse" - nie trzeba dokładać ukrytego tekstu. Dopisek „V-TECH ŁÓDŹ" zszedł
  * z nagłówka: księga znaku wymaga wokół znaku pola ochronnego o wysokości
  * samych liter, a przy tym odstępie pasek urósłby o kolejne 30 px. Ta sama
  * treść stoi zresztą wiersz wyżej, w pasku kontaktowym, i w stopce.
@@ -99,15 +99,14 @@ function vts_render_header(): void
     ?>
     <div class="vts-topbar">
       <div class="vts-wrap">
-        <?php /* Bez kodu pocztowego — pasek ma być krótki (uwaga klienta, X 2026). */ ?>
+        <?php /* Bez kodu pocztowego - pasek ma być krótki (uwaga klienta, X 2026). */ ?>
         <span class="vts-topbar__where"><?= esc_html("{$c['city']}, {$c['street']}") ?> ·
-          <?= esc_html($c['hours']['weekdays']['label']) ?>
-          <?= esc_html($c['hours']['weekdays']['open'] . '–' . $c['hours']['weekdays']['close']) ?></span>
+          <?= esc_html(vts_hours_line()) ?></span>
         <span class="vts-topbar__phones">
           <?php foreach (['tuning', 'fleet'] as $k) :
               $p = $c['phones'][$k]; ?>
             <span><?= esc_html($p['label']) ?>
-              <a href="<?= esc_attr(vts_phone_href($p['number'])) ?>"><?= esc_html($p['number']) ?></a></span>
+              <?= vts_phone_links($p) ?></span>
           <?php endforeach; ?>
         </span>
       </div>
@@ -127,7 +126,7 @@ function vts_render_header(): void
           ]);
           ?>
         </nav>
-        <?php /* Jedyne wejście do strony Kontakt w górnym pasku — zakładka „Kontakt"
+        <?php /* Jedyne wejście do strony Kontakt w górnym pasku - zakładka „Kontakt"
                  zeszła z menu, bo dublowała ten przycisk (decyzja klienta, IX 2026).
                  Telefony są w pasku nad nagłówkiem, na telefonie w dolnym pasku. */ ?>
         <a class="vts-btn vts-btn--primary vts-header__cta"
@@ -140,7 +139,7 @@ function vts_render_header(): void
 /* Kotwice w menu (pozycje 'custom' z #fragmentem). WordPress przed porównaniem
  * adresu pozycji z bieżącym URL odcina fragment, więc na stronie usług ECU
  * wszystkie dwanaście kotwic dostawałoby current-menu-item i aria-current.
- * Bieżąca jest strona, nie kotwica — zdejmujemy oba sygnały. */
+ * Bieżąca jest strona, nie kotwica - zdejmujemy oba sygnały. */
 function vts_menu_item_is_anchor($item): bool
 {
     return isset($item->type, $item->url) && $item->type === 'custom' && str_contains((string) $item->url, '#');
@@ -161,8 +160,8 @@ add_filter('nav_menu_link_attributes', function ($atts, $item) {
 add_action('after_setup_theme', function () {
     register_nav_menus([
         'vts_main'   => 'Nawigacja główna',
-        'vts_footer' => 'Stopka — usługi',
-        'vts_client' => 'Stopka — strefa klienta',
+        'vts_footer' => 'Stopka - usługi',
+        'vts_client' => 'Stopka - strefa klienta',
     ]);
     add_theme_support('post-thumbnails');
     add_theme_support('title-tag');
@@ -218,15 +217,12 @@ function vts_render_footer(): void
             <h4>Kontakt</h4>
             <div class="vts-footer__meta">
               <?php foreach ($c['phones'] as $p) : ?>
-                <span><?= esc_html($p['label']) ?>:
-                  <a href="<?= esc_attr(vts_phone_href($p['number'])) ?>"><?= esc_html($p['number']) ?></a></span>
+                <span><?= esc_html($p['label']) ?>: <?= vts_phone_links($p) ?></span>
               <?php endforeach; ?>
               <span><a href="mailto:<?= esc_attr($c['email']) ?>"><?= esc_html($c['email']) ?></a></span>
               <span style="margin-top:6px">
-                <?= esc_html($c['hours']['weekdays']['label']) ?>
-                <?= esc_html($c['hours']['weekdays']['open'] . '–' . $c['hours']['weekdays']['close']) ?><br>
-                <?= esc_html($c['hours']['saturday']['label']) ?>
-                <?= esc_html($c['hours']['saturday']['open'] . '–' . $c['hours']['saturday']['close']) ?>
+                <?= esc_html(vts_hours_text('weekdays')) ?>,<br>
+                <?= esc_html(vts_hours_text('saturday')) ?>
               </span>
             </div>
             <a class="vts-btn vts-btn--primary" style="margin-top:16px"
@@ -252,7 +248,7 @@ function vts_render_footer(): void
 
 /* ----------------------------------------------------------- drobiazgi */
 
-/** hello-elementor nie ma własnego układu treści — dajemy stronom kontener. */
+/** hello-elementor nie ma własnego układu treści - dajemy stronom kontener. */
 add_filter('body_class', function ($classes) {
     $classes[] = 'vts';
     return $classes;

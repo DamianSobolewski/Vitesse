@@ -3,7 +3,7 @@ Contributors: vtech
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 
 Konfigurator chip tuningu Vtech z kaskadowymi dropdownami i wynikami PowerChip / Chip Tuning.
@@ -23,6 +23,9 @@ Tryb popup: [vt_konfigurator mode="popup"]
 4. Umieść shortcode [vt_konfigurator] na wybranej stronie
 
 == Changelog ==
+
+= 1.1.0 =
+* Tryb charts="1": przyrosty Stage 1 z ziptuning.nl i rica.nl pod przyciskiem "Twoje wykresy"
 
 = 1.0.0 =
 * Pierwsze wydanie

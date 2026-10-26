@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Vitesse — wyszukiwarka mocy
+ * Plugin Name: Vitesse - wyszukiwarka mocy
  * Description: REST kaskady Marka→Model→Generacja→Silnik, wynik dla wersji, shortcode [vts_power_search].
  */
 
@@ -13,7 +13,7 @@ const VTS_NS = 'vitesse/v1';
 /* ------------------------------------------------------------ token bramki
  *
  * Nonce WordPressa jest wypalany w HTML i żyje 12–24 h, więc łamie się przy
- * cache'owaniu całych stron — a wymagamy cache'u. Zamiast tego wystawiamy
+ * cache'owaniu całych stron - a wymagamy cache'u. Zamiast tego wystawiamy
  * krótkotrwały token HMAC przy nieskeszowanym zapytaniu XHR.
  */
 
@@ -23,7 +23,7 @@ function vts_gate_secret(): string
     if ($s !== '') {
         return $s;
     }
-    // Awaryjnie — środowisko bez skonfigurowanego sekretu.
+    // Awaryjnie - środowisko bez skonfigurowanego sekretu.
     return wp_salt('auth');
 }
 
@@ -96,7 +96,7 @@ add_action('rest_api_init', function () {
     ]);
 
     /**
-     * Warianty silnikowe — WYŁĄCZNIE dane fabryczne.
+     * Warianty silnikowe - WYŁĄCZNIE dane fabryczne.
      * Przyrosty wychodzą dopiero z GET /catalog/result z tokenem.
      */
     register_rest_route(VTS_NS, '/catalog/engines', [
@@ -121,7 +121,7 @@ add_action('rest_api_init', function () {
      *
      * Bez płatnego API: pierwsze trzy znaki (WMI) identyfikują producenta, więc
      * mapujemy je na markę z własnego katalogu, a z dziesiątego znaku czytamy rok
-     * modelowy. To wystarcza, żeby ustawić pierwszy krok kaskady — reszta zostaje
+     * modelowy. To wystarcza, żeby ustawić pierwszy krok kaskady - reszta zostaje
      * po stronie użytkownika. Endpoint NIE zwraca wartości po modyfikacji;
      * przyrosty wydaje wyłącznie GET /catalog/result z tokenem.
      */
@@ -150,7 +150,7 @@ add_action('rest_api_init', function () {
 
     /**
      * Wynik dla wybranej wersji: przyrosty i wartości po modyfikacji dla każdego
-     * poziomu produktu. Bez bramki e-mail — klient zrezygnował z niej we wrześniu
+     * poziomu produktu. Bez bramki e-mail - klient zrezygnował z niej we wrześniu
      * 2026 (wyszukiwarka ma pokazywać wynik od razu, tak jak konfigurator V-techa).
      * Token z listy silników i limit zapytań zostają: to hamulec na masowe
      * zgarnianie katalogu skryptem, nie na człowieka.
@@ -198,7 +198,7 @@ function vts_flush_catalog_cache(): void
  *
  * Tablica WMI → slug marki w naszym katalogu. Świadomie niepełna: pokrywa
  * producentów obecnych w katalogu V-techa, a nie cały świat. Nierozpoznany VIN
- * nie jest błędem — użytkownik schodzi rząd niżej, do wyboru ręcznego.
+ * nie jest błędem - użytkownik schodzi rząd niżej, do wyboru ręcznego.
  */
 function vts_vin_wmi_map(): array
 {
@@ -272,7 +272,7 @@ function vts_vin_decode(string $vin): array
 {
     $vin = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $vin));
 
-    // I, O i Q nie występują w VIN-ie — mylą się z 1 i 0, więc norma ich nie dopuszcza.
+    // I, O i Q nie występują w VIN-ie - mylą się z 1 i 0, więc norma ich nie dopuszcza.
     if (strlen($vin) !== 17 || preg_match('/[IOQ]/', $vin)) {
         return ['ok' => false, 'message' => 'To nie wygląda na poprawny numer VIN (17 znaków, bez liter I, O i Q).'];
     }
@@ -308,7 +308,7 @@ function vts_vin_decode(string $vin): array
 }
 
 /**
- * Przyrosty dla wersji silnika — jeden wynik dla wyszukiwarki i strony katalogu.
+ * Przyrosty dla wersji silnika - jeden wynik dla wyszukiwarki i strony katalogu.
  *
  * @return array|null null, gdy wersji nie ma
  */
@@ -328,12 +328,12 @@ function vts_engine_result(int $engine_id): ?array
     $services = vts_services();
     $results  = [];
     $stock_hp = (int) $path['stock_hp'];
-    $stock_nm = (int) $path['stock_nm'];   // 0 znaczy „nieznany" — V-tech nie podaje momentu fabrycznego
+    $stock_nm = (int) $path['stock_nm'];   // 0 znaczy „nieznany" - V-tech nie podaje momentu fabrycznego
 
     foreach (vts_engine_gains($engine_id) as $g) {
         $code = $g['service_code'];
 
-        // Brak wartości to w tej tabeli ZERO, nie NULL — importer zapisuje to, co
+        // Brak wartości to w tej tabeli ZERO, nie NULL - importer zapisuje to, co
         // przychodzi ze źródła, a konfigurator V-techa podaje w nieużywanych polach
         // zera. Wcześniejszy warunek `!== null` nie łapał więc niczego i moc po
         // modyfikacji była pusta dla 11 277 z 11 514 wariantów. Traktujemy zero
@@ -366,8 +366,8 @@ function vts_engine_result(int $engine_id): ?array
         ];
     }
 
-    // Kafelki podsumowania pokazują JEDEN wariant — ten o największym przyroście
-    // mocy — a nie maksima z różnych produktów. Inaczej klient widziałby moc
+    // Kafelki podsumowania pokazują JEDEN wariant - ten o największym przyroście
+    // mocy - a nie maksima z różnych produktów. Inaczej klient widziałby moc
     // z jednego pakietu i moment z drugiego, czego nie da się kupić razem.
     $top = null;
     foreach ($results as $r) {
@@ -407,14 +407,14 @@ add_filter('rest_post_dispatch', function ($response, $server, $request) {
 add_shortcode('vts_power_search', function ($atts) {
     $a = shortcode_atts([
         'title'  => 'Sprawdź, ile zyska Twój silnik',
-        'layout' => 'inline',   // wide — pełna szerokość pod hero; inline — w kolumnie obok tekstu
+        'layout' => 'inline',   // wide - pełna szerokość pod hero; inline - w kolumnie obok tekstu
         'vin'    => '',         // puste = decyduje flaga funkcji
     ], $atts);
 
     $vin_on = $a['vin'] === '' ? vts_feature('vin_decoder') : (bool) $a['vin'];
     $wide   = $a['layout'] === 'wide';
 
-    // Marki renderujemy po stronie serwera — bez tego wyszukiwarka jest dla
+    // Marki renderujemy po stronie serwera - bez tego wyszukiwarka jest dla
     // robota pustym divem, a to najważniejszy element strony głównej.
     $makes  = vts_makes();
     $counts = vts_catalog_counts();
@@ -422,7 +422,7 @@ add_shortcode('vts_power_search', function ($atts) {
 
     // Kaskada to cztery natywne <select>. Przy 61 markach i 4853 silnikach własna
     // lista kosztowałaby systemowy wybór na telefonie, obsługę klawiatury
-    // i czytniki ekranu — a nie dałaby nic w zamian.
+    // i czytniki ekranu - a nie dałaby nic w zamian.
     $slots = [
         ['make',  'Marka'],
         ['model', 'Model'],
@@ -470,7 +470,7 @@ add_shortcode('vts_power_search', function ($atts) {
         <?php endforeach; ?>
       </div>
 
-      <?php /* Wynik. Pokazuje się sam po wyborze silnika — osobny przycisk
+      <?php /* Wynik. Pokazuje się sam po wyborze silnika - osobny przycisk
                „Sprawdź potencjał" zszedł na życzenie klienta (X 2026). Do tego
                czasu blok jest ukryty. Wartości wpisuje skrypt z /catalog/result. */ ?>
       <div class="vts-ps__out" data-out hidden>
@@ -492,8 +492,7 @@ add_shortcode('vts_power_search', function ($atts) {
       </div>
 
       <p class="vts-ps__hint">Nie ma Twojej wersji? Zadzwoń:
-        <a href="<?= esc_attr(vts_phone_href($c['phones']['tuning']['number'])) ?>">
-          <?= esc_html($c['phones']['tuning']['number']) ?></a>.
+        <?= vts_phone_links($c['phones']['tuning']) ?>.
         Katalog nie obejmuje wszystkiego, nad czym pracujemy.</p>
     </div>
     <?php

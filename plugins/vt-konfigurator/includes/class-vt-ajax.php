@@ -14,6 +14,14 @@ class VT_Ajax {
 	}
 
 	public function register_routes(): void {
+		$args = [];
+		foreach ( [ 'brand', 'model', 'gen', 'engine', 'year' ] as $param ) {
+			$args[ $param ] = [
+				'required'          => true,
+				'sanitize_callback' => 'sanitize_text_field',
+			];
+		}
+
 		register_rest_route(
 			'vt/v1',
 			'/result',
@@ -21,28 +29,19 @@ class VT_Ajax {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'handle_result' ],
 				'permission_callback' => '__return_true',
-				'args'                => [
-					'brand'  => [
-						'required'          => true,
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-					'model'  => [
-						'required'          => true,
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-					'gen'    => [
-						'required'          => true,
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-					'engine' => [
-						'required'          => true,
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-					'year'   => [
-						'required'          => true,
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-				],
+				'args'                => $args,
+			]
+		);
+
+		// Owner mode only (charts="1"): Stage 1 gains from ziptuning.nl / rica.nl.
+		register_rest_route(
+			'vt/v1',
+			'/external',
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'handle_external' ],
+				'permission_callback' => '__return_true',
+				'args'                => $args,
 			]
 		);
 	}
@@ -53,31 +52,11 @@ class VT_Ajax {
 			return $rate_error;
 		}
 
-		$brand  = $request->get_param( 'brand' );
-		$model  = $request->get_param( 'model' );
-		$gen    = $request->get_param( 'gen' );
-		$engine = $request->get_param( 'engine' );
-		$year   = $request->get_param( 'year' );
-
-		// Strict slug validation — only chars that appear in vtech slugs.
-		$slug_re = '/^[a-z0-9][a-z0-9\-\.]*$/i';
-		foreach ( [ 'brand' => $brand, 'model' => $model, 'gen' => $gen, 'engine' => $engine ] as $name => $val ) {
-			if ( ! preg_match( $slug_re, $val ) ) {
-				return new WP_Error(
-					'invalid_param',
-					/* translators: %s: parameter name */
-					sprintf( __( 'Nieprawidłowy parametr: %s', 'vt-konfigurator' ), $name ),
-					[ 'status' => 400 ]
-				);
-			}
+		$params = $this->validate_params( $request );
+		if ( is_wp_error( $params ) ) {
+			return $params;
 		}
-		if ( ! preg_match( '/^\d{4}$/', $year ) ) {
-			return new WP_Error(
-				'invalid_param',
-				__( 'Nieprawidłowy rocznik.', 'vt-konfigurator' ),
-				[ 'status' => 400 ]
-			);
-		}
+		[ $brand, $model, $gen, $engine, $year ] = $params;
 
 		$cache_key = md5( "$brand|$model|$gen|$engine|$year" );
 		$settings  = VT_Storage::get_settings();
@@ -120,6 +99,100 @@ class VT_Ajax {
 
 		$result['_source'] = 'live';
 		return new WP_REST_Response( $result, 200 );
+	}
+
+	public function handle_external( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		$rate_error = $this->check_rate_limit();
+		if ( is_wp_error( $rate_error ) ) {
+			return $rate_error;
+		}
+
+		$params = $this->validate_params( $request );
+		if ( is_wp_error( $params ) ) {
+			return $params;
+		}
+		[ $brand, $model, $gen, $engine, $year ] = $params;
+
+		$cache_key = 'ext_' . md5( "$brand|$model|$gen|$engine|$year" );
+		$settings  = VT_Storage::get_settings();
+		$use_cache = '1' === $settings['cache_enabled'];
+
+		if ( $use_cache ) {
+			$cached = VT_Storage::get_cached_result( $cache_key );
+			if ( null !== $cached ) {
+				$cached['_source'] = 'cache';
+				return new WP_REST_Response( $cached, 200 );
+			}
+		}
+
+		$result = VT_External::lookup( $brand, $model, $gen, $engine, $year );
+
+		if ( is_wp_error( $result ) ) {
+			VT_Storage::log_error(
+				sprintf( 'Błąd źródeł zewnętrznych [%s/%s/%s/%s/%s]: %s', $brand, $model, $gen, $engine, $year, $result->get_error_message() )
+			);
+
+			if ( $use_cache ) {
+				$stale = VT_Storage::get_stale_result( $cache_key );
+				if ( null !== $stale ) {
+					$stale['_source'] = 'stale';
+					return new WP_REST_Response( $stale, 200 );
+				}
+			}
+
+			// One source may still have answered — show it, but don't cache.
+			$partial = $result->get_error_data()['partial'] ?? null;
+			if ( $partial ) {
+				$partial['_source'] = 'partial';
+				return new WP_REST_Response( $partial, 200 );
+			}
+
+			return new WP_Error(
+				'fetch_error',
+				__( 'Nie udało się pobrać wyników. Spróbuj ponownie później.', 'vt-konfigurator' ),
+				[ 'status' => 503 ]
+			);
+		}
+
+		if ( $use_cache ) {
+			VT_Storage::set_cached_result( $cache_key, $result, (int) $settings['cache_ttl'] );
+		}
+
+		$result['_source'] = 'live';
+		return new WP_REST_Response( $result, 200 );
+	}
+
+	/**
+	 * @return array{0:string,1:string,2:string,3:string,4:string}|WP_Error
+	 */
+	private function validate_params( WP_REST_Request $request ): array|WP_Error {
+		$brand  = $request->get_param( 'brand' );
+		$model  = $request->get_param( 'model' );
+		$gen    = $request->get_param( 'gen' );
+		$engine = $request->get_param( 'engine' );
+		$year   = $request->get_param( 'year' );
+
+		// Strict slug validation — only chars that appear in vtech slugs.
+		$slug_re = '/^[a-z0-9][a-z0-9\-\.]*$/i';
+		foreach ( [ 'brand' => $brand, 'model' => $model, 'gen' => $gen, 'engine' => $engine ] as $name => $val ) {
+			if ( ! preg_match( $slug_re, $val ) ) {
+				return new WP_Error(
+					'invalid_param',
+					/* translators: %s: parameter name */
+					sprintf( __( 'Nieprawidłowy parametr: %s', 'vt-konfigurator' ), $name ),
+					[ 'status' => 400 ]
+				);
+			}
+		}
+		if ( ! preg_match( '/^\d{4}$/', $year ) ) {
+			return new WP_Error(
+				'invalid_param',
+				__( 'Nieprawidłowy rocznik.', 'vt-konfigurator' ),
+				[ 'status' => 400 ]
+			);
+		}
+
+		return [ $brand, $model, $gen, $engine, $year ];
 	}
 
 	// ── Rate limiting ────────────────────────────────────────────────────────

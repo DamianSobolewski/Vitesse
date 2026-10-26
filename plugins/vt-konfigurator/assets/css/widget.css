@@ -291,6 +291,87 @@
 	color: var(--vtk-accent);
 }
 
+/* ── Competitor gains: ziptuning.nl / rica.nl (admin only) ─────────────── */
+.vtk-ext {
+	margin-top: 1.25rem;
+}
+
+.vtk-ext-loading,
+.vtk-ext-empty {
+	margin: 0;
+	font-size: 0.8125rem;
+	color: var(--vtk-muted);
+}
+
+.vtk-ext-tiles {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+	gap: 0.625rem;
+}
+
+.vtk-ext-tile {
+	background: var(--vtk-card-bg);
+	border: 1px solid var(--vtk-border);
+	border-radius: var(--vtk-radius);
+	padding: 0.625rem 0.75rem;
+	min-width: 0;
+}
+
+.vtk-ext-source {
+	display: flex;
+	align-items: baseline;
+	gap: 0.25rem;
+	margin-bottom: 0.25rem;
+	font-size: 0.6875rem;
+	color: var(--vtk-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.vtk-ext-source-name {
+	font-weight: 700;
+	color: var(--vtk-text);
+	text-transform: none;
+	letter-spacing: 0;
+	text-decoration: none;
+}
+
+a.vtk-ext-source-name:hover {
+	color: var(--vtk-accent);
+	text-decoration: underline;
+}
+
+.vtk-ext-gains {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	font-size: 0.8125rem;
+	color: var(--vtk-muted);
+}
+
+.vtk-ext-gain strong {
+	font-size: 1.125rem;
+	font-weight: 800;
+	color: var(--vtk-text);
+}
+
+.vtk-ext-gain--hp strong {
+	color: var(--vtk-accent);
+}
+
+.vtk-ext-match {
+	margin: 0.25rem 0 0;
+	font-size: 0.6875rem;
+	color: var(--vtk-muted);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.vtk-ext-tile--empty .vtk-ext-empty {
+	font-size: 0.75rem;
+}
+
 /* ── Phone contact ──────────────────────────────────────────────────────── */
 .vtk-phones {
 	margin-top: 1.5rem;

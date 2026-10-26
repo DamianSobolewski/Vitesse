@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: Vitesse — konfiguracja
+ * Plugin Name: Vitesse - konfiguracja
  * Description: Dane firmy, flagi funkcji i dostęp do sekretów. Jedyne źródło prawdy dla obu.
  *
  * Zasada: sekrety czytamy WYŁĄCZNIE ze środowiska (docker-compose → getenv).
- * Nigdy z wp_options — opcje wyciekają w eksportach bazy, backupach i przez wtyczki.
+ * Nigdy z wp_options - opcje wyciekają w eksportach bazy, backupach i przez wtyczki.
  */
 
 if (!defined('ABSPATH')) {
@@ -19,7 +19,7 @@ define('VTS_ASSETS_DIR', WP_CONTENT_DIR . '/vts-assets');
  * Flagi funkcji
  *
  * Domyślne wartości mieszkają w kodzie (wersjonowane), a opcja `vts_feature_*`
- * je nadpisuje — dzięki temu przełączenie to jeden `wp option update`,
+ * je nadpisuje - dzięki temu przełączenie to jeden `wp option update`,
  * bez deployu. Patrz plan §6.
  * ---------------------------------------------------------------------- */
 
@@ -29,7 +29,7 @@ define('VTS_ASSETS_DIR', WP_CONTENT_DIR . '/vts-assets');
 function vts_feature(string $flag): bool
 {
     static $defaults = [
-        // Serwis aut osobowych (Jaguar / Land Rover) — architektura gotowa, treść niewidoczna.
+        // Serwis aut osobowych (Jaguar / Land Rover) - architektura gotowa, treść niewidoczna.
         'jlr_service'     => false,
         // Dekoder VIN jako dodatkowy rząd wyszukiwarki. Rozpoznaje tylko markę (po WMI
         // z własnego katalogu), więc i tak zostawia użytkownika przy wyborze ręcznym.
@@ -60,7 +60,7 @@ function vts_feature(string $flag): bool
 /**
  * Do jakiego poziomu katalogu wypuszczamy indeksowanie.
  *
- * Przełącznik odwrotu z planu §4.4 — gdyby Search Console pokazała problem
+ * Przełącznik odwrotu z planu §4.4 - gdyby Search Console pokazała problem
  * z thin contentem, schodzimy poziom niżej jedną komendą, bez zmian w adresach.
  *
  * @return string make|model|generation|engine
@@ -94,7 +94,7 @@ function vts_secret(string $name, string $fallback = ''): string
 /* -------------------------------------------------------------------------
  * Limit zapytań na adres IP
  *
- * Adres nie trafia do bazy ani do transientów w postaci jawnej — tylko jako
+ * Adres nie trafia do bazy ani do transientów w postaci jawnej - tylko jako
  * hash z solą ze środowiska (VTS_LEAD_SALT).
  * ---------------------------------------------------------------------- */
 
@@ -141,7 +141,7 @@ function vts_lead_inbox(string $kind = 'retail'): string
 /* -------------------------------------------------------------------------
  * Dane firmy
  *
- * TODO(klient): NIP i REGON — brak na starym serwisie, wymagane w stopce i JSON-LD.
+ * TODO(klient): NIP i REGON - brak na starym serwisie, wymagane w stopce i JSON-LD.
  * TODO(klient): przypisanie numerów telefonów do działów (Tuning / Floty).
  * ---------------------------------------------------------------------- */
 
@@ -154,7 +154,7 @@ function vts_company(): array
     }
 
     $data = [
-        'name'        => 'Vitesse V-tech Łódź',
+        'name'        => 'VITESSE V-tech Łódź',
         'legal_name'  => get_option('vts_legal_name', ''),   // TODO(klient): pełna nazwa rejestrowa
         'nip'         => get_option('vts_nip', ''),          // TODO(klient)
         'regon'       => get_option('vts_regon', ''),        // TODO(klient)
@@ -163,21 +163,26 @@ function vts_company(): array
         'postal_code' => '93-631',
         'city'        => 'Łódź',
         'country'     => 'PL',
-        // Poprzedni adres — wciąż krąży w sieci, przydaje się w treści „jak dojechać”.
+        // Poprzedni adres - wciąż krąży w sieci, przydaje się w treści „jak dojechać”.
         'former_address' => 'Tuszyn, ul. Tysiąclecia 17B',
 
         'email'       => 'biuro@vitesse.auto.pl',
 
         // Numery ze starego serwisu. Przypisanie do działów do potwierdzenia.
+        // Numery potwierdzone przez klienta (X 2026). 'number' = pierwszy numer działu
+        // (tel: w przycisku „Zadzwoń", dane strukturalne), 'numbers' = wszystkie do wyświetlenia.
+        // Biuro pokazujemy tylko w stopce i na stronie Kontakt ('where' => 'footer').
         'phones'      => [
-            'tuning' => ['label' => 'Tuning', 'number' => '511 205 980'],
-            'fleet'  => ['label' => 'Floty',  'number' => '515 660 210'],
-            'office' => ['label' => 'Biuro',  'number' => '42 203 22 31'],
+            'tuning' => ['label' => 'Tuning', 'number' => '511 205 980', 'numbers' => ['511 205 980', '515 660 210']],
+            'fleet'  => ['label' => 'Floty',  'number' => '799 000 046', 'numbers' => ['799 000 046']],
+            'office' => ['label' => 'Biuro',  'number' => '42 203 22 31', 'numbers' => ['42 203 22 31'], 'where' => 'footer'],
         ],
 
+        // 'open'/'close' w formacie 24 h trafiają do danych strukturalnych (schema.org);
+        // do wyświetlania służy vts_hours_text() (zapis krótki, bez zer wiodących).
         'hours'       => [
-            'weekdays' => ['open' => '08:00', 'close' => '17:00', 'label' => 'poniedziałek – piątek'],
-            'saturday' => ['open' => '08:00', 'close' => '14:00', 'label' => 'sobota'],
+            'weekdays' => ['open' => '08:30', 'close' => '17:00', 'label' => 'poniedziałek - piątek'],
+            'saturday' => ['open' => '08:30', 'close' => '14:00', 'label' => 'sobota'],
         ],
 
         'geo'         => ['lat' => null, 'lng' => null],     // TODO(klient): dokładne współrzędne pod mapę
@@ -186,7 +191,32 @@ function vts_company(): array
     return $data;
 }
 
-/** Telefon w formacie do `tel:` — same cyfry z prefiksem krajowym. */
+/** Godziny do wyświetlenia: „poniedziałek - piątek 8:30-17:00" (klucz weekdays / saturday). */
+function vts_hours_text(string $key): string
+{
+    $h = vts_company()['hours'][$key];
+
+    return $h['label'] . ' ' . ltrim($h['open'], '0') . '-' . ltrim($h['close'], '0');
+}
+
+/** Wszystkie godziny w jednej linii: „poniedziałek - piątek 8:30-17:00, sobota 8:30-14:00". */
+function vts_hours_line(): string
+{
+    return vts_hours_text('weekdays') . ', ' . vts_hours_text('saturday');
+}
+
+/** Numery działu jako odnośniki tel:, rozdzielone przecinkami. Kod HTML gotowy do wypisania. */
+function vts_phone_links(array $p): string
+{
+    $out = [];
+    foreach ($p['numbers'] ?? [$p['number']] as $n) {
+        $out[] = '<a href="' . esc_attr(vts_phone_href($n)) . '">' . esc_html($n) . '</a>';
+    }
+
+    return implode(', ', $out);
+}
+
+/** Telefon w formacie do `tel:` - same cyfry z prefiksem krajowym. */
 function vts_phone_href(string $number): string
 {
     $digits = preg_replace('/\D+/', '', $number);
@@ -202,7 +232,7 @@ function vts_phone_href(string $number): string
  * Wersja zasobu na potrzeby cache-bustingu.
  *
  * Bierzemy mtime pliku, więc przeglądarka dostaje nową wersję dokładnie wtedy,
- * gdy plik faktycznie się zmienił — i ani razu więcej.
+ * gdy plik faktycznie się zmienił - i ani razu więcej.
  */
 function vts_asset_ver(string $relative_path): string
 {
