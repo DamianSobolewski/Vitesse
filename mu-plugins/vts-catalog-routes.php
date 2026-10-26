@@ -206,7 +206,7 @@ function vts_catalog_intro(array $r): string
         'make'   => 'Modele ' . $r['make']['name'] . ', dla których mamy gotowe rozwiązania. Wybierz swój.',
         'model'  => 'Generacje modelu ' . $r['model']['name'] . '. Wybierz rocznik swojego auta.',
         'gen'    => 'Wersje silnikowe i przyrosty mocy. Wartości orientacyjne, wiążący jest pomiar na hamowni.',
-        'engine' => 'Dane fabryczne, przyrost mocy i momentu dla każdego poziomu programu, pomiar na hamowni w cenie.',
+        'engine' => 'Dane fabryczne oraz przyrost mocy i momentu dla każdego poziomu programu.',
     };
 }
 
@@ -284,7 +284,6 @@ function vts_view_engine(array $r): void
         <?php if ($wynik && $wynik['results']) : ?>
           <?php /* Wynik prosto z katalogu, bez bramki - ta sama funkcja, która
                    obsługuje wyszukiwarkę. Robot indeksujący widzi pełne liczby. */ ?>
-          <?php $ma_wykres = (bool) array_filter(array_column($wynik['results'], 'chart_url')); ?>
           <div class="vts-cat-gains">
             <?php foreach ($wynik['results'] as $w) : ?>
               <div class="vts-ps__srv"><h3><?= esc_html($w['label']) ?></h3>
@@ -294,16 +293,13 @@ function vts_view_engine(array $r): void
                     <span>moment <b>+<?= (int) $w['gain_nm'] ?> Nm</b><?= $w['tuned_nm'] ? ' <em>→ ' . (int) $w['tuned_nm'] . ' Nm</em>' : '' ?></span>
                   <?php endif; ?>
                 </div>
-                <?php /* Wykres mocy ze sklepu V-techa (wtyczka VT Konfigurator); overlay dopina power-search.js. */ ?>
-                <?php if (!empty($w['chart_url'])) : ?>
-                  <button type="button" class="vts-ps__chart" data-vts-chart="<?= esc_url($w['chart_url']) ?>"
-                          data-vts-chart-alt="<?= esc_attr('Wykres mocy V-tech: ' . $pojazd . ' - ' . $w['label']) ?>">Zobacz wykres mocy</button>
-                <?php endif; ?>
+                <?php /* Katalog pokazuje same przyrosty, bez wykresów (uwaga klienta, X 2026, #43):
+                         zamiast przycisku jest jedno zdanie pod listą. */ ?>
               </div>
             <?php endforeach; ?>
           </div>
           <p class="vts-note"><?= esc_html($wynik['note']) ?>
-            <?= $ma_wykres ? '' : 'Jeśli chcesz zobaczyć wykres z hamowni, skontaktuj się z nami.' ?></p>
+            Jeśli chcesz zobaczyć wykres - skontaktuj się z nami.</p>
         <?php else : ?>
           <p>Dla tej wersji nie mamy jeszcze wartości w katalogu. Zadzwoń:
             <?= vts_phone_links($c['phones']['tuning']) ?>,

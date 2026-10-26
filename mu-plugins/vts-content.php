@@ -722,14 +722,78 @@ add_filter('the_excerpt', function ($tresc) {
  */
 function vts_przyklady_id(): array
 {
-    // Trzy, a nie pięć: przy pięciu drugi rząd zostaje z dwoma kafelkami i rytm
-    // się rwie. Trzy mieszczą się w jednym rzędzie i pokrywają cały przekrój
-    // oferty - diesel osobowy, benzyna i dostawczy.
-    return array_map('intval', (array) get_option('vts_przyklady', [
-        10889,  // VW Passat CC 2.0 BlueTDI 143 KM - diesel osobowy
-        10700,  // VW Golf VII GTI 2.0 TSI 220 KM  - benzyna
-        8229,   // Ford Transit VI 2.2 TDCi 110 KM - dostawczy
-    ]));
+    // Ręczny wybór (opcja z listą identyfikatorów silników) ma pierwszeństwo, ale domyślnie
+    // opcji nie ma: identyfikatory silników różnią się między instalacjami, więc stała lista
+    // na serwerze klienta wskazywała na inne silniki albo na nic i sekcja stała pusta.
+    return array_values(array_filter(array_map('intval', (array) get_option('vts_przyklady', []))));
+}
+
+/**
+ * Trzy losowe przykłady z katalogu, odświeżane co 6 godzin (cache, żeby nie losować w bazie
+ * przy każdym wejściu). Warunek klienta (#116): przyrost chip tuningu powyżej 15% mocy
+ * fabrycznej, żeby nie pokazywać „+3 KM". Górna granica 40% odcina wartości skrajne,
+ * które w katalogu są artefaktami danych. Marki się nie powtarzają, a o ile się da,
+ * przykłady są różnych paliw.
+ */
+function vts_przyklady_losowe(): array
+{
+    global $wpdb;
+
+    $klucz = 'vts_przyklady_los';
+    $dane  = get_transient($klucz);
+    if (is_array($dane) && $dane) {
+        return $dane;
+    }
+
+    $e = vts_table('engine'); $g = vts_table('generation');
+    $m = vts_table('model');  $k = vts_table('make');
+    $z = vts_table('gain');
+
+    $kandydaci = $wpdb->get_results(
+        "SELECT e.id, e.name AS silnik, e.fuel, e.stock_hp, e.slug AS e_slug,
+                g.name AS gen, g.slug AS g_slug,
+                o.name AS model, o.slug AS o_slug,
+                k.name AS marka, k.slug AS k_slug,
+                z.gain_hp, z.gain_nm
+           FROM {$e} e
+           JOIN {$g} g ON g.id = e.generation_id AND g.visibility = 1
+           JOIN {$m} o ON o.id = g.model_id AND o.visibility = 1
+           JOIN {$k} k ON k.id = o.make_id AND k.visibility = 1 AND k.is_truck = 0
+           JOIN {$z} z ON z.engine_id = e.id AND z.service_code = 'chip' AND z.visibility = 1
+          WHERE e.visibility = 1 AND e.stock_hp >= 70
+            AND z.gain_hp * 100 > 15 * e.stock_hp
+            AND z.gain_hp * 100 <= 40 * e.stock_hp
+          ORDER BY RAND() LIMIT 60",
+        ARRAY_A
+    ) ?: [];
+
+    $wybrane = [];
+    $marki   = [];
+    $paliwa  = [];
+    // pierwszy przebieg: nowa marka i nowe paliwo; drugi: tylko nowa marka
+    foreach ([true, false] as $wymagajPaliwa) {
+        foreach ($kandydaci as $w) {
+            if (count($wybrane) >= 3) {
+                break 2;
+            }
+            if (isset($marki[$w['k_slug']]) || isset($wybrane[$w['id']])) {
+                continue;
+            }
+            if ($wymagajPaliwa && isset($paliwa[$w['fuel']])) {
+                continue;
+            }
+            $wybrane[$w['id']]    = $w;
+            $marki[$w['k_slug']]  = true;
+            $paliwa[$w['fuel']]   = true;
+        }
+    }
+
+    $dane = array_values($wybrane);
+    if ($dane) {
+        set_transient($klucz, $dane, 6 * HOUR_IN_SECONDS);
+    }
+
+    return $dane;
 }
 
 function vts_przyklady(): array
@@ -737,7 +801,7 @@ function vts_przyklady(): array
     global $wpdb;
     $ids = vts_przyklady_id();
     if (!$ids) {
-        return [];
+        return vts_przyklady_losowe();
     }
 
     $klucz = 'vts_przyklady_' . md5(implode(',', $ids));
