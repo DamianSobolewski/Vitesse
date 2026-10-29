@@ -339,7 +339,7 @@ function vts_render_home_hero(): void
              pod hasłem. */ ?>
     <section class="vts-ps-band" id="wyszukiwarka">
       <div class="vts-wrap">
-        <?= do_shortcode('[vts_power_search layout="wide"]') ?>
+        <?= do_shortcode('[vt_konfigurator]') ?>
       </div>
     </section>
     <?php

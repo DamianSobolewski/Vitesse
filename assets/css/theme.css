@@ -1191,3 +1191,39 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
    i pogrubienie z wlasnych regul — podkreslenie robiloby z nich gaszcz. */
 .vts-section .vts-card :is(p,li) a[href^="tel:"],
 .vts-section .vts-card :is(p,li) a[href^="mailto:"]{text-decoration:none}
+
+/* --- wtyczka VT Konfigurator (Artur) w motywie strony ---------------------
+ * Wtyczka ma własne zmienne --vtk-* i jasny motyw. Nadpisujemy je tutaj, nie w
+ * plugins/vt-konfigurator/, żeby aktualizacja wtyczki nie kasowała stylów.
+ * Zdwojona klasa podnosi specyficzność ponad widget.css, który ładuje się
+ * dopiero przy renderze shortcode'u, czyli po tym pliku. */
+.vtk-widget.vtk-widget{
+  /* akcent i promień wtyczka ustawia też inline z panelu (domyślnie czerwień) - stąd !important */
+  --vtk-accent:var(--vts-accent) !important;--vtk-accent-dark:var(--vts-accent-soft);
+  --vtk-radius:var(--vts-radius) !important;--vtk-font:var(--vts-font-body);
+  --vtk-bg:var(--vts-surface);--vtk-border:var(--vts-line);
+  --vtk-text:var(--vts-text);--vtk-muted:var(--vts-muted);
+  --vtk-card-bg:var(--vts-surface-2);--vtk-shadow:none}
+.vtk-widget .vtk-form{padding:var(--vts-gap-m);border-color:var(--vts-line)}
+.vtk-widget .vtk-label{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
+  font-weight:500;letter-spacing:var(--vts-track-eyebrow)}
+.vtk-widget .vtk-select{background-color:var(--vts-field-bg);border:1px solid var(--vts-line);
+  font-size:var(--vts-step-0);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A919E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")}
+.vtk-widget .vtk-select:hover:not(:disabled){border-color:var(--vts-line-strong)}
+.vtk-widget .vtk-select:focus{border-color:var(--vts-accent);box-shadow:0 0 0 3px rgba(244,106,0,.25)}
+.vtk-widget .vtk-select:disabled{background-color:var(--vts-field-bg);opacity:.45}
+.vtk-widget .vtk-select option{background:var(--vts-surface);color:var(--vts-text)}
+.vtk-widget .vtk-btn--submit,.vtk-widget .vtk-popup-btn{color:var(--vts-on-accent);font-weight:700}
+.vtk-widget .vtk-btn--reset:hover,.vtk-widget .vtk-chart-btn:hover{color:var(--vts-on-accent)}
+.vtk-widget .vtk-btn--reset:hover{background:var(--vts-accent)}
+.vtk-widget .vtk-error-msg{background:rgba(229,84,75,.12);border-color:rgba(229,84,75,.4);
+  color:var(--vts-danger-text)}
+.vtk-widget .vtk-gain-value{font-variant-numeric:tabular-nums}
+.vtk-widget .vtk-card:hover{border-color:var(--vts-accent)}
+.vtk-widget .vtk-result-overlay,.vtk-widget .vtk-modal-overlay{background:rgba(8,9,12,.78)}
+.vtk-widget .vtk-result-box,.vtk-widget .vtk-modal-box{border:1px solid var(--vts-line);
+  box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.vtk-widget .vtk-result-close:hover,.vtk-widget .vtk-modal-close:hover{background:var(--vts-surface-2)}
+.vtk-widget .vtk-phone-link:hover{color:var(--vts-accent-soft)}
+.vtk-widget .vtk-result-box:focus{outline:none}
