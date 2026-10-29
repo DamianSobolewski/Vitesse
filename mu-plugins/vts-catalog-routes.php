@@ -212,6 +212,10 @@ function vts_catalog_intro(array $r): string
 
 function vts_view_index(): void
 {
+    // Katalog dostaje konfigurator z wtyczki VT wprost (inline, tryb klienta, bez wykresów),
+    // a nie naszą kaskadę z strony głównej - tak ustalono z klientem (X 2026). Kafelki marek
+    // zostają pod nim jako przeglądanie bez wyszukiwania.
+    echo '<div class="vts-cat-konf">' . do_shortcode('[vt_konfigurator]') . '</div>';
     echo '<div class="vts-cat-grid">';
     foreach (vts_makes() as $m) {
         printf('<a class="vts-cat-tile" href="%s"><b>%s</b><span>%d modeli</span></a>',
@@ -318,7 +322,7 @@ function vts_view_engine(array $r): void
           <?php endforeach; ?>
         </ul>
       </div>
-      <div><?= do_shortcode('[vts_power_search title="Sprawdź inną wersję"]') ?></div>
+      <div><?= do_shortcode('[vt_konfigurator]') ?></div>
     </div>
     <?php
 }

@@ -524,6 +524,9 @@ a.vts-card:hover{border-color:var(--vts-accent);transform:translateY(-2px)}
 .vts-card h3{font-size:var(--vts-step-1);margin-bottom:8px}
 .vts-card h4{font-size:var(--vts-step-0);margin:0 0 6px}
 .vts-card p{color:var(--vts-muted);font-size:var(--vts-step--1);margin:0}
+/* Kafelki "Zakres" (Pięć dróg do większej mocy): opis większy i jaśniejszy (uwaga klienta, X 2026). */
+.vts-grid--zakres .vts-card p{font-size:var(--vts-step-0);
+  color:color-mix(in srgb,var(--vts-text) 38%,var(--vts-muted))}
 .vts-card__n{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);letter-spacing:var(--vts-track-label);
   color:var(--vts-accent-ink);display:block;margin-bottom:12px}
 
@@ -781,8 +784,10 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
   box-sizing:border-box}
 .vts-photo--svg figcaption{position:static;background:none;padding:0 var(--vts-gap-m) var(--vts-gap-m);
   margin-top:calc(-1 * var(--vts-gap-l))}
+/* Podpis wykresu poglądowego leży na jasnej karcie, nie na zdjęciu - bez cienia z wariantu --chart. */
 .vts-photo--svg b{display:block;color:var(--vts-text);font-family:var(--vts-font-display);font-weight:700;
-  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head);max-width:34ch;text-wrap:balance}
+  font-size:var(--vts-step-1);letter-spacing:var(--vts-track-head);max-width:34ch;text-wrap:balance;
+  text-shadow:none}
 .vts-dchart__grid line{stroke:var(--vts-line-soft);stroke-width:1}
 .vts-dchart__axis{fill:none;stroke:var(--vts-line);stroke-width:1.5}
 .vts-dchart__hp,.vts-dchart__nm{fill:none;stroke:var(--vts-dim);stroke-width:2.2;stroke-linecap:round}
@@ -916,6 +921,7 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 }
 
 /* --- katalog osiągów (strony wirtualne) --- */
+.vts-cat-konf{margin-bottom:var(--vts-gap-l)}
 .vts-cat-grid{display:grid;gap:8px;
   grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr))}
 /* Przy 190 px na telefonie wchodzi jedna kolumna, a przy 61 markach to
