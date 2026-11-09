@@ -1261,3 +1261,9 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vtk-widget .vtk-result-box{max-width:none;max-height:none;overflow:visible;
   padding:var(--vts-gap-m);box-shadow:none}
 .vtk-widget .vtk-result-close{display:none}
+/* Wynik wyśrodkowany: tytuł, kafelki (1, 2 lub więcej) i ich treść, także gdy jest tylko jeden kafelek */
+.vtk-widget .vtk-result-box{text-align:center}
+.vtk-widget .vtk-cards,.vtk-widget .vtk-cards--single{display:flex;flex-wrap:wrap;justify-content:center}
+.vtk-widget .vtk-card{flex:0 1 320px;min-width:min(100%,240px)}
+.vtk-widget .vtk-phones{justify-content:center}
+.vtk-widget .vtk-gain-wrap{align-items:center}
