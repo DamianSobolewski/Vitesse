@@ -207,33 +207,32 @@ function vts_hero_slides_default(): array
 {
     return [
         [
-            'img'     => 'hero',
-            'light'   => true,
+            'img'     => 'slajd-ecu',
             'eyebrow' => 'Chip tuning · Łódź',
             'title'   => 'Odblokowywanie sterowników ECU *na miejscu*, od ręki.',
-            'lead'    => 'Najnowsze modele bez wysyłki sterownika za granicę. Otwieramy go u siebie, '
-                       . 'więc Twoje auto wraca tego samego dnia z pomiarem na hamowni.',
+            'lead'    => 'Najnowsze modele bez wysyłki sterownika za granicę. Otwieramy je u siebie, '
+                       . 'więc Twoje auto jest gotowe tego samego dnia.',
         ],
         [
-            'img'     => 'pas-chip',
+            'img'     => 'slajd-gwarancja',
             'eyebrow' => 'Gwarancja i leasing',
             'title'   => 'Chip tuning aut na gwarancji i w leasingu.',
-            'lead'    => 'Bezpieczny przyrost mocy z kopią oryginalnego programu. Dla aut, które trzeba '
-                       . 'oddać w stanie fabrycznym, mamy zdejmowany PowerChip.',
+            'lead'    => 'Dla takich aut również mamy bezpieczne rozwiązanie - to PowerChip, '
+                       . 'który przed wizytą w ASO można bezśladowo zdemontować.',
         ],
         [
-            'img'     => 'pas-floty',
+            'img'     => 'slajd-flota',
             'eyebrow' => 'Floty B2B',
             'title'   => 'Eco-tuning i zarządzanie flotą.',
-            'lead'    => 'Zmniejsz zużycie paliwa nawet o 10% i załóż limitery prędkości we flocie firmowej. '
-                       . 'Obsługa partiami, faktura VAT, pomiar na każdym aucie.',
+            'lead'    => 'Zmniejszenie zużycia paliwa nawet o 10% i montaż limiterów prędkości '
+                       . 'i/lub obrotów we flocie firmowej. Możliwy dojazd, faktury VAT.',
         ],
         [
-            'img'     => 'pas-onas',
+            'img'     => 'slajd-dyno',
             'eyebrow' => 'Zaplecze pomiarowe',
             'title'   => 'Hamownia obciążeniowa 4×4 i stanowisko motocyklowe w Łodzi.',
-            'lead'    => 'Pomiar mocy i momentu na kołach dla aut 2WD i 4×4, dostawczych, kamperów '
-                       . 'i motocykli. Z wydrukiem wykresu, także bez modyfikacji.',
+            'lead'    => 'Pomiar mocy i momentu obrotowego dla aut 2WD i 4×4, dostawczych, kamperów '
+                       . 'i motocykli na certyfikowanej hamowni podwoziowej.',
         ],
     ];
 }
@@ -276,7 +275,8 @@ function vts_hero_slide_img(string $name, string $size = ''): string
     $file  = $name . ($size === 'sm' ? '-sm' : '') . '.webp';
     $local = VTS_ASSETS_DIR . '/img/' . $file;
 
-    return file_exists($local) ? VTS_ASSETS_URL . '/img/' . $file : '';
+    // Wersja w adresie: podmiana pliku o tej samej nazwie (np. pas-chip.webp) musi omijać cache przeglądarki.
+    return file_exists($local) ? VTS_ASSETS_URL . '/img/' . $file . '?v=' . vts_asset_ver('img/' . $file) : '';
 }
 
 function vts_render_home_hero(): void
@@ -919,9 +919,11 @@ add_shortcode('vts_wyniki', function () {
           </span>
           <?= vts_wykres_mocy($fabr, $po, 'vts-wyk-' . (++$nr)) ?>
           <span class="vts-wynik__liczby">
-            <span><em>moc</em><b><?= $fabr ?> → <?= $po ?></b><i>KM</i></span>
+            <?php /* #222: pod wykresem same przyrosty (moc i moment). Moc przed i po
+                     jest już opisana na krzywych, a momentu fabrycznego katalog nie podaje. */ ?>
+            <span><em>przyrost mocy</em><b>+<?= (int) $w['gain_hp'] ?></b><i>KM</i></span>
             <?php if ((int) $w['gain_nm'] > 0) : ?>
-              <span><em>moment</em><b>+<?= (int) $w['gain_nm'] ?></b><i>Nm</i></span>
+              <span><em>przyrost momentu</em><b>+<?= (int) $w['gain_nm'] ?></b><i>Nm</i></span>
             <?php endif; ?>
           </span>
         </a>
@@ -948,11 +950,11 @@ add_shortcode('vts_usps', function () {
     // [zdjęcie usp-*, alt, tytuł, treść]. Zdjęcia zamiast ikon - na życzenie
     // klienta; źródła i licencje w assets/img/CREDITS.md.
     $poz = [
-        ['unlock', 'Laptop diagnostyczny podłączony do samochodu',
+        ['unlock', 'Zbliżenie na złącze testowe i płytkę sterownika silnika',
          'Odblokowanie sterowników ECU na miejscu',
          'Zablokowany sterownik (roczniki od 2020) odblokowujemy u siebie na miejscu. '
          . 'Bez wysyłki za granicę i bez tygodnia postoju.'],
-        ['leasing', 'Kluczyk samochodowy na desce rozdzielczej',
+        ['leasing', 'Dłoń trzymająca model żółtego auta i kluczyki nad dokumentami',
          'Bezpieczny tuning aut na gwarancji i w leasingu',
          'W ofercie mamy rozwiązania podnoszące moc bez ryzyka utraty gwarancji '
          . 'czy problemów z leasingiem.'],
@@ -964,7 +966,7 @@ add_shortcode('vts_usps', function () {
          'Indywidualny tuning kamperów pod obciążeniem',
          'Program pod pełną masę: więcej momentu na podjazdach, spokojna praca '
          . 'silnika przy długim wysiłku i mniej paliwa w trasie.'],
-        ['hamownia', 'Motocykl na stanowisku hamowni',
+        ['hamownia', 'Mechanik na motocyklu przypiętym pasami do rolek hamowni',
          'Hamownia 4×4 i stanowisko motocyklowe',
          'Pomiar inercyjny lub obciążeniowy aut 2WD i 4×4, dostawczych, kamperów '
          . 'i motocykli. Przed modyfikacją i po niej.'],
@@ -1010,12 +1012,12 @@ add_shortcode('vts_proces', function () {
     $kroki = [
         ['Diagnostyka wstępna', 'Sprawdzamy wersję silnika, odczytujemy błędy i oceniamy stan '
          . 'techniczny. Jeśli auto wymaga naprawy, poinformujemy Cię o jej kosztach.'],
-        ['Pomiar seryjny na hamowni', 'Auto wjeżdża na rolki. Mierzymy moc i moment, by ocenić '
+        ['Pomiar na hamowni', 'Auto wjeżdża na rolki. Mierzymy moc i moment, by ocenić '
          . 'stan techniczny silnika i mieć punkt wyjścia dla dalszych modyfikacji.'],
         ['Indywidualne strojenie', 'Chip tuning, PowerChip albo eco-tuning pod Twój egzemplarz. '
          . 'Odczyt oryginalnego oprogramowania zostaje na serwerze, by w razie potrzeby '
          . 'zawsze można było do niego wrócić.'],
-        ['Pomiar końcowy i wykres', 'Drugi przejazd na tej samej hamowni. Jeśli trzeba dokonać '
+        ['Pomiar końcowy i wykres', 'Drugi i ewentualnie kolejne pomiary. Jeśli trzeba dokonać '
          . 'korekt, poprawiamy. Jeśli efekt jest zgodny z oczekiwaniami, dostajesz wydruk '
          . 'mocy i momentu przed i po.'],
         ['2 lata gwarancji, tydzień na testy', 'Na usługę udzielamy dwuletniej gwarancji. Masz '

@@ -310,3 +310,25 @@
 
   start();
 })();
+
+/* Wtyczka VT Konfigurator: wynik od razu po wyborze ostatniego parametru.
+ *
+ * Wtyczka sama odblokowuje „Sprawdź tuning" dopiero przy komplecie wyborów, a jej
+ * handler na <select> odpala się przed tym (bąbelkowanie do document). Jeśli
+ * przycisk jest aktywny, klikamy go - czyli idziemy jej własną ścieżką, z jej
+ * danymi, cache i błędami. Gdy dostawca zmieni klasy albo doda własne auto-wysyłanie,
+ * nakładka po cichu nic nie robi i widżet działa jak w oryginale. */
+(function () {
+  'use strict';
+
+  document.addEventListener('change', function (e) {
+    try {
+      var t = e.target;
+      if (!t || t.tagName !== 'SELECT' || !t.closest) { return; }
+      var widget = t.closest('.vtk-widget');
+      if (!widget) { return; }
+      var btn = widget.querySelector('.vtk-btn--submit');
+      if (btn && !btn.disabled) { btn.click(); }
+    } catch (err) { /* widżet działa dalej ręcznie */ }
+  });
+})();

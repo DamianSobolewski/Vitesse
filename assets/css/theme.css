@@ -70,7 +70,9 @@ p:last-child{margin-bottom:0}
 .vts-lead{font-size:var(--vts-step-1);color:var(--vts-lead);line-height:1.5;max-width:50ch}
 /* Kilka akapitów w skali leadu (wstęp przy wyszukiwarce na /chip-tuning/):
    większa czcionka na życzenie klienta, szerokość czytania bez zmian. */
-.vts-lead--copy{max-width:var(--vts-content)}
+/* #227: tekst pod „Sprawdź, ile zyska Twój silnik" był w stopniu 1 (do 23 px), czyli większy niż
+   opisy w kafelkach niżej; schodzi do stopnia 0, jak reszta tekstu czytanego */
+.vts-lead--copy{max-width:var(--vts-content);font-size:var(--vts-step-0)}
 .vts-lead--copy p{margin:0 0 var(--vts-gap-s);font-size:inherit;color:inherit}
 /* Przypis — zastrzeżenia i noty prawne. Wcześniej pisany stylem w atrybucie,
    przez co nie dało się go odróżnić od zwykłego akapitu przy przeglądzie
@@ -652,7 +654,8 @@ a.vts-card:hover > .vts-i{opacity:1;transform:translateY(-2px)}
   100% {transform:rotate(var(--vts-kat))}
 }
 
-.vts-gauge__val{position:absolute;left:50%;top:78%;transform:translate(-50%,-50%);
+/* #213: wartość schodzi poniżej końców łuku (były 78%), jednakowo we wszystkich wskaźnikach */
+.vts-gauge__val{position:absolute;left:50%;top:89%;transform:translate(-50%,-50%);
   z-index:2;display:flex;align-items:baseline;gap:4px;white-space:nowrap}
 .vts-gauge__val b{font-family:var(--vts-font-display);font-weight:700;
   font-size:var(--vts-step-2);letter-spacing:var(--vts-track-head);color:var(--vts-text);
@@ -1215,6 +1218,26 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vtk-widget .vtk-select:disabled{background-color:var(--vts-field-bg);opacity:.45}
 .vtk-widget .vtk-select option{background:var(--vts-surface);color:var(--vts-text)}
 .vtk-widget .vtk-btn--submit,.vtk-widget .vtk-popup-btn{color:var(--vts-on-accent);font-weight:700}
+
+/* Box wyszukiwarki (#214, #229): na ciemnym tle ginął. Dostaje jasną stal z gradientem
+ * z belki nawigacji (.vts-header), a zmienne jasnej palety ustawiamy lokalnie, żeby
+ * pola, etykiety i komunikaty błędów miały kontrast bez ruszania reszty strony. */
+.vtk-widget .vtk-form{
+  --vts-line:#8E9094;--vts-line-strong:#6B6D72;--vts-text:#15171C;--vts-muted:#494A4E;
+  --vts-field-bg:#FFF;--vts-danger-text:#B3261E;
+  background:linear-gradient(#C1C2C3 0%,#FAFAFA 40%,#FFF 70%,#D2D3D5 100%);
+  border:1px solid #8E9094;color:var(--vts-text)}
+.vtk-widget .vtk-form .vtk-label{color:#494A4E}
+.vtk-widget .vtk-form .vtk-select{color:#15171C;border-color:#8E9094}
+.vtk-widget .vtk-form .vtk-select:disabled{background-color:#ECEEF1;opacity:.7}
+.vtk-widget .vtk-form .vtk-select option{background:#FFF;color:#15171C}
+.vtk-widget .vtk-form .vtk-error-msg{background:#FDECEA;border-color:#E9A9A3;color:#B3261E}
+.vtk-widget .vtk-form .vtk-loading{color:#494A4E}
+/* Wynik pokazuje się sam po wyborze ostatniej listy (assets/js/site.js), więc przycisk
+ * „Sprawdź tuning" znika z widoku. Zostaje w DOM, bo skrypt klika go zwykłą ścieżką
+ * wtyczki, a Enter na liście też go używa. */
+.vtk-widget .vtk-btn--submit{display:none}
+.vtk-widget .vtk-form .vtk-dropdowns{margin-bottom:0}
 .vtk-widget .vtk-btn--reset:hover,.vtk-widget .vtk-chart-btn:hover{color:var(--vts-on-accent)}
 .vtk-widget .vtk-btn--reset:hover{background:var(--vts-accent)}
 .vtk-widget .vtk-error-msg{background:rgba(229,84,75,.12);border-color:rgba(229,84,75,.4);

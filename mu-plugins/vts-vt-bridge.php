@@ -48,6 +48,30 @@ add_action('admin_notices', function () {
        . '<a href="' . esc_url(admin_url('plugins.php')) . '">Aktywuj wtyczkę</a>.</p></div>';
 });
 
+/**
+ * „Nie powiodło się sprawdzanie ciasteczka" (#216).
+ *
+ * Wtyczka wkłada do strony nonce `wp_rest` i wysyła go w nagłówku X-WP-Nonce. Nonce żyje
+ * 12-24 h, a stronę potrafi serwować cache (hostingu, przeglądarki, karta otwarta od wczoraj) -
+ * wtedy WordPress odrzuca nawet publiczne zapytanie błędem `rest_cookie_invalid_nonce`
+ * (403) i klient widzi komunikat zamiast wyniku. Endpointy /vt/v1/ są publiczne, tylko do
+ * odczytu (`permission_callback` = __return_true, limit zapytań na IP po stronie wtyczki),
+ * więc nonce niczego tam nie chroni. Przy jego odrzuceniu traktujemy zapytanie jak anonimowe.
+ * Inne trasy REST (w tym panel zalogowanego admina) zostają przy domyślnej kontroli.
+ */
+add_filter('rest_authentication_errors', function ($wynik) {
+    if (!is_wp_error($wynik) || $wynik->get_error_code() !== 'rest_cookie_invalid_nonce') {
+        return $wynik;
+    }
+    $trasa = (string) ($GLOBALS['wp']->query_vars['rest_route'] ?? '');
+    if (!preg_match('#^/vt/v1/(result|external)/?$#', $trasa)) {
+        return $wynik;
+    }
+    wp_set_current_user(0);
+
+    return null;
+}, 110);
+
 /* ----------------------------------------------------------- drzewo → tabele */
 
 /** Te same reguły co w dawnym tools/scrape/vtech-tree.py - slugi muszą zostać identyczne. */

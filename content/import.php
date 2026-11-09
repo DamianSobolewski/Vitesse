@@ -329,6 +329,13 @@ foreach ($wpisy as $slug => $cfg) {
     ];
 
     $istnieje = vts_find_post($slug);
+    // Zmiana adresu wpisu: klucz "was" w posts.json wskazuje dawne slugi. Przemianowujemy istniejący
+    // wpis zamiast zakładać drugi; WordPress sam zapamięta stary slug i odeśle go 301 na nowy.
+    foreach (!$istnieje ? (array) ($cfg['was'] ?? []) : [] as $stary) {
+        if ($istnieje = vts_find_post((string) $stary)) {
+            break;
+        }
+    }
     if ($istnieje) {
         $data['ID'] = $istnieje->ID;
         $id = wp_update_post($data, true);
@@ -370,6 +377,43 @@ $sa_slajdy = get_posts([
     'fields'         => 'ids',
     'no_found_rows'  => true,
 ]);
+if ($sa_slajdy && function_exists('vts_hero_slides_default')) {
+    /*
+     * Aktualizacja fabrycznych slajdów z rundy 05.11.2026 (#212, #215): nowe zdjęcia i podtytuły.
+     * Dotyka tylko pól, które nadal mają fabryczną wartość z poprzedniej wersji - zdjęcie slajdu
+     * z biblioteki mediów albo tekst poprawiony w kokpicie zostają. Znacznik _vts_seed_rev
+     * sprawia, że przebieg jest jednorazowy.
+     */
+    $poprzednie = [
+        ['img' => 'hero',      'lead' => 'Najnowsze modele bez wysyłki sterownika za granicę. Otwieramy go u siebie, '
+                                       . 'więc Twoje auto wraca tego samego dnia z pomiarem na hamowni.'],
+        ['img' => 'pas-chip',  'lead' => 'Bezpieczny przyrost mocy z kopią oryginalnego programu. Dla aut, które trzeba '
+                                       . 'oddać w stanie fabrycznym, mamy zdejmowany PowerChip.'],
+        ['img' => 'pas-floty', 'lead' => 'Zmniejsz zużycie paliwa nawet o 10% i załóż limitery prędkości we flocie firmowej. '
+                                       . 'Obsługa partiami, faktura VAT, pomiar na każdym aucie.'],
+        ['img' => 'pas-onas',  'lead' => 'Pomiar mocy i momentu na kołach dla aut 2WD i 4×4, dostawczych, kamperów '
+                                       . 'i motocykli. Z wydrukiem wykresu, także bez modyfikacji.'],
+    ];
+    $zmienione = 0;
+    foreach (vts_hero_slides_default() as $i => $s) {
+        $post = get_posts([
+            'post_type' => 'vts_slajd', 'post_status' => 'any', 'name' => 'slajd-' . ($i + 1),
+            'posts_per_page' => 1, 'no_found_rows' => true,
+        ])[0] ?? null;
+        if (!$post || !get_post_meta($post->ID, '_vts_seed', true) || (int) get_post_meta($post->ID, '_vts_seed_rev', true) >= 2) {
+            continue;
+        }
+        if (!has_post_thumbnail($post) && get_post_meta($post->ID, '_vts_img', true) === $poprzednie[$i]['img']) {
+            update_post_meta($post->ID, '_vts_img', $s['img']);
+            $zmienione++;
+        }
+        if (get_post_meta($post->ID, '_vts_lead', true) === $poprzednie[$i]['lead']) {
+            update_post_meta($post->ID, '_vts_lead', $s['lead']);
+        }
+        update_post_meta($post->ID, '_vts_seed_rev', 2);
+    }
+    vts_log('slajdy hero: zaktualizowane fabryczne (' . $zmienione . ')');
+}
 if ($sa_slajdy || !function_exists('vts_hero_slides_default')) {
     vts_log('slajdy hero: bez zmian' . ($sa_slajdy ? '' : ' (brak vts-hero-slides.php)'));
 } else {

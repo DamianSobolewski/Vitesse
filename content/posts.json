@@ -32,14 +32,15 @@
     },
     "icon": "fuel"
   },
-  "zamkniety-sterownik": {
-    "file": "zamkniety-sterownik",
-    "title": "Zamknięty sterownik: co to właściwie znaczy",
+  "zablokowany-sterownik": {
+    "file": "zablokowany-sterownik",
+    "was": ["zamkniety-sterownik"],
+    "title": "Zablokowany sterownik: co to właściwie znaczy",
     "date": "2026-08-25",
-    "excerpt": "Producenci zabezpieczają moduły przed odczytem i zapisem. To nie jest awaria ani wada, tylko zamek, który trzeba umieć otworzyć.",
+    "excerpt": "Producenci zabezpieczają moduły przed odczytem i zapisem. To nie jest awaria ani wada, tylko blokada, którą trzeba umieć zdjąć.",
     "seo": {
-      "title": "Zamknięty sterownik - co to znaczy i co z tego wynika | VITESSE V-tech",
-      "desc": "Dlaczego część sterowników wymaga otwarcia przed modyfikacją, co to zmienia w czasie realizacji i na co uważać przy wysyłce modułu."
+      "title": "Zablokowany sterownik - co to znaczy i co z tego wynika | VITESSE V-tech",
+      "desc": "Dlaczego część sterowników wymaga odblokowania przed modyfikacją, co to zmienia w czasie realizacji i na co uważać przy wysyłce modułu."
     },
     "icon": "unlock"
   }

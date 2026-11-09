@@ -40,10 +40,8 @@ użycie komercyjne dozwolone, podanie autora nieobowiązkowe.
 
 | Plik | Autor | Strona zdjęcia | Co przedstawia |
 |---|---|---|---|
-| `pas-onas.webp`, `pas-onas-sm.webp` | Mehmet Talha Onuk | `unsplash.com/photos/mechanics-working-in-automotive-repair-workshop-8t6tk7LYLrE` | wnętrze warsztatu z podnośnikami |
 | `pas-floty.webp`, `pas-floty-sm.webp` | Marcin Jozwiak | `unsplash.com/photos/parked-trucks-kGoPcmpPT7c` | ciągniki siodłowe na placu (Jankowice, PL) |
 | `pas-ev.webp`, `pas-ev-sm.webp` | Precious Madubuike | `unsplash.com/photos/electric-car-charging-on-city-street-N2Td7KpIvYc` | przewód ładowania wpięty do auta |
-| `pas-chip.webp`, `pas-chip-sm.webp` | Abhishek Desai | `unsplash.com/photos/turned-on-gray-laptop-computer-placed-on-car-bucket-seat-nQbnF8FLJ0g` | laptop diagnostyczny na fotelu |
 
 Każdy wiersz obejmuje oba warianty: 1800 px i mniejszy `-sm` dla wąskich ekranów.
 
@@ -61,7 +59,7 @@ opisują kadr neutralnie i żaden nie sugeruje, że to hala Vitesse.
 
 ### `/hamownia/` — na razie zdjęcie stockowe
 
-Na podstronie hamowni stoi `foto-hamownia.webp` (motocykl na hamowni, niżej). Własne zdjęcie
+Na podstronie hamowni stoi `foto-hamownia.webp` (zdjęcie od klienta, opisane w sekcji „Runda z 05.11.2026” na końcu). Własne zdjęcie
 sprzedawałoby lepiej:
 
 **W `tools/scrape/mirror/vitesse.auto.pl/images/` leży osiem własnych fotografii stanowiska**
@@ -105,21 +103,10 @@ licencja **Unsplash License**, użycie komercyjne dozwolone, podanie autora nieo
 
 | Plik | Autor | Strona zdjęcia | Co przedstawia |
 |---|---|---|---|
-| `foto-kamper.webp`, `foto-kamper-sm.webp` | Miraxh Tereziu | `unsplash.com/photos/white-camper-van-parked-by-a-wooden-fence-eUkjMvbeLug` | biały kamper przy płocie w górach |
-| `foto-dpf.webp`, `foto-dpf-sm.webp` | engin akyurt | `unsplash.com/photos/collection-of-car-exhaust-catalytic-converters-and-parts--ShTRctVXlk` | katalizatory i filtry spalin na ścianie |
-| `foto-wallbox.webp`, `foto-wallbox-sm.webp` | go-e | `unsplash.com/photos/woman-plugging-electric-car-charger-into-wall-Lv-vzrhjybE` | wallbox na drewnianej ścianie (na obudowie mały znak producenta go-e) |
-| `foto-hamownia.webp`, `foto-hamownia-sm.webp`, `usp-hamownia.webp`, `usp-hamownia-sm.webp` | Mario Amé | `unsplash.com/photos/a-red-ducati-motorcycle-is-on-a-dyno-E5uUCbeBTfU` | motocykl na hamowni (widoczne oznaczenia Ducati i producenta hamowni) |
 | `foto-volvo.webp`, `foto-volvo-sm.webp` | ERIK SETH | `unsplash.com/photos/a-white-volvo-car-parked-in-front-of-a-house-COYjMnrXHKM` | Volvo V90 Cross Country bokiem — bez widocznego znaczka, zgodnie z uwagą klienta |
-| `foto-ecu.webp`, `foto-ecu-sm.webp` | Brenton Pearce | `unsplash.com/photos/a-close-up-of-a-car-engine-aJlJAwocqwk` | turbosprężarka i kolektor |
-| `foto-onas.webp`, `foto-onas-sm.webp` | Mehmet Talha Onuk | `unsplash.com/photos/mechanics-working-in-automotive-repair-workshop-8t6tk7LYLrE` | hala warsztatu (to samo zdjęcie co `pas-onas`, inny kadr) |
 | `foto-ev.webp`, `foto-ev-sm.webp` | Precious Madubuike | `unsplash.com/photos/electric-car-charging-on-city-street-N2Td7KpIvYc` | ładowanie auta elektrycznego (to samo co `pas-ev`, kadr 4:3) |
-| `usp-unlock.webp`, `usp-unlock-sm.webp` | Mehmet Talha Onuk | `unsplash.com/photos/a-man-sitting-in-a-car-using-a-laptop-computer-dSosKR6g-W8` | laptop diagnostyczny w aucie |
-| `usp-leasing.webp`, `usp-leasing-sm.webp` | Bence Balla-Schottner | `unsplash.com/photos/black-key-fob-iTHT1gXJuS8` | kluczyk na desce rozdzielczej |
 | `usp-floty.webp`, `usp-floty-sm.webp` | Markus Winkler | `unsplash.com/photos/white-vans-parked-in-mossingen-3vlGNkDep4E` | rząd białych dostawczaków (widoczne znaczki VW) |
-| `usp-kamper.webp`, `usp-kamper-sm.webp` | Rafael Peier | `unsplash.com/photos/an-rv-drives-along-a-scenic-mountain-road-at-sunset-muEU34zZlzs` | kamper na górskiej drodze |
-| `foto-leasing.webp`, `foto-leasing-sm.webp` | Bence Balla-Schottner | jak `usp-leasing` (kadr 4:3, X 2026) | kluczyk na desce rozdzielczej |
 | `foto-floty.webp`, `foto-floty-sm.webp` | Markus Winkler | jak `usp-floty` (kadr 4:3, X 2026) | rząd białych dostawczaków |
-| `foto-unlock.webp`, `foto-unlock-sm.webp` | Mehmet Talha Onuk | jak `usp-unlock` (kadr 4:3, X 2026) | laptop diagnostyczny w aucie |
 
 Każdy plik ma wariant `-sm` (połowa szerokości). **Obróbka (od X 2026):** kadr 4:3 (`foto-*`)
 albo 16:9 (`usp-*`), bez korekty nasycenia i jasności, WebP q80 — klient prosił o wyraźne
@@ -148,3 +135,42 @@ Oryginały leżą w `tools/scrape/raw-client/` (poza repozytorium), warianty rob
 
 Niewykorzystane warianty z tej samej przesyłki: `Start@Stop-2.jpg` (podświetlony przycisk,
 pion), `ciśnienie oleju.webp` (1024 px, za mało na wariant 1200 px).
+
+## Zdjęcia dostarczone przez klienta i ze starego serwisu (runda z 05.11.2026)
+
+Plik `nowe zdjecia` od Krzyśka (Vitesse) wraz z listą poprawek z Figmy oraz dwa kadry z nagłówka
+dotychczasowej strony vitesse.auto.pl. **Właściciel: Vitesse** — klient odpowiada za prawa do
+tych zdjęć. Zastępują wcześniejsze zdjęcia z Unsplash o tych samych nazwach (wpisy usunięte
+z tabel wyżej). Oryginały: `tools/scrape/raw-client/` i `tools/scrape/mirror/` (poza
+repozytorium), warianty robi `tools/fetch-photos.py` (`python3 tools/fetch-photos.py <klucz>`).
+
+| Plik (każdy z wariantem `-sm`) | Oryginał | Gdzie stoi |
+|---|---|---|
+| `foto-kamper` | `kamper_2.jpg` (kamper na hamowni) | Chip tuning: sekcja kamperów (#230) |
+| `foto-unlock` | `ECU_prog.jpg` | Chip tuning: odblokowywanie sterownika (#231) |
+| `foto-hamownia` | `hamownia.jpg` | Hamownia: pomiar na hamowni podwoziowej (#226) |
+| `foto-dyno` | `dyno.jpg` (pion, kadr 4:3 przy kole) | Podnoszenie mocy: weryfikacja efektów (#225) |
+| `foto-startstop` | `start_stop.jpg` | Usługi ECU: Start&Stop (#238) |
+| `foto-olej` | `oil_pressure.jpg` | Usługi ECU: ciśnienie oleju (#239) |
+| `foto-wallbox` | `accelev-two.jpg` | EV / Hybryda: ładowarka Accelev two (#244) |
+| `foto-onas` | `firma_5.jpg` | O nas: hala warsztatu (#246) |
+| `foto-powerchip` | `PowerChip.jpg` | PowerChipy: kiedy PowerChip, a kiedy chip tuning (#242) |
+| `foto-dpf` | `slide03.jpg` ze starej strony („Wyłącz SCR”) | Usługi ECU: DPF/SCR (#236), Oferta dla flot (#234) |
+| `foto-ecu` | `slide01.jpg` ze starej strony („Zwiększ moc silnika”) | Usługi ECU: sekcja „Serwis ECU” (#237) |
+| `usp-unlock` | `ECU.jpg` | Strona główna, kafelek odblokowania (#217) |
+| `usp-leasing` | `gwarancja.jpg` | Strona główna, kafelek gwarancji i leasingu (#218) |
+| `usp-kamper` | `kamper.jpg` (kadr przy kamperze, prawa strona) | Strona główna, kafelek kamperów (#219) |
+| `usp-hamownia` | `hamownia_1WD.jpg` | Strona główna, kafelek hamowni (#220) |
+| `pas-chip` | `chip_tuning.jpg` | Tło nagłówka Chip tuning (#228) |
+| `pas-onas` | `firma_6.jpg` | Tło nagłówka O nas (#245) |
+| `slajd-ecu` | `ECU.jpg` | Slajd 1 strony głównej (#212) |
+| `slajd-gwarancja` | `gwarancja.jpg` | Slajd 2 strony głównej (#212) |
+| `slajd-flota` | `pas-floty.webp` rozjaśnione 1,7× | Slajd 3 strony głównej (#212) |
+| `slajd-dyno` | `dyno.jpg` (pion, przy prawej krawędzi, lewa strona w kolorze tła hero) | Slajd 4 strony głównej (#212) |
+
+Niewykorzystane z przesyłki: `diag.jpg`.
+
+Do dostarczenia (Envato, pobiera Damian): „Starting the Car Engine with a Key” (#240), „Gear Shift in Luxury Car Interior” (#241),
+„Car Saleswoman Helping Man Buying a New Car” (#243). Do czasu dostarczenia stoją poprzednie
+zdjęcia (skrzynia, Volvo) albo kafelek z ikoną (dawka rozruchowa). Po pobraniu: wpisać
+licencję Envato tutaj i podmienić zadanie w `tools/fetch-photos.py`.
