@@ -800,11 +800,32 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
   filter:drop-shadow(0 0 4px rgba(244,106,0,.55))}
 /* schemat kanału dolotowego ([vts_dolot_schemat]) */
 .vts-dolot__wall{fill:none;stroke:var(--vts-dim);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
-.vts-dolot__valve{fill:var(--vts-surface-2);stroke:var(--vts-muted);stroke-width:2;stroke-linejoin:round}
-.vts-dolot__nagar{fill:var(--vts-dim);opacity:.85;stroke:none}
-.vts-dolot__flow,.vts-dolot__head{fill:none;stroke:var(--vts-accent);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
-.vts-dolot__flow.is-przed,.vts-dolot__head.is-przed{stroke:var(--vts-dim);stroke-width:1.8;stroke-dasharray:3 5}
-.vts-dolot__head.is-przed{stroke-dasharray:none}
+.vts-dolot__hatch{stroke:var(--vts-line);stroke-width:1.2}
+.vts-dolot__cast{fill:url(#vts-dolot-hatch);stroke:none}
+.vts-dolot__seat{fill:none;stroke:var(--vts-muted);stroke-width:3;stroke-linecap:round}
+.vts-dolot__m0{stop-color:var(--vts-dim)}
+.vts-dolot__m1{stop-color:var(--vts-surface-2)}
+.vts-dolot__g0{stop-color:var(--vts-accent);stop-opacity:.22}
+.vts-dolot__g1{stop-color:var(--vts-accent);stop-opacity:0}
+.vts-dolot__chamber{fill:none}
+.vts-dolot__chamber.is-po{fill:url(#vts-dolot-glow)}
+.vts-dolot__valve{stroke:var(--vts-muted);stroke-width:1.6;stroke-linejoin:round}
+.vts-dolot__chamfer{fill:none;stroke:var(--vts-muted);stroke-width:1;opacity:.55}
+.vts-dolot__nagar{fill:var(--vts-muted);opacity:.55;stroke:var(--vts-dim);stroke-width:1}
+.vts-dolot__ziarno{fill:var(--vts-surface);opacity:.7}
+.vts-dolot__stream{fill:none;stroke:var(--vts-accent);stroke-width:26;stroke-linecap:round;stroke-linejoin:round;opacity:.1}
+.vts-dolot__stream.is-przed{stroke:var(--vts-dim);stroke-width:12;opacity:.12}
+.vts-dolot__flow{fill:none;stroke:var(--vts-accent);stroke-width:2.4;stroke-linecap:round;opacity:.55}
+.vts-dolot__flow.is-przed{stroke:var(--vts-dim);stroke-width:1.6;stroke-dasharray:2 6;opacity:.8}
+.vts-dolot__czast{fill:var(--vts-accent-soft)}
+.vts-dolot__czast.is-przed{fill:var(--vts-muted)}
+.vts-dolot__grot{fill:var(--vts-accent);stroke:var(--vts-accent);stroke-width:1;stroke-linejoin:round}
+.vts-dolot__grot.is-przed{fill:var(--vts-dim);stroke:var(--vts-dim)}
+.vts-dolot__pill{fill:none;stroke:var(--vts-line);stroke-width:1}
+.vts-dolot__pill.is-po{fill:var(--vts-accent-dim);stroke:var(--vts-accent)}
+.vts-dolot .vts-dchart__lbl{font-size:16px;letter-spacing:.04em}
+.vts-dolot .vts-dchart__foot{font-size:16px}
+@media (prefers-reduced-motion:reduce){.vts-dolot__czast{display:none}}
 .vts-dchart__lbl{font-family:var(--vts-font-mono);font-size:12px;fill:var(--vts-muted);letter-spacing:.06em}
 .vts-dchart__lbl.is-po{fill:var(--vts-accent-ink)}
 .vts-dchart__foot{font-family:var(--vts-font-mono);font-size:11px;fill:var(--vts-dim);letter-spacing:.06em}

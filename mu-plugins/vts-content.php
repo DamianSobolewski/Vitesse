@@ -1322,35 +1322,94 @@ add_shortcode('vts_wykres_pogladowy', function () {
  * (#167). Rysunek poglądowy: przekrój kanału z zaworem przed i po czyszczeniu.
  */
 add_shortcode('vts_dolot_schemat', function () {
+    // Tory powietrza (po lewej i prawej stronie trzonka zaworu), wspólne dla smug i cząsteczek.
+    $tory = [
+        1 => ['M 108 66 V 196 C 108 222 92 232 64 248', 'M 172 66 V 196 C 172 222 188 232 216 248'],
+        0 => ['M 108 66 V 150', 'M 172 66 V 150'],
+    ];
+    // Stały „rozrzut" ziarenek nagaru (bez losowania, żeby rysunek był stabilny).
+    $ziarna = [[88,100],[92,118],[90,140],[95,158],[88,178],[91,196],[190,108],[188,126],[192,148],[186,168],[190,190],
+               [134,112],[142,130],[138,152],[144,170],[136,184],[120,252],[140,248],[158,252]];
     ob_start(); ?>
     <figure class="vts-photo vts-photo--svg vts-dolot">
-      <svg viewBox="0 0 640 400" role="img"
+      <svg viewBox="14 22 592 370" role="img"
            aria-label="Schemat poglądowy: kanał dolotowy z zaworem przed i po czyszczeniu z nagaru">
-        <?php foreach ([0 => 20, 1 => 340] as $po => $tx) : ?>
-        <g transform="translate(<?= $tx ?> 0)" class="<?= $po ? 'is-po' : '' ?>">
+        <defs>
+          <pattern id="vts-dolot-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line class="vts-dolot__hatch" x1="0" y1="0" x2="0" y2="7"/>
+          </pattern>
+          <linearGradient id="vts-dolot-fadeg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#000"/><stop offset=".3" stop-color="#fff"/><stop offset="1" stop-color="#fff"/>
+          </linearGradient>
+          <mask id="vts-dolot-fade" maskUnits="userSpaceOnUse" x="0" y="40" width="280" height="210">
+            <rect x="0" y="40" width="280" height="210" fill="url(#vts-dolot-fadeg)"/>
+          </mask>
+          <linearGradient id="vts-dolot-metal" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" class="vts-dolot__m0"/><stop offset=".45" class="vts-dolot__m1"/><stop offset="1" class="vts-dolot__m0"/>
+          </linearGradient>
+          <radialGradient id="vts-dolot-glow" cx=".5" cy=".12" r=".75">
+            <stop offset="0" class="vts-dolot__g0"/><stop offset="1" class="vts-dolot__g1"/>
+          </radialGradient>
+          <marker id="vts-dolot-grot" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto" markerUnits="strokeWidth">
+            <path class="vts-dolot__grot" d="M 0.5 0.8 L 9.5 5 L 0.5 9.2 Q 2.6 5 0.5 0.8 Z"/>
+          </marker>
+          <marker id="vts-dolot-grot-przed" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto" markerUnits="strokeWidth">
+            <path class="vts-dolot__grot is-przed" d="M 0.5 0.8 L 9.5 5 L 0.5 9.2 Q 2.6 5 0.5 0.8 Z"/>
+          </marker>
+        </defs>
+        <?php foreach ([0 => 20, 1 => 320] as $po => $tx) : $k = $po ? '' : ' is-przed'; ?>
+        <g transform="translate(<?= $tx ?> 0)" class="<?= $po ? 'is-po' : 'is-przed' ?>">
           <text class="vts-dchart__lbl<?= $po ? ' is-po' : '' ?>" x="140" y="34" text-anchor="middle"><?= $po ? 'PO CZYSZCZENIU' : 'PRZED CZYSZCZENIEM' ?></text>
-          <!-- kanał, gniazdo zaworu i komora spalania -->
+
+          <!-- komora spalania z poświatą (po czyszczeniu) -->
+          <rect class="vts-dolot__chamber<?= $po ? ' is-po' : '' ?>" x="20" y="238" width="240" height="80"/>
+
+          <!-- głowica w przekroju: kreskowanie wygaszone ku górze -->
+          <g mask="url(#vts-dolot-fade)">
+            <path class="vts-dolot__cast" d="M 20 52 H 80 V 206 C 80 221 70 231 55 238 H 20 Z"/>
+            <path class="vts-dolot__cast" d="M 260 52 H 200 V 206 C 200 221 210 231 225 238 H 260 Z"/>
+          </g>
           <path class="vts-dolot__wall" d="M 80 56 V 206 C 80 221 70 231 55 238 H 20 V 318 H 260 V 238 H 225 C 210 231 200 221 200 206 V 56"/>
-          <!-- zawór -->
-          <rect class="vts-dolot__valve" x="135" y="46" width="10" height="196" rx="2"/>
-          <path class="vts-dolot__valve" d="M 108 250 L 172 250 L 204 268 L 76 268 Z"/>
+          <path class="vts-dolot__seat" d="M 46 241 L 60 233 M 234 241 L 220 233"/>
+
+          <!-- smugi powietrza -->
+          <?php foreach ($tory[$po] as $d) : ?>
+            <path class="vts-dolot__stream<?= $k ?>" d="<?= $d ?>"/>
+          <?php endforeach; ?>
+
+          <!-- zawór: trzonek i grzybek z fazą -->
+          <rect class="vts-dolot__valve" x="135" y="46" width="10" height="196" rx="2" fill="url(#vts-dolot-metal)"/>
+          <path class="vts-dolot__valve" d="M 108 250 L 172 250 L 204 268 L 76 268 Z" fill="url(#vts-dolot-metal)"/>
+          <path class="vts-dolot__chamfer" d="M 108 250 L 172 250 M 86 262 L 194 262"/>
+
           <?php if (!$po) : ?>
-            <!-- nagar na ściankach, trzonku i grzybku -->
-            <path class="vts-dolot__nagar" d="M 80 90 C 98 96 100 130 92 150 C 98 170 96 196 82 206 V 90 Z"/>
-            <path class="vts-dolot__nagar" d="M 200 100 C 184 108 180 140 190 160 C 184 182 186 198 198 206 V 100 Z"/>
-            <ellipse class="vts-dolot__nagar" cx="140" cy="146" rx="14" ry="40"/>
-            <path class="vts-dolot__nagar" d="M 104 250 C 120 240 160 240 176 250 L 172 254 L 108 254 Z"/>
-            <path class="vts-dolot__flow is-przed" d="M 112 64 V 130 M 168 64 V 130"/>
-            <path class="vts-dolot__head is-przed" d="M 106 122 L 112 132 L 118 122 M 162 122 L 168 132 L 174 122"/>
-          <?php else : ?>
-            <path class="vts-dolot__flow" d="M 108 64 V 214 C 108 228 98 240 84 250 M 172 64 V 214 C 172 228 182 240 196 250"/>
-            <path class="vts-dolot__head" d="M 76 244 L 84 254 L 92 246 M 188 246 L 196 254 L 204 244"/>
+            <!-- nagar: nieregularne naloty ze ziarnistą fakturą -->
+            <path class="vts-dolot__nagar" d="M 80 82 C 95 78 104 100 99 122 C 106 138 101 160 95 176 C 101 190 94 202 82 208 Z"/>
+            <path class="vts-dolot__nagar" d="M 200 92 C 186 96 178 120 188 142 C 181 160 184 180 190 192 C 193 200 196 204 200 208 Z"/>
+            <path class="vts-dolot__nagar" d="M 133 100 C 126 112 124 134 130 156 C 128 176 132 192 138 200 C 146 194 152 174 150 154 C 156 132 152 112 147 100 Z"/>
+            <path class="vts-dolot__nagar" d="M 102 250 C 112 238 132 240 142 241 C 156 240 168 240 178 250 L 172 255 L 108 255 Z"/>
+            <?php foreach ($ziarna as [$zx, $zy]) : ?><circle class="vts-dolot__ziarno" cx="<?= $zx ?>" cy="<?= $zy ?>" r="1.5"/><?php endforeach; ?>
           <?php endif; ?>
-          <text class="vts-dchart__lbl" x="140" y="304" text-anchor="middle">komora spalania</text>
-          <text class="vts-dchart__lbl<?= $po ? ' is-po' : '' ?>" x="140" y="346" text-anchor="middle"><?= $po ? 'pełny przepływ powietrza' : 'nagar zwęża kanał' ?></text>
+
+          <!-- tory z grotami i cząsteczki powietrza -->
+          <?php foreach ($tory[$po] as $i => $d) : ?>
+            <path class="vts-dolot__flow<?= $k ?>" marker-end="url(#vts-dolot-grot<?= $po ? '' : '-przed' ?>)" d="<?= $d ?>"/>
+            <?php $n = $po ? 4 : 2; $dur = $po ? 1.9 : 4.2;
+            for ($j = 0; $j < $n; $j++) : $b = -round($j * $dur / $n + $i * .35, 2); ?>
+              <circle class="vts-dolot__czast<?= $k ?>" r="<?= $po ? 2.8 : 2.2 ?>" opacity="0">
+                <animateMotion dur="<?= $dur ?>s" begin="<?= $b ?>s" repeatCount="indefinite" path="<?= $d ?>"/>
+                <animate attributeName="opacity" dur="<?= $dur ?>s" begin="<?= $b ?>s" repeatCount="indefinite"
+                         values="0;1;1;0" keyTimes="0;.12;.82;1"/>
+              </circle>
+            <?php endfor; ?>
+          <?php endforeach; ?>
+
+          <text class="vts-dchart__lbl" x="140" y="300" text-anchor="middle">komora spalania</text>
+          <rect class="vts-dolot__pill<?= $po ? ' is-po' : '' ?>" x="8" y="326" width="264" height="36" rx="18"/>
+          <text class="vts-dchart__lbl<?= $po ? ' is-po' : '' ?>" x="140" y="350" text-anchor="middle"><?= $po ? 'pełny przepływ powietrza' : 'nagar zwęża kanał' ?></text>
         </g>
         <?php endforeach; ?>
-        <text class="vts-dchart__foot" x="320" y="392" text-anchor="middle">schemat poglądowy · przekrój kanału dolotowego z zaworem</text>
+        <text class="vts-dchart__foot" x="310" y="388" text-anchor="middle">schemat poglądowy · przekrój kanału dolotowego z zaworem</text>
       </svg>
       <figcaption><span class="vts-photo__e">Co czyścimy</span>
         <b>Nagar na zaworach dławi powietrze, czysty dolot oddaje je silnikowi</b></figcaption>
