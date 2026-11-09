@@ -1250,3 +1250,14 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vtk-widget .vtk-result-close:hover,.vtk-widget .vtk-modal-close:hover{background:var(--vts-surface-2)}
 .vtk-widget .vtk-phone-link:hover{color:var(--vts-accent-soft)}
 .vtk-widget .vtk-result-box:focus{outline:none}
+
+/* Wynik pod listami zamiast okna (jak dawna wyszukiwarka). Wtyczka rysuje wynik jako
+ * nakładkę fixed z przyciemnionym tłem; zdejmujemy pozycjonowanie i tło, więc ten sam
+ * element leży zaraz pod formularzem. Wtyczka dalej steruje nim przez atrybut `hidden`,
+ * a okno z wykresem mocy (.vtk-dyno-*) zostaje wyskakujące. */
+.vtk-widget .vtk-result-overlay{position:static;inset:auto;z-index:auto;display:block;
+  background:none;padding:0;margin-top:var(--vts-gap-m);animation:none}
+.vtk-widget .vtk-result-overlay[hidden]{display:none !important}
+.vtk-widget .vtk-result-box{max-width:none;max-height:none;overflow:visible;
+  padding:var(--vts-gap-m);box-shadow:none}
+.vtk-widget .vtk-result-close{display:none}

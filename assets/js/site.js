@@ -327,6 +327,10 @@
       if (!t || t.tagName !== 'SELECT' || !t.closest) { return; }
       var widget = t.closest('.vtk-widget');
       if (!widget) { return; }
+      // Wynik leży pod listami (theme.css), a przycisku zamykania nie ma - przy zmianie
+      // pojazdu stary wynik znika, nowy pojawi się po kliknięciu poniżej.
+      var stary = widget.querySelector('.vtk-result-overlay');
+      if (stary) { stary.hidden = true; }
       var btn = widget.querySelector('.vtk-btn--submit');
       if (btn && !btn.disabled) { btn.click(); }
     } catch (err) { /* widżet działa dalej ręcznie */ }
