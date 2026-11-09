@@ -816,7 +816,7 @@ function vts_przyklady(): array
     $in = implode(',', array_fill(0, count($ids), '%d'));
 
     $wiersze = $wpdb->get_results($wpdb->prepare(
-        "SELECT e.id, e.name AS silnik, e.stock_hp, e.slug AS e_slug,
+        "SELECT e.id, e.name AS silnik, e.fuel, e.stock_hp, e.slug AS e_slug,
                 g.name AS gen, g.slug AS g_slug,
                 o.name AS model, o.slug AS o_slug,
                 k.name AS marka, k.slug AS k_slug,
@@ -859,37 +859,92 @@ function vts_przyklady(): array
  * fabryczny, więc dla prawie wszystkich nie byłoby punktu wyjścia. Moment
  * podajemy jako sam przyrost, liczbą.
  */
-function vts_wykres_mocy(int $fabr, int $po, string $id): string
+function vts_wykres_mocy(int $fabr, int $po, string $id, string $paliwo = 'diesel'): string
 {
-    $max = max($po, 1) * 1.16;                     // zapas nad krzywą
-    $y   = fn(int $v) => 108 - ($v / $max) * 96;   // pole rysunku: y 12..108
+    // Kształt krzywych z hamowni, nie łuk: moment narasta, gdy turbo wchodzi w pracę, trzyma
+    // półkę i opada przy wysokich obrotach, a moc to moment razy obroty, więc rośnie dłużej
+    // i szczyt wypada później niż szczyt momentu. Dla diesla szczyt mocy jest w ok. 3/4 zakresu
+    // obrotów, dla benzyny (turbo) bliżej odcięcia. Wersja po modyfikacji dostaje wcześniejsze
+    // wejście turbo i dłuższą półkę - tam przyrost jest największy, tak jak na wydrukach.
+    // Każdy wykres ma lekko inne parametry (ziarno z identyfikatora), żeby trzy kafelki
+    // obok siebie nie były kopiami. Wartości szczytowe są prawdziwe, reszta poglądowa.
+    $benzyna = in_array(strtolower($paliwo), ['benzyna', 'petrol', 'gasoline'], true);
+    $ziarno  = (crc32($id . $fabr . $po) % 1000) / 1000;          // 0..1, stałe dla danego kafelka
+    $los     = fn(float $zakres) => ($ziarno - .5) * 2 * $zakres;  // ±zakres
 
-    $krzywa = function (float $szczyt) {
-        return sprintf(
-            'M 30 108 C 92 106, 122 %.1f, 172 %.1f C 206 %.1f, 228 %.1f, 250 %.1f',
-            $szczyt + 7, $szczyt, $szczyt - 2, $szczyt + 6, $szczyt + 15
-        );
+    // [wejście turbo, szerokość narastania, początek spadku momentu, głębokość spadku, obroty min, max]
+    $p = $benzyna
+        ? ['us' => .27 + $los(.03), 'w' => .08, 'ud' => .68 + $los(.04), 'k' => .42, 'r0' => 1500, 'r1' => 6800]
+        : ['us' => .24 + $los(.03), 'w' => .075, 'ud' => .55 + $los(.04), 'k' => .78, 'r0' => 1000, 'r1' => 5000];
+    $stop = $p;
+    $tuned = $p;
+    $tuned['us'] -= .045;                  // turbo wchodzi wcześniej
+    $tuned['ud'] += .07;                   // półka momentu trwa dłużej
+    $tuned['k']  *= .8;                    // wolniejszy spadek na końcu zakresu
+
+    $moc = function (array $q, float $faza) use ($ziarno) {
+        $pkt = [];
+        for ($i = 0; $i <= 72; $i++) {
+            $u  = $i / 72;                     // położenie na wykresie 0..1
+            $uu = .1 + .9 * $u;                // wykres zaczyna się nie od zera obrotów, tylko od ok. 1/10 zakresu
+            $narastanie = 1 / (1 + exp(-($uu - $q['us']) / $q['w']));
+            $spadek = 1 - $q['k'] * pow(max(0, ($uu - $q['ud']) / (1 - $q['ud'])), 1.5);
+            // drobna nierówność, bo prawdziwy pomiar nie jest gładki (regulacja doładowania, rezonanse)
+            $dryg = 1 + .007 * sin($uu * 41 + $faza + $ziarno * 6) + .004 * sin($uu * 83 + $faza * 2);
+            $moment = $narastanie * max(.05, $spadek) * $dryg;
+            $pkt[] = [$u, $moment * ($q['r0'] + $uu * ($q['r1'] - $q['r0']))];
+        }
+        $max = max(array_column($pkt, 1));
+        return array_map(fn($x) => [$x[0], $x[1] / $max], $pkt);   // 0..1, szczyt = 1
     };
 
-    $yf = $y($fabr);
-    $yp = $y($po);
+    $max_os = max($po, 1) * 1.16;                                  // zapas nad krzywą
+    $X = fn(float $u) => 30 + $u * 222;                            // pole rysunku: x 30..252
+    $Y = fn(float $v) => 108 - ($v / $max_os) * 96;                // y 12..108
+
+    $ksztalt = function (array $pkt, int $szczyt) use ($X, $Y) {
+        $d = '';
+        $top = [0, 0];
+        foreach ($pkt as $n => [$u, $v]) {
+            $d .= ($n ? ' L ' : 'M ') . sprintf('%.1f %.1f', $X($u), $Y($v * $szczyt));
+            if ($v >= $top[1]) {
+                $top = [$u, $v];
+            }
+        }
+        return [$d, $top[0], $Y($szczyt), $Y($pkt[count($pkt) - 1][1] * $szczyt)];
+    };
+
+    [$d_f, $u_f, $y_f, $kon_f] = $ksztalt($moc($stop, 0.0), $fabr);
+    [$d_p, $u_p, $y_p]         = $ksztalt($moc($tuned, 1.7), $po);
+
+    // Podpisy przy szczytach: „po" nad swoim punktem, „przed" pod końcem szarej krzywej,
+    // żeby nie leżały na liniach.
+    $x_p = max(52.0, min(228.0, $X($u_p)));
 
     ob_start(); ?>
     <span class="vts-chart">
       <svg viewBox="0 0 260 130" role="img"
-           aria-label="Moc fabryczna <?= $fabr ?> KM, po modyfikacji <?= $po ?> KM. Przebieg krzywej poglądowy.">
+           aria-label="Moc fabryczna <?= $fabr ?> KM, po modyfikacji <?= $po ?> KM. Przebieg krzywych poglądowy.">
         <defs>
           <clipPath id="<?= esc_attr($id) ?>"><rect class="vts-chart__wipe" x="0" y="0" width="260" height="130"/></clipPath>
         </defs>
+        <g class="vts-chart__siatka">
+          <?php foreach ([1, 2, 3, 4, 5] as $k) : ?>
+            <line x1="<?= round(30 + $k * 37, 1) ?>" y1="12" x2="<?= round(30 + $k * 37, 1) ?>" y2="108"/>
+          <?php endforeach; ?>
+          <?php foreach ([1, 2, 3] as $k) : ?>
+            <line x1="30" y1="<?= round(108 - $k * 24, 1) ?>" x2="252" y2="<?= round(108 - $k * 24, 1) ?>"/>
+          <?php endforeach; ?>
+        </g>
         <path class="vts-chart__os" d="M 30 12 V 108 H 252" fill="none"/>
         <g clip-path="url(#<?= esc_attr($id) ?>)">
-          <path class="vts-chart__linia" d="<?= $krzywa($yf) ?>" fill="none"/>
-          <path class="vts-chart__linia is-po" d="<?= $krzywa($yp) ?>" fill="none"/>
-          <circle class="vts-chart__pkt" cx="172" cy="<?= round($yf, 1) ?>" r="3.4"/>
-          <circle class="vts-chart__pkt is-po" cx="172" cy="<?= round($yp, 1) ?>" r="3.9"/>
+          <path class="vts-chart__linia" d="<?= $d_f ?>" fill="none"/>
+          <path class="vts-chart__linia is-po" d="<?= $d_p ?>" fill="none"/>
+          <circle class="vts-chart__pkt" cx="<?= round($X($u_f), 1) ?>" cy="<?= round($y_f, 1) ?>" r="3.4"/>
+          <circle class="vts-chart__pkt is-po" cx="<?= round($X($u_p), 1) ?>" cy="<?= round($y_p, 1) ?>" r="3.9"/>
         </g>
-        <text class="vts-chart__opis" x="255" y="<?= round($yf, 1) + 4 ?>" text-anchor="end"><?= $fabr ?> KM</text>
-        <text class="vts-chart__opis is-po" x="255" y="<?= round($yp, 1) - 5 ?>" text-anchor="end"><?= $po ?> KM</text>
+        <text class="vts-chart__opis is-po" x="<?= round($x_p, 1) ?>" y="<?= round($y_p - 9, 1) ?>" text-anchor="middle"><?= $po ?> KM</text>
+        <text class="vts-chart__opis" x="252" y="<?= round(min(106.0, $kon_f + 14), 1) ?>" text-anchor="end"><?= $fabr ?> KM</text>
         <text class="vts-chart__stopka" x="34" y="124">przebieg poglądowy</text>
       </svg>
     </span>
@@ -917,7 +972,7 @@ add_shortcode('vts_wyniki', function () {
             <b><?= esc_html($w['marka'] . ' ' . $w['model']) ?></b>
             <span><?= esc_html($w['gen'] . ' · ' . $w['silnik']) ?></span>
           </span>
-          <?= vts_wykres_mocy($fabr, $po, 'vts-wyk-' . (++$nr)) ?>
+          <?= vts_wykres_mocy($fabr, $po, 'vts-wyk-' . (++$nr), (string) ($w['fuel'] ?? '')) ?>
           <span class="vts-wynik__liczby">
             <?php /* #222: pod wykresem same przyrosty (moc i moment). Moc przed i po
                      jest już opisana na krzywych, a momentu fabrycznego katalog nie podaje. */ ?>

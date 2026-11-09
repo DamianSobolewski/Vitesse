@@ -746,6 +746,7 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-chart{display:block}
 .vts-chart svg{display:block;width:100%;height:auto}
 .vts-chart__os{stroke:var(--vts-line);stroke-width:1}
+.vts-chart__siatka line{stroke:var(--vts-line);stroke-width:.6;opacity:.45}
 .vts-chart__linia{stroke:var(--vts-dim);stroke-width:2;stroke-dasharray:5 4;stroke-linecap:round}
 .vts-chart__linia.is-po{stroke:var(--vts-accent);stroke-width:2.4}
 .vts-chart__pkt{fill:var(--vts-muted)}
