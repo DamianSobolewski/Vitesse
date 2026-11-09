@@ -170,7 +170,8 @@ repozytorium), warianty robi `tools/fetch-photos.py` (`python3 tools/fetch-photo
 
 Niewykorzystane z przesyłki: `diag.jpg`.
 
-Do dostarczenia (Envato, pobiera Damian): „Starting the Car Engine with a Key” (#240), „Gear Shift in Luxury Car Interior” (#241),
-„Car Saleswoman Helping Man Buying a New Car” (#243). Do czasu dostarczenia stoją poprzednie
-zdjęcia (skrzynia, Volvo) albo kafelek z ikoną (dawka rozruchowa). Po pobraniu: wpisać
-licencję Envato tutaj i podmienić zadanie w `tools/fetch-photos.py`.
+Envato (pobrał Damian, numery licencji do dopisania): `foto-dawka` = „Starting the Car Engine with a Key” (#240, Usługi ECU: dawka rozruchowa),
+`foto-skrzynia` = „Gear Shift in Luxury Car Interior” (#241, Usługi ECU: TCU), `foto-volvo` = „Car Saleswoman Helping Man Buying a New Car” (#243, PowerChipy: Volvo VEA).
+Oryginały: `tools/scrape/raw-client/envato-*.jpg`. Wpis o `foto-volvo` z Unsplash wyżej jest nieaktualny.
+
+Brak zdjęcia kanałów dolotowych (#167): na stronie stoi własny rysunek SVG (`[vts_dolot_schemat]`), `foto-dolot` zostaje w repo na wypadek zdjęcia od klienta.

@@ -42,7 +42,8 @@ SAT, BRI, QUALITY = 1.0, 1.0, 80
 # (klucz, źródło, rodzaj kadru, przesunięcie środka kadru w pionie 0–1)
 JOBS = [
     ('kamper',       'client:kamper_2.jpg',        'foto', .5),    # #230, kamper na hamowni
-    ('volvo',        'COYjMnrXHKM', 'foto', .6),
+    ('volvo',        'client:envato-car-saleswoman.jpg', 'foto', .55, .68),   # #243
+    ('dawka',        'client:envato-starting-engine.jpg', 'foto', .85),        # #240
     ('ev',           'N2Td7KpIvYc', 'foto', .5),
     ('leasing',      'iTHT1gXJuS8', 'foto', .5),
     ('floty',        '3vlGNkDep4E', 'foto', .5),
@@ -50,7 +51,7 @@ JOBS = [
     # zdjęcia od klienta (X 2026)
     ('temperatura',  'client:Temperatura pracy silnika.jpg',      'foto', .5),
     ('dolot',        'client:Czyszczenie układów dolotowych.jpg', 'foto', .45),
-    ('skrzynia',     'client:Programowanie skrzyń biegów.jpg',    'foto', .55),
+    ('skrzynia',     'client:envato-gear-shift.jpg',              'foto', .5, .35),   # #241
     ('klapy',        'client:Klapy wirowe.jpg',                   'foto', .5),
     ('sonda',        'client:Druga sonda Lambda i pompa powietrza dodatkowego (Subaru, SAI).jpg', 'foto', .5),
     ('sai',          'client:Pompa powietrza dodatkowego SAI.jpeg', 'foto', .5),

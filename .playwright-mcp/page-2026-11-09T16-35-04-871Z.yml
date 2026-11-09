@@ -1,0 +1,480 @@
+- generic [active] [ref=f43e1]:
+  - generic [ref=f43e3]:
+    - generic [ref=f43e4]: Łódź, ul. Kolumny 267C · poniedziałek - piątek 8:30-17:00, sobota 8:30-14:00
+    - generic [ref=f43e5]:
+      - generic [ref=f43e6]:
+        - text: Tuning
+        - link "511 205 980" [ref=f43e7] [cursor=pointer]:
+          - /url: tel:+48511205980
+        - text: ","
+        - link "515 660 210" [ref=f43e8] [cursor=pointer]:
+          - /url: tel:+48515660210
+      - generic [ref=f43e9]:
+        - text: Floty
+        - link "799 000 046" [ref=f43e10] [cursor=pointer]:
+          - /url: tel:+48799000046
+  - banner [ref=f43e11]:
+    - generic [ref=f43e12]:
+      - link "Vitesse" [ref=f43e13] [cursor=pointer]:
+        - /url: http://localhost:8090/
+        - img "Vitesse" [ref=f43e14]
+      - navigation "Nawigacja główna" [ref=f43e17]:
+        - list [ref=f43e18]:
+          - listitem [ref=f43e19]:
+            - link "Strona główna" [ref=f43e20] [cursor=pointer]:
+              - /url: http://localhost:8090/
+          - listitem [ref=f43e21]:
+            - link "Oferta" [ref=f43e22] [cursor=pointer]:
+              - /url: http://localhost:8090/podnoszenie-mocy/
+          - listitem [ref=f43e23]:
+            - link "EV / Hybryda" [ref=f43e24] [cursor=pointer]:
+              - /url: http://localhost:8090/ev-hybryda/
+          - listitem [ref=f43e25]:
+            - link "Hamownia" [ref=f43e26] [cursor=pointer]:
+              - /url: http://localhost:8090/hamownia/
+          - listitem [ref=f43e27]:
+            - link "O nas" [ref=f43e28] [cursor=pointer]:
+              - /url: http://localhost:8090/o-nas/
+          - listitem [ref=f43e29]:
+            - link "Katalog przyrostów" [ref=f43e30] [cursor=pointer]:
+              - /url: http://localhost:8090/chiptuning/
+          - listitem [ref=f43e31]:
+            - link "Blog" [ref=f43e32] [cursor=pointer]:
+              - /url: http://localhost:8090/blog/
+      - link "Umów wizytę" [ref=f43e33] [cursor=pointer]:
+        - /url: http://localhost:8090/kontakt/
+  - link "Skip to content" [ref=f43e34] [cursor=pointer]:
+    - /url: "#content"
+  - main [ref=f43e35]:
+    - generic [ref=f43e36]:
+      - generic [ref=f43e38]:
+        - navigation "Ścieżka" [ref=f43e39]:
+          - link "Start" [ref=f43e40] [cursor=pointer]:
+            - /url: http://localhost:8090/
+          - text: /
+          - link "Podnoszenie mocy" [ref=f43e41] [cursor=pointer]:
+            - /url: http://localhost:8090/podnoszenie-mocy/
+          - text: /Dodatkowe usługi ECU
+        - generic [ref=f43e42]:
+          - paragraph [ref=f43e43]: Serwis ECU
+          - heading "Dodatkowe usługi ECU" [level=1] [ref=f43e44]
+          - paragraph [ref=f43e45]: "Kilkanaście różnych usług, które możemy wykonać dzięki modyfikacji oprogramowania - od podniesienia mocy, przez DPF, EGR, SCR, układ Start&Stop i ciśnienie oleju, po sondę Lambda i skrzynię biegów. Zobacz poniżej czy znajdziesz to czego szukasz:"
+      - generic [ref=f43e46]:
+        - generic [ref=f43e47]:
+          - generic [ref=f43e48]:
+            - paragraph [ref=f43e49]: Serwis ECU
+            - heading "Sterownik odpowiada za więcej niż moc" [level=2] [ref=f43e50]
+            - paragraph [ref=f43e51]: Poza mocą sterownik decyduje o pracy filtra cząstek stałych, dawkowaniu AdBlue, ciśnieniu oleju, temperaturze silnika i limitach prędkości. Część tych nastaw da się dostroić do tego, jak naprawdę używasz pojazdu. Część prac rozwiązuje znane problemy fabryczne konkretnych rodzin silników, część może być konieczna z uwagi na zużycie niektórych podzespołów i starzenie się pojazdu.
+            - paragraph [ref=f43e52]: Każdą modyfikację poprzedza odczyt błędów i parametrów bieżących. Jeśli problem leży w mechanice, powiemy Ci to przed wyceną zamiast sprzedawać usługę, która nie pomoże.
+          - figure [ref=f43e54]:
+            - img "Czerwony obrotomierz z rozświetloną podziałką do 8000 obrotów" [ref=f43e55]
+        - navigation "Usługi na tej stronie" [ref=f43e57]:
+          - paragraph [ref=f43e58]: Przejdź do usługi
+          - list [ref=f43e59]:
+            - listitem [ref=f43e60]:
+              - link "DPF, EGR, SCR (AdBlue)" [ref=f43e61] [cursor=pointer]:
+                - /url: "#dpf"
+            - listitem [ref=f43e62]:
+              - link "Start&Stop" [ref=f43e63] [cursor=pointer]:
+                - /url: "#start-stop"
+            - listitem [ref=f43e64]:
+              - link "Ciśnienie oleju" [ref=f43e65] [cursor=pointer]:
+                - /url: "#cisnienie-oleju"
+            - listitem [ref=f43e66]:
+              - link "Temperatura pracy silnika" [ref=f43e67] [cursor=pointer]:
+                - /url: "#temperatura"
+            - listitem [ref=f43e68]:
+              - link "Klapy wirowe" [ref=f43e69] [cursor=pointer]:
+                - /url: "#klapy-wirowe"
+            - listitem [ref=f43e70]:
+              - link "Limitery prędkości i obrotów" [ref=f43e71] [cursor=pointer]:
+                - /url: "#limitery"
+            - listitem [ref=f43e72]:
+              - link "Druga sonda lambda" [ref=f43e73] [cursor=pointer]:
+                - /url: "#sonda-lambda"
+            - listitem [ref=f43e74]:
+              - link "Dawka rozruchowa" [ref=f43e75] [cursor=pointer]:
+                - /url: "#dawka-rozruchowa"
+            - listitem [ref=f43e76]:
+              - link "Pompa SAI (Subaru)" [ref=f43e77] [cursor=pointer]:
+                - /url: "#pompa-powietrza"
+            - listitem [ref=f43e78]:
+              - link "Czyszczenie dolotów" [ref=f43e79] [cursor=pointer]:
+                - /url: "#dolot"
+            - listitem [ref=f43e80]:
+              - link "Skrzynie biegów (TCU)" [ref=f43e81] [cursor=pointer]:
+                - /url: "#skrzynie"
+            - listitem [ref=f43e82]:
+              - link "Odblokowanie sterowników" [ref=f43e83] [cursor=pointer]:
+                - /url: "#odblokowanie"
+      - generic [ref=f43e85]:
+        - generic [ref=f43e86]:
+          - paragraph [ref=f43e87]: Układy oczyszczania spalin
+          - heading "DPF / FAP, EGR, SCR i AdBlue" [level=2] [ref=f43e88]
+          - paragraph [ref=f43e89]: Filtr cząstek stałych, zawór recyrkulacji spalin i układ AdBlue projektowano pod auto, które regularnie wyjeżdża w trasę i nagrzewa wydech. Przy krótkich odcinkach, w ruchu miejskim i we flocie kurierskiej regeneracja filtra nie dochodzi do końca, EGR zarasta nagarem, a błąd SCR potrafi odliczać kilometry do blokady rozruchu.
+          - paragraph [ref=f43e90]: "Zaczynamy od diagnostyki: odczytu błędów, stopnia zapełnienia filtra i historii regeneracji. Potem ustawiamy progi i przebieg regeneracji pod Twój sposób jazdy, korygujemy pracę EGR i dawkowanie AdBlue. Jeśli filtr jest mechanicznie zużyty, usłyszysz to od nas przed wyceną."
+          - heading "Kiedy warto" [level=3] [ref=f43e91]
+          - list [ref=f43e92]:
+            - listitem [ref=f43e93]: Auto z silnikiem diesla eksploatowane jest głównie na krótkich dystansach
+            - listitem [ref=f43e94]: Awarie układów oczyszczania spalin nasilają się, a koszty napraw rosną
+            - listitem [ref=f43e95]: Gdy serwis, mimo wymiany wielu części, nie potrafi zlokalizować usterki
+        - figure [ref=f43e97]:
+          - img "Przekrój filtra spalin i układu SCR na tle metalowej siatki" [ref=f43e98]
+      - generic [ref=f43e100]:
+        - generic [ref=f43e101]:
+          - paragraph [ref=f43e102]: Komfort i trwałość
+          - heading "Wyłączanie systemu Start&Stop" [level=2] [ref=f43e103]
+          - paragraph [ref=f43e104]: System start-stop gasi silnik na każdych światłach i uruchamia go, gdy puszczasz hamulec. W mieście to kilkadziesiąt rozruchów dziennie, a każdy obciąża rozrusznik, akumulator i koło dwumasowe. Przycisk na konsoli wyłącza system tylko do następnego uruchomienia auta, więc naciskasz go przy każdym starcie.
+          - paragraph [ref=f43e105]: "Wyłączamy start-stop programowo, w sterowniku silnika. Auto zapamiętuje ten stan na stałe: nie dotykasz niczego po odpaleniu, a pozostałe funkcje działają jak dotąd. Możemy także odwrócić działanie przycisku."
+          - heading "Kiedy warto" [level=3] [ref=f43e106]
+          - list [ref=f43e107]:
+            - listitem [ref=f43e108]: Jeździsz głównie po mieście i silnik gaśnie kilkadziesiąt razy dziennie.
+            - listitem [ref=f43e109]: Wymieniałeś akumulator albo rozrusznik wcześniej, niż zakłada serwis.
+            - listitem [ref=f43e110]: Masz dość wyłączania systemu przyciskiem po każdym uruchomieniu.
+            - listitem [ref=f43e111]: Lubisz jeździć dynamicznie a system wyłącza silnik zaraz po ostrym przyspieszaniu
+        - figure [ref=f43e113]:
+          - img "Palec naciskający przycisk Start&Stop wśród przycisków na konsoli środkowej" [ref=f43e114]
+      - generic [ref=f43e116]:
+        - generic [ref=f43e117]:
+          - paragraph [ref=f43e118]: Ochrona silnika
+          - heading "Podnoszenie ciśnienia oleju" [level=2] [ref=f43e119]
+          - paragraph [ref=f43e120]: W wielu nowoczesnych silnikach pompa oleju ma regulowaną wydajność, a sterownik ustawia ją możliwie nisko, żeby oszczędzać paliwo. Na papierze to wystarcza. W praktyce, przy gorącym silniku, zużytym oleju i dużym obciążeniu, ciśnienie spada do granicy, za którą zaczyna się przyspieszone zużycie panewek wałka i łańcucha rozrządu.
+          - paragraph [ref=f43e121]: Korygujemy mapę sterowania pompą tak, by ciśnienie w całym zakresie obrotów trzymało bezpieczny zapas. Koszt tej modyfikacji jest symboliczny w porównaniu do kosztu związanego z remontem lub wymianą silnika.
+          - heading "Kiedy warto" [level=3] [ref=f43e122]
+          - list [ref=f43e123]:
+            - listitem [ref=f43e124]: Silnik z rodziny znanej z problemów z łańcuchem rozrządu albo panewkami.
+            - listitem [ref=f43e125]: "Auto pracuje pod obciążeniem: przyczepa, kamper, dostawczak z ładunkiem."
+            - listitem [ref=f43e126]: Po chip tuningu, gdy wyższy moment wymaga lepszego smarowania.
+            - listitem [ref=f43e127]: Jeśli lubisz autem poszaleć lub używasz go czasem na torze.
+        - figure [ref=f43e129]:
+          - img "Wskaźnik ciśnienia oleju z podziałką od 0 do 8 i czerwoną kontrolką obok" [ref=f43e130]
+      - generic [ref=f43e132]:
+        - generic [ref=f43e133]:
+          - paragraph [ref=f43e134]: Ochrona silnika
+          - heading "Obniżanie temperatury pracy silnika" [level=2] [ref=f43e135]
+          - paragraph [ref=f43e136]: "Producenci podnoszą temperaturę pracy silnika, bo gorętszy silnik to niższe spalanie w teście homologacyjnym. Dla silnika pracującego pod obciążeniem to kłopot: mniejszy zapas do przegrzania, gęstszy nagar, szybciej starzejący się olej i uszczelki."
+          - paragraph [ref=f43e137]: Zmieniamy progi termostatu sterowanego elektronicznie i charakterystykę pracy wentylatorów, żeby silnik utrzymywał niższą, stabilną temperaturę. Przedłuży to żywotność wielu elementów, zapewni też większe rezerwy bezpieczeństwa.
+          - heading "Kiedy warto" [level=3] [ref=f43e138]
+          - list [ref=f43e139]:
+            - listitem [ref=f43e140]: Jeździsz z przyczepą, kamperem albo z pełnym ładunkiem w upały.
+            - listitem [ref=f43e141]: Wskaźnik temperatury wchodzi wysoko na podjazdach i w korkach.
+            - listitem [ref=f43e142]: Silnik po modyfikacjach mocy, które podnoszą ilość ciepła do odebrania.
+        - figure [ref=f43e144]:
+          - img "Wskaźnik temperatury silnika i kontrolka check engine na desce rozdzielczej" [ref=f43e145]
+      - generic [ref=f43e147]:
+        - generic [ref=f43e148]:
+          - paragraph [ref=f43e149]: Kolektor dolotowy
+          - heading "Klapy wirowe" [level=2] [ref=f43e150]
+          - paragraph [ref=f43e151]: "Klapy w kolektorze dolotowym mają zawirowywać powietrze przy niskich obrotach. W kilku popularnych rodzinach silników to typowy punkt awaryjny: zacierają się od nagaru, pękają osie i dźwignie, a urwany element potrafi trafić do cylindra. Sterownik widzi niezgodność położenia i zapala kontrolkę, czasem z trybem awaryjnym."
+          - paragraph [ref=f43e152]: Jeśli naprawa mechaniczna nie ma sensu, można klapy zablokować lub zdemontować (ewentualnie wymienić kolektor na wersję bez klap) oraz wyłączyć je programowo. Bez błędów i bez ryzyka, że luźna część wpadnie do dolotu.
+          - heading "Kiedy warto" [level=3] [ref=f43e153]
+          - list [ref=f43e154]:
+            - listitem [ref=f43e155]: Błąd położenia klap wraca po skasowaniu albo po wymianie siłownika.
+            - listitem [ref=f43e156]: Kolektor był już naprawiany, a usterka pojawia się ponownie.
+            - listitem [ref=f43e157]: Chcesz uniknąć kosztownej wymiany całego kolektora.
+        - figure [ref=f43e159]:
+          - img "Mechanik w rękawicach trzyma przepustnicę z klapą w komorze silnika" [ref=f43e160]
+      - generic [ref=f43e162]:
+        - generic [ref=f43e163]:
+          - paragraph [ref=f43e164]: Floty i tor
+          - heading "Limitery prędkości i obrotów" [level=2] [ref=f43e165]
+          - paragraph [ref=f43e166]: Jeśli limiter prędkości przeszkadza Ci na autostradzie – możemy go przesunąć lub zdjąć.
+          - paragraph [ref=f43e167]: Ale limitery to także świetne narzędzie w kontroli kosztów we flotach pojazdów. Ich założenie pozwala obniżyć zarówno zużycie paliwa jak i całego układu napędowego, co przekłada się na niższe koszty utrzymania floty.
+          - paragraph [ref=f43e168]: "Zakładamy, przesuwamy albo zdejmujemy ograniczenia prędkości i obrotów w sterowniku. Wartość ustalasz Ty: jedną dla całej floty albo inną dla każdego pojazdu. Zmianę dokumentujemy, więc przy kontroli ubezpieczyciela masz czarno na białym, co i kiedy ustawiono."
+        - generic [ref=f43e169]:
+          - heading "Co robimy" [level=3] [ref=f43e170]
+          - list [ref=f43e171]:
+            - listitem [ref=f43e172]:
+              - generic [ref=f43e178]:
+                - heading "Limit prędkości pod politykę floty" [level=4] [ref=f43e179]
+                - text: Jedna wartość dla wszystkich aut, na przykład 120 km/h, albo osobna dla dostawczych i osobowych.
+            - listitem [ref=f43e180]:
+              - generic [ref=f43e184]:
+                - heading "Limit obrotów dla trwałości silnika" [level=4] [ref=f43e185]
+                - text: Ustawienie limitera np. na 3000 obr/min pozwala sprawnie się poruszać, ograniczając jednocześnie spalanie i przedwczesne zużycie silnika.
+            - listitem [ref=f43e186]:
+              - generic [ref=f43e191]:
+                - heading "Obsługa partiami, faktury" [level=4] [ref=f43e192]
+                - generic [ref=f43e193]:
+                  - text: Flotę programujemy w umówionych turach, żeby auta nie stały w jednym tygodniu.
+                  - link "Zobacz ofertę dla flot" [ref=f43e194] [cursor=pointer]:
+                    - /url: /podnoszenie-mocy/oferta-dla-flot/
+                  - text: .
+      - generic [ref=f43e196]:
+        - generic [ref=f43e197]:
+          - paragraph [ref=f43e198]: Układ wydechowy
+          - heading "Druga sonda lambda" [level=2] [ref=f43e199]
+          - paragraph [ref=f43e200]: Druga sonda, za katalizatorem, nie steruje składem mieszanki. Sprawdza tylko, czy katalizator pracuje. Po jego wymianie na inny niż fabryczny albo przy zużytym wkładzie sterownik widzi odchyłkę i zapala check engine, czasem także z trybem awaryjnym.
+          - paragraph [ref=f43e201]: Programowo wyłączamy diagnostykę drugiej sondy w sterowniku. Silnik dalej pracuje na pierwszej sondzie, więc skład mieszanki i spalanie zostają bez zmian. Znikają kontrolka i błędy P0420 oraz P0430. Jeśli katalizator jest sprawny, a błąd bierze się z nieszczelności wydechu, najpierw powiemy Ci o tym.
+          - heading "Kiedy warto" [level=3] [ref=f43e202]
+          - list [ref=f43e203]:
+            - listitem [ref=f43e204]: Po wymianie katalizatora na zamiennik, który sterownik uznaje za niesprawny.
+            - listitem [ref=f43e205]: Błąd P0420 lub P0430 wraca po każdym skasowaniu.
+            - listitem [ref=f43e206]: Jazda z kontrolką „check engine” to ryzyko przeoczenia innych usterek
+        - figure [ref=f43e208]:
+          - img "Żółta kontrolka check engine na zegarze samochodu" [ref=f43e209]
+      - generic [ref=f43e211]:
+        - generic [ref=f43e212]:
+          - paragraph [ref=f43e213]: Zimny rozruch
+          - heading "Korekta dawki rozruchowej" [level=2] [ref=f43e214]
+          - paragraph [ref=f43e215]: Jeśli na zimnym silniku nie ma problemów z rozruchem, ale pojawiają się na rozgrzanym, wtedy najczęściej przyczyną są częściowo zużyte (pompo)wtryskiwacze. Gorące paliwo jest rzadsze i ucieka do powrotów przez drobne nieszczelności, przez co fabryczna dawka paliwa okazuje się zbyt mała do skutecznego rozruchu. Programowa korekta dawki rozruchowej pozwala na uniknięcie większych kosztów związanych z regeneracją lub wymianą wtryskiwaczy.
+        - figure [ref=f43e217]:
+          - img "Dłoń przekręcająca kluczyk w stacyjce, w tle zegar prędkościomierza" [ref=f43e218]
+      - generic [ref=f43e220]:
+        - generic [ref=f43e221]:
+          - paragraph [ref=f43e222]: Subaru
+          - heading "Pompa powietrza dodatkowego SAI" [level=2] [ref=f43e223]
+          - paragraph [ref=f43e224]: Układ SAI wdmuchuje powietrze do wydechu przez pierwsze dwie minuty po zimnym rozruchu, żeby szybciej nagrzać katalizator. W Subaru pompa i zawory zapiekają się od wilgoci, a sterownik zgłasza błędy z zakresu P0410 do P2444 i zapala check engine. Naprawa to komplet części za kilka tysięcy złotych, a usterka lubi wracać.
+          - paragraph [ref=f43e225]: "Programowo wyłączamy układ SAI w sterowniku: ECU przestaje oczekiwać pompy i zaworów, kontrolka gaśnie, tryb awaryjny się nie włącza. Praca rozgrzanego silnika nie zmienia się, bo układ i tak działa tylko chwilę po starcie. Pompę i zawory zostawiasz albo demontujesz."
+          - heading "Kiedy warto" [level=3] [ref=f43e226]
+          - list [ref=f43e227]:
+            - listitem [ref=f43e228]: Subaru z błędami P0410, P0411 albo P2440 do P2444.
+            - listitem [ref=f43e229]: Pompa SAI była już wymieniana i usterka wróciła.
+            - listitem [ref=f43e230]: Check engine zapala się tylko po zimnym rozruchu.
+        - figure [ref=f43e232]:
+          - img "Kontrolka check engine na czerwonym obrotomierzu" [ref=f43e233]
+      - generic [ref=f43e235]:
+        - generic [ref=f43e236]:
+          - paragraph [ref=f43e237]: Mechanika i oprogramowanie
+          - heading "Czyszczenie układów dolotowych" [level=2] [ref=f43e238]
+          - paragraph [ref=f43e239]: W silnikach z wtryskiem bezpośrednim paliwo nie obmywa zaworów dolotowych, więc nagar z odmy i EGR osiada na nich warstwa po warstwie. Ten problem może pojawić się już nawet po kilkudziesięciu tysiącach kilometrów. Żaden dodatek do paliwa tego nie usunie.
+          - paragraph [ref=f43e240]: "Zaczynamy od kamerki inspekcyjnej, czyścimy kolektor i zawory chemicznie i mechanicznie – łupinkami orzechów pod ciśnieniem. Efekt możemy sprawdzić na hamowni: pomiar przed i po pokazuje, ile mocy wróciło."
+          - heading "Kiedy warto" [level=3] [ref=f43e241]
+          - list [ref=f43e242]:
+            - listitem [ref=f43e243]: Gdy silnik dymi lub szybko wracają problemy z DPFem
+            - listitem [ref=f43e244]: Nierówna praca na biegu jałowym, szarpanie i gorsze przyspieszenie.
+            - listitem [ref=f43e245]: Przed chip tuningiem, żeby program pracował na czystym dolocie.
+        - figure "Co czyścimy Nagar na zaworach dławi powietrze, czysty dolot oddaje je silnikowi" [ref=f43e247]:
+          - 'img "Schemat poglądowy: kanał dolotowy z zaworem przed i po czyszczeniu z nagaru" [ref=f43e248]':
+            - generic [ref=f43e249]:
+              - generic [ref=f43e250]: PRZED CZYSZCZENIEM
+              - generic [ref=f43e260]: komora spalania
+              - generic [ref=f43e261]: nagar zwęża kanał
+            - generic [ref=f43e262]:
+              - generic [ref=f43e263]: PO CZYSZCZENIU
+              - generic [ref=f43e269]: komora spalania
+              - generic [ref=f43e270]: pełny przepływ powietrza
+            - generic [ref=f43e271]: schemat poglądowy · przekrój kanału dolotowego z zaworem
+          - generic [ref=f43e272]:
+            - generic [ref=f43e273]: Co czyścimy
+            - generic [ref=f43e274]: Nagar na zaworach dławi powietrze, czysty dolot oddaje je silnikowi
+      - generic [ref=f43e276]:
+        - generic [ref=f43e277]:
+          - paragraph [ref=f43e278]: Sterownik skrzyni
+          - heading "Programowanie skrzyń biegów (TCU)" [level=2] [ref=f43e279]
+          - paragraph [ref=f43e280]: Skrzynia automatyczna ma własny komputer. To on decyduje, kiedy zmienić bieg, jak szybko to zrobić i ile momentu przepuścić przez sprzęgła. Po chip tuningu większy moment obrotowy silnika może nie zostać zrealizowany, jeśli limitery zapisane w skrzyni biegów na to nie pozwolą.
+          - paragraph [ref=f43e281]: "Programujemy TCU pod nowe parametry silnika: szybsza zmiana przełożeń, wyższy limit momentu na sprzęgłach, wcześniejsza blokada konwertera, dopasowane punkty zmiany biegów. Przy większych przyrostach momentu to nie dodatek, tylko warunek, żeby zestaw pracował bezpiecznie."
+          - heading "Kiedy warto" [level=3] [ref=f43e282]
+          - list [ref=f43e283]:
+            - listitem [ref=f43e284]: Po chip tuningu auta z automatem, zwłaszcza DSG, ZF 8HP i skrzyniach dwusprzęgłowych.
+            - listitem [ref=f43e285]: Gdy powolny start powoduje dodatkowe emocje przy włączaniu się do ruchu
+            - listitem [ref=f43e286]: Gdy skrzynia zmienia biegi przy zbyt niskich obrotach silnika
+        - figure [ref=f43e288]:
+          - img "Lewarek automatycznej skrzyni biegów w konsoli środkowej" [ref=f43e289]
+      - generic [ref=f43e291]:
+        - generic [ref=f43e292]:
+          - paragraph [ref=f43e293]: ECU unlock
+          - heading "Odblokowywanie sterowników" [level=2] [ref=f43e294]
+          - paragraph [ref=f43e295]: Wiele sterowników od połowy 2020 roku jest zablokowana przed odczytem i programowaniem. Przez kilka lat oznaczało to brak jakichkolwiek możliwości modyfikacji oprogramowania – niezależnie czy związanej z podnoszeniem mocy, czy też z innymi usługami opartymi o zmiany w sofcie.
+          - paragraph [ref=f43e296]: Obecnie jest to już możliwe, choć wiele firm korzysta z możliwości odblokowania poprzez wysyłkę modułu za granicę, co oznacza unieruchomienie auta na kilka dni. U nas zablokowane ECU odblokowujemy na miejscu, więc cała operacja odbywa się podczas jednej wizyty.
+        - generic [ref=f43e297]:
+          - heading "Co robimy" [level=3] [ref=f43e298]
+          - list [ref=f43e299]:
+            - listitem [ref=f43e300]:
+              - generic [ref=f43e304]:
+                - heading "Odblokowanie na miejscu" [level=4] [ref=f43e305]
+                - text: Sterownik nie jedzie w paczce, więc nie ma ryzyka uszkodzenia w transporcie ani zgubionej przesyłki.
+            - listitem [ref=f43e306]:
+              - generic [ref=f43e310]:
+                - heading "Jeden dzień zamiast tygodnia" [level=4] [ref=f43e311]
+                - text: Odczyt, modyfikacja i zapis tego samego dnia, z pomiarem na hamowni przed i po.
+            - listitem [ref=f43e312]:
+              - generic [ref=f43e315]:
+                - heading "Również w nowych samochodach" [level=4] [ref=f43e316]
+                - text: Umożliwia wprowadzanie modyfikacji także w autach po 2020 roku produkcji.
+      - generic [ref=f43e318]:
+        - generic [ref=f43e319]:
+          - paragraph [ref=f43e320]: Zgłoszenie
+          - heading "Opisz, co dzieje się z pojazdem" [level=2] [ref=f43e321]
+          - paragraph [ref=f43e322]: Im więcej wiemy o objawach i o tym, co już było robione, tym szybciej powiemy, czy problem leży w oprogramowaniu, czy w mechanice.
+          - generic [ref=f43e323]:
+            - heading "VITESSE V-tech Łódź" [level=3] [ref=f43e324]
+            - generic [ref=f43e325]:
+              - term [ref=f43e326]: Warsztat
+              - definition [ref=f43e330]: ul. Kolumny 267C93-631 Łódź
+              - term [ref=f43e331]: Telefony
+              - definition [ref=f43e334]:
+                - text: "Tuning:"
+                - link "511 205 980" [ref=f43e335] [cursor=pointer]:
+                  - /url: tel:+48511205980
+                - text: ","
+                - link "515 660 210" [ref=f43e336] [cursor=pointer]:
+                  - /url: tel:+48515660210
+                - text: "Floty:"
+                - link "799 000 046" [ref=f43e337] [cursor=pointer]:
+                  - /url: tel:+48799000046
+                - text: "Biuro:"
+                - link "42 203 22 31" [ref=f43e338] [cursor=pointer]:
+                  - /url: tel:+48422032231
+              - term [ref=f43e339]: E-mail
+              - definition [ref=f43e343]:
+                - link "biuro@vitesse.auto.pl" [ref=f43e344] [cursor=pointer]:
+                  - /url: mailto:biuro@vitesse.auto.pl
+              - term [ref=f43e345]: Godziny
+              - definition [ref=f43e349]: poniedziałek - piątek 8:30-17:00, sobota 8:30-14:00
+          - paragraph [ref=f43e350]: Zakres prac przy układach oczyszczania spalin zależy od tego, gdzie i jak pojazd pracuje. Ustalamy go osobno dla każdego przypadku, dlatego nie publikujemy tu cennika.
+        - generic [ref=f43e352]:
+          - generic [ref=f43e353]:
+            - status
+            - list
+          - form "Contact form" [ref=f43e354]:
+            - generic [ref=f43e355]:
+              - paragraph [ref=f43e356]:
+                - generic [ref=f43e357]:
+                  - text: Imię i nazwisko
+                  - textbox "Imię i nazwisko" [ref=f43e359]:
+                    - /placeholder: Jan Kowalski
+              - paragraph [ref=f43e360]:
+                - generic [ref=f43e361]:
+                  - text: E-mail
+                  - textbox "E-mail" [ref=f43e363]:
+                    - /placeholder: jan@example.pl
+              - paragraph [ref=f43e364]:
+                - generic [ref=f43e365]:
+                  - text: Telefon
+                  - textbox "Telefon" [ref=f43e367]:
+                    - /placeholder: 600 000 000
+              - paragraph [ref=f43e368]:
+                - generic [ref=f43e369]:
+                  - text: Pojazd
+                  - textbox "Pojazd" [ref=f43e371]:
+                    - /placeholder: marka, model, rok, wersja silnika
+              - paragraph [ref=f43e372]:
+                - text: Zakres prac
+                - generic [ref=f43e374]:
+                  - generic [ref=f43e376] [cursor=pointer]:
+                    - checkbox "DPF / FAP" [ref=f43e377]
+                    - generic [ref=f43e378]: DPF / FAP
+                  - generic [ref=f43e380] [cursor=pointer]:
+                    - checkbox "EGR" [ref=f43e381]
+                    - generic [ref=f43e382]: EGR
+                  - generic [ref=f43e384] [cursor=pointer]:
+                    - checkbox "SCR / AdBlue" [ref=f43e385]
+                    - generic [ref=f43e386]: SCR / AdBlue
+                  - generic [ref=f43e388] [cursor=pointer]:
+                    - checkbox "Start&Stop" [ref=f43e389]
+                    - generic [ref=f43e390]: Start&Stop
+                  - generic [ref=f43e392] [cursor=pointer]:
+                    - checkbox "Ciśnienie oleju" [ref=f43e393]
+                    - generic [ref=f43e394]: Ciśnienie oleju
+                  - generic [ref=f43e396] [cursor=pointer]:
+                    - checkbox "Temperatura pracy silnika" [ref=f43e397]
+                    - generic [ref=f43e398]: Temperatura pracy silnika
+                  - generic [ref=f43e400] [cursor=pointer]:
+                    - checkbox "Klapy wirowe" [ref=f43e401]
+                    - generic [ref=f43e402]: Klapy wirowe
+                  - generic [ref=f43e404] [cursor=pointer]:
+                    - checkbox "Limitery prędkości lub obrotów" [ref=f43e405]
+                    - generic [ref=f43e406]: Limitery prędkości lub obrotów
+                  - generic [ref=f43e408] [cursor=pointer]:
+                    - checkbox "Druga sonda lambda" [ref=f43e409]
+                    - generic [ref=f43e410]: Druga sonda lambda
+                  - generic [ref=f43e412] [cursor=pointer]:
+                    - checkbox "Dawka rozruchowa" [ref=f43e413]
+                    - generic [ref=f43e414]: Dawka rozruchowa
+                  - generic [ref=f43e416] [cursor=pointer]:
+                    - checkbox "Pompa powietrza SAI (Subaru)" [ref=f43e417]
+                    - generic [ref=f43e418]: Pompa powietrza SAI (Subaru)
+                  - generic [ref=f43e420] [cursor=pointer]:
+                    - checkbox "Czyszczenie układu dolotowego" [ref=f43e421]
+                    - generic [ref=f43e422]: Czyszczenie układu dolotowego
+                  - generic [ref=f43e424] [cursor=pointer]:
+                    - checkbox "Skrzynia biegów (TCU)" [ref=f43e425]
+                    - generic [ref=f43e426]: Skrzynia biegów (TCU)
+                  - generic [ref=f43e428] [cursor=pointer]:
+                    - checkbox "Odblokowanie sterownika" [ref=f43e429]
+                    - generic [ref=f43e430]: Odblokowanie sterownika
+              - paragraph [ref=f43e431]:
+                - generic [ref=f43e432]:
+                  - text: Opis problemu
+                  - textbox "Opis problemu" [ref=f43e434]:
+                    - /placeholder: Jakie błędy pokazuje sterownik? Co już było robione?
+              - paragraph [ref=f43e435]:
+                - generic [ref=f43e439] [cursor=pointer]:
+                  - checkbox "Wyrażam zgodę na kontakt w sprawie mojego zapytania. Administratorem danych jest VITESSE V-tech Łódź. Podanie danych jest dobrowolne, a zgodę mogę wycofać w każdej chwili." [ref=f43e440]
+                  - generic [ref=f43e441]: Wyrażam zgodę na kontakt w sprawie mojego zapytania. Administratorem danych jest VITESSE V-tech Łódź. Podanie danych jest dobrowolne, a zgodę mogę wycofać w każdej chwili.
+              - paragraph [ref=f43e442]:
+                - button "Wyślij zgłoszenie" [disabled] [ref=f43e443]
+  - contentinfo [ref=f43e444]:
+    - generic [ref=f43e445]:
+      - generic [ref=f43e446]:
+        - generic [ref=f43e447]:
+          - link "Vitesse" [ref=f43e448] [cursor=pointer]:
+            - /url: http://localhost:8090/
+            - img "Vitesse" [ref=f43e449]
+          - generic [ref=f43e452]:
+            - generic [ref=f43e453]: Chip tuning, PowerChipy, modyfikacje ECU i pomiary na hamowni 4×4 w Łodzi.Autoryzacja V-tech od 2008 roku.
+            - generic [ref=f43e454]: ul. Kolumny 267C 93-631 Łódź
+        - generic [ref=f43e455]:
+          - heading "Usługi" [level=4] [ref=f43e456]
+          - list [ref=f43e457]:
+            - listitem [ref=f43e458]:
+              - link "Chip tuning osobowe i kampery" [ref=f43e459] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/chip-tuning/
+            - listitem [ref=f43e460]:
+              - link "Oferta dla flot B2B" [ref=f43e461] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/oferta-dla-flot/
+            - listitem [ref=f43e462]:
+              - link "PowerChip Volvo VEA" [ref=f43e463] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/powerboxy/
+            - listitem [ref=f43e464]:
+              - link "Usługi DPF / EGR / SCR" [ref=f43e465] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/dodatkowe-uslugi-ecu/
+            - listitem [ref=f43e466]:
+              - link "Hamownia motocyklowa i 4×4" [ref=f43e467] [cursor=pointer]:
+                - /url: http://localhost:8090/hamownia/
+            - listitem [ref=f43e468]:
+              - link "Modyfikacje EV i hybryd" [ref=f43e469] [cursor=pointer]:
+                - /url: http://localhost:8090/ev-hybryda/
+        - generic [ref=f43e470]:
+          - heading "Strefa klienta" [level=4] [ref=f43e471]
+          - list [ref=f43e472]:
+            - listitem [ref=f43e473]:
+              - link "O nas" [ref=f43e474] [cursor=pointer]:
+                - /url: http://localhost:8090/o-nas/
+            - listitem [ref=f43e475]:
+              - link "Regulamin" [ref=f43e476] [cursor=pointer]:
+                - /url: http://localhost:8090/regulamin/
+            - listitem [ref=f43e477]:
+              - link "2 lata gwarancji" [ref=f43e478] [cursor=pointer]:
+                - /url: http://localhost:8090/gwarancja/
+            - listitem [ref=f43e479]:
+              - link "Najczęstsze pytania" [ref=f43e480] [cursor=pointer]:
+                - /url: http://localhost:8090/faq/
+            - listitem [ref=f43e481]:
+              - link "Polityka prywatności" [ref=f43e482] [cursor=pointer]:
+                - /url: http://localhost:8090/polityka-prywatnosci/
+        - generic [ref=f43e483]:
+          - heading "Kontakt" [level=4] [ref=f43e484]
+          - generic [ref=f43e485]:
+            - generic [ref=f43e486]:
+              - text: "Tuning:"
+              - link "511 205 980" [ref=f43e487] [cursor=pointer]:
+                - /url: tel:+48511205980
+              - text: ","
+              - link "515 660 210" [ref=f43e488] [cursor=pointer]:
+                - /url: tel:+48515660210
+            - generic [ref=f43e489]:
+              - text: "Floty:"
+              - link "799 000 046" [ref=f43e490] [cursor=pointer]:
+                - /url: tel:+48799000046
+            - generic [ref=f43e491]:
+              - text: "Biuro:"
+              - link "42 203 22 31" [ref=f43e492] [cursor=pointer]:
+                - /url: tel:+48422032231
+            - link "biuro@vitesse.auto.pl" [ref=f43e494] [cursor=pointer]:
+              - /url: mailto:biuro@vitesse.auto.pl
+            - generic [ref=f43e495]: poniedziałek - piątek 8:30-17:00, sobota 8:30-14:00
+          - link "Umów wizytę" [ref=f43e496] [cursor=pointer]:
+            - /url: http://localhost:8090/kontakt/
+      - generic [ref=f43e497]: © 2026 VITESSE V-tech Łódź

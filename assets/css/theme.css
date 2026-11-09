@@ -798,6 +798,13 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-dchart__nm{stroke-dasharray:7 5}
 .vts-dchart__hp.is-po,.vts-dchart__nm.is-po{stroke:var(--vts-accent);
   filter:drop-shadow(0 0 4px rgba(244,106,0,.55))}
+/* schemat kanału dolotowego ([vts_dolot_schemat]) */
+.vts-dolot__wall{fill:none;stroke:var(--vts-dim);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+.vts-dolot__valve{fill:var(--vts-surface-2);stroke:var(--vts-muted);stroke-width:2;stroke-linejoin:round}
+.vts-dolot__nagar{fill:var(--vts-dim);opacity:.85;stroke:none}
+.vts-dolot__flow,.vts-dolot__head{fill:none;stroke:var(--vts-accent);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.vts-dolot__flow.is-przed,.vts-dolot__head.is-przed{stroke:var(--vts-dim);stroke-width:1.8;stroke-dasharray:3 5}
+.vts-dolot__head.is-przed{stroke-dasharray:none}
 .vts-dchart__lbl{font-family:var(--vts-font-mono);font-size:12px;fill:var(--vts-muted);letter-spacing:.06em}
 .vts-dchart__lbl.is-po{fill:var(--vts-accent-ink)}
 .vts-dchart__foot{font-family:var(--vts-font-mono);font-size:11px;fill:var(--vts-dim);letter-spacing:.06em}

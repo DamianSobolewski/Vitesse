@@ -1315,6 +1315,50 @@ add_shortcode('vts_wykres_pogladowy', function () {
     return ob_get_clean();
 });
 
+/* -------------------------------------------------- schemat kanału dolotowego
+ *
+ * Rysunek przy usłudze „Czyszczenie układów dolotowych" na stronie dodatkowych
+ * usług ECU. Zastępuje zdjęcie kanałów w głowicy, którego klient nie dostarczył
+ * (#167). Rysunek poglądowy: przekrój kanału z zaworem przed i po czyszczeniu.
+ */
+add_shortcode('vts_dolot_schemat', function () {
+    ob_start(); ?>
+    <figure class="vts-photo vts-photo--svg vts-dolot">
+      <svg viewBox="0 0 640 400" role="img"
+           aria-label="Schemat poglądowy: kanał dolotowy z zaworem przed i po czyszczeniu z nagaru">
+        <?php foreach ([0 => 20, 1 => 340] as $po => $tx) : ?>
+        <g transform="translate(<?= $tx ?> 0)" class="<?= $po ? 'is-po' : '' ?>">
+          <text class="vts-dchart__lbl<?= $po ? ' is-po' : '' ?>" x="140" y="34" text-anchor="middle"><?= $po ? 'PO CZYSZCZENIU' : 'PRZED CZYSZCZENIEM' ?></text>
+          <!-- kanał, gniazdo zaworu i komora spalania -->
+          <path class="vts-dolot__wall" d="M 80 56 V 206 C 80 221 70 231 55 238 H 20 V 318 H 260 V 238 H 225 C 210 231 200 221 200 206 V 56"/>
+          <!-- zawór -->
+          <rect class="vts-dolot__valve" x="135" y="46" width="10" height="196" rx="2"/>
+          <path class="vts-dolot__valve" d="M 108 250 L 172 250 L 204 268 L 76 268 Z"/>
+          <?php if (!$po) : ?>
+            <!-- nagar na ściankach, trzonku i grzybku -->
+            <path class="vts-dolot__nagar" d="M 80 90 C 98 96 100 130 92 150 C 98 170 96 196 82 206 V 90 Z"/>
+            <path class="vts-dolot__nagar" d="M 200 100 C 184 108 180 140 190 160 C 184 182 186 198 198 206 V 100 Z"/>
+            <ellipse class="vts-dolot__nagar" cx="140" cy="146" rx="14" ry="40"/>
+            <path class="vts-dolot__nagar" d="M 104 250 C 120 240 160 240 176 250 L 172 254 L 108 254 Z"/>
+            <path class="vts-dolot__flow is-przed" d="M 112 64 V 130 M 168 64 V 130"/>
+            <path class="vts-dolot__head is-przed" d="M 106 122 L 112 132 L 118 122 M 162 122 L 168 132 L 174 122"/>
+          <?php else : ?>
+            <path class="vts-dolot__flow" d="M 108 64 V 214 C 108 228 98 240 84 250 M 172 64 V 214 C 172 228 182 240 196 250"/>
+            <path class="vts-dolot__head" d="M 76 244 L 84 254 L 92 246 M 188 246 L 196 254 L 204 244"/>
+          <?php endif; ?>
+          <text class="vts-dchart__lbl" x="140" y="304" text-anchor="middle">komora spalania</text>
+          <text class="vts-dchart__lbl<?= $po ? ' is-po' : '' ?>" x="140" y="346" text-anchor="middle"><?= $po ? 'pełny przepływ powietrza' : 'nagar zwęża kanał' ?></text>
+        </g>
+        <?php endforeach; ?>
+        <text class="vts-dchart__foot" x="320" y="392" text-anchor="middle">schemat poglądowy · przekrój kanału dolotowego z zaworem</text>
+      </svg>
+      <figcaption><span class="vts-photo__e">Co czyścimy</span>
+        <b>Nagar na zaworach dławi powietrze, czysty dolot oddaje je silnikowi</b></figcaption>
+    </figure>
+    <?php
+    return ob_get_clean();
+});
+
 /* ------------------------------------------------------------------- FAQ */
 
 /** Jedno źródło pytań - używane na stronie głównej, w FAQ i w JSON-LD. */
