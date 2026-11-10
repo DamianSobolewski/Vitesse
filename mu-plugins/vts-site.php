@@ -33,6 +33,12 @@ add_action('wp_enqueue_scripts', function () {
             wp_enqueue_script("vts-{$handle}", VTS_ASSETS_URL . '/' . $rel, [], vts_asset_ver($rel), true);
         }
     }
+
+    // Flaga dla power-search.js: przycisk „Zobacz wykres mocy" w wyniku konfiguratora V-techa.
+    if (wp_script_is('vts-power-search', 'enqueued')) {
+        wp_add_inline_script('vts-power-search',
+            'window.vtsVtCharts=' . (vts_feature('vt_charts') ? 'true' : 'false') . ';', 'before');
+    }
 }, 20);
 
 /** hello-elementor dokłada własne style, które kolidują z naszym systemem. */

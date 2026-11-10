@@ -1,0 +1,336 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e3]:
+    - generic [ref=f1e4]: Łódź, ul. Kolumny 267C · poniedziałek - piątek 8:30-17:00, sobota 8:30-14:00
+    - generic [ref=f1e5]:
+      - generic [ref=f1e6]:
+        - text: Tuning
+        - link "511 205 980" [ref=f1e7] [cursor=pointer]:
+          - /url: tel:+48511205980
+        - text: ","
+        - link "515 660 210" [ref=f1e8] [cursor=pointer]:
+          - /url: tel:+48515660210
+      - generic [ref=f1e9]:
+        - text: Floty
+        - link "799 000 046" [ref=f1e10] [cursor=pointer]:
+          - /url: tel:+48799000046
+  - banner [ref=f1e11]:
+    - generic [ref=f1e12]:
+      - link "Vitesse" [ref=f1e13] [cursor=pointer]:
+        - /url: http://localhost:8090/
+        - img "Vitesse" [ref=f1e14]
+      - navigation "Nawigacja główna" [ref=f1e17]:
+        - list [ref=f1e18]:
+          - listitem [ref=f1e19]:
+            - link "Strona główna" [ref=f1e20] [cursor=pointer]:
+              - /url: http://localhost:8090/
+          - listitem [ref=f1e21]:
+            - link "Oferta" [ref=f1e22] [cursor=pointer]:
+              - /url: http://localhost:8090/podnoszenie-mocy/
+          - listitem [ref=f1e23]:
+            - link "EV / Hybryda" [ref=f1e24] [cursor=pointer]:
+              - /url: http://localhost:8090/ev-hybryda/
+          - listitem [ref=f1e25]:
+            - link "Hamownia" [ref=f1e26] [cursor=pointer]:
+              - /url: http://localhost:8090/hamownia/
+          - listitem [ref=f1e27]:
+            - link "O nas" [ref=f1e28] [cursor=pointer]:
+              - /url: http://localhost:8090/o-nas/
+          - listitem [ref=f1e29]:
+            - link "Katalog przyrostów" [ref=f1e30] [cursor=pointer]:
+              - /url: http://localhost:8090/chiptuning/
+          - listitem [ref=f1e31]:
+            - link "Blog" [ref=f1e32] [cursor=pointer]:
+              - /url: http://localhost:8090/blog/
+      - link "Umów wizytę" [ref=f1e33] [cursor=pointer]:
+        - /url: http://localhost:8090/kontakt/
+  - link "Skip to content" [ref=f1e34] [cursor=pointer]:
+    - /url: "#content"
+  - main [ref=f1e35]:
+    - generic [ref=f1e36]:
+      - generic [ref=f1e39]:
+        - navigation "Ścieżka" [ref=f1e40]:
+          - link "Start" [ref=f1e41] [cursor=pointer]:
+            - /url: http://localhost:8090/
+          - text: /
+          - link "Podnoszenie mocy" [ref=f1e42] [cursor=pointer]:
+            - /url: http://localhost:8090/podnoszenie-mocy/
+          - text: /Chip tuning / PowerChipy
+        - generic [ref=f1e43]:
+          - paragraph [ref=f1e44]: Chip tuning Łódź
+          - heading "Chip tuning / PowerChipy" [level=1] [ref=f1e45]
+          - paragraph [ref=f1e46]: Więcej mocy i momentu z rezerw, które producent zostawił w silniku. Program lub moduł PowerChip indywidualnie strojony do danego egzemplarza. Potwierdzenie efektów na hamowni, tydzień na przetestowanie na co dzień.
+      - generic [ref=f1e48]:
+        - generic [ref=f1e49]:
+          - paragraph [ref=f1e50]: Wyszukiwarka mocy
+          - heading "Sprawdź, ile zyska Twój silnik" [level=2] [ref=f1e51]
+          - generic [ref=f1e52]:
+            - paragraph [ref=f1e53]: Wybierz markę, model i wersję silnika. Zobaczysz, jakich efektów możesz oczekiwać po wizycie u nas, zarówno po chip tuningu, jak i po montażu PowerChipa.
+            - paragraph [ref=f1e54]: Chip tuning to zmiana parametrów w oprogramowaniu sterownika silnika, m.in. dawki i ciśnienia paliwa, ciśnienia doładowania i kąta wtrysku, przy kontroli temperatur w dolocie i wydechu.
+            - paragraph [ref=f1e55]: PowerChip to zewnętrzne urządzenie wpinane wtyczkami do wiązki silnika. Montujemy go tam, gdzie nie ma możliwości modyfikacji programu, oraz w autach na gwarancji. Jest możliwość sterowania modułem z poziomu aplikacji w telefonie.
+          - paragraph [ref=f1e56]: Nie ma Twojej wersji w katalogu? Zadzwoń. Katalog nie obejmuje wszystkiego, nad czym pracujemy.
+        - generic [ref=f1e60]:
+          - generic [ref=f1e61]:
+            - generic [ref=f1e62]: Wybierz markę
+            - combobox "Wybierz markę" [ref=f1e63] [cursor=pointer]:
+              - option "Wybierz markę" [selected]
+              - option "Abarth"
+              - option "Aixam"
+              - option "Alfa Romeo"
+              - option "Aston Martin"
+              - option "Audi"
+              - option "BAIC"
+              - option "BMW"
+              - option "Cadillac"
+              - option "Chatenet"
+              - option "Chevrolet"
+              - option "Chrysler"
+              - option "Citroen"
+              - option "Cupra"
+              - option "Dacia"
+              - option "Daewoo"
+              - option "DAF"
+              - option "Dodge"
+              - option "DS"
+              - option "Fiat"
+              - option "Ford"
+              - option "Foton"
+              - option "GAZ"
+              - option "Honda"
+              - option "Hyundai"
+              - option "Infiniti"
+              - option "Isuzu"
+              - option "Iveco"
+              - option "Jaecoo"
+              - option "Jaguar"
+              - option "Jeep"
+              - option "Kia"
+              - option "Lancia"
+              - option "Land Rover"
+              - option "Lexus"
+              - option "Ligier"
+              - option "Maserati"
+              - option "Mazda"
+              - option "Mercedes"
+              - option "Mercedes Truck"
+              - option "MG"
+              - option "Microcar"
+              - option "Mini"
+              - option "Mitsubishi"
+              - option "Nissan"
+              - option "Omoda"
+              - option "Opel"
+              - option "Peugeot"
+              - option "Porsche"
+              - option "Renault"
+              - option "Saab"
+              - option "Scania"
+              - option "Seat"
+              - option "Skoda"
+              - option "Smart"
+              - option "SsangYong"
+              - option "Subaru"
+              - option "Suzuki"
+              - option "Toyota"
+              - option "Volkswagen"
+              - option "Volvo"
+          - generic [ref=f1e64]:
+            - generic [ref=f1e65]: Wybierz model
+            - combobox "Wybierz model" [disabled] [ref=f1e66]:
+              - option "Wybierz model" [selected]
+          - generic [ref=f1e67]:
+            - generic [ref=f1e68]: Wybierz generację
+            - combobox "Wybierz generację" [disabled] [ref=f1e69]:
+              - option "Wybierz generację" [selected]
+          - generic [ref=f1e70]:
+            - generic [ref=f1e71]: Wybierz silnik
+            - combobox "Wybierz silnik" [disabled] [ref=f1e72]:
+              - option "Wybierz silnik" [selected]
+          - generic [ref=f1e73]:
+            - generic [ref=f1e74]: Wybierz rocznik
+            - combobox "Wybierz rocznik" [disabled] [ref=f1e75]:
+              - option "Wybierz rocznik" [selected]
+      - generic [ref=f1e77]:
+        - paragraph [ref=f1e78]: Kategorie pojazdów
+        - heading "Chip tuning dla ośmiu rodzajów pojazdów" [level=2] [ref=f1e79]
+        - paragraph [ref=f1e80]: Każda kategoria dostaje inny program, bo inaczej pracuje silnik w aucie osobowym, a inaczej w kamperze, który zawsze jeździ z pełnym obciążeniem.
+        - generic [ref=f1e81]:
+          - generic [ref=f1e82]:
+            - heading "Samochody osobowe" [level=3] [ref=f1e87]
+            - paragraph [ref=f1e88]: Diesel, benzyna, LPG. Z turbosprężarką i bez. Manual i automat. Więcej momentu w szerokim zakresie obrotów, więcej frajdy, większe bezpieczeństwo.
+          - generic [ref=f1e89]:
+            - heading "Samochody dostawcze" [level=3] [ref=f1e95]
+            - paragraph [ref=f1e96]: Auta obciążone i jeżdżące dużo. Program pod pracę z ładunkiem i niższe spalanie na trasie, zamiast rekordu na hamowni.
+          - generic [ref=f1e97]:
+            - heading "Ciężarowe i autobusy" [level=3] [ref=f1e104]
+            - paragraph [ref=f1e105]: Ciągniki siodłowe, podwozia, wywrotki, autokary. 18 lat specjalizacji w modyfikacjach tego typu pojazdów. Większa moc, mniejsze spalanie, duże oszczędności.
+          - generic [ref=f1e106]:
+            - heading "Kampery" [level=3] [ref=f1e112]
+            - paragraph [ref=f1e113]: Ciężki pojazd na bazie dostawczej. Program pod podjazdy i długą pracę silnika przy pełnym obciążeniu. Lżejsza jazda, mniejsze spalanie.
+          - generic [ref=f1e114]:
+            - heading "Ciągniki i maszyny budowlane" [level=3] [ref=f1e121]
+            - paragraph [ref=f1e122]: Pomagamy przy problemach z DPF, SCR, EGR. John Deere, Case, New Holland, Fendt, Claas, Deutz Fahr, Massey Ferguson, Caterpillar. Przy maszynach często przyjeżdżamy na miejsce.
+          - generic [ref=f1e123]:
+            - heading "EV i hybrydy" [level=3] [ref=f1e127]
+            - paragraph [ref=f1e128]: Pomagamy zwiększyć zasięg w samochodach elektrycznych i hybrydowych dzięki urządzeniom, które możesz sam zamontować. Sprzedajemy także wallboxy, m.in. z programem ochrony baterii.
+          - generic [ref=f1e129]:
+            - heading "Skrzynie biegów (TCU)" [level=3] [ref=f1e133]
+            - paragraph [ref=f1e134]: Sterownik skrzyni to osobny komputer. Zmieniamy progi zmiany biegów i limit momentu, który przenoszą sprzęgła.
+          - generic [ref=f1e135]:
+            - heading "Auta na gwarancji i w leasingu" [level=3] [ref=f1e139]
+            - paragraph [ref=f1e140]: Tak, w tych autach również można bezpiecznie podnosić moc. Do tego służą nowoczesne PowerChipy, które po odpięciu wtyczek nie zostawiają żadnych śladów.
+      - generic [ref=f1e142]:
+        - generic [ref=f1e143]:
+          - paragraph [ref=f1e144]: Gwarancja i leasing
+          - heading "Podnoszenie mocy w leasingu i na gwarancji" [level=2] [ref=f1e145]
+          - paragraph [ref=f1e146]: Często spotykamy się z tym, że klienci decydują się na modyfikację „już niedługo, bo kończy się leasing lub gwarancja”. A przecież można to zrobić znacznie wcześniej, także w nowym aucie.
+          - paragraph [ref=f1e147]: "Leasing nie stanowi żadnego problemu: można wykonać chip tuning. Do aut na gwarancji mamy w ofercie moduł PowerChip, który przed wizytą w serwisie można łatwo zdemontować. Nie pozostawia to żadnych śladów, a samochód z czystym sumieniem można oddać na serwis."
+          - paragraph [ref=f1e148]: Jeśli nie chcesz sam demontować i ponownie montować modułu, możemy to zrobić za Ciebie.
+        - list [ref=f1e150]:
+          - listitem [ref=f1e151]:
+            - generic [ref=f1e156]:
+              - heading "PowerChip zamiast zapisu w sterowniku" [level=4] [ref=f1e157]
+              - generic [ref=f1e158]:
+                - text: Moduł zdejmujesz przed przeglądem lub naprawą w ASO. W sterowniku nie pozostają żadne ślady.
+                - link "Zobacz PowerChipy" [ref=f1e159] [cursor=pointer]:
+                  - /url: /podnoszenie-mocy/powerboxy/
+                - text: .
+          - listitem [ref=f1e160]:
+            - generic [ref=f1e164]:
+              - heading "Oryginał zawsze zapisany" [level=4] [ref=f1e165]
+              - text: Kopia fabrycznego oprogramowania zostaje u nas. Gdyby zaszła taka potrzeba, przywrócimy program fabryczny niezależnie od tego, czy zdecydujesz się na to za tydzień, czy za kilka lat.
+          - listitem [ref=f1e166]:
+            - generic [ref=f1e170]:
+              - heading "Informacja o ryzyku" [level=4] [ref=f1e171]
+              - text: PowerChip po demontażu nie pozostawia żadnych śladów. Jeśli jednak zapomnisz lub zignorujesz konieczność zdjęcia urządzenia, serwis ma prawo odmówić naprawy gwarancyjnej lub nawet odebrać gwarancję na pojazd.
+      - generic [ref=f1e173]:
+        - generic [ref=f1e174]:
+          - paragraph [ref=f1e175]: Strefa kamperów
+          - heading "Chip tuning kamperów i kampervanów" [level=2] [ref=f1e176]
+          - paragraph [ref=f1e177]: "Kamper to podwozie dostawcze obciążone mocniej, niż producent zakładał dla wersji towarowej. Czujesz to na każdym dłuższym podjeździe i przy wyprzedzaniu z pełnymi zbiornikami. Przygotowując program, bierzemy pod uwagę trzy rzeczy:"
+          - list [ref=f1e178]:
+            - listitem [ref=f1e179]:
+              - strong [ref=f1e180]: Podjazdy.
+              - text: Wyższy moment w całym zakresie obrotów, więc rzadziej redukujesz biegi.
+            - listitem [ref=f1e181]:
+              - strong [ref=f1e182]: Praca przy pełnym obciążeniu.
+              - text: Stabilna temperatura i doładowanie przy długim, równomiernym wysiłku.
+            - listitem [ref=f1e183]:
+              - strong [ref=f1e184]: Spalanie w trasie.
+              - text: Silnik pracuje z większą lekkością, co przekłada się na niższe zużycie paliwa.
+          - paragraph [ref=f1e185]: Pomiary mocy wykonujemy na hamowni przystosowanej do długiego rozstawu osi oraz wysokiego nadwozia z wyposażeniem dodatkowym na dachu. Obsługujemy pojazdy o całkowitej wysokości do 365 cm.
+        - figure [ref=f1e187]:
+          - img "Kamper na rolkach hamowni w hali Vitesse" [ref=f1e188]
+      - generic [ref=f1e189]:
+        - generic [ref=f1e190]:
+          - generic [ref=f1e191]:
+            - paragraph [ref=f1e192]: ECU unlock
+            - heading "Odblokowywanie sterownika silnika na miejscu, od ręki" [level=2] [ref=f1e193]
+            - paragraph [ref=f1e194]: Od połowy 2020 roku sterowniki Bosch w większości przypadków są fabrycznie zablokowane przed odczytem i programowaniem. Do niedawna nie było żadnej możliwości pracy z takimi sterownikami. Niektóre firmy mają już możliwość odblokowania ich po wysyłce za granicę, my robimy to na miejscu.
+            - paragraph [ref=f1e195]: Twoje auto jest gotowe tego samego dnia.
+          - figure [ref=f1e197]:
+            - img "Sterownik silnika wpięty w stanowisko do programowania, obok laptop z oprogramowaniem" [ref=f1e198]
+        - generic [ref=f1e200]:
+          - generic [ref=f1e201]:
+            - heading "Kilka godzin zamiast kilku dni" [level=3] [ref=f1e205]
+            - paragraph [ref=f1e206]: Odblokowanie, odczyt, modyfikacja i zapis tego samego dnia. Możesz auto zostawić, ale możesz również zaczekać na miejscu, przy kawie.
+          - generic [ref=f1e207]:
+            - heading "Sterownik nie krąży po Europie" [level=3] [ref=f1e211]
+            - paragraph [ref=f1e212]: Moduł nie jedzie w paczce, więc nie ma ryzyka uszkodzenia w transporcie ani zagubienia przesyłki.
+          - generic [ref=f1e213]:
+            - heading "Dodatkowe koszty" [level=3] [ref=f1e217]
+            - paragraph [ref=f1e218]: Odblokowanie wiąże się z pewnym ryzykiem z naszej strony oraz wymaga specjalistycznego sprzętu. W zabezpieczonych sterownikach sam program również napisany jest inaczej niż w starszych wersjach, dlatego koszt tej usługi jest wyższy.
+      - generic [ref=f1e220]:
+        - paragraph [ref=f1e221]: Etapy modyfikacji
+        - 'heading "Stage 1 i Stage 2: czym się różnią" [level=2] [ref=f1e222]'
+        - paragraph [ref=f1e223]: Nazwy etapów nie są normą branżową, więc opisujemy, co przez nie rozumiemy. Granicą jest to, czy pojazd ma za sobą zmiany mechaniczne.
+        - generic [ref=f1e224]:
+          - generic [ref=f1e225]:
+            - generic [ref=f1e226]: Stage 1
+            - heading "Bez zmian mechanicznych" [level=3] [ref=f1e227]
+            - paragraph [ref=f1e228]: Zmiana wyłącznie w oprogramowaniu, na fabrycznym osprzęcie. Wykorzystujemy fabryczne rezerwy silnika.
+            - list [ref=f1e229]:
+              - listitem [ref=f1e230]: Silnik i osprzęt pozostają seryjne
+              - listitem [ref=f1e231]: Najczęstszy wybór, obejmuje większość naszych realizacji
+              - listitem [ref=f1e232]: "Odwracalny: oryginalne oprogramowanie zapisujemy przed każdą zmianą"
+              - listitem [ref=f1e233]: Zakres przyrostu sprawdzisz w wyszukiwarce mocy
+          - generic [ref=f1e234]:
+            - generic [ref=f1e235]: Stage 2
+            - heading "Po modyfikacjach mechanicznych" [level=3] [ref=f1e236]
+            - paragraph [ref=f1e237]: Program dostrojony do silnika po modyfikacjach w układzie dolotowym, wydechowym, rozrządu itp. Modyfikacje mechaniczne wykonujemy sami bądź dostrajamy program do zmian już istniejących. Sugerujemy wstępny pomiar przed jakimikolwiek zmianami mechanicznymi, żeby ustalić punkt odniesienia.
+            - list [ref=f1e238]:
+              - listitem [ref=f1e239]: Wymaga sprawnego, zmierzonego wcześniej pojazdu
+              - listitem [ref=f1e240]: Zwykle łączy się z modyfikacją sterownika skrzyni (TCU)
+              - listitem [ref=f1e241]: Zakres ustalamy po pomiarze seryjnym
+  - contentinfo [ref=f1e242]:
+    - generic [ref=f1e243]:
+      - generic [ref=f1e244]:
+        - generic [ref=f1e245]:
+          - link "Vitesse" [ref=f1e246] [cursor=pointer]:
+            - /url: http://localhost:8090/
+            - img "Vitesse" [ref=f1e247]
+          - generic [ref=f1e250]:
+            - generic [ref=f1e251]: Chip tuning, PowerChipy, modyfikacje ECU i pomiary na hamowni 4×4 w Łodzi.Autoryzacja V-tech od 2008 roku.
+            - generic [ref=f1e252]: ul. Kolumny 267C 93-631 Łódź
+        - generic [ref=f1e253]:
+          - heading "Usługi" [level=4] [ref=f1e254]
+          - list [ref=f1e255]:
+            - listitem [ref=f1e256]:
+              - link "Chip tuning osobowe i kampery" [ref=f1e257] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/chip-tuning/
+            - listitem [ref=f1e258]:
+              - link "Oferta dla flot B2B" [ref=f1e259] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/oferta-dla-flot/
+            - listitem [ref=f1e260]:
+              - link "PowerChip Volvo VEA" [ref=f1e261] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/powerboxy/
+            - listitem [ref=f1e262]:
+              - link "Usługi DPF / EGR / SCR" [ref=f1e263] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/dodatkowe-uslugi-ecu/
+            - listitem [ref=f1e264]:
+              - link "Hamownia motocyklowa i 4×4" [ref=f1e265] [cursor=pointer]:
+                - /url: http://localhost:8090/hamownia/
+            - listitem [ref=f1e266]:
+              - link "Modyfikacje EV i hybryd" [ref=f1e267] [cursor=pointer]:
+                - /url: http://localhost:8090/ev-hybryda/
+        - generic [ref=f1e268]:
+          - heading "Strefa klienta" [level=4] [ref=f1e269]
+          - list [ref=f1e270]:
+            - listitem [ref=f1e271]:
+              - link "O nas" [ref=f1e272] [cursor=pointer]:
+                - /url: http://localhost:8090/o-nas/
+            - listitem [ref=f1e273]:
+              - link "Regulamin" [ref=f1e274] [cursor=pointer]:
+                - /url: http://localhost:8090/regulamin/
+            - listitem [ref=f1e275]:
+              - link "2 lata gwarancji" [ref=f1e276] [cursor=pointer]:
+                - /url: http://localhost:8090/gwarancja/
+            - listitem [ref=f1e277]:
+              - link "Najczęstsze pytania" [ref=f1e278] [cursor=pointer]:
+                - /url: http://localhost:8090/faq/
+            - listitem [ref=f1e279]:
+              - link "Polityka prywatności" [ref=f1e280] [cursor=pointer]:
+                - /url: http://localhost:8090/polityka-prywatnosci/
+        - generic [ref=f1e281]:
+          - heading "Kontakt" [level=4] [ref=f1e282]
+          - generic [ref=f1e283]:
+            - generic [ref=f1e284]:
+              - text: "Tuning:"
+              - link "511 205 980" [ref=f1e285] [cursor=pointer]:
+                - /url: tel:+48511205980
+              - text: ","
+              - link "515 660 210" [ref=f1e286] [cursor=pointer]:
+                - /url: tel:+48515660210
+            - generic [ref=f1e287]:
+              - text: "Floty:"
+              - link "799 000 046" [ref=f1e288] [cursor=pointer]:
+                - /url: tel:+48799000046
+            - generic [ref=f1e289]:
+              - text: "Biuro:"
+              - link "42 203 22 31" [ref=f1e290] [cursor=pointer]:
+                - /url: tel:+48422032231
+            - link "biuro@vitesse.auto.pl" [ref=f1e292] [cursor=pointer]:
+              - /url: mailto:biuro@vitesse.auto.pl
+            - generic [ref=f1e293]: poniedziałek - piątek 8:30-17:00, sobota 8:30-14:00
+          - link "Umów wizytę" [ref=f1e294] [cursor=pointer]:
+            - /url: http://localhost:8090/kontakt/
+      - generic [ref=f1e295]: © 2026 VITESSE V-tech Łódź

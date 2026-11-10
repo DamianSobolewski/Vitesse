@@ -73,6 +73,50 @@
     if (btn) { e.preventDefault(); openChart(btn); }
   });
 
+  /* Przycisk wykresu w wyniku konfiguratora V-techa (wtyczka VT Konfigurator).
+   * Wtyczka zwraca chart_url w /vt/v1/result, ale rysuje przycisk tylko w trybie
+   * właściciela (charts="1"), który dokłada też dane konkurencji. Kodu wtyczki nie
+   * ruszamy: podsłuchujemy odpowiedź i dopinamy przycisk do kafelków sami. */
+  var vtWynik = null;
+
+  function vtDopnij() {
+    if (!vtWynik) { return; }
+    var box = document.querySelector('.vtk-widget .vtk-result-box');
+    if (!box) { return; }
+    var karty = box.querySelectorAll('.vtk-card');
+    var tytul = box.querySelector('.vtk-result-title');
+    var opis = tytul ? tytul.textContent.replace(/^\s*Wyniki tuningu dla\s*/i, '') : '';
+    var klucze = ['powerchip', 'chip_tuning'].filter(function (k) { return vtWynik[k]; });
+    klucze.forEach(function (k, i) {
+      var karta = karty[i];
+      var url = vtWynik[k].chart_url;
+      if (!karta || !url || karta.querySelector('[data-vts-chart]')) { return; }
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'vts-ps__chart vts-ps__chart--card';
+      b.setAttribute('data-vts-chart', url);
+      b.setAttribute('data-vts-chart-alt', 'Wykres mocy V-tech: ' + opis);
+      b.textContent = 'Zobacz wykres mocy';
+      karta.appendChild(b);
+    });
+  }
+
+  if (window.vtsVtCharts && window.fetch) {
+    var fetchOrg = window.fetch;
+    window.fetch = function (input) {
+      var p = fetchOrg.apply(this, arguments);
+      var url = typeof input === 'string' ? input : (input && input.url) || '';
+      if (url.indexOf('/vt/v1/result') !== -1) {
+        p.then(function (r) { return r.clone().json(); })
+          .then(function (d) { vtWynik = d; setTimeout(vtDopnij, 0); })
+          .catch(function () {});
+      }
+      return p;
+    };
+    // Wynik rysuje się po odpowiedzi - obserwator łapie moment, w którym kafelki wchodzą do DOM.
+    new MutationObserver(vtDopnij).observe(document.body, { childList: true, subtree: true });
+  }
+
   /* Odliczanie liczby na ekranie. Przy wyłączonym ruchu wpisujemy od razu
      wartość końcową - nigdy przypadkową klatkę. */
   function licz(el, od, doo, sufiks, prefiks) {

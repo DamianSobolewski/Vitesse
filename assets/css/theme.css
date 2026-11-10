@@ -35,7 +35,8 @@ h1,h2,h3,h4{font-family:var(--vts-font-display);font-weight:700;letter-spacing:v
    inaczej każda podstrona krzyczy tak samo głośno jak wejście na serwis.
    Wcześniej wszystkie H1 miały 66 px, a katalog wyłamywał się na 44. */
 h1{font-size:var(--vts-step-3);letter-spacing:var(--vts-track-display);line-height:1.03}
-.vts-hero__in h1{font-size:var(--vts-step-4)}
+/* Tytuł podstrony ma ten sam rozmiar co H2 (uwaga klienta, XI 2026); duży H1 zostaje tylko w hero strony głównej. */
+.vts-hero--slider .vts-hero__in h1{font-size:var(--vts-step-4)}
 h2{font-size:var(--vts-step-3)}
 h3{font-size:var(--vts-step-1);font-weight:600;letter-spacing:var(--vts-track-tight)}
 h4{font-weight:600;letter-spacing:var(--vts-track-tight)}
@@ -826,6 +827,11 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-dolot .vts-dchart__lbl{font-size:16px;letter-spacing:.04em}
 .vts-dolot .vts-dchart__foot{font-size:16px}
 @media (prefers-reduced-motion:reduce){.vts-dolot__czast{display:none}}
+/* Schemat przy czyszczeniu dolotu: karta na pełną wysokość kolumny, rysunek wyśrodkowany, bez podpisu pod spodem. */
+#dolot .vts-split{align-items:stretch}
+#dolot .vts-svc__media{display:flex}
+#dolot .vts-dolot{flex:1;display:flex;align-items:center;justify-content:center}
+#dolot .vts-dolot svg{padding:var(--vts-gap-m);aspect-ratio:auto}
 .vts-dchart__lbl{font-family:var(--vts-font-mono);font-size:12px;fill:var(--vts-muted);letter-spacing:.06em}
 .vts-dchart__lbl.is-po{fill:var(--vts-accent-ink)}
 .vts-dchart__foot{font-family:var(--vts-font-mono);font-size:11px;fill:var(--vts-dim);letter-spacing:.06em}

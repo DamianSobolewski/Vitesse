@@ -1411,8 +1411,6 @@ add_shortcode('vts_dolot_schemat', function () {
         <?php endforeach; ?>
         <text class="vts-dchart__foot" x="310" y="388" text-anchor="middle">schemat poglądowy · przekrój kanału dolotowego z zaworem</text>
       </svg>
-      <figcaption><span class="vts-photo__e">Co czyścimy</span>
-        <b>Nagar na zaworach dławi powietrze, czysty dolot oddaje je silnikowi</b></figcaption>
     </figure>
     <?php
     return ob_get_clean();

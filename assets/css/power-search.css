@@ -135,6 +135,7 @@
 .vts-ps__chart:is(:hover,:focus,:active){background:transparent;color:var(--vts-accent);border-color:var(--vts-accent)}
 .vts-ps__chart:focus-visible{outline:2px solid var(--vts-accent);outline-offset:2px}
 .vts-ps__srv .vts-ps__chart{flex-basis:100%}
+.vtk-widget .vts-ps__chart--card{display:block;margin:var(--vts-gap-s) auto 0}
 @media (min-width:521px){.vts-ps__srv .vts-ps__chart{flex-basis:auto}}
 
 /* --- overlay z wykresem (jeden na stronę, dopina go power-search.js) ---------- */
