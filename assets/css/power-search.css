@@ -147,7 +147,11 @@
 .vts-chart-overlay__img{display:block;max-width:100%;max-height:82vh;object-fit:contain;
   background:#fff;border-radius:var(--vts-radius)}
 .vts-chart-overlay__src{margin:0;font-size:var(--vts-step--2);color:var(--vts-muted);text-align:center}
-.vts-chart-overlay__close{position:absolute;top:-14px;right:-14px;width:40px;height:40px;
+/* Krzyżyk w rogu ramki, nie poza nią (uwaga klienta 13.11.2026: „X się rozjechał").
+   Wcześniej -14px wystawało za ramkę i na wąskim ekranie było ucinane; glif × leżał
+   na linii bazowej zamiast w środku koła. */
+.vts-chart-overlay__close{position:absolute;top:8px;right:8px;width:40px;height:40px;
+  display:grid;place-items:center;padding:0;box-sizing:border-box;
   border-radius:50%;border:1px solid var(--vts-line-strong);background:var(--vts-surface);
   color:var(--vts-text);font-size:26px;line-height:1;cursor:pointer}
 .vts-chart-overlay__close:is(:hover,:focus,:active){

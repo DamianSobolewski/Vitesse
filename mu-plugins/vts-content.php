@@ -1194,7 +1194,9 @@ add_shortcode('vts_social_proof', function () {
 add_shortcode('vts_map', function () {
     $c     = vts_company();
     $adres = $c['street'] . ', ' . $c['postal_code'] . ' ' . $c['city'];
-    $q     = rawurlencode($adres);
+    // Z samym adresem Google podpisuje pineskę numerem budynku (13.11.2026),
+    // z nazwą firmy bierze wpis firmy i pokazuje „VITESSE".
+    $q     = rawurlencode($c['name'] . ', ' . $adres);
 
     return '<div class="vts-map">'
          . '<iframe src="https://maps.google.com/maps?q=' . $q . '&output=embed"'
@@ -1377,8 +1379,8 @@ add_shortcode('vts_dolot_schemat', function () {
             <path class="vts-dolot__stream<?= $k ?>" d="<?= $d ?>"/>
           <?php endforeach; ?>
 
-          <!-- zawór: trzonek i grzybek z fazą -->
-          <rect class="vts-dolot__valve" x="135" y="46" width="10" height="196" rx="2" fill="url(#vts-dolot-metal)"/>
+          <!-- zawór: trzonek wchodzi w grzybek (13.11.2026: połączyć elementy) -->
+          <rect class="vts-dolot__valve" x="135" y="46" width="10" height="208" rx="2" fill="url(#vts-dolot-metal)"/>
           <path class="vts-dolot__valve" d="M 108 250 L 172 250 L 204 268 L 76 268 Z" fill="url(#vts-dolot-metal)"/>
           <path class="vts-dolot__chamfer" d="M 108 250 L 172 250 M 86 262 L 194 262"/>
 
@@ -1410,6 +1412,107 @@ add_shortcode('vts_dolot_schemat', function () {
         </g>
         <?php endforeach; ?>
         <text class="vts-dchart__foot" x="310" y="388" text-anchor="middle">schemat poglądowy · przekrój kanału dolotowego z zaworem</text>
+      </svg>
+    </figure>
+    <?php
+    return ob_get_clean();
+});
+
+/* ------------------------------------------------------ schemat klap wirowych
+ *
+ * Rysunek przy usłudze „Klapy wirowe". Zastępuje zdjęcie przepustnicy, które
+ * nie pasowało do tematu (uwaga klienta 13.11.2026, #156). Ten sam język rysunku
+ * co schemat dolotu: przekrój kanału kolektora, po lewej klapa fabryczna, po prawej
+ * klapa zablokowana. Klasy .vts-dolot__* są wspólne, własne to .vts-klapa__*.
+ */
+add_shortcode('vts_klapy_schemat', function () {
+    // Tory powietrza: [smuga i strzałka, ...]. Fabrycznie klapa przymyka kanał i zostaje szczelina
+    // po lewej (powietrze zawirowuje), po zablokowaniu powietrze płynie dwoma pełnymi torami.
+    $tory = [
+        0 => ['M 96 66 V 146 C 96 170 104 180 120 188 C 150 196 164 214 154 228 C 146 240 126 236 128 224', 'M 164 66 V 120'],
+        1 => ['M 112 66 V 262', 'M 160 66 V 262'],
+    ];
+    ob_start(); ?>
+    <figure class="vts-photo vts-photo--svg vts-dolot vts-klapa">
+      <svg viewBox="14 22 592 370" role="img"
+           aria-label="Schemat poglądowy: kanał kolektora dolotowego z klapą wirową fabryczną i po zablokowaniu">
+        <defs>
+          <pattern id="vts-klapa-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line class="vts-dolot__hatch" x1="0" y1="0" x2="0" y2="7"/>
+          </pattern>
+          <linearGradient id="vts-klapa-fadeg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#000"/><stop offset=".3" stop-color="#fff"/><stop offset="1" stop-color="#fff"/>
+          </linearGradient>
+          <mask id="vts-klapa-fade" maskUnits="userSpaceOnUse" x="0" y="40" width="280" height="210">
+            <rect x="0" y="40" width="280" height="210" fill="url(#vts-klapa-fadeg)"/>
+          </mask>
+          <linearGradient id="vts-klapa-metal" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" class="vts-dolot__m0"/><stop offset=".5" class="vts-dolot__m1"/><stop offset="1" class="vts-dolot__m0"/>
+          </linearGradient>
+          <radialGradient id="vts-klapa-glow" cx=".5" cy=".12" r=".75">
+            <stop offset="0" class="vts-dolot__g0"/><stop offset="1" class="vts-dolot__g1"/>
+          </radialGradient>
+          <marker id="vts-klapa-grot" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto" markerUnits="strokeWidth">
+            <path class="vts-dolot__grot" d="M 0.5 0.8 L 9.5 5 L 0.5 9.2 Q 2.6 5 0.5 0.8 Z"/>
+          </marker>
+          <marker id="vts-klapa-grot-przed" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto" markerUnits="strokeWidth">
+            <path class="vts-dolot__grot is-przed" d="M 0.5 0.8 L 9.5 5 L 0.5 9.2 Q 2.6 5 0.5 0.8 Z"/>
+          </marker>
+        </defs>
+        <?php foreach ([0 => 20, 1 => 320] as $po => $tx) : $k = $po ? '' : ' is-przed'; ?>
+        <g transform="translate(<?= $tx ?> 0)" class="<?= $po ? 'is-po' : 'is-przed' ?>">
+          <text class="vts-dchart__lbl<?= $po ? ' is-po' : '' ?>" x="140" y="34" text-anchor="middle"><?= $po ? 'PO ZABLOKOWANIU' : 'FABRYCZNIE' ?></text>
+
+          <!-- cylinder z poświatą (po zablokowaniu) -->
+          <rect class="vts-dolot__chamber<?= $po ? ' is-po' : '' ?>" x="20" y="238" width="240" height="80" <?= $po ? 'style="fill:url(#vts-klapa-glow)"' : '' ?>/>
+
+          <!-- kolektor w przekroju: kreskowanie wygaszone ku górze -->
+          <g mask="url(#vts-klapa-fade)">
+            <path class="vts-dolot__cast" style="fill:url(#vts-klapa-hatch)" d="M 20 52 H 80 V 206 C 80 221 70 231 55 238 H 20 Z"/>
+            <path class="vts-dolot__cast" style="fill:url(#vts-klapa-hatch)" d="M 260 52 H 200 V 206 C 200 221 210 231 225 238 H 260 Z"/>
+          </g>
+          <path class="vts-dolot__wall" d="M 80 56 V 206 C 80 221 70 231 55 238 H 20 V 318 H 260 V 238 H 225 C 210 231 200 221 200 206 V 56"/>
+
+          <!-- smugi powietrza -->
+          <?php foreach ($tory[$po] as $d) : ?>
+            <path class="vts-dolot__stream<?= $k ?>" d="<?= $d ?>"/>
+          <?php endforeach; ?>
+
+          <!-- dźwignia i siłownik na zewnątrz kanału (po zablokowaniu odłączone, linia przerywana) -->
+          <path class="vts-klapa__rod<?= $po ? ' is-off' : '' ?>" d="M 200 120 H 241 V 100"/>
+          <rect class="vts-klapa__act<?= $po ? ' is-off' : '' ?>" x="226" y="72" width="30" height="28" rx="4"/>
+
+          <!-- klapa na osi: fabrycznie przymyka kanał, po zablokowaniu leży wzdłuż ściany -->
+          <?php if ($po) : ?>
+            <rect class="vts-klapa__plate" x="190" y="90" width="9" height="62" rx="2"/>
+          <?php else : ?>
+            <path class="vts-klapa__plate" d="M 201.2 123.8 L 109.2 153.8 L 106.8 146.2 L 198.8 116.2 Z"/>
+          <?php endif; ?>
+          <circle class="vts-klapa__ax" cx="200" cy="120" r="7"/>
+          <?php if ($po) : ?>
+            <!-- blokada osi: nakładka na oś klapy -->
+            <path class="vts-klapa__lock" d="M 195 115 L 205 125 M 205 115 L 195 125"/>
+          <?php endif; ?>
+
+          <!-- tory z grotami i cząsteczki powietrza -->
+          <?php foreach ($tory[$po] as $i => $d) : ?>
+            <path class="vts-dolot__flow<?= $k ?>" marker-end="url(#vts-klapa-grot<?= $po ? '' : '-przed' ?>)" d="<?= $d ?>"/>
+            <?php $n = $po ? 4 : ($i ? 1 : 3); $dur = $po ? 1.9 : 4.2;
+            for ($j = 0; $j < $n; $j++) : $b = -round($j * $dur / $n + $i * .35, 2); ?>
+              <circle class="vts-dolot__czast<?= $k ?>" r="<?= $po ? 2.8 : 2.2 ?>" opacity="0">
+                <animateMotion dur="<?= $dur ?>s" begin="<?= $b ?>s" repeatCount="indefinite" path="<?= $d ?>"/>
+                <animate attributeName="opacity" dur="<?= $dur ?>s" begin="<?= $b ?>s" repeatCount="indefinite"
+                         values="0;1;1;0" keyTimes="0;.12;.82;1"/>
+              </circle>
+            <?php endfor; ?>
+          <?php endforeach; ?>
+
+          <text class="vts-dchart__lbl" x="140" y="300" text-anchor="middle">do cylindra</text>
+          <rect class="vts-dolot__pill<?= $po ? ' is-po' : '' ?>" x="8" y="326" width="264" height="36" rx="18"/>
+          <text class="vts-dchart__lbl<?= $po ? ' is-po' : '' ?>" x="140" y="350" text-anchor="middle"><?= $po ? 'zablokowana · bez ryzyka' : 'ruchoma klapa i dźwignia' ?></text>
+        </g>
+        <?php endforeach; ?>
+        <text class="vts-dchart__foot" x="310" y="388" text-anchor="middle">schemat poglądowy · przekrój kolektora z klapą wirową</text>
       </svg>
     </figure>
     <?php

@@ -126,7 +126,7 @@ Oryginały leżą w `tools/scrape/raw-client/` (poza repozytorium), warianty rob
 |---|---|---|
 | `foto-startstop.webp`, `foto-startstop-sm.webp` | `Start@Stop.jpg` 4722×3148 | palec na przycisku Engine Start Stop |
 | `foto-olej.webp`, `foto-olej-sm.webp` | `ciśnienie oleju-2.webp` 1536×1024 | zapalona kontrolka ciśnienia oleju między zegarami |
-| `foto-temperatura.webp`, `foto-temperatura-sm.webp` | `Temperatura pracy silnika.jpg` 5957×3831 | wskaźnik temperatury i kontrolka check engine |
+| `foto-temperatura.webp`, `foto-temperatura-sm.webp` | `Temperatura pracy silnika.jpg` 3800×2571 (nowe od klienta, 13.11.2026) | sam wskaźnik temperatury, bez kontrolek; kadr 4:3 z przesunięciem w prawo |
 | `foto-dolot.webp`, `foto-dolot-sm.webp` | `Czyszczenie układów dolotowych.jpg` 7008×4672 | głowica i kolektor pokryte nagarem, na stole |
 | `foto-skrzynia.webp`, `foto-skrzynia-sm.webp` | `Programowanie skrzyń biegów.jpg` 3324×4654 (pion) | lewarek automatu; kadr 4:3 ze środka |
 | `foto-klapy.webp`, `foto-klapy-sm.webp` | `Klapy wirowe.jpg` 5000×3335 | przepustnica z klapą w rękach mechanika |
@@ -175,3 +175,5 @@ Envato (pobrał Damian, numery licencji do dopisania): `foto-dawka` = „Startin
 Oryginały: `tools/scrape/raw-client/envato-*.jpg`. Wpis o `foto-volvo` z Unsplash wyżej jest nieaktualny.
 
 Brak zdjęcia kanałów dolotowych (#167): na stronie stoi własny rysunek SVG (`[vts_dolot_schemat]`), `foto-dolot` zostaje w repo na wypadek zdjęcia od klienta.
+
+Klapy wirowe (#156, 13.11.2026): zdjęcie przepustnicy (`foto-klapy.webp`) nie pasowało do tematu, klient go nie chciał. Na stronie stoi własny rysunek SVG `[vts_klapy_schemat]`, w stylu schematu dolotu. Pliki `foto-klapy*.webp` zostają w repozytorium na wypadek właściwego zdjęcia.

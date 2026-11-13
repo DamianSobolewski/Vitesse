@@ -49,7 +49,7 @@ JOBS = [
     ('floty',        '3vlGNkDep4E', 'foto', .5),
     ('usp-floty',    '3vlGNkDep4E', 'usp',  .5),
     # zdjęcia od klienta (X 2026)
-    ('temperatura',  'client:Temperatura pracy silnika.jpg',      'foto', .5),
+    ('temperatura',  'client:Temperatura pracy silnika.jpg',      'foto', .5, .62),   # runda 13.11.2026: nowe zdjęcie wskaźnika
     ('dolot',        'client:Czyszczenie układów dolotowych.jpg', 'foto', .45),
     ('skrzynia',     'client:envato-gear-shift.jpg',              'foto', .5, .35),   # #241
     ('klapy',        'client:Klapy wirowe.jpg',                   'foto', .5),

@@ -124,24 +124,61 @@
 	}
 
 	/**
-	 * Returns years in which the selected gen+engine combination exists.
+	 * Returns years in which the selected generation has at least one engine.
+	 * (Kolejność pól od 13.11.2026: Generacja → Rocznik → Silnik.)
 	 */
-	function getYears(brandSlug, modelSlug, genSlug, engineSlug) {
+	function getYears(brandSlug, modelSlug, genSlug) {
 		var years = tree[brandSlug] &&
 			tree[brandSlug].models[modelSlug] &&
 			tree[brandSlug].models[modelSlug].years || {};
-		var engineValue = genSlug + '::' + engineSlug;
 		var result = [];
 		Object.keys(years).forEach(function (yearSlug) {
 			var yearData = years[yearSlug];
-			var hasEngine = (yearData.engines || []).some(function (e) {
-				return e.value === engineValue;
+			var hasGen = (yearData.engines || []).some(function (e) {
+				return e.value.split('::')[0] === genSlug;
 			});
-			if (hasEngine) {
+			if (hasGen) {
 				result.push({ slug: yearSlug, label: yearData.label });
 			}
 		});
 		return result.sort(function (a, b) { return a.slug.localeCompare(b.slug); });
+	}
+
+	/**
+	 * Returns engines of a generation available in the chosen year.
+	 * Pusty rocznik = wszystkie silniki generacji (gdy brak rocznika do wyboru).
+	 */
+	function getEnginesForYear(brandSlug, modelSlug, genSlug, yearSlug) {
+		if (!yearSlug) { return getEngines(brandSlug, modelSlug, genSlug); }
+		var model = tree[brandSlug] && tree[brandSlug].models[modelSlug];
+		var yearData = model && model.years && model.years[yearSlug];
+		var seen = {};
+		var engines = [];
+		((yearData && yearData.engines) || []).forEach(function (eng) {
+			var parts = eng.value.split('::');
+			if (parts[0] === genSlug && !seen[parts[1]]) {
+				seen[parts[1]] = true;
+				engines.push({ slug: parts[1], label: eng.engine });
+			}
+		});
+		return sortByLabel(engines);
+	}
+
+	/**
+	 * Pierwszy rocznik, w którym występuje dana generacja + silnik. Serwer wymaga
+	 * czterocyfrowego rocznika, więc gdy użytkownik nie miał go z czego wybrać,
+	 * wyprowadzamy go z wybranego silnika.
+	 */
+	function findYearForEngine(brandSlug, modelSlug, genSlug, engineSlug) {
+		var list = getYears(brandSlug, modelSlug, genSlug);
+		var target = genSlug + '::' + engineSlug;
+		var years = tree[brandSlug].models[modelSlug].years;
+		for (var i = 0; i < list.length; i++) {
+			if ((years[list[i].slug].engines || []).some(function (e) { return e.value === target; })) {
+				return list[i].slug;
+			}
+		}
+		return '';
 	}
 
 	// ── Fetch result ─────────────────────────────────────────────────────────
@@ -279,8 +316,8 @@
 			{ key: 'brand',  ph: i18n.selectBrand },
 			{ key: 'model',  ph: i18n.selectModel },
 			{ key: 'gen',    ph: i18n.selectGeneration },
-			{ key: 'engine', ph: i18n.selectEngine },
 			{ key: 'year',   ph: i18n.selectYear },
+			{ key: 'engine', ph: i18n.selectEngine },
 		];
 		var selects = {};
 
@@ -347,8 +384,15 @@
 			});
 		}
 
+		/** Gdy do wyboru jest dokładnie jedna pozycja, wybieramy ją za użytkownika. */
+		function autoPick(sel, items) {
+			if (items.length !== 1) return;
+			sel.value = items[0].slug;
+			sel.dispatchEvent(new Event('change', { bubbles: true }));
+		}
+
 		function resetFrom(level) {
-			var order = ['brand', 'model', 'gen', 'engine', 'year'];
+			var order = ['brand', 'model', 'gen', 'year', 'engine'];
 			var idx   = order.indexOf(level);
 			for (var i = idx; i < order.length; i++) {
 				state[order[i]] = '';
@@ -356,6 +400,13 @@
 			}
 			submitBtn.disabled = true;
 			errorEl.hidden = true;
+		}
+
+		// Silniki generacji w wybranym roczniku; ostatnie pole, po nim wynik.
+		function fillEngines() {
+			var engines = getEnginesForYear(state.brand, state.model, state.gen, state.year);
+			populateSelect(selects.engine, engines, false);
+			autoPick(selects.engine, engines);
 		}
 
 		populateSelect(selects.brand, getBrands(), false);
@@ -368,22 +419,37 @@
 		selects.model.addEventListener('change', function () {
 			state.model = this.value;
 			resetFrom('gen');
-			if (state.model) populateSelect(selects.gen, getGenerations(state.brand, state.model), false);
+			if (state.model) {
+				var gens = getGenerations(state.brand, state.model);
+				populateSelect(selects.gen, gens, false);
+				autoPick(selects.gen, gens);
+			}
 		});
 		selects.gen.addEventListener('change', function () {
 			state.gen = this.value;
-			resetFrom('engine');
-			if (state.gen) populateSelect(selects.engine, getEngines(state.brand, state.model, state.gen), false);
+			resetFrom('year');
+			if (!state.gen) return;
+			var years = getYears(state.brand, state.model, state.gen);
+			if (years.length === 0) {
+				// Brak rocznika do wyboru: przeskakujemy od razu do silnika.
+				fillEngines();
+				return;
+			}
+			populateSelect(selects.year, years, false);
+			autoPick(selects.year, years);
+		});
+		selects.year.addEventListener('change', function () {
+			resetFrom('engine');   // zeruje silnik i wynik, rocznik zostaje
+			state.year = this.value;
+			if (state.year) fillEngines();
 		});
 		selects.engine.addEventListener('change', function () {
 			state.engine = this.value;
-			resetFrom('year');
-			if (state.engine) populateSelect(selects.year, getYears(state.brand, state.model, state.gen, state.engine), false);
-		});
-		selects.year.addEventListener('change', function () {
-			state.year = this.value;
 			errorEl.hidden = true;
-			submitBtn.disabled = !state.year;
+			if (state.engine && !state.year) {
+				state.year = findYearForEngine(state.brand, state.model, state.gen, state.engine);
+			}
+			submitBtn.disabled = !(state.engine && state.year);
 		});
 
 		// ── Submit → show results in popup ────────────────────────────────

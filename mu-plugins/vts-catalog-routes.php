@@ -292,7 +292,7 @@ function vts_view_engine(array $r): void
             <?php foreach ($wynik['results'] as $w) : ?>
               <div class="vts-ps__srv"><h3><?= esc_html($w['label']) ?></h3>
                 <div class="vts-ps__srv-v">
-                  <span>moc <b>+<?= (int) $w['gain_hp'] ?> KM</b><?= $w['tuned_hp'] ? ' <em>→ ' . (int) $w['tuned_hp'] . ' KM</em>' : '' ?></span>
+                  <span>moc <b>+<?= (int) $w['gain_hp'] ?> KM</b><?= $w['tuned_hp'] ? ' <em>→ ' . (int) $w['tuned_hp'] . ' KM / ' . (int) round($w['tuned_hp'] * 0.7355) . ' kW</em>' : '' ?></span>
                   <?php if ((int) $w['gain_nm'] > 0) : ?>
                     <span>moment <b>+<?= (int) $w['gain_nm'] ?> Nm</b><?= $w['tuned_nm'] ? ' <em>→ ' . (int) $w['tuned_nm'] . ' Nm</em>' : '' ?></span>
                   <?php endif; ?>

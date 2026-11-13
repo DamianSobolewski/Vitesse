@@ -828,10 +828,17 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-dolot .vts-dchart__foot{font-size:16px}
 @media (prefers-reduced-motion:reduce){.vts-dolot__czast{display:none}}
 /* Schemat przy czyszczeniu dolotu: karta na pełną wysokość kolumny, rysunek wyśrodkowany, bez podpisu pod spodem. */
-#dolot .vts-split{align-items:stretch}
-#dolot .vts-svc__media{display:flex}
-#dolot .vts-dolot{flex:1;display:flex;align-items:center;justify-content:center}
-#dolot .vts-dolot svg{padding:var(--vts-gap-m);aspect-ratio:auto}
+#dolot .vts-split,#klapy-wirowe .vts-split{align-items:stretch}
+#dolot .vts-svc__media,#klapy-wirowe .vts-svc__media{display:flex}
+#dolot .vts-dolot,#klapy-wirowe .vts-dolot{flex:1;display:flex;align-items:center;justify-content:center}
+#dolot .vts-dolot svg,#klapy-wirowe .vts-dolot svg{padding:var(--vts-gap-m);aspect-ratio:auto}
+/* schemat klap wirowych ([vts_klapy_schemat]): klapa, oś, dźwignia i siłownik */
+.vts-klapa__plate{fill:url(#vts-klapa-metal);stroke:var(--vts-muted);stroke-width:1.6;stroke-linejoin:round}
+.vts-klapa__ax{fill:var(--vts-surface-2);stroke:var(--vts-muted);stroke-width:1.6}
+.vts-klapa__rod{fill:none;stroke:var(--vts-dim);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.vts-klapa__act{fill:var(--vts-surface);stroke:var(--vts-dim);stroke-width:1.6}
+.vts-klapa__rod.is-off,.vts-klapa__act.is-off{stroke-dasharray:4 5;opacity:.7}
+.vts-klapa__lock{fill:none;stroke:var(--vts-accent-ink,var(--vts-accent));stroke-width:2.2;stroke-linecap:round}
 .vts-dchart__lbl{font-family:var(--vts-font-mono);font-size:12px;fill:var(--vts-muted);letter-spacing:.06em}
 .vts-dchart__lbl.is-po{fill:var(--vts-accent-ink)}
 .vts-dchart__foot{font-family:var(--vts-font-mono);font-size:11px;fill:var(--vts-dim);letter-spacing:.06em}
@@ -983,6 +990,13 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
   border:1px solid var(--vts-line);border-radius:var(--vts-radius)}
 @media (max-width:640px){.vts-cat-facts{grid-template-columns:1fr 1fr}
   .vts-cat-facts .vts-ps__cell:nth-child(3){grid-column:1/-1;border-left:0;padding-left:0}}
+/* Uwaga klienta 13.11.2026: dane fabryczne i moc po programie czcionką nagłówka
+   „Co zyska ten silnik", nie monospace. Tylko w katalogu - w wyszukiwarce zostaje mono. */
+.vts-cat-facts .vts-ps__cell b,.vts-cat-facts .vts-ps__cell.is-text b{
+  font-family:var(--vts-font-display);font-weight:600;font-size:var(--vts-step-1);
+  letter-spacing:0;color:#E8EDF3;line-height:1.2}
+.vts-cat-gains .vts-ps__srv-v em{font-family:var(--vts-font-display);font-weight:600;
+  font-size:var(--vts-step-1);letter-spacing:0;color:#E8EDF3;white-space:nowrap}
 .vts-cat-gains{display:grid;gap:1px;background:var(--vts-line);border:1px solid var(--vts-line);
   border-radius:var(--vts-radius);overflow:hidden;margin-bottom:var(--vts-gap-s)}
 .vts-cat-gains .vts-ps__srv{padding:14px var(--vts-gap-m)}

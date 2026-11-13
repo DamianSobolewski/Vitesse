@@ -78,6 +78,7 @@
    * właściciela (charts="1"), który dokłada też dane konkurencji. Kodu wtyczki nie
    * ruszamy: podsłuchujemy odpowiedź i dopinamy przycisk do kafelków sami. */
   var vtWynik = null;
+  var vtZapytanie = 0;
 
   function vtDopnij() {
     if (!vtWynik) { return; }
@@ -107,8 +108,18 @@
       var p = fetchOrg.apply(this, arguments);
       var url = typeof input === 'string' ? input : (input && input.url) || '';
       if (url.indexOf('/vt/v1/result') !== -1) {
+        // Nowe zapytanie unieważnia poprzednią odpowiedź. Bez tego obserwator DOM
+        // dopinał do świeżych kafelków wykres poprzedniego auta (uwaga klienta
+        // 13.11.2026: po drugim wyszukiwaniu Omoda pokazywała wykres Jaecoo),
+        // a spóźniona odpowiedź starszego zapytania mogła nadpisać nowszą.
+        var moj = ++vtZapytanie;
+        vtWynik = null;
         p.then(function (r) { return r.clone().json(); })
-          .then(function (d) { vtWynik = d; setTimeout(vtDopnij, 0); })
+          .then(function (d) {
+            if (moj !== vtZapytanie) { return; }
+            vtWynik = d;
+            setTimeout(vtDopnij, 0);
+          })
           .catch(function () {});
       }
       return p;

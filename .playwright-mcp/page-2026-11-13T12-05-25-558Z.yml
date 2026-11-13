@@ -1,0 +1,249 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e3]:
+    - generic [ref=f4e4]: Łódź, ul. Kolumny 267C · poniedziałek - piątek 8:30-17:00, sobota 8:30-14:00
+    - generic [ref=f4e5]:
+      - generic [ref=f4e6]:
+        - text: Tuning
+        - link "511 205 980" [ref=f4e7] [cursor=pointer]:
+          - /url: tel:+48511205980
+        - text: ","
+        - link "515 660 210" [ref=f4e8] [cursor=pointer]:
+          - /url: tel:+48515660210
+      - generic [ref=f4e9]:
+        - text: Floty
+        - link "799 000 046" [ref=f4e10] [cursor=pointer]:
+          - /url: tel:+48799000046
+  - banner [ref=f4e11]:
+    - generic [ref=f4e12]:
+      - link "Vitesse" [ref=f4e13] [cursor=pointer]:
+        - /url: http://localhost:8090/
+        - img "Vitesse" [ref=f4e14]
+      - navigation "Nawigacja główna" [ref=f4e17]:
+        - list [ref=f4e18]:
+          - listitem [ref=f4e19]:
+            - link "Strona główna" [ref=f4e20] [cursor=pointer]:
+              - /url: http://localhost:8090/
+          - listitem [ref=f4e21]:
+            - link "Oferta" [ref=f4e22] [cursor=pointer]:
+              - /url: http://localhost:8090/podnoszenie-mocy/
+          - listitem [ref=f4e23]:
+            - link "EV / Hybryda" [ref=f4e24] [cursor=pointer]:
+              - /url: http://localhost:8090/ev-hybryda/
+          - listitem [ref=f4e25]:
+            - link "Hamownia" [ref=f4e26] [cursor=pointer]:
+              - /url: http://localhost:8090/hamownia/
+          - listitem [ref=f4e27]:
+            - link "O nas" [ref=f4e28] [cursor=pointer]:
+              - /url: http://localhost:8090/o-nas/
+          - listitem [ref=f4e29]:
+            - link "Katalog przyrostów" [ref=f4e30] [cursor=pointer]:
+              - /url: http://localhost:8090/chiptuning/
+          - listitem [ref=f4e31]:
+            - link "Blog" [ref=f4e32] [cursor=pointer]:
+              - /url: http://localhost:8090/blog/
+      - link "Umów wizytę" [ref=f4e33] [cursor=pointer]:
+        - /url: http://localhost:8090/kontakt/
+  - link "Skip to content" [ref=f4e34] [cursor=pointer]:
+    - /url: "#content"
+  - generic [ref=f4e36]:
+    - navigation "Ścieżka" [ref=f4e37]:
+      - link "Start" [ref=f4e38] [cursor=pointer]:
+        - /url: http://localhost:8090/
+      - text: /
+      - link "Katalog" [ref=f4e39] [cursor=pointer]:
+        - /url: http://localhost:8090/chiptuning//
+      - text: /
+      - link "Daewoo" [ref=f4e40] [cursor=pointer]:
+        - /url: http://localhost:8090/chiptuning/daewoo/
+      - text: /
+      - link "Nubira" [ref=f4e41] [cursor=pointer]:
+        - /url: http://localhost:8090/chiptuning/daewoo/nubira/
+      - text: /
+      - link "I" [ref=f4e42] [cursor=pointer]:
+        - /url: http://localhost:8090/chiptuning/daewoo/nubira/i/
+    - heading "Daewoo Nubira I 1.6 78kW 106KM" [level=1] [ref=f4e43]
+    - paragraph [ref=f4e44]: Dane fabryczne oraz przyrost mocy i momentu dla każdego poziomu programu.
+  - generic [ref=f4e47]:
+    - generic [ref=f4e48]:
+      - generic [ref=f4e49]:
+        - generic [ref=f4e50]:
+          - generic [ref=f4e51]: Moc fabryczna
+          - generic [ref=f4e52]: 106 KM
+        - generic [ref=f4e53]:
+          - generic [ref=f4e54]: Paliwo
+          - generic [ref=f4e55]: diesel
+        - generic [ref=f4e56]:
+          - generic [ref=f4e57]: Moc [kW]
+          - generic [ref=f4e58]: "78"
+      - heading "Co zyska ten silnik" [level=2] [ref=f4e59]
+      - generic [ref=f4e61]:
+        - heading "Chip Tuning" [level=3] [ref=f4e62]
+        - generic [ref=f4e63]:
+          - generic [ref=f4e64]:
+            - text: moc +8 KM
+            - emphasis [ref=f4e65]: → 114 KM / 84 kW
+          - generic [ref=f4e66]: moment +10 Nm
+      - paragraph [ref=f4e67]: Podane wartości to przyrosty względem stanu fabrycznego, orientacyjne i zależne od stanu technicznego pojazdu. Ostateczny wynik potwierdzamy pomiarem na hamowni przed modyfikacją i po niej. Jeśli chcesz zobaczyć wykres - skontaktuj się z nami.
+      - paragraph [ref=f4e68]:
+        - link "Umów wizytę" [ref=f4e69] [cursor=pointer]:
+          - /url: http://localhost:8090/kontakt/?vehicle=Daewoo%20Nubira%20I%201.6%2078kW%20106KM
+      - heading "Inne wersje tej generacji" [level=2] [ref=f4e70]
+      - list [ref=f4e71]:
+        - listitem [ref=f4e72]:
+          - link "2.0 98kW 133KM" [ref=f4e73] [cursor=pointer]:
+            - /url: http://localhost:8090/chiptuning/daewoo/nubira/i/2-0-98kw-133km-98/
+          - generic [ref=f4e74]: 133 KM
+    - generic [ref=f4e78]:
+      - generic [ref=f4e79]:
+        - generic [ref=f4e80]: Wybierz markę
+        - combobox "Wybierz markę" [ref=f4e81] [cursor=pointer]:
+          - option "Wybierz markę" [selected]
+          - option "Abarth"
+          - option "Aixam"
+          - option "Alfa Romeo"
+          - option "Aston Martin"
+          - option "Audi"
+          - option "BAIC"
+          - option "BMW"
+          - option "Cadillac"
+          - option "Chatenet"
+          - option "Chevrolet"
+          - option "Chrysler"
+          - option "Citroen"
+          - option "Cupra"
+          - option "Dacia"
+          - option "Daewoo"
+          - option "DAF"
+          - option "Dodge"
+          - option "DS"
+          - option "Fiat"
+          - option "Ford"
+          - option "Foton"
+          - option "GAZ"
+          - option "Honda"
+          - option "Hyundai"
+          - option "Infiniti"
+          - option "Isuzu"
+          - option "Iveco"
+          - option "Jaecoo"
+          - option "Jaguar"
+          - option "Jeep"
+          - option "Kia"
+          - option "Lancia"
+          - option "Land Rover"
+          - option "Lexus"
+          - option "Ligier"
+          - option "Maserati"
+          - option "Mazda"
+          - option "Mercedes"
+          - option "Mercedes Truck"
+          - option "MG"
+          - option "Microcar"
+          - option "Mini"
+          - option "Mitsubishi"
+          - option "Nissan"
+          - option "Omoda"
+          - option "Opel"
+          - option "Peugeot"
+          - option "Porsche"
+          - option "Renault"
+          - option "Saab"
+          - option "Scania"
+          - option "Seat"
+          - option "Skoda"
+          - option "Smart"
+          - option "SsangYong"
+          - option "Subaru"
+          - option "Suzuki"
+          - option "Toyota"
+          - option "Volkswagen"
+          - option "Volvo"
+      - generic [ref=f4e82]:
+        - generic [ref=f4e83]: Wybierz model
+        - combobox "Wybierz model" [disabled] [ref=f4e84]:
+          - option "Wybierz model" [selected]
+      - generic [ref=f4e85]:
+        - generic [ref=f4e86]: Wybierz generację
+        - combobox "Wybierz generację" [disabled] [ref=f4e87]:
+          - option "Wybierz generację" [selected]
+      - generic [ref=f4e88]:
+        - generic [ref=f4e89]: Wybierz rocznik
+        - combobox "Wybierz rocznik" [disabled] [ref=f4e90]:
+          - option "Wybierz rocznik" [selected]
+      - generic [ref=f4e91]:
+        - generic [ref=f4e92]: Wybierz silnik
+        - combobox "Wybierz silnik" [disabled] [ref=f4e93]:
+          - option "Wybierz silnik" [selected]
+  - contentinfo [ref=f4e94]:
+    - generic [ref=f4e95]:
+      - generic [ref=f4e96]:
+        - generic [ref=f4e97]:
+          - link "Vitesse" [ref=f4e98] [cursor=pointer]:
+            - /url: http://localhost:8090/
+            - img "Vitesse" [ref=f4e99]
+          - generic [ref=f4e102]:
+            - generic [ref=f4e103]: Chip tuning, PowerChipy, modyfikacje ECU i pomiary na hamowni 4×4 w Łodzi.Autoryzacja V-tech od 2008 roku.
+            - generic [ref=f4e104]: ul. Kolumny 267C 93-631 Łódź
+        - generic [ref=f4e105]:
+          - heading "Usługi" [level=4] [ref=f4e106]
+          - list [ref=f4e107]:
+            - listitem [ref=f4e108]:
+              - link "Chip tuning osobowe i kampery" [ref=f4e109] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/chip-tuning/
+            - listitem [ref=f4e110]:
+              - link "Oferta dla flot B2B" [ref=f4e111] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/oferta-dla-flot/
+            - listitem [ref=f4e112]:
+              - link "PowerChip Volvo VEA" [ref=f4e113] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/powerboxy/
+            - listitem [ref=f4e114]:
+              - link "Usługi DPF / EGR / SCR" [ref=f4e115] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/dodatkowe-uslugi-ecu/
+            - listitem [ref=f4e116]:
+              - link "Hamownia motocyklowa i 4×4" [ref=f4e117] [cursor=pointer]:
+                - /url: http://localhost:8090/hamownia/
+            - listitem [ref=f4e118]:
+              - link "Modyfikacje EV i hybryd" [ref=f4e119] [cursor=pointer]:
+                - /url: http://localhost:8090/ev-hybryda/
+        - generic [ref=f4e120]:
+          - heading "Strefa klienta" [level=4] [ref=f4e121]
+          - list [ref=f4e122]:
+            - listitem [ref=f4e123]:
+              - link "O nas" [ref=f4e124] [cursor=pointer]:
+                - /url: http://localhost:8090/o-nas/
+            - listitem [ref=f4e125]:
+              - link "Regulamin" [ref=f4e126] [cursor=pointer]:
+                - /url: http://localhost:8090/regulamin/
+            - listitem [ref=f4e127]:
+              - link "2 lata gwarancji" [ref=f4e128] [cursor=pointer]:
+                - /url: http://localhost:8090/gwarancja/
+            - listitem [ref=f4e129]:
+              - link "Najczęstsze pytania" [ref=f4e130] [cursor=pointer]:
+                - /url: http://localhost:8090/faq/
+            - listitem [ref=f4e131]:
+              - link "Polityka prywatności" [ref=f4e132] [cursor=pointer]:
+                - /url: http://localhost:8090/polityka-prywatnosci/
+        - generic [ref=f4e133]:
+          - heading "Kontakt" [level=4] [ref=f4e134]
+          - generic [ref=f4e135]:
+            - generic [ref=f4e136]:
+              - text: "Tuning:"
+              - link "511 205 980" [ref=f4e137] [cursor=pointer]:
+                - /url: tel:+48511205980
+              - text: ","
+              - link "515 660 210" [ref=f4e138] [cursor=pointer]:
+                - /url: tel:+48515660210
+            - generic [ref=f4e139]:
+              - text: "Floty:"
+              - link "799 000 046" [ref=f4e140] [cursor=pointer]:
+                - /url: tel:+48799000046
+            - generic [ref=f4e141]:
+              - text: "Biuro:"
+              - link "42 203 22 31" [ref=f4e142] [cursor=pointer]:
+                - /url: tel:+48422032231
+            - link "biuro@vitesse.auto.pl" [ref=f4e144] [cursor=pointer]:
+              - /url: mailto:biuro@vitesse.auto.pl
+            - generic [ref=f4e145]: poniedziałek - piątek 8:30-17:00, sobota 8:30-14:00
+          - link "Umów wizytę" [ref=f4e146] [cursor=pointer]:
+            - /url: http://localhost:8090/kontakt/
+      - generic [ref=f4e147]: © 2026 VITESSE V-tech Łódź
