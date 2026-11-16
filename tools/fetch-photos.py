@@ -62,7 +62,7 @@ JOBS = [
     ('startstop',    'client:start_stop.jpg',      'foto', .5),
     ('olej',         'client:oil_pressure.jpg',    'foto', .5),
     ('wallbox',      'client:accelev-two.jpg',     'foto', .5),
-    ('onas',         'client:hamownia_Porsche.jpg', 'foto', .5, .5),   # 16.11.2026: Porsche na hamowni zamiast hali (czarny pas z lewej obcięty w pliku źródłowym)
+    ('onas',         'client:hamownia_Porsche.jpg', 'fotoszer', .5),   # 16.11.2026: Porsche na hamowni, całe zdjęcie bez kadrowania do 4:3 (czarny pas z lewej obcięty w pliku źródłowym; 2222x898)
     ('powerchip',    'client:PowerChip.jpg',       'foto', .5),
     ('dpf',          'mirror:slide03.jpg',         'foto', .5, .5),    # „Wyłącz SCR"
     ('ecu',          'mirror:slide01.jpg',         'foto', .5, .22),   # „Zwiększ moc silnika"
@@ -77,7 +77,8 @@ JOBS = [
     ('slajd-dyno',       'client:dyno.jpg',         'slajd', .5, .5, 1.0, 'right'),
     ('slajd-flota',      'asset:pas-floty.webp',    'pas',   .5, .5, 1.7),   # to samo zdjęcie, jaśniejsze
 ]
-KINDS = {'foto': ((4, 3), 1200, 600), 'usp': ((16, 9), 900, 450),
+# 'fotoszer' = zdjęcie w naturalnych proporcjach źródła (bez kadrowania do 4:3), plik też foto-<klucz>.webp
+KINDS = {'foto': ((4, 3), 1200, 600), 'fotoszer': ((2222, 898), 1200, 600), 'usp': ((16, 9), 900, 450),
          'pas': ((8, 3), 1800, 900), 'slajd': ((3, 2), 1800, 900)}
 only  = [a for a in sys.argv[1:] if not a.startswith('--')]
 force = '--force' in sys.argv or bool(only)
@@ -107,7 +108,7 @@ for key, pid, kind, fy, *extra in JOBS:
         continue
     fx, bri, mode = (list(extra) + [.5, 1.0, ''][len(extra):])[:3]
     ar, big, small = KINDS[kind]
-    name = f'foto-{key}' if kind == 'foto' else key
+    name = f'foto-{key}' if kind.startswith('foto') else key
     targets = [(big, OUT / f'{name}.webp'), (small, OUT / f'{name}-sm.webp')]
     if not force and all(dst.exists() for _, dst in targets):
         continue

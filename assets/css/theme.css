@@ -776,6 +776,7 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-photo__e{display:block;font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
   letter-spacing:var(--vts-track-eyebrow);text-transform:uppercase;color:var(--vts-accent-ink);margin-bottom:7px}
 /* Wykres z hamowni: podpis leży na białym wydruku, więc kolory ma literalne. */
+.vts-photo--wide img{aspect-ratio:2222/898}   /* zdjęcie szerokie: całe, bez kadru 4:3 (O nas, Porsche) */
 .vts-photo--chart img{aspect-ratio:16/10;object-fit:contain;background:#fff}
 .vts-photo--chart a{display:block}
 .vts-photo--chart figcaption{position:absolute;inset:auto 0 0;

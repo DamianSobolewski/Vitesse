@@ -1215,15 +1215,18 @@ add_shortcode('vts_map', function () {
  * (eyebrow, title) shortcode_atts pomija.
  */
 add_shortcode('vts_photo', function ($atts) {
-    $a = shortcode_atts(['img' => '', 'alt' => ''], $atts);
+    $a = shortcode_atts(['img' => '', 'alt' => '', 'wide' => ''], $atts);
 
-    $img = vts_img_tag('foto-' . $a['img'], (string) $a['alt'], 1200, 900,
+    // wide="1": zdjęcie w naturalnych proporcjach (plik z fetch-photos.py, rodzaj 'fotoszer'),
+    // bez kadru 4:3. Wymiary muszą zgadzać się z plikiem (2222x898 przy szerokości 1200).
+    $szeroko = $a['wide'] === '1';
+    $img = vts_img_tag('foto-' . $a['img'], (string) $a['alt'], 1200, $szeroko ? 485 : 900,
         '(max-width:900px) 92vw, (max-width:1240px) 44vw, 560px');
     if ($img === '') {
         return '';
     }
 
-    return '<figure class="vts-photo">' . $img . '</figure>';
+    return '<figure class="vts-photo' . ($szeroko ? ' vts-photo--wide' : '') . '">' . $img . '</figure>';
 });
 
 /* ------------------------------------------------------ nawigacja skokowa
