@@ -62,7 +62,7 @@ JOBS = [
     ('startstop',    'client:start_stop.jpg',      'foto', .5),
     ('olej',         'client:oil_pressure.jpg',    'foto', .5),
     ('wallbox',      'client:accelev-two.jpg',     'foto', .5),
-    ('onas',         'client:firma_5.jpg',         'foto', .5),
+    ('onas',         'client:hamownia_Porsche.jpg', 'foto', .5, .5),   # 16.11.2026: Porsche na hamowni zamiast hali (czarny pas z lewej obcięty w pliku źródłowym)
     ('powerchip',    'client:PowerChip.jpg',       'foto', .5),
     ('dpf',          'mirror:slide03.jpg',         'foto', .5, .5),    # „Wyłącz SCR"
     ('ecu',          'mirror:slide01.jpg',         'foto', .5, .22),   # „Zwiększ moc silnika"

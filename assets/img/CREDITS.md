@@ -153,7 +153,7 @@ repozytorium), warianty robi `tools/fetch-photos.py` (`python3 tools/fetch-photo
 | `foto-startstop` | `start_stop.jpg` | Usługi ECU: Start&Stop (#238) |
 | `foto-olej` | `oil_pressure.jpg` | Usługi ECU: ciśnienie oleju (#239) |
 | `foto-wallbox` | `accelev-two.jpg` | EV / Hybryda: ładowarka Accelev two (#244) |
-| `foto-onas` | `firma_5.jpg` | O nas: hala warsztatu (#246) |
+| `foto-onas` | `hamownia_Porsche.jpg` 2222×898 (po obcięciu czarnego pasa z lewej, 16.11.2026) | O nas: żółte Porsche na hamowni; wcześniej `firma_5.jpg` (hala warsztatu, #246) |
 | `foto-powerchip` | `PowerChip.jpg` | PowerChipy: kiedy PowerChip, a kiedy chip tuning (#242) |
 | `foto-dpf` | `slide03.jpg` ze starej strony („Wyłącz SCR”) | Usługi ECU: DPF/SCR (#236), Oferta dla flot (#234) |
 | `foto-ecu` | `slide01.jpg` ze starej strony („Zwiększ moc silnika”) | Usługi ECU: sekcja „Serwis ECU” (#237) |

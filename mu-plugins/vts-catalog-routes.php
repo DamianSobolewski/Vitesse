@@ -206,7 +206,7 @@ function vts_catalog_intro(array $r): string
         'make'   => 'Modele ' . $r['make']['name'] . ', dla których mamy gotowe rozwiązania. Wybierz swój.',
         'model'  => 'Generacje modelu ' . $r['model']['name'] . '. Wybierz rocznik swojego auta.',
         'gen'    => 'Wersje silnikowe i przyrosty mocy. Wartości orientacyjne, wiążący jest pomiar na hamowni.',
-        'engine' => 'Dane fabryczne oraz przyrost mocy i momentu dla każdego poziomu programu.',
+        'engine' => 'Co zyska twój silnik',
     };
 }
 
@@ -276,15 +276,6 @@ function vts_view_engine(array $r): void
     ?>
     <div class="vts-split vts-split--wide-left">
       <div>
-        <div class="vts-cat-facts">
-          <div class="vts-ps__cell"><span>Moc fabryczna</span><b><?= (int) $e['stock_hp'] ?> KM</b></div>
-          <?php /* Momentu fabrycznego nie pokazujemy - dla większości wersji V-tech
-                   go nie podaje i komórka świeciła „brak danych". */ ?>
-          <div class="vts-ps__cell is-text"><span>Paliwo</span><b><?= esc_html($e['fuel']) ?></b></div>
-          <div class="vts-ps__cell"><span>Moc [kW]</span><b><?= (int) $e['stock_kw'] ?></b></div>
-        </div>
-
-        <h2>Co zyska ten silnik</h2>
         <?php if ($wynik && $wynik['results']) : ?>
           <?php /* Wynik prosto z katalogu, bez bramki - ta sama funkcja, która
                    obsługuje wyszukiwarkę. Robot indeksujący widzi pełne liczby. */ ?>

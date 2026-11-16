@@ -984,17 +984,9 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-cat-tile span{font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
   letter-spacing:var(--vts-track-label);text-transform:uppercase;color:var(--vts-muted)}
 
-/* strona wersji silnika: dane fabryczne i lista poziomów programu */
-.vts-cat-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;
-  margin-bottom:var(--vts-gap-m);padding:16px var(--vts-gap-m);background:var(--vts-surface);
-  border:1px solid var(--vts-line);border-radius:var(--vts-radius)}
-@media (max-width:640px){.vts-cat-facts{grid-template-columns:1fr 1fr}
-  .vts-cat-facts .vts-ps__cell:nth-child(3){grid-column:1/-1;border-left:0;padding-left:0}}
-/* Uwaga klienta 13.11.2026: dane fabryczne i moc po programie czcionką nagłówka
-   „Co zyska ten silnik", nie monospace. Tylko w katalogu - w wyszukiwarce zostaje mono. */
-.vts-cat-facts .vts-ps__cell b,.vts-cat-facts .vts-ps__cell.is-text b{
-  font-family:var(--vts-font-display);font-weight:600;font-size:var(--vts-step-1);
-  letter-spacing:0;color:#E8EDF3;line-height:1.2}
+/* strona wersji silnika: lista poziomów programu. Pasek danych fabrycznych i nagłówek
+   „Co zyska ten silnik" zdjęte 16.11.2026 (screen od klienta): moc fabryczna jest w H1. */
+/* moc po programie czcionką nagłówka (uwaga klienta 13.11.2026) */
 .vts-cat-gains .vts-ps__srv-v em{font-family:var(--vts-font-display);font-weight:600;
   font-size:var(--vts-step-1);letter-spacing:0;color:#E8EDF3;white-space:nowrap}
 .vts-cat-gains{display:grid;gap:1px;background:var(--vts-line);border:1px solid var(--vts-line);
