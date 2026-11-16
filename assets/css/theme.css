@@ -335,6 +335,18 @@ p:last-child{margin-bottom:0}
   .vts-hero__bg.is-active{background-image:var(--vts-hero-img-sm,var(--vts-hero-img))}
 }
 @media (prefers-reduced-motion:reduce){.vts-hero__bg{transition:none}}
+/* Nagłówek z oddalonym zdjęciem (O nas, Porsche): zamiast cover, które w niskim, szerokim pasie
+   ucina zdjęcie do ok. 40% wysokości, zdjęcie stoi przy prawej krawędzi w ok. 140% wysokości pasa,
+   a lewa strona (pod tekstem) wygasa do tła. Na wąskich ekranach zostaje zwykłe cover. */
+@media (min-width:901px){
+  /* Warstwa tła ma wymiary samego zdjęcia (140% wysokości pasa, proporcje 1800:675), więc maska
+     wygasza jego lewy brzeg, a nie lewy brzeg całego pasa. */
+  .vts-hero--oddal .vts-hero__bg{inset:auto 0 auto auto;top:50%;height:140%;aspect-ratio:1800/675;
+    transform:translateY(-50%);background-size:100% 100%;background-position:center;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 40%);
+    mask-image:linear-gradient(90deg,transparent 0,#000 40%)}
+}
+}
 /* Zasłona ma tłumić zapalone na zdjęciu reflektory, więc NIE może być w warstwie
    rozjaśniającej — tam kolor tła byłby niewidoczny. Stąd osobna warstwa nad tłem. */
 /* Zasłona i światła muszą jechać razem ze zdjęciem — inaczej poświata zostaje
@@ -776,7 +788,6 @@ body.blog .site-main article.post p{margin:0;color:var(--vts-muted);
 .vts-photo__e{display:block;font-family:var(--vts-font-mono);font-size:var(--vts-step--3);
   letter-spacing:var(--vts-track-eyebrow);text-transform:uppercase;color:var(--vts-accent-ink);margin-bottom:7px}
 /* Wykres z hamowni: podpis leży na białym wydruku, więc kolory ma literalne. */
-.vts-photo--wide img{aspect-ratio:2222/898}   /* zdjęcie szerokie: całe, bez kadru 4:3 (O nas, Porsche) */
 .vts-photo--chart img{aspect-ratio:16/10;object-fit:contain;background:#fff}
 .vts-photo--chart a{display:block}
 .vts-photo--chart figcaption{position:absolute;inset:auto 0 0;

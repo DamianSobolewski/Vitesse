@@ -153,7 +153,7 @@ repozytorium), warianty robi `tools/fetch-photos.py` (`python3 tools/fetch-photo
 | `foto-startstop` | `start_stop.jpg` | Usługi ECU: Start&Stop (#238) |
 | `foto-olej` | `oil_pressure.jpg` | Usługi ECU: ciśnienie oleju (#239) |
 | `foto-wallbox` | `accelev-two.jpg` | EV / Hybryda: ładowarka Accelev two (#244) |
-| `foto-onas` | `hamownia_Porsche.jpg` 2222×898 (po obcięciu czarnego pasa z lewej, 16.11.2026), bez kadru 4:3, `[vts_photo wide="1"]` | O nas: żółte Porsche na hamowni; wcześniej `firma_5.jpg` (hala warsztatu, #246) |
+| `foto-onas` | `firma_5.jpg` | O nas: hala warsztatu (#246) |
 | `foto-powerchip` | `PowerChip.jpg` | PowerChipy: kiedy PowerChip, a kiedy chip tuning (#242) |
 | `foto-dpf` | `slide03.jpg` ze starej strony („Wyłącz SCR”) | Usługi ECU: DPF/SCR (#236), Oferta dla flot (#234) |
 | `foto-ecu` | `slide01.jpg` ze starej strony („Zwiększ moc silnika”) | Usługi ECU: sekcja „Serwis ECU” (#237) |
@@ -162,7 +162,7 @@ repozytorium), warianty robi `tools/fetch-photos.py` (`python3 tools/fetch-photo
 | `usp-kamper` | `kamper.jpg` (kadr przy kamperze, prawa strona) | Strona główna, kafelek kamperów (#219) |
 | `usp-hamownia` | `hamownia_1WD.jpg` | Strona główna, kafelek hamowni (#220) |
 | `pas-chip` | `chip_tuning.jpg` | Tło nagłówka Chip tuning (#228) |
-| `pas-onas` | `firma_6.jpg` | Tło nagłówka O nas (#245) |
+| `pas-onas` | `hamownia_Porsche.jpg` 2222×898 (po obcięciu czarnego pasa z lewej, 16.11.2026) | Tło nagłówka O nas: żółte Porsche na hamowni; wcześniej `firma_6.jpg` (#245) |
 | `slajd-ecu` | `ECU.jpg` | Slajd 1 strony głównej (#212) |
 | `slajd-gwarancja` | `gwarancja.jpg` | Slajd 2 strony głównej (#212) |
 | `slajd-flota` | `pas-floty.webp` rozjaśnione 1,7× | Slajd 3 strony głównej (#212) |

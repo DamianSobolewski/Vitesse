@@ -402,6 +402,7 @@ function vts_page_hero(string $slug): array
             'lead'    => 'Firma została założona w 2008 roku i od samego początku pracuje '
                        . 'z autoryzacją renomowanej firmy V-tech.',
             'img'     => 'pas-onas',
+            'oddal'   => true,   // 16.11.2026: zdjęcie oddalone, żeby w wąskim pasie było widać więcej auta
         ],
         'kontakt' => [
             'eyebrow' => 'Łódź, ul. Kolumny 267C',
@@ -419,7 +420,7 @@ function vts_render_page_header(): void
     $img  = !empty($hero['img']) ? vts_hero_slide_img($hero['img']) : '';
     $pad  = $img ? '' : ' style="padding-block:var(--vts-gap-l) var(--vts-gap-m)"';
     ?>
-    <section class="vts-hero vts-hero--page<?= $img ? ' has-img' : '' ?>"<?= $pad ?>>
+    <section class="vts-hero vts-hero--page<?= $img ? ' has-img' : '' ?><?= $img && !empty($hero['oddal']) ? ' vts-hero--oddal' : '' ?>"<?= $pad ?>>
       <?php if ($img) : ?>
         <div class="vts-hero__bg is-active"
              style="--vts-hero-img:url('<?= esc_url($img) ?>');--vts-hero-img-sm:url('<?= esc_url(vts_hero_slide_img($hero['img'], 'sm') ?: $img) ?>')"></div>
@@ -1215,18 +1216,15 @@ add_shortcode('vts_map', function () {
  * (eyebrow, title) shortcode_atts pomija.
  */
 add_shortcode('vts_photo', function ($atts) {
-    $a = shortcode_atts(['img' => '', 'alt' => '', 'wide' => ''], $atts);
+    $a = shortcode_atts(['img' => '', 'alt' => ''], $atts);
 
-    // wide="1": zdjęcie w naturalnych proporcjach (plik z fetch-photos.py, rodzaj 'fotoszer'),
-    // bez kadru 4:3. Wymiary muszą zgadzać się z plikiem (2222x898 przy szerokości 1200).
-    $szeroko = $a['wide'] === '1';
-    $img = vts_img_tag('foto-' . $a['img'], (string) $a['alt'], 1200, $szeroko ? 485 : 900,
+    $img = vts_img_tag('foto-' . $a['img'], (string) $a['alt'], 1200, 900,
         '(max-width:900px) 92vw, (max-width:1240px) 44vw, 560px');
     if ($img === '') {
         return '';
     }
 
-    return '<figure class="vts-photo' . ($szeroko ? ' vts-photo--wide' : '') . '">' . $img . '</figure>';
+    return '<figure class="vts-photo">' . $img . '</figure>';
 });
 
 /* ------------------------------------------------------ nawigacja skokowa

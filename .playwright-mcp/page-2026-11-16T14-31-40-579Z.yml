@@ -1,0 +1,160 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]: Łódź, ul. Kolumny 267C · poniedziałek - piątek 8:30-17:00, sobota 8:30-14:00
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - text: Tuning
+        - link "511 205 980" [ref=e7] [cursor=pointer]:
+          - /url: tel:+48511205980
+        - text: ","
+        - link "515 660 210" [ref=e8] [cursor=pointer]:
+          - /url: tel:+48515660210
+      - generic [ref=e9]:
+        - text: Floty
+        - link "799 000 046" [ref=e10] [cursor=pointer]:
+          - /url: tel:+48799000046
+  - banner [ref=e11]:
+    - generic [ref=e12]:
+      - link "Vitesse" [ref=e13] [cursor=pointer]:
+        - /url: http://localhost:8090/
+        - img "Vitesse" [ref=e14]
+      - navigation "Nawigacja główna" [ref=e17]:
+        - list [ref=e18]:
+          - listitem [ref=e19]:
+            - link "Strona główna" [ref=e20] [cursor=pointer]:
+              - /url: http://localhost:8090/
+          - listitem [ref=e21]:
+            - link "Oferta" [ref=e22] [cursor=pointer]:
+              - /url: http://localhost:8090/podnoszenie-mocy/
+          - listitem [ref=e23]:
+            - link "EV / Hybryda" [ref=e24] [cursor=pointer]:
+              - /url: http://localhost:8090/ev-hybryda/
+          - listitem [ref=e25]:
+            - link "Hamownia" [ref=e26] [cursor=pointer]:
+              - /url: http://localhost:8090/hamownia/
+          - listitem [ref=e27]:
+            - link "O nas" [ref=e28] [cursor=pointer]:
+              - /url: http://localhost:8090/o-nas/
+          - listitem [ref=e29]:
+            - link "Katalog przyrostów" [ref=e30] [cursor=pointer]:
+              - /url: http://localhost:8090/chiptuning/
+          - listitem [ref=e31]:
+            - link "Blog" [ref=e32] [cursor=pointer]:
+              - /url: http://localhost:8090/blog/
+      - link "Umów wizytę" [ref=e33] [cursor=pointer]:
+        - /url: http://localhost:8090/kontakt/
+  - link "Skip to content" [ref=e34] [cursor=pointer]:
+    - /url: "#content"
+  - main [ref=e35]:
+    - generic [ref=e36]:
+      - generic [ref=e39]:
+        - navigation "Ścieżka" [ref=e40]:
+          - link "Start" [ref=e41] [cursor=pointer]:
+            - /url: http://localhost:8090/
+          - text: /O nas
+        - generic [ref=e42]:
+          - paragraph [ref=e43]: Kim jesteśmy
+          - heading "O nas" [level=1] [ref=e44]
+          - paragraph [ref=e45]: Firma została założona w 2008 roku i od samego początku pracuje z autoryzacją renomowanej firmy V-tech.
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - paragraph [ref=e49]: Kim jesteśmy
+          - heading "Tuningujemy auta od 2008 roku" [level=2] [ref=e50]
+          - paragraph [ref=e51]: VITESSE działa w Łodzi przy ulicy Kolumny 267C. Autoryzację V-tech otrzymaliśmy w kwietniu 2008 roku i od tego czasu zajmujemy się modyfikacjami oprogramowania sterowników oraz pomiarami na hamowni. Robimy chip tuning, PowerChipy, odblokowywanie sterowników, eco-tuning dla flot, modyfikacje aut elektrycznych i hybryd oraz pomiary na hamowni 4×4 i motocyklowej. Przez lata prowadziliśmy też serwis mechaniczny Scanii i Volvo. Chip tuning ciężarówek i autobusów zostaje w ofercie. Wcześniej pracowaliśmy w Tuszynie przy Tysiąclecia 17B, ten adres jest już nieaktualny.
+        - figure [ref=e53]:
+          - img "Budynek warsztatu Vitesse z bramami garażowymi i placem przed wejściem" [ref=e54]
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - paragraph [ref=e58]: Nasza filozofia
+          - heading "Certyfikat, gwarancja, okres testowy" [level=2] [ref=e59]
+          - paragraph [ref=e60]: Na każdą modyfikację mocy wystawiany jest papierowy certyfikat, potwierdzający że program został profesjonalnie przygotowany.
+          - paragraph [ref=e61]: Na nasze usługi udzielamy dwuletniej gwarancji. Gdyby w tym czasie pojawiły się jakieś błędy, dymienie, szarpanie itp. – bezpłatnie skorygujemy program.
+          - paragraph [ref=e62]: Nie ponosisz żadnego ryzyka – dajemy Ci tydzień na przetestowanie naszych modyfikacji (w przypadku samochodów ciężarowych i autobusów – dwa tygodnie). Jeśli nie będziesz zadowolony z efektów – przywracamy ustawienia fabryczne i zwracamy pieniądze.
+        - figure [ref=e64]:
+          - img "Certyfikat V-tech wystawiany na każdą modyfikację mocy, z długopisem na biurku" [ref=e65]
+      - generic [ref=e67]:
+        - paragraph [ref=e68]: Sprzęt
+        - heading "Na czym pracujemy" [level=2] [ref=e69]
+        - generic [ref=e70]:
+          - generic [ref=e71]:
+            - heading "Hamownia podwoziowa 4×4" [level=3] [ref=e77]
+            - paragraph [ref=e78]: "Stanowisko obciążeniowe dla pojazdów z napędem na jedną i na obie osie, także o zwiększonych gabarytach: dostawcze i kampery."
+          - generic [ref=e79]:
+            - heading "Stanowisko motocyklowe" [level=3] [ref=e88]
+            - paragraph [ref=e89]: Pomiar motocykli na dedykowanym stanowisku, potwierdzenie stanu technicznego lub przeprowadzonych modyfikacji.
+          - generic [ref=e90]:
+            - heading "Tylko oryginalny sprzęt" [level=3] [ref=e94]
+            - paragraph [ref=e95]: Narzędzia do diagnostyki i programowania sterowników oryginalne i z licencją. Zapewnia to bezpieczeństwo naszych usług.
+  - contentinfo [ref=e96]:
+    - generic [ref=e97]:
+      - generic [ref=e98]:
+        - generic [ref=e99]:
+          - link "Vitesse" [ref=e100] [cursor=pointer]:
+            - /url: http://localhost:8090/
+            - img "Vitesse" [ref=e101]
+          - generic [ref=e104]:
+            - generic [ref=e105]: Chip tuning, PowerChipy, modyfikacje ECU i pomiary na hamowni 4×4 w Łodzi.Autoryzacja V-tech od 2008 roku.
+            - generic [ref=e106]: ul. Kolumny 267C 93-631 Łódź
+        - generic [ref=e107]:
+          - heading "Usługi" [level=4] [ref=e108]
+          - list [ref=e109]:
+            - listitem [ref=e110]:
+              - link "Chip tuning osobowe i kampery" [ref=e111] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/chip-tuning/
+            - listitem [ref=e112]:
+              - link "Oferta dla flot B2B" [ref=e113] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/oferta-dla-flot/
+            - listitem [ref=e114]:
+              - link "PowerChip Volvo VEA" [ref=e115] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/powerboxy/
+            - listitem [ref=e116]:
+              - link "Usługi DPF / EGR / SCR" [ref=e117] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/dodatkowe-uslugi-ecu/
+            - listitem [ref=e118]:
+              - link "Hamownia motocyklowa i 4×4" [ref=e119] [cursor=pointer]:
+                - /url: http://localhost:8090/hamownia/
+            - listitem [ref=e120]:
+              - link "Modyfikacje EV i hybryd" [ref=e121] [cursor=pointer]:
+                - /url: http://localhost:8090/ev-hybryda/
+        - generic [ref=e122]:
+          - heading "Strefa klienta" [level=4] [ref=e123]
+          - list [ref=e124]:
+            - listitem [ref=e125]:
+              - link "O nas" [ref=e126] [cursor=pointer]:
+                - /url: http://localhost:8090/o-nas/
+            - listitem [ref=e127]:
+              - link "Regulamin" [ref=e128] [cursor=pointer]:
+                - /url: http://localhost:8090/regulamin/
+            - listitem [ref=e129]:
+              - link "2 lata gwarancji" [ref=e130] [cursor=pointer]:
+                - /url: http://localhost:8090/gwarancja/
+            - listitem [ref=e131]:
+              - link "Najczęstsze pytania" [ref=e132] [cursor=pointer]:
+                - /url: http://localhost:8090/faq/
+            - listitem [ref=e133]:
+              - link "Polityka prywatności" [ref=e134] [cursor=pointer]:
+                - /url: http://localhost:8090/polityka-prywatnosci/
+        - generic [ref=e135]:
+          - heading "Kontakt" [level=4] [ref=e136]
+          - generic [ref=e137]:
+            - generic [ref=e138]:
+              - text: "Tuning:"
+              - link "511 205 980" [ref=e139] [cursor=pointer]:
+                - /url: tel:+48511205980
+              - text: ","
+              - link "515 660 210" [ref=e140] [cursor=pointer]:
+                - /url: tel:+48515660210
+            - generic [ref=e141]:
+              - text: "Floty:"
+              - link "799 000 046" [ref=e142] [cursor=pointer]:
+                - /url: tel:+48799000046
+            - generic [ref=e143]:
+              - text: "Biuro:"
+              - link "42 203 22 31" [ref=e144] [cursor=pointer]:
+                - /url: tel:+48422032231
+            - link "biuro@vitesse.auto.pl" [ref=e146] [cursor=pointer]:
+              - /url: mailto:biuro@vitesse.auto.pl
+            - generic [ref=e147]: poniedziałek - piątek 8:30-17:00, sobota 8:30-14:00
+          - link "Umów wizytę" [ref=e148] [cursor=pointer]:
+            - /url: http://localhost:8090/kontakt/
+      - generic [ref=e149]: © 2026 VITESSE V-tech Łódź
