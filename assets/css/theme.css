@@ -341,11 +341,10 @@ p:last-child{margin-bottom:0}
 @media (min-width:901px){
   /* Warstwa tła ma wymiary samego zdjęcia (140% wysokości pasa, proporcje 1800:675), więc maska
      wygasza jego lewy brzeg, a nie lewy brzeg całego pasa. */
-  .vts-hero--oddal .vts-hero__bg{inset:auto 0 auto auto;top:50%;height:140%;aspect-ratio:1800/675;
+  .vts-hero--oddal .vts-hero__bg{inset:auto 0 auto auto;top:40%;height:140%;aspect-ratio:1800/675;
     transform:translateY(-50%);background-size:100% 100%;background-position:center;
     -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 40%);
     mask-image:linear-gradient(90deg,transparent 0,#000 40%)}
-}
 }
 /* Zasłona ma tłumić zapalone na zdjęciu reflektory, więc NIE może być w warstwie
    rozjaśniającej — tam kolor tła byłby niewidoczny. Stąd osobna warstwa nad tłem. */

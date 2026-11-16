@@ -1,0 +1,471 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]: Łódź, ul. Kolumny 267C · poniedziałek - piątek 8:30-17:00, sobota 8:30-14:00
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - text: Tuning
+        - link "511 205 980" [ref=e7] [cursor=pointer]:
+          - /url: tel:+48511205980
+        - text: ","
+        - link "515 660 210" [ref=e8] [cursor=pointer]:
+          - /url: tel:+48515660210
+      - generic [ref=e9]:
+        - text: Floty
+        - link "799 000 046" [ref=e10] [cursor=pointer]:
+          - /url: tel:+48799000046
+  - banner [ref=e11]:
+    - generic [ref=e12]:
+      - link "Vitesse" [ref=e13] [cursor=pointer]:
+        - /url: http://localhost:8090/
+        - img "Vitesse" [ref=e14]
+      - navigation "Nawigacja główna" [ref=e17]:
+        - list [ref=e18]:
+          - listitem [ref=e19]:
+            - link "Strona główna" [ref=e20] [cursor=pointer]:
+              - /url: http://localhost:8090/
+          - listitem [ref=e21]:
+            - link "Oferta" [ref=e22] [cursor=pointer]:
+              - /url: http://localhost:8090/podnoszenie-mocy/
+          - listitem [ref=e23]:
+            - link "EV / Hybryda" [ref=e24] [cursor=pointer]:
+              - /url: http://localhost:8090/ev-hybryda/
+          - listitem [ref=e25]:
+            - link "Hamownia" [ref=e26] [cursor=pointer]:
+              - /url: http://localhost:8090/hamownia/
+          - listitem [ref=e27]:
+            - link "O nas" [ref=e28] [cursor=pointer]:
+              - /url: http://localhost:8090/o-nas/
+          - listitem [ref=e29]:
+            - link "Katalog przyrostów" [ref=e30] [cursor=pointer]:
+              - /url: http://localhost:8090/chiptuning/
+          - listitem [ref=e31]:
+            - link "Blog" [ref=e32] [cursor=pointer]:
+              - /url: http://localhost:8090/blog/
+      - link "Umów wizytę" [ref=e33] [cursor=pointer]:
+        - /url: http://localhost:8090/kontakt/
+  - link "Skip to content" [ref=e34] [cursor=pointer]:
+    - /url: "#content"
+  - main [ref=e35]:
+    - generic [ref=e36]:
+      - generic [ref=e43]:
+        - generic [ref=e45]:
+          - paragraph [ref=e46]: Chip tuning · Łódź
+          - heading "Odblokowywanie sterowników ECU na miejscu, od ręki." [level=1] [ref=e47]
+          - paragraph [ref=e48]: Najnowsze modele bez wysyłki sterownika za granicę. Otwieramy je u siebie, więc Twoje auto jest gotowe tego samego dnia.
+        - tablist "Slajdy" [ref=e49]:
+          - tab "Chip tuning · Łódź" [selected] [ref=e50] [cursor=pointer]
+          - tab "Gwarancja i leasing" [ref=e51] [cursor=pointer]
+          - tab "Floty B2B" [ref=e52] [cursor=pointer]
+          - tab "Zaplecze pomiarowe" [ref=e53] [cursor=pointer]
+      - generic [ref=e58]:
+        - generic [ref=e59]:
+          - generic [ref=e60]: Wybierz markę
+          - combobox "Wybierz markę" [ref=e61] [cursor=pointer]:
+            - option "Wybierz markę" [selected]
+            - option "Abarth"
+            - option "Aixam"
+            - option "Alfa Romeo"
+            - option "Aston Martin"
+            - option "Audi"
+            - option "BAIC"
+            - option "BMW"
+            - option "Cadillac"
+            - option "Chatenet"
+            - option "Chevrolet"
+            - option "Chrysler"
+            - option "Citroen"
+            - option "Cupra"
+            - option "Dacia"
+            - option "Daewoo"
+            - option "DAF"
+            - option "Dodge"
+            - option "DS"
+            - option "Fiat"
+            - option "Ford"
+            - option "Foton"
+            - option "GAZ"
+            - option "Honda"
+            - option "Hyundai"
+            - option "Infiniti"
+            - option "Isuzu"
+            - option "Iveco"
+            - option "Jaecoo"
+            - option "Jaguar"
+            - option "Jeep"
+            - option "Kia"
+            - option "Lancia"
+            - option "Land Rover"
+            - option "Lexus"
+            - option "Ligier"
+            - option "Maserati"
+            - option "Mazda"
+            - option "Mercedes"
+            - option "Mercedes Truck"
+            - option "MG"
+            - option "Microcar"
+            - option "Mini"
+            - option "Mitsubishi"
+            - option "Nissan"
+            - option "Omoda"
+            - option "Opel"
+            - option "Peugeot"
+            - option "Porsche"
+            - option "Renault"
+            - option "Saab"
+            - option "Scania"
+            - option "Seat"
+            - option "Skoda"
+            - option "Smart"
+            - option "SsangYong"
+            - option "Subaru"
+            - option "Suzuki"
+            - option "Toyota"
+            - option "Volkswagen"
+            - option "Volvo"
+        - generic [ref=e62]:
+          - generic [ref=e63]: Wybierz model
+          - combobox "Wybierz model" [disabled] [ref=e64]:
+            - option "Wybierz model" [selected]
+        - generic [ref=e65]:
+          - generic [ref=e66]: Wybierz generację
+          - combobox "Wybierz generację" [disabled] [ref=e67]:
+            - option "Wybierz generację" [selected]
+        - generic [ref=e68]:
+          - generic [ref=e69]: Wybierz rocznik
+          - combobox "Wybierz rocznik" [disabled] [ref=e70]:
+            - option "Wybierz rocznik" [selected]
+        - generic [ref=e71]:
+          - generic [ref=e72]: Wybierz silnik
+          - combobox "Wybierz silnik" [disabled] [ref=e73]:
+            - option "Wybierz silnik" [selected]
+      - generic [ref=e75]:
+        - paragraph [ref=e76]: Co robimy
+        - heading "Sześć rzeczy, po które przyjeżdża się do VITESSE" [level=2] [ref=e77]
+        - paragraph [ref=e78]: Sprawdź, czy robimy to, czego szukasz. Każdy kafelek prowadzi do właściwej części oferty.
+        - generic [ref=e79]:
+          - link "+0 KM Chip tuning i PowerChipy średni przyrost z katalogu Chip tuning aut osobowych, dostawczych, ciężarowych, autobusów, kamperów i ciągników rolniczych, moduły Plug&Play, programowanie skrzyń biegów." [ref=e80] [cursor=pointer]:
+            - /url: http://localhost:8090/podnoszenie-mocy/
+            - generic [ref=e99]:
+              - generic [ref=e100]: "+0"
+              - generic [ref=e101]: KM
+            - generic [ref=e102]:
+              - heading "Chip tuning i PowerChipy" [level=3] [ref=e103]
+              - generic [ref=e104]: średni przyrost z katalogu
+              - generic [ref=e105]: Chip tuning aut osobowych, dostawczych, ciężarowych, autobusów, kamperów i ciągników rolniczych, moduły Plug&Play, programowanie skrzyń biegów.
+          - link "0,0 % Oferta dla flot i eco-tuning mniej paliwa, nierzadko ponad 10% Niższe spalanie w autach firmowych, limitery prędkości i obrotów, kalkulator oszczędności i wycena dla całej floty." [ref=e106] [cursor=pointer]:
+            - /url: http://localhost:8090/podnoszenie-mocy/oferta-dla-flot/
+            - generic [ref=e125]:
+              - generic [ref=e126]: 0,0
+              - generic [ref=e127]: "%"
+            - generic [ref=e128]:
+              - heading "Oferta dla flot i eco-tuning" [level=3] [ref=e129]
+              - generic [ref=e130]: mniej paliwa, nierzadko ponad 10%
+              - generic [ref=e131]: Niższe spalanie w autach firmowych, limitery prędkości i obrotów, kalkulator oszczędności i wycena dla całej floty.
+          - link "0 usług Modyfikacje oprogramowania diagnostyka i modyfikacje DPF, SCR (AdBlue), EGR, Start&Stop, ciśnienie oleju, temperatura pracy silnika, klapy wirowe, limitery prędkości i obrotów, druga sonda Lambda, korekta dawki rozruchowej, pompa powietrza dodatkowego (Subaru), czyszczenie układów dolotowych." [ref=e132] [cursor=pointer]:
+            - /url: http://localhost:8090/podnoszenie-mocy/dodatkowe-uslugi-ecu/
+            - generic [ref=e151]:
+              - generic [ref=e152]: "0"
+              - generic [ref=e153]: usług
+            - generic [ref=e154]:
+              - heading "Modyfikacje oprogramowania" [level=3] [ref=e155]
+              - generic [ref=e156]: diagnostyka i modyfikacje
+              - generic [ref=e157]: DPF, SCR (AdBlue), EGR, Start&Stop, ciśnienie oleju, temperatura pracy silnika, klapy wirowe, limitery prędkości i obrotów, druga sonda Lambda, korekta dawki rozruchowej, pompa powietrza dodatkowego (Subaru), czyszczenie układów dolotowych.
+          - link "EV Pojazdy elektryczne i hybrydy zasięg, moc, ładowanie Większy zasięg oraz dobór, sprzedaż i montaż ładowarek wallbox w domu i w firmie." [ref=e158] [cursor=pointer]:
+            - /url: http://localhost:8090/ev-hybryda/
+            - generic [ref=e159]: EV
+            - generic [ref=e179]:
+              - heading "Pojazdy elektryczne i hybrydy" [level=3] [ref=e180]
+              - generic [ref=e181]: zasięg, moc, ładowanie
+              - generic [ref=e182]: Większy zasięg oraz dobór, sprzedaż i montaż ładowarek wallbox w domu i w firmie.
+          - link "4×4 Hamownia 4×4 i motocyklowa napęd na obie osie + moto Pomiar inercyjny i obciążeniowy aut 2WD i 4×4, dostawczych, kamperów i motocykli. Z wydrukiem wykresu, także bez modyfikacji." [ref=e183] [cursor=pointer]:
+            - /url: http://localhost:8090/hamownia/
+            - generic [ref=e184]: 4×4
+            - generic [ref=e204]:
+              - heading "Hamownia 4×4 i motocyklowa" [level=3] [ref=e205]
+              - generic [ref=e206]: napęd na obie osie + moto
+              - generic [ref=e207]: Pomiar inercyjny i obciążeniowy aut 2WD i 4×4, dostawczych, kamperów i motocykli. Z wydrukiem wykresu, także bez modyfikacji.
+          - link "D2D Door-2-door odbiór i odstawienie auta Jeśli nie masz czasu, odbierzemy Twoje auto w umówionym terminie i odstawimy na miejsce po wykonanej usłudze. Samochody ciężarowe w wielu przypadkach możemy zrobić także u Ciebie." [ref=e208] [cursor=pointer]:
+            - /url: http://localhost:8090/kontakt/
+            - generic [ref=e209]: D2D
+            - generic [ref=e229]:
+              - heading "Door-2-door" [level=3] [ref=e230]
+              - generic [ref=e231]: odbiór i odstawienie auta
+              - generic [ref=e232]: Jeśli nie masz czasu, odbierzemy Twoje auto w umówionym terminie i odstawimy na miejsce po wykonanej usłudze. Samochody ciężarowe w wielu przypadkach możemy zrobić także u Ciebie.
+      - generic [ref=e234]:
+        - paragraph [ref=e235]: Dlaczego my
+        - heading "Czym różni się chip tuning w VITESSE" [level=2] [ref=e236]
+        - generic [ref=e237]:
+          - generic [ref=e238]:
+            - img "Zbliżenie na złącze testowe i płytkę sterownika silnika" [ref=e239]
+            - generic [ref=e240]:
+              - heading "Odblokowanie sterowników ECU na miejscu" [level=3] [ref=e241]
+              - paragraph [ref=e242]: Zablokowany sterownik (roczniki od 2020) odblokowujemy u siebie na miejscu. Bez wysyłki za granicę i bez tygodnia postoju.
+          - generic [ref=e243]:
+            - img "Dłoń trzymająca model żółtego auta i kluczyki nad dokumentami" [ref=e244]
+            - generic [ref=e245]:
+              - heading "Bezpieczny tuning aut na gwarancji i w leasingu" [level=3] [ref=e246]
+              - paragraph [ref=e247]: W ofercie mamy rozwiązania podnoszące moc bez ryzyka utraty gwarancji czy problemów z leasingiem.
+          - generic [ref=e248]:
+            - img "Rząd białych aut dostawczych na placu firmy" [ref=e249]
+            - generic [ref=e250]:
+              - heading "Eco-tuning i kompleksowa obsługa flot" [level=3] [ref=e251]
+              - paragraph [ref=e252]: Spalanie niższe do 10%, limitery prędkości i obrotów, obsługa partiami i faktura VAT. Możesz przetestować na 1–2 pojazdach.
+          - generic [ref=e253]:
+            - img "Kamper na górskiej drodze o zachodzie słońca" [ref=e254]
+            - generic [ref=e255]:
+              - heading "Indywidualny tuning kamperów pod obciążeniem" [level=3] [ref=e256]
+              - paragraph [ref=e257]: "Program pod pełną masę: więcej momentu na podjazdach, spokojna praca silnika przy długim wysiłku i mniej paliwa w trasie."
+          - generic [ref=e258]:
+            - img "Mechanik na motocyklu przypiętym pasami do rolek hamowni" [ref=e259]
+            - generic [ref=e260]:
+              - heading "Hamownia 4×4 i stanowisko motocyklowe" [level=3] [ref=e261]
+              - paragraph [ref=e262]: Pomiar inercyjny lub obciążeniowy aut 2WD i 4×4, dostawczych, kamperów i motocykli. Przed modyfikacją i po niej.
+      - generic [ref=e264]:
+        - paragraph [ref=e265]: Wyniki
+        - heading "Popularne wersje silników i realne przyrosty" [level=2] [ref=e266]
+        - paragraph [ref=e267]: Trzy przykłady z katalogu V-tech. Kliknij kafelek, żeby zobaczyć możliwe opcje.
+        - generic [ref=e268]:
+          - link "Citroen C4 II · 2.0 BlueHDi 110kW 150KM Moc fabryczna 150 KM, po modyfikacji 182 KM. Przebieg krzywych poglądowy. przyrost mocy +32KM przyrost momentu +65Nm" [ref=e269] [cursor=pointer]:
+            - /url: http://localhost:8090/chiptuning/citroen/c4/ii/2-0-bluehdi-110kw-150km-110/
+            - generic [ref=e270]:
+              - generic [ref=e271]: Citroen C4
+              - generic [ref=e272]: II · 2.0 BlueHDi 110kW 150KM
+            - img "Moc fabryczna 150 KM, po modyfikacji 182 KM. Przebieg krzywych poglądowy." [ref=e274]:
+              - generic [ref=e282]: 182 KM
+              - generic [ref=e283]: 150 KM
+              - generic [ref=e284]: przebieg poglądowy
+            - generic [ref=e285]:
+              - generic [ref=e286]:
+                - emphasis [ref=e287]: przyrost mocy
+                - text: +32KM
+              - generic [ref=e288]:
+                - emphasis [ref=e289]: przyrost momentu
+                - text: +65Nm
+          - link "Skoda Yeti 5L · 1.8 TSI 118kW 160KM Moc fabryczna 160 KM, po modyfikacji 195 KM. Przebieg krzywych poglądowy. przyrost mocy +35KM przyrost momentu +80Nm" [ref=e290] [cursor=pointer]:
+            - /url: http://localhost:8090/chiptuning/skoda/yeti/5l/1-8-tsi-118kw-160km-118/
+            - generic [ref=e291]:
+              - generic [ref=e292]: Skoda Yeti
+              - generic [ref=e293]: 5L · 1.8 TSI 118kW 160KM
+            - img "Moc fabryczna 160 KM, po modyfikacji 195 KM. Przebieg krzywych poglądowy." [ref=e295]:
+              - generic [ref=e303]: 195 KM
+              - generic [ref=e304]: 160 KM
+              - generic [ref=e305]: przebieg poglądowy
+            - generic [ref=e306]:
+              - generic [ref=e307]:
+                - emphasis [ref=e308]: przyrost mocy
+                - text: +35KM
+              - generic [ref=e309]:
+                - emphasis [ref=e310]: przyrost momentu
+                - text: +80Nm
+          - link "Fiat Bravo 198 · 1.6 Multijet 66kW 90KM Moc fabryczna 90 KM, po modyfikacji 116 KM. Przebieg krzywych poglądowy. przyrost mocy +26KM przyrost momentu +40Nm" [ref=e311] [cursor=pointer]:
+            - /url: http://localhost:8090/chiptuning/fiat/bravo/198/1-6-multijet-66kw-90km-66/
+            - generic [ref=e312]:
+              - generic [ref=e313]: Fiat Bravo
+              - generic [ref=e314]: 198 · 1.6 Multijet 66kW 90KM
+            - img "Moc fabryczna 90 KM, po modyfikacji 116 KM. Przebieg krzywych poglądowy." [ref=e316]:
+              - generic [ref=e324]: 116 KM
+              - generic [ref=e325]: 90 KM
+              - generic [ref=e326]: przebieg poglądowy
+            - generic [ref=e327]:
+              - generic [ref=e328]:
+                - emphasis [ref=e329]: przyrost mocy
+                - text: +26KM
+              - generic [ref=e330]:
+                - emphasis [ref=e331]: przyrost momentu
+                - text: +40Nm
+      - generic [ref=e333]:
+        - paragraph [ref=e334]: Jak to wygląda
+        - heading "Proces bezpiecznego tuningu, krok po kroku" [level=2] [ref=e335]
+        - generic [ref=e336]:
+          - generic [ref=e337]:
+            - generic [ref=e338]: Krok 1
+            - heading "Diagnostyka wstępna" [level=3] [ref=e339]
+            - paragraph [ref=e340]: Sprawdzamy wersję silnika, odczytujemy błędy i oceniamy stan techniczny. Jeśli auto wymaga naprawy, poinformujemy Cię o jej kosztach.
+          - generic [ref=e341]:
+            - generic [ref=e342]: Krok 2
+            - heading "Pomiar na hamowni" [level=3] [ref=e343]
+            - paragraph [ref=e344]: Auto wjeżdża na rolki. Mierzymy moc i moment, by ocenić stan techniczny silnika i mieć punkt wyjścia dla dalszych modyfikacji.
+          - generic [ref=e345]:
+            - generic [ref=e346]: Krok 3
+            - heading "Indywidualne strojenie" [level=3] [ref=e347]
+            - paragraph [ref=e348]: Chip tuning, PowerChip albo eco-tuning pod Twój egzemplarz. Odczyt oryginalnego oprogramowania zostaje na serwerze, by w razie potrzeby zawsze można było do niego wrócić.
+          - generic [ref=e349]:
+            - generic [ref=e350]: Krok 4
+            - heading "Pomiar końcowy i wykres" [level=3] [ref=e351]
+            - paragraph [ref=e352]: Drugi i ewentualnie kolejne pomiary. Jeśli trzeba dokonać korekt, poprawiamy. Jeśli efekt jest zgodny z oczekiwaniami, dostajesz wydruk mocy i momentu przed i po.
+          - generic [ref=e353]:
+            - generic [ref=e354]: Krok 5
+            - heading "2 lata gwarancji, tydzień na testy" [level=3] [ref=e355]
+            - paragraph [ref=e356]: Na usługę udzielamy dwuletniej gwarancji. Masz również tydzień na to, by przekonać się, że to jest to, czego oczekiwałeś. Jeśli nie, zwracamy pieniądze.
+      - generic [ref=e358]:
+        - paragraph [ref=e359]: Zanim zapytasz
+        - heading "Pytania, które słyszymy najczęściej" [level=2] [ref=e360]
+        - generic [ref=e361]:
+          - group [ref=e362]:
+            - generic "Czy chip tuning szkodzi silnikowi? +" [ref=e363] [cursor=pointer]
+          - group [ref=e364]:
+            - generic "Czy mogę mieć problem z gwarancją lub leasingiem? +" [ref=e365] [cursor=pointer]
+          - group [ref=e366]:
+            - generic "Ile trwa chip tuning? +" [ref=e367] [cursor=pointer]
+          - group [ref=e368]:
+            - generic "O ile spadnie spalanie? +" [ref=e369] [cursor=pointer]
+          - group [ref=e370]:
+            - generic "Czy da się wrócić do stanu fabrycznego? +" [ref=e371] [cursor=pointer]
+          - group [ref=e372]:
+            - generic "Ile kosztuje chip tuning? +" [ref=e373] [cursor=pointer]
+          - group [ref=e374]:
+            - generic "Na czym polega usługa Door-2-door? +" [ref=e375] [cursor=pointer]
+      - generic [ref=e377]:
+        - paragraph [ref=e378]: Zaufanie
+        - heading "Co mówią klienci" [level=2] [ref=e379]
+        - generic [ref=e380]:
+          - generic [ref=e381]:
+            - generic [ref=e382]: 4,9
+            - generic [ref=e383]: Google · 87 opinii
+          - generic [ref=e386]:
+            - figure "Marcin K." [ref=e387]:
+              - blockquote [ref=e388]: Golf 2.0 TDI, chip tuning. Pomiar przed i po na miejscu, wydruk dostałem do ręki. Auto na trasie idzie zupełnie inaczej, a spalanie spadło o pół litra. Termin dotrzymany co do godziny.
+            - figure "Tomasz W., flota 11 aut" [ref=e390]:
+              - blockquote [ref=e391]: Zaczęliśmy od jednego Sprintera na próbę, po sześciu tygodniach tankowania potwierdziły oszczędność i zrobiliśmy resztę partiami. Faktura, harmonogram, zero przestojów.
+            - figure "Agnieszka R." [ref=e393]:
+              - blockquote [ref=e394]: Volvo w leasingu, więc PowerChip. Montaż zajął kwadrans, przed przeglądem sama zdejmuję moduł w pięć minut. Uczciwie wytłumaczone, co można, a czego nie.
+      - generic [ref=e397]:
+        - generic [ref=e398]:
+          - paragraph [ref=e399]: Szybki kontakt
+          - heading "Umów pomiar albo zapytaj o wycenę" [level=2] [ref=e400]
+          - paragraph [ref=e401]: Odpowiadamy w godzinach pracy warsztatu. Jeśli sprawa jest pilna, zadzwoń.
+          - generic [ref=e402]:
+            - heading "VITESSE V-tech Łódź" [level=3] [ref=e403]
+            - generic [ref=e404]:
+              - term [ref=e405]: Warsztat
+              - definition [ref=e409]: ul. Kolumny 267C93-631 Łódź
+              - term [ref=e410]: Telefony
+              - definition [ref=e413]:
+                - text: "Tuning:"
+                - link "511 205 980" [ref=e414] [cursor=pointer]:
+                  - /url: tel:+48511205980
+                - text: ","
+                - link "515 660 210" [ref=e415] [cursor=pointer]:
+                  - /url: tel:+48515660210
+                - text: "Floty:"
+                - link "799 000 046" [ref=e416] [cursor=pointer]:
+                  - /url: tel:+48799000046
+                - text: "Biuro:"
+                - link "42 203 22 31" [ref=e417] [cursor=pointer]:
+                  - /url: tel:+48422032231
+              - term [ref=e418]: E-mail
+              - definition [ref=e422]:
+                - link "biuro@vitesse.auto.pl" [ref=e423] [cursor=pointer]:
+                  - /url: mailto:biuro@vitesse.auto.pl
+              - term [ref=e424]: Godziny
+              - definition [ref=e428]: poniedziałek - piątek 8:30-17:00, sobota 8:30-14:00
+        - generic [ref=e430]:
+          - generic [ref=e431]:
+            - status
+            - list
+          - form "Contact form" [ref=e432]:
+            - generic [ref=e433]:
+              - paragraph [ref=e434]:
+                - generic [ref=e435]:
+                  - text: Imię i nazwisko
+                  - textbox "Imię i nazwisko" [ref=e437]:
+                    - /placeholder: Jan Kowalski
+              - paragraph [ref=e438]:
+                - generic [ref=e439]:
+                  - text: E-mail
+                  - textbox "E-mail" [ref=e441]:
+                    - /placeholder: jan@example.pl
+              - paragraph [ref=e442]:
+                - generic [ref=e443]:
+                  - text: Telefon
+                  - textbox "Telefon" [ref=e445]:
+                    - /placeholder: 600 000 000
+              - paragraph [ref=e446]:
+                - generic [ref=e447]:
+                  - text: Pojazd
+                  - textbox "Pojazd" [ref=e449]:
+                    - /placeholder: marka, model, rok, wersja silnika
+              - paragraph [ref=e450]:
+                - generic [ref=e451]:
+                  - text: Czego dotyczy zapytanie
+                  - textbox "Czego dotyczy zapytanie" [ref=e453]:
+                    - /placeholder: Opisz krótko, co chcesz osiągnąć.
+              - paragraph [ref=e454]:
+                - generic [ref=e458] [cursor=pointer]:
+                  - checkbox "Wyrażam zgodę na kontakt w sprawie mojego zapytania. Administratorem danych jest VITESSE V-tech Łódź. Podanie danych jest dobrowolne, a zgodę mogę wycofać w każdej chwili." [ref=e459]
+                  - generic [ref=e460]: Wyrażam zgodę na kontakt w sprawie mojego zapytania. Administratorem danych jest VITESSE V-tech Łódź. Podanie danych jest dobrowolne, a zgodę mogę wycofać w każdej chwili.
+              - paragraph [ref=e461]:
+                - button "Wyślij zapytanie" [disabled] [ref=e462]
+  - contentinfo [ref=e463]:
+    - generic [ref=e464]:
+      - generic [ref=e465]:
+        - generic [ref=e466]:
+          - link "Vitesse" [ref=e467] [cursor=pointer]:
+            - /url: http://localhost:8090/
+            - img "Vitesse" [ref=e468]
+          - generic [ref=e471]:
+            - generic [ref=e472]: Chip tuning, PowerChipy, modyfikacje ECU i pomiary na hamowni 4×4 w Łodzi.Autoryzacja V-tech od 2008 roku.
+            - generic [ref=e473]: ul. Kolumny 267C 93-631 Łódź
+        - generic [ref=e474]:
+          - heading "Usługi" [level=4] [ref=e475]
+          - list [ref=e476]:
+            - listitem [ref=e477]:
+              - link "Chip tuning osobowe i kampery" [ref=e478] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/chip-tuning/
+            - listitem [ref=e479]:
+              - link "Oferta dla flot B2B" [ref=e480] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/oferta-dla-flot/
+            - listitem [ref=e481]:
+              - link "PowerChip Volvo VEA" [ref=e482] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/powerboxy/
+            - listitem [ref=e483]:
+              - link "Usługi DPF / EGR / SCR" [ref=e484] [cursor=pointer]:
+                - /url: http://localhost:8090/podnoszenie-mocy/dodatkowe-uslugi-ecu/
+            - listitem [ref=e485]:
+              - link "Hamownia motocyklowa i 4×4" [ref=e486] [cursor=pointer]:
+                - /url: http://localhost:8090/hamownia/
+            - listitem [ref=e487]:
+              - link "Modyfikacje EV i hybryd" [ref=e488] [cursor=pointer]:
+                - /url: http://localhost:8090/ev-hybryda/
+        - generic [ref=e489]:
+          - heading "Strefa klienta" [level=4] [ref=e490]
+          - list [ref=e491]:
+            - listitem [ref=e492]:
+              - link "O nas" [ref=e493] [cursor=pointer]:
+                - /url: http://localhost:8090/o-nas/
+            - listitem [ref=e494]:
+              - link "Regulamin" [ref=e495] [cursor=pointer]:
+                - /url: http://localhost:8090/regulamin/
+            - listitem [ref=e496]:
+              - link "2 lata gwarancji" [ref=e497] [cursor=pointer]:
+                - /url: http://localhost:8090/gwarancja/
+            - listitem [ref=e498]:
+              - link "Najczęstsze pytania" [ref=e499] [cursor=pointer]:
+                - /url: http://localhost:8090/faq/
+            - listitem [ref=e500]:
+              - link "Polityka prywatności" [ref=e501] [cursor=pointer]:
+                - /url: http://localhost:8090/polityka-prywatnosci/
+        - generic [ref=e502]:
+          - heading "Kontakt" [level=4] [ref=e503]
+          - generic [ref=e504]:
+            - generic [ref=e505]:
+              - text: "Tuning:"
+              - link "511 205 980" [ref=e506] [cursor=pointer]:
+                - /url: tel:+48511205980
+              - text: ","
+              - link "515 660 210" [ref=e507] [cursor=pointer]:
+                - /url: tel:+48515660210
+            - generic [ref=e508]:
+              - text: "Floty:"
+              - link "799 000 046" [ref=e509] [cursor=pointer]:
+                - /url: tel:+48799000046
+            - generic [ref=e510]:
+              - text: "Biuro:"
+              - link "42 203 22 31" [ref=e511] [cursor=pointer]:
+                - /url: tel:+48422032231
+            - link "biuro@vitesse.auto.pl" [ref=e513] [cursor=pointer]:
+              - /url: mailto:biuro@vitesse.auto.pl
+            - generic [ref=e514]: poniedziałek - piątek 8:30-17:00, sobota 8:30-14:00
+          - link "Umów wizytę" [ref=e515] [cursor=pointer]:
+            - /url: http://localhost:8090/kontakt/
+      - generic [ref=e516]: © 2026 VITESSE V-tech Łódź
